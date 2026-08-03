@@ -9,6 +9,7 @@ import { downloadCommercialProposalPdf } from "../lib/commercial-proposal-pdf";
 const ctx = createEmptyContext();
 ctx.clientName = "Consultorio Dental Sonrisa";
 ctx.clientEmail = "contacto@sonrisa.mx";
+ctx.clientPhone = "834 123 4567";
 ctx.negocioDescripcion = "soy dentista en Madero, quiero que mis pacientes agenden citas online";
 ctx.category = "citas";
 

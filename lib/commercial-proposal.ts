@@ -112,7 +112,13 @@ export interface CommercialProposal {
   numero: string;
   fechaEmision: string;
   fechaVigencia: string;
-  cliente: { negocio: string; giro: string; ciudad: string | null; contacto: string };
+  cliente: {
+    negocio: string;
+    giro: string;
+    ciudad: string | null;
+    contacto: string;
+    telefono: string | null;
+  };
   vendedor: typeof VENDOR;
   dolor: string;
   costo_omision: string;
@@ -127,6 +133,12 @@ export interface CommercialProposal {
   diasEntrega: number;
   rondasRevision: number;
   garantiaDias: number;
+  /** Consejo de ventas: por qué conviene actuar ahora */
+  porQueAhora: string;
+  /** El proceso en pasos claros (reduce la fricción para decir que sí) */
+  proceso: string[];
+  /** Frase de confianza / compromiso del consultor */
+  compromiso: string;
   cta: string;
   notaLegal: string;
 }
@@ -192,6 +204,17 @@ export function buildCommercialProposal(
     valor: i === n - 1 ? Math.max(Math.round(subtotal - valorBase * (n - 1)), 0) : valorBase,
   }));
 
+  const porQueAhora =
+    "Cada semana sin esto, su negocio sigue dejando oportunidades frente a competidores que sí aparecen en internet. Los precios y la agenda de este proyecto son los de hoy: al confirmar el anticipo, se bloquean ambos. Esperar solo le cuesta más caro en clientes perdidos.";
+  const proceso = [
+    "Autoriza la propuesta respondiendo al correo con la frase AUTORIZO LA PROPUESTA.",
+    "Confirma el anticipo del 50% para reservar tu lugar en la agenda.",
+    "Desarrollamos el proyecto en los plazos pactados, con avances claros para ti.",
+    "Recibes tu solución terminada, con garantía de 15 días de ajustes menores.",
+  ];
+  const compromiso =
+    "Mi compromiso es simple: comunicación clara, sin sorpresas en el precio y un resultado que de verdad trabaje para tu negocio. Si algo no te convence en el camino, lo resolvemos juntos antes de avanzar.";
+
   return {
     numero,
     fechaEmision: fecha(hoy),
@@ -201,6 +224,7 @@ export function buildCommercialProposal(
       giro: result.giro || result.categoria,
       ciudad: detectarCiudad(context.negocioDescripcion),
       contacto: context.clientName || result.clientName || "",
+      telefono: context.clientPhone ?? null,
     },
     vendedor: VENDOR,
     dolor: result.dolor || "Su negocio pierde oportunidades porque no tiene una presencia digital clara.",
@@ -216,6 +240,9 @@ export function buildCommercialProposal(
     diasEntrega,
     rondasRevision: 2,
     garantiaDias: 15,
+    porQueAhora,
+    proceso,
+    compromiso,
     cta:
       "Para iniciar, responde este correo con la frase \"AUTORIZO LA PROPUESTA\" y realiza el pago del anticipo. El proyecto se agenda al confirmar el anticipo.",
     notaLegal: `Precios vigentes hasta ${fecha(addDias(hoy, 7))}. Los tiempos de entrega comienzan a partir de la confirmación del anticipo y entrega de materiales por parte del cliente.`,
@@ -243,7 +270,7 @@ ${logoV}   ${logoC}
 **Contacto:** ${p.vendedor.email} ${p.vendedor.whatsapp ? `· WhatsApp: ${p.vendedor.whatsapp}` : ""}
 
 **Cliente:** ${p.cliente.negocio}
-**Contacto:** ${p.cliente.contacto}
+**Contacto:** ${p.cliente.contacto}${p.cliente.telefono ? ` · Tel/WhatsApp: ${p.cliente.telefono}` : ""}
 **Giro:** ${p.cliente.giro}${p.cliente.ciudad ? ` · Ubicación: ${p.cliente.ciudad}` : ""}
 
 </div>
@@ -275,6 +302,10 @@ No le hablaremos de tecnología: le hablaremos de **resultados** para su negocio
 - ${p.solucionBullets.join("\n- ")}
 
 En resumen: **${p.cliente.negocio}** dejará de perder oportunidades y empezará a recibir clientes de forma constante, con una imagen a la altura del trabajo que ya hace.
+
+**¿Por qué ahora?**
+
+${p.porQueAhora}
 
 <!-- ═══════════ PÁGINA 3 · ENTREGABLES ═══════════ -->
 
@@ -316,6 +347,17 @@ La inversión total para que ${p.cliente.negocio} cuente con esta solución es d
 ## 5. Garantía y siguiente paso
 
 Su proyecto queda cubierto con una **garantía de ${p.garantiaDias} días de ajustes menores** posteriores a la entrega. Su tranquilidad es parte del trato.
+
+**El proceso en 4 pasos**
+
+1. ${p.proceso[0]}
+2. ${p.proceso[1]}
+3. ${p.proceso[2]}
+4. ${p.proceso[3]}
+
+**Mi compromiso contigo**
+
+${p.compromiso}
 
 **Para iniciar:**
 

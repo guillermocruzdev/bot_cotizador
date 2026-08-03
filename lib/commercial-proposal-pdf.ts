@@ -67,7 +67,8 @@ export function downloadCommercialProposalPdf(p: CommercialProposal) {
   doc.setTextColor(...GRAY);
   doc.text(`Contacto: ${p.cliente.contacto}`, W - M - doc.getTextWidth(`Contacto: ${p.cliente.contacto}`), 302);
   doc.text(`Giro: ${p.cliente.giro}`, W - M - doc.getTextWidth(`Giro: ${p.cliente.giro}`), 322);
-  if (p.cliente.ciudad) doc.text(`Ubicación: ${p.cliente.ciudad}`, W - M - doc.getTextWidth(`Ubicación: ${p.cliente.ciudad}`), 342);
+  if (p.cliente.telefono) doc.text(`Tel/WhatsApp: ${p.cliente.telefono}`, W - M - doc.getTextWidth(`Tel/WhatsApp: ${p.cliente.telefono}`), 342);
+  if (p.cliente.ciudad) doc.text(`Ubicación: ${p.cliente.ciudad}`, W - M - doc.getTextWidth(`Ubicación: ${p.cliente.ciudad}`), 362);
 
   // Espacios de logo
   doc.setDrawColor(...GRAY);
@@ -97,6 +98,17 @@ export function downloadCommercialProposalPdf(p: CommercialProposal) {
   paragraph(doc, M, 360, `Esto no es un detalle menor. En su giro (${p.cliente.giro.toLowerCase()}), cada día sin una presencia profesional clara representa una oportunidad que se va con la competencia:`);
   quoteBox(doc, M, 430, p.costo_omision, CW);
   paragraph(doc, M, 560, "La buena noticia: este problema tiene solución, y en las siguientes páginas se la explicamos con claridad.");
+
+  // Consejo del consultor: por qué ahora
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(...ACCENT);
+  doc.text("Consejo de tu consultor: ¿por qué ahora?", M, 632);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(...DARK);
+  const ahora = doc.splitTextToSize(p.porQueAhora, CW);
+  doc.text(ahora, M, 652);
 
   // ─────────────── PÁGINA 2 · LA SOLUCIÓN ───────────────
   beginSection(doc, p, "2", "La solución");
@@ -179,6 +191,23 @@ export function downloadCommercialProposalPdf(p: CommercialProposal) {
     "Los tiempos de entrega inician al confirmar el anticipo y recibir los materiales.",
   ]);
 
+  // El proceso en 4 pasos
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(...DARK);
+  doc.text("El proceso en 4 pasos:", M, 628);
+  let pstep = 650;
+  p.proceso.forEach((step, i) => {
+    const lines = doc.splitTextToSize(step, CW - 26);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...ACCENT);
+    doc.text(`${i + 1}.`, M, pstep);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...DARK);
+    doc.text(lines, M + 14, pstep);
+    pstep += lines.length * 13 + 7;
+  });
+
   // ─────────────── PÁGINA 5 · GARANTÍA Y CTA ───────────────
   beginSection(doc, p, "5", "Garantía y siguiente paso");
   paragraph(doc, M, 150, `Su proyecto queda cubierto con una garantía de ${p.garantiaDias} días de ajustes menores posteriores a la entrega. Su tranquilidad es parte del trato.`);
@@ -196,6 +225,22 @@ export function downloadCommercialProposalPdf(p: CommercialProposal) {
   doc.text(ctaLines, M + 20, 290);
 
   paragraph(doc, M, 420, "Estamos listos para arrancar en cuanto confirme. Este proyecto está pensado para que su negocio recupere la inversión con muy pocos clientes nuevos.");
+
+  // Mi compromiso
+  doc.setFillColor(...LIGHT);
+  doc.roundedRect(M, 470, CW, 104, 10, 10, "F");
+  doc.setDrawColor(...ACCENT);
+  doc.setLineWidth(1.2);
+  doc.line(M, 470, W - M, 470);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(...PRIMARY);
+  doc.text("Mi compromiso contigo", M + 18, 500);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(...DARK);
+  const comp = doc.splitTextToSize(p.compromiso, CW - 36);
+  doc.text(comp, M + 18, 524);
 
   // Nota legal final
   doc.setDrawColor(...GRAY);
@@ -235,6 +280,12 @@ function beginSection(doc: jsPDF, p: CommercialProposal, num: string, title: str
   doc.setDrawColor(...ACCENT);
   doc.setLineWidth(2);
   doc.line(M, 112, M + 60, 112);
+
+  // Pie con número de página (más profesional)
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  doc.setTextColor(...GRAY);
+  doc.text(`Propuesta ${p.numero} · Página ${doc.getNumberOfPages()} de 6`, M, H - 30);
 }
 
 function paragraph(doc: jsPDF, x: number, y: number, text: string) {

@@ -569,8 +569,8 @@ export const FLOW: Record<string, ConversationNode> = {
       `¡Gracias${ctx.clientName ? `, ${ctx.clientName.split(" ")[0]}` : ""}! Y un correo para enviarte la propuesta cuando esté lista, ¿cuál es? ${pickEmoji("contacto")}`,
     expectedResponseType: "url",
     nextNode: (response, ctx) => {
-      if (isNoSé(response, ctx)) return "extra_comments";
-      return "extra_comments";
+      if (isNoSé(response, ctx)) return "contact_phone";
+      return "contact_phone";
     },
     onReceive: (response, ctx) => {
       const emailMatch = response.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
@@ -582,6 +582,26 @@ export const FLOW: Record<string, ConversationNode> = {
         }
       } else {
         ctx.clientEmail = response.trim();
+      }
+    },
+  },
+
+  contact_phone: {
+    id: "contact_phone",
+    type: "closing",
+    generateMessage: (ctx) =>
+      `Y para cualquier detalle rápido, ¿un teléfono o WhatsApp donde pueda localizarte? Lo pongo en la propuesta para que me contactes sin fricción cuando quieras avanzar. ${pickEmoji("contacto")}`,
+    expectedResponseType: "text",
+    nextNode: (response, ctx) => {
+      if (isNoSé(response, ctx)) return "extra_comments";
+      return "extra_comments";
+    },
+    onReceive: (response, ctx) => {
+      const t = response.toLowerCase();
+      if (/(no|ninguno|no tengo|no doy)/.test(t)) {
+        ctx.clientPhone = null;
+      } else {
+        ctx.clientPhone = extractSubject(response);
       }
     },
   },
