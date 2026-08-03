@@ -528,6 +528,22 @@ ${bullets([
   si(context.pwa) ? "Manifest + service worker para instalación como app en móvil." : "Sin PWA.",
 ])}`);
 
+  // ═══ 11B. Imágenes y contenido visual ═══
+  sections.push(`## 11B · Imágenes y contenido visual
+
+La página DEBE verse completa y profesional desde el primer deploy. Cuando el cliente no tenga fotos reales, usa imágenes placeholder de alta calidad; nunca dejes cajas grises, espacios vacíos ni imágenes rotas.
+
+**Fuentes de imágenes permitidas (gratuitas / licenciadas):**
+- https://picsum.photos/seed/<slug-del-negocio>/1200/800 — foto con semilla estable (no cambia en cada carga).
+- https://placehold.co/1200x800/2563eb/ffffff?text=Tu+Negocio — placeholder con texto.
+- https://images.unsplash.com/... — URLs directas de fotos libres (verificar licencia).
+
+**Reglas:**
+- Usa la imagen ADECUADA a cada sección: hero de portada, servicios, galería/portafolio, productos, comida (si es restaurante), local/consultorio (si es clínica, estética, taller), etc.
+- Usa el componente \`next/image\` con \`fill\` o dimensiones correctas, \`alt\` descriptivo en español y \`loading="lazy"\` (excepto la imagen del hero, que va con \`priority\`).
+- No uses imágenes con derechos de autor no licenciadas ni hotlinks frágiles.
+- Crea en el README una sección \"Reemplazar imágenes\" que indique al cliente cómo poner sus fotos reales (carpeta/archivo) sin tocar código.`);
+
   // ═══ 12. Despliegue en Vercel ═══
   sections.push(`## 12 · Configuración de despliegue en Vercel
 
@@ -569,6 +585,7 @@ ${bullets([
 - Trabaja con **criterio senior**: si algo del brief es ambiguo, toma una decisión razonable y documéntala en el README (no dejes la tarea bloqueada).
 - Prioriza la **experiencia del cliente final**: cada pantalla debe verse como un producto terminado.
 - Usa datos de demostración realistas (nombres, productos, horarios) para que el deploy en Vercel se vea vivo desde el primer momento.
+- La página DEBE incluir imágenes en todas las secciones donde aportan (hero, galería, portafolio, productos, comida, local). Usa placeholders de alta calidad (ver sección 11B) para que el sitio se vea completo desde el primer deploy, y deja claro al cliente cómo reemplazarlos por sus fotos reales.
 - No inventes funcionalidades fuera del alcance; si crees que falta algo crítico, agrégalo como \`TODO\` con justificación.
 - Mantén commits atómicos y mensajes claros en español.
 - El resultado final DEBE poder abrirse en producción (Vercel) y entregarse al cliente sin que el cliente tenga que "arreglar" nada técnico.
