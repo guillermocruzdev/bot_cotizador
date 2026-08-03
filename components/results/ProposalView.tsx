@@ -18,8 +18,14 @@ import {
   readPersistedResult,
   useChatStore,
 } from "@/lib/chat-store";
-import { buildCommercialProposal } from "@/lib/commercial-proposal";
-import { downloadCommercialProposalPdf } from "@/lib/commercial-proposal-pdf";
+import { generateProposal } from "@/lib/generate-proposal";
+import {
+  buildClientData,
+  calculateQuote,
+  detectarCiudad,
+  type ClientData,
+  type TipoWeb,
+} from "@/lib/quote-engine";
 import type { AnalysisResult } from "@/lib/types";
 import { ContactCTA } from "./ContactCTA";
 import { FeatureList } from "./FeatureList";
@@ -30,6 +36,14 @@ import { ValueSelling } from "./ValueSelling";
 import { WhyThisPrice } from "./WhyThisPrice";
 
 const DEV_NAME = process.env.NEXT_PUBLIC_DEVELOPER_NAME || "";
+
+/** Mapea la categoría detectada al tipo de web de la cotización. */
+function derivarTipoWeb(category: string | null, paginas: number | null): TipoWeb {
+  if (category === "citas") return "agenda";
+  if (category === "ecommerce" || category === "webapp") return "corporativo";
+  if (paginas && paginas > 3) return "corporativo";
+  return "landing";
+}
 
 export function ProposalView() {
   const result = useChatStore((s) => s.result);
@@ -55,9 +69,26 @@ export function ProposalView() {
     setReady(true);
   }, []);
 
+  // Deriva los datos del cliente (Fase 1) desde la conversación y genera
+  // la propuesta comercial profesional de 6 páginas (Fase 2).
+  const clientData: ClientData | null = result
+    ? buildClientData({
+        nombre: context.clientName || result.clientName || "",
+        giro: result.giro || result.categoria || "",
+        telefono: context.clientPhone ?? null,
+        ubicacion: detectarCiudad(context.negocioDescripcion),
+        tipoWeb: derivarTipoWeb(context.category, context.paginas),
+        dominioHosting: true,
+        branding: false,
+        presupuesto: null,
+      })
+    : null;
+
+  const quoteTotal = clientData ? calculateQuote(clientData).total : null;
+
   const descargarPropuesta = () => {
-    if (!result) return;
-    downloadCommercialProposalPdf(buildCommercialProposal(result, context));
+    if (!clientData) return;
+    generateProposal(clientData);
   };
 
   if (!ready) {
@@ -119,11 +150,11 @@ export function ProposalView() {
           </div>
         </MessageAnimator>
 
-        {/* ── Precio (exacto, sin rangos) ── */}
+        {/* ── Precio (exacto, sin rangos, calculado por el motor) ── */}
         <PriceCard
           categoria={result.categoria}
           nivel={result.nivel}
-          precio_exacto={result.precio_min}
+          precio_exacto={quoteTotal ?? result.precio_min}
           tiempo_estimado={result.tiempo_estimado}
           giro={result.giro}
           cuota_mensual={result.cuota_mensual}
