@@ -1,10 +1,16 @@
 /**
- * GENERADOR DE PROMPT TÉCNICO PROFESIONAL (para Roo Code + DeepSeek)
+ * GENERADOR DE PACK DE PROMPTS PARA ROO CODE + DEEPSEEK (mobile-first, por fases)
  *
- * Produce un documento de ingeniería completo, como si un desarrollador
- * senior le diera indicaciones a un agente de coding autónomo. El objetivo
- * es que el trabajo resultante sea profesional tanto visual como
- * internamente, listo para desplegar en Vercel y entregar al cliente.
+ * En lugar de un único documento enorme, emite un PACK de 5 prompts
+ * secuenciales. Cada prompt es una FASE que se pega en un CHAT NUEVO de
+ * Roo Code + DeepSeek, con su propio contexto compacto e instrucciones
+ * detalladas. Así se AHORRAN tokens (cada chat carga solo lo que necesita)
+ * y la web queda construida al 100%, primero para CELULAR (mobile-first)
+ * y luego escalada a tablet/escritorio.
+ *
+ * Fases: 1) Fundación + design tokens + base mobile-first · 2) Shell
+ * (header/footer) + componentes UI · 3) Secciones de contenido · 4) Lógica,
+ * API e integraciones · 5) QA, rendimiento y despliegue en Vercel.
  *
  * Este generador es DETERMINISTA: usa el contexto estructurado de la
  * conversación (autenticación, pagos, panel, citas, SEO, PWA, etc.) más el
@@ -304,7 +310,29 @@ const NFR = [
   "**Buenas prácticas**: directiva `use client` solo donde se necesite interactividad; Server Components por defecto.",
 ] as const;
 
-// ─── Secciones del documento ───────────────────────────────────────
+// ─── Generador del PACK de prompts por fases (Roo Code + DeepSeek) ───
+//
+// En lugar de un único documento enorme (que obliga a cargar TODO el contexto
+// en un solo chat y quema tokens), este generador emite un PACK de 5 prompts
+// secuenciales. Cada prompt es una FASE que se pega en un CHAT NUEVO de
+// Roo Code + DeepSeek, con su propio contexto compacto y sus instrucciones.
+// Resultado: menos tokens por chat, contexto fresco, y la web queda al 100%,
+// construida PRIMERO para celular (mobile-first) y luego escalada a los demás
+// tamaños.
+
+interface PackBase {
+  clientName: string;
+  businessDescription: string | null;
+  category: PricingCategory;
+  nivel: Nivel;
+  context: ChatContext;
+  analysis: PromptAnalysis;
+  spec: CategorySpec;
+  features: string[];
+  stack: string[];
+  entregables: string[];
+  today: string;
+}
 
 export function buildTechnicalPrompt(opts: PromptBuildOptions): string {
   const { clientName, businessDescription, category, nivel, context, analysis } = opts;
@@ -318,18 +346,78 @@ export function buildTechnicalPrompt(opts: PromptBuildOptions): string {
   const stack = analysis.stack_tecnico.length ? analysis.stack_tecnico : category.stack;
   const entregables = analysis.entregables.length ? analysis.entregables : category.entregables;
 
-  const sections: string[] = [];
+  const base: PackBase = { clientName, businessDescription, category, nivel, context, analysis, spec, features, stack, entregables, today };
+  const ctxCompact = buildCompactContext(base);
 
-  // ═══ Cabecera ═══
-  sections.push(`# BRIEF TÉCNICO DE DESARROLLO — ${analysis.categoria}
+  const chats: string[] = [];
+  chats.push(buildPreamble(base, ctxCompact));
+  chats.push(buildChat1Fundacion(base, ctxCompact));
+  chats.push(buildChat2Shell(base, ctxCompact));
+  chats.push(buildChat3Contenido(base, ctxCompact));
+  chats.push(buildChat4Logica(base, ctxCompact));
+  chats.push(buildChat5QaDeploy(base, ctxCompact));
 
-> **Preparado para:** Roo Code + DeepSeek
-> **Cliente:** ${clientName || "Por confirmar"}
-> **Generado:** ${today}
-> **Instrucción:** lee el documento completo antes de escribir código. Cada sección es un requisito de entrega. Trabaja con criterio de desarrollador senior: código limpio, arquitectura escalable y resultado visual impecable.`);
+  return chats.join("\n\n\n");
+}
 
-  // ═══ 0. Ficha ═══
-  sections.push(`## 0 · Ficha del proyecto
+// ─── Helpers del pack por fases ────────────────────────────────────
+
+/** Contexto compacto y autosuficiente que acompaña a CADA fase. */
+function buildCompactContext(base: PackBase): string {
+  const { context, analysis } = base;
+  const estilo = si(context.animaciones)
+    ? `moderno, con micro-interacciones y animaciones sutiles${context.referencia ? ` (referencia del cliente: ${context.referencia})` : ""}`
+    : "sobrio, limpio y directo";
+  const lines = [
+    `PROYECTO: ${analysis.categoria} para ${base.clientName || "el cliente"} · Nivel ${analysis.nivelLabel}.`,
+    `GIRO: ${analysis.giro ?? "negocio local"}${analysis.presupuesto_giro ? ` · Presupuesto del giro: ${analysis.presupuesto_giro}` : ""}.`,
+    `STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui${si(context.animaciones) ? " · Framer Motion" : ""}${si(context.baseDeDatos) || si(context.autenticacion) || base.category.id !== "landing" ? " · Supabase" : ""} · Vercel.`,
+    `ESTILO: ${estilo}.`,
+    context.servicios ? `SERVICIOS/OFERTA A MOSTRAR: ${context.servicios}.` : null,
+    context.estructuraWeb ? `ESTRUCTURA ACORDADA CON EL CLIENTE: ${context.estructuraWeb}.` : null,
+    context.negocioDescripcion ? `NEGOCIO: "${context.negocioDescripcion}".` : null,
+    "REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español, placeholders visuales de alta calidad, sin cajas vacías ni imágenes rotas.",
+  ].filter((l): l is string => l !== null);
+  return lines.join("\n");
+}
+
+/** Metodología mobile-first obligatoria (se instala en el CHAT 1 y se recuerda en los demás). */
+function buildMobileFirstRules(): string {
+  return `### Metodología MOBILE-FIRST (obligatoria en TODO el proyecto)
+
+Esta web se diseña y construye PRIMERO para celular (360px) y DESPUÉS se escala a tablet y escritorio. No es negociable: la mayoría de los clientes entrarán por teléfono.
+
+1. **Diseña en 360px primero.** Los estilos base (sin prefijo) son los del móvil. Escala hacia arriba con \`sm:\`, \`md:\`, \`lg:\`. NUNCA al revés (no uses prefijos para "arreglar" el móvil).
+2. **Fluido, no fijo.** Prohibido \`width: 1200px\` o \`min-width\` grandes en bloques. Usa \`w-full\`, \`max-w-*\`, \`grid\` con \`grid-cols-1\` → \`sm:grid-cols-2\` → \`lg:grid-cols-3\`, y unidades relativas (\`rem\`, \`clamp()\`, \`vw\` con límite).
+3. **Cero scroll horizontal.** \`overflow-x-hidden\` en el contenedor raíz; revisa que ningún elemento (imágenes, tablas, tooltips) desborde los 360px.
+4. **Objetivos táctiles ≥ 44×44px** para botones, enlaces y controles del menú móvil, con espacio suficiente entre ellos.
+5. **Navegación móvil real:** header con logo + menú (hamburguesa) que abre un panel deslizable o dropdown accesible (\`aria-expanded\`, foco gestionado, cierra al tocar un enlace). En escritorio, el mismo header muestra la navegación horizontal.
+6. **Tipografía escalable:** \`text-*\` de Tailwind y \`clamp()\` en títulos grandes (hero); nada de tamaños fijos en px que rompan en pantallas chicas.
+7. **Imágenes:** \`next/image\` con \`fill\` dentro de contenedores con \`aspect-ratio\`, \`sizes\` correcto y \`alt\` en español; nunca fijes un ancho mayor al viewport.
+8. **Prueba SIEMPRE el modo responsive del navegador** en 360px, 375px, 768px, 1024px y 1440px, y corrige cualquier desbordamiento o superposición antes de dar por terminada la fase.`;
+}
+
+function buildEstiloTexto(base: PackBase): string {
+  return si(base.context.animaciones)
+    ? `moderno, con micro-interacciones y animaciones sutiles (Framer Motion), respetando la referencia del cliente${base.context.referencia ? ` (${base.context.referencia})` : ""}`
+    : "sobrio, limpio y directo, con foco en la claridad";
+}
+
+function buildPreamble(base: PackBase, ctxCompact: string): string {
+  const { clientName, analysis, context, today } = base;
+  return `# 📦 PACK DE PROMPTS · ${analysis.categoria} — para Roo Code + DeepSeek (mobile-first, por fases)
+
+> Generado por tu consultor senior (${today}) para que Roo Code + DeepSeek construyan la web **al 100%**.
+> Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
+
+## Cómo usar este pack (IMPORTANTE)
+
+1. Contiene **5 prompts secuenciales**: CHAT 1 → CHAT 5. Cada uno se pega en un **chat NUEVO** de Roo Code + DeepSeek, en orden. NO pegues varios en el mismo chat.
+2. Ejecuta el CHAT 1 y espera el marcador \`FIN_DE_FASE_1\`. Luego abre un **chat nuevo** y pega el CHAT 2; espera \`FIN_DE_FASE_2\`; y así hasta el CHAT 5.
+3. Cada chat es **autosuficiente**: trae su propio contexto compacto + las instrucciones de su fase. El agente no necesita "recordar" el chat anterior.
+4. Al terminar el CHAT 5 tendrás la página construida, probada en todos los tamaños y desplegada en Vercel.
+
+### Ficha del proyecto
 
 | Campo | Valor |
 |---|---|
@@ -340,112 +428,37 @@ export function buildTechnicalPrompt(opts: PromptBuildOptions): string {
 | Tiempo estimado | ${analysis.tiempo_estimado} |
 | Despliegue | Vercel (producción) |
 | Fecha de entrega acordada | ${context.fechaEntrega || "Por definir"} |
-| Mantenimiento | ${si(context.mantenimiento) ? "Sí, plan mensual" : "No incluido (opcional)"}`);
+| Mantenimiento | ${si(context.mantenimiento) ? "Sí, plan mensual" : "No incluido (opcional)"} |
 
-  // ═══ 1. Resumen ejecutivo ═══
-  sections.push(`## 1 · Resumen ejecutivo
+### Contexto global del proyecto
 
-${businessDescription ? `El cliente se dedica a: "${businessDescription}".` : `El cliente necesita una presencia web para su negocio.`}
-El objetivo es construir **${analysis.categoria.toLowerCase()}** para **${clientName || "el cliente"}**, con un acabado profesional tanto visual como interno, listo para **desplegar en producción (Vercel)** y entregar al cliente final.
+${ctxCompact}
 
-Esta pieza debe sentirse como un producto terminado: diseño cuidado, contenido realista (aunque sea placeholder de alta calidad), código limpio, documentado y con todas las integraciones funcionando con datos de prueba cuando no se disponga de credenciales reales.`);
+---
+Copia cada bloque \`CHAT N\` por separado y pégalo en su propio chat. Empieza por el CHAT 1 👇`;
+}
 
-  // ═══ 1B. Estrategia comercial ═══
-  if (analysis.giro || analysis.punto_venta) {
-    sections.push(`## 1B · Estrategia comercial y propuesta de valor
+function buildChat1Fundacion(base: PackBase, ctxCompact: string): string {
+  const { category, analysis } = base;
+  return `## 🧩 CHAT 1 · FUNDACIÓN DEL PROYECTO + DESIGN TOKENS + BASE MOBILE-FIRST
 
-El cliente pertenece al giro: **${analysis.giro ?? "negocio local"}** (presupuesto típico del giro: ${analysis.presupuesto_giro ?? "según mercado"}).
+> Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. No pegues el CHAT 2 aquí.
 
-### Por qué el cliente necesita esta web (mensaje de venta)
-${analysis.punto_venta ?? "Comunicar profesionalismo y convertir visitas en clientes."}
+### Rol
+Actúa como **desarrollador senior de Next.js**. Estás INICIANDO un proyecto desde cero y vas a dejarlo listo para recibir las siguientes fases (interfaz, contenido, lógica y despliegue). Tu criterio es el de alguien que ya entregó decenas de webs en producción.
 
-### El problema que resuelve
-${analysis.dolor ?? "El cliente pierde oportunidades porque no tiene una presencia digital clara."}
+### Contexto del proyecto
+${ctxCompact}
 
-### Beneficios de negocio (comunicar en la web y en la entrega)
-${bullets(analysis.beneficios?.length ? analysis.beneficios : ["Presencia profesional", "Captación de clientes", "Ahorro de tiempo"])}
+### Objetivo de esta fase
+Dejar la base funcionando con \`npm run dev\`: sistema de diseño definido (tokens), layout raíz listo, estructura de carpetas y la metodología mobile-first documentada. Al terminar NO debe haber aún secciones visibles: solo el esqueleto estilizado.
 
-### Propuesta de valor (copy para la portada y secciones)
-${analysis.valor_negocio ?? ""}
-
-### Costo de omisión (por qué conviene actuar ahora)
-${analysis.costo_omision ?? ""}
-
-> **Nota para el desarrollador:** la web debe COMUNICAR este valor. El copy de la portada y de cada sección debe responder \"¿qué gano yo como dueño de negocio?\". No entregar una página que solo describe servicios: entregar una página que vende, con un mensaje claro de beneficio para el cliente.`);
-  }
-
-  // ═══ 2. Contexto y objetivos ═══
-  sections.push(`## 2 · Contexto y objetivos de negocio
-
-### Objetivos del proyecto
-${bullets([
-  "Establecer o mejorar la presencia digital del negocio.",
-  si(context.pagos) ? "Permitir transacciones en línea de forma segura." : "Generar contacto y consultas de clientes potenciales.",
-  si(context.citas) || category.id === "citas" ? "Reducir llamadas y agendar citas en línea sin fricción." : si(context.dashboard) ? "Centralizar la administración de la operación." : "Comunicar servicios/beneficios de forma clara y atractiva.",
-  "Garantizar una experiencia impecable en cualquier dispositivo.",
-])}
-
-### Datos relevantes capturados en la entrevista
-${bullets([
-  analysis.giro ? `Giro del negocio: **${analysis.giro}** (presupuesto típico del giro: ${analysis.presupuesto_giro ?? "según mercado"}).` : null,
-  `Páginas/secciones estimadas: ${context.paginas ?? "por definir"}.`,
-  `Autenticación: ${si(context.autenticacion) ? "sí" : no(context.autenticacion) ? "no" : "no definido"}.`,
-  `Base de datos: ${si(context.baseDeDatos) ? "sí" : no(context.baseDeDatos) ? "no" : "no definido"}.`,
-  `Pagos en línea: ${si(context.pagos) ? "sí" : no(context.pagos) ? "no" : "no definido"}.`,
-  `Panel de administración: ${si(context.dashboard) ? "sí" : no(context.dashboard) ? "no" : "no definido"}.`,
-  `Citas/reservas: ${si(context.citas) || category.id === "citas" ? "sí" : no(context.citas) ? "no" : "no definido"}.`,
-  `Mapas: ${si(context.mapas) ? "sí" : "no"}. · PDFs/documentos: ${si(context.documentos) ? "sí" : "no"}. · Chat/WhatsApp: ${si(context.chat) ? "sí" : "no"}.`,
-  `Animaciones/modernidad: ${si(context.animaciones) ? "sí" : no(context.animaciones) ? "prefiere sobrio" : "por definir"}.`,
-  `SEO: ${si(context.seo) ? "sí" : "básico"}. · PWA instalable: ${si(context.pwa) ? "sí" : "no"}.`,
-  `Contenido del cliente: ${si(context.contenidoListo) ? "lo tiene listo" : no(context.contenidoListo) ? "necesita ayuda" : "por confirmar"}.`,
-  `Presupuesto mencionado: ${context.presupuesto ?? "no especificado"}.`,
-  context.servicios ? `Servicios / oferta a mostrar: **${context.servicios}**.` : "Servicios: no detallados (definir sección de servicios).",
-  context.estructuraWeb ? `Estructura/secciones que el cliente describió: ${context.estructuraWeb}.` : "Estructura: por confirmar con el sitemap de la sección 7.",
-  context.referencia ? `Referencia de estilo: ${context.referencia}.` : null,
-  context.comentarios ? `Comentarios extra: ${context.comentarios}.` : null,
-].filter((l): l is string => l !== null))}`);
-
-  // ═══ 3. Alcance ═══
-  sections.push(`## 3 · Alcance
-
-### 3.1 Dentro del alcance
-${bullets(features)}
-
-### 3.2 Fuera del alcance (a menos que se indique)
-${bullets([
-  "Contenido definitivo del cliente (fotos profesionales, textos finales, logotipo) — se entrega con placeholders de alta calidad.",
-  "Servicios de hosting adicionales, dominios o SSL por cuenta del cliente.",
-  "Integraciones no mencionadas en la entrevista.",
-])}`);
-
-  // ═══ 4. Requisitos funcionales ═══
-  sections.push(`## 4 · Requisitos funcionales (historias de usuario)
-
-${buildFunctionalRequirements(context, spec, category).join("\n")}
-
-> Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).`);
-
-  // ═══ 5. No funcionales ═══
-  sections.push(`## 5 · Requisitos no funcionales
-
-${bullets([...NFR])}`);
-
-  // ═══ 6. Stack y arquitectura ═══
-  sections.push(`## 6 · Stack técnico y arquitectura
-
-### 6.1 Stack recomendado
-> ${stack.join(" · ")}
-
-${bullets([
-  "**Next.js 14+ (App Router)** — Server Components por defecto, API routes como Backend.",
-  "**TypeScript estricto** — sin `any` sin justificar.",
-  "**Tailwind CSS + shadcn/ui** — sistema de diseño consistente.",
-  "**Supabase (PostgreSQL + Auth + Storage)** — base de datos y autenticación.",
-  "**Framer Motion** — animaciones suaves y accesibles.",
-  "**Vercel** — despliegue con CI/CD automático.",
-])}
-
-### 6.2 Estructura de carpetas recomendada
+### Pasos
+1. **Scaffold**: crea el proyecto Next.js 14+ (App Router) con TypeScript estricto, Tailwind CSS y shadcn/ui configurado. Si el proyecto ya existe, verifica que compile y que ESLint + Prettier estén listos.
+2. **Design tokens**: define en \`globals.css\` (CSS variables) la paleta, tipografía, radios, sombras y escala de espaciado según el estilo del cliente (**${buildEstiloTexto(base)}**). Conecta las variables a \`tailwind.config\` (colores, fuentes, breakpoints y \`container\`).
+3. **Layout raíz**: \`app/layout.tsx\` con \`lang="es"\`, fuentes (Inter o similar), metadata (title = nombre del negocio, description y Open Graph) y el contenido mínimo (el header/footer se construyen en el CHAT 2).
+4. **Base CSS**: reset, \`overflow-x-hidden\` en el cuerpo (regla mobile-first), utilidad de contenedor/sección, estilos base de encabezados, enlaces y foco accesible.
+5. **Estructura de carpetas**: crea la estructura recomendada:
 \`\`\`
 app/
   (public)/        # páginas visibles (rutas por categoría)
@@ -463,23 +476,59 @@ public/            # estáticos (íconos PWA, og-image...)
 supabase/
   migrations/      # SQL del esquema
 \`\`\`
+6. **README**: documenta arranque (instalación, comandos, variables de entorno) y pega la metodología mobile-first de abajo para que quede como referencia del proyecto.
 
-### 6.3 Decisiones de arquitectura
+### Reglas de diseño
 ${bullets([
-  "Separar Server Components (datos, render) de Client Components (interactividad) para minimizar el JS enviado al navegador.",
-  "Toda API route valida su input con **Zod** y responde JSON tipado.",
-  "Las consultas a Supabase usan **RLS** para que el cliente anónimo solo lea lo público.",
-  "Los secretos (service role, Stripe) viven SOLO en el servidor; el cliente usa las keys públicas.",
-  "Manejo de estados de carga/error/vacío en cada vista (UX completa, no solo el caso feliz).",
-])}`);
+  `Estilo: ${buildEstiloTexto(base)}.`,
+  "Sistema de diseño: paleta en CSS variables, tipografía legible, componentes shadcn/ui consistentes.",
+  "Favicon, íconos PWA y Open Graph image para compartir en redes.",
+])}
 
-  // ═══ 7. Estructura de páginas ═══
-  sections.push(`## 7 · Estructura de páginas / rutas
+### Metodología mobile-first (aplícala en todo el proyecto)
+${buildMobileFirstRules()}
 
-${bullets(spec.pages)}
+### Definition of Done de esta fase
+- \`npm run dev\` corre sin errores y carga un shell básico pero con la paleta correcta.
+- Tokens definidos en CSS variables y conectados a Tailwind.
+- \`npm run build\` compila sin errores ni warnings de tipos.
+- Estructura de carpetas creada y README documentado (arranque + mobile-first).
 
-${context.servicios
-  ? `### Servicios / oferta a mostrar
+Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_1\` seguido de un resumen de 3-5 líneas (archivos creados y comandos). No sigas con la siguiente fase.`;
+}
+
+function buildChat2Shell(base: PackBase, ctxCompact: string): string {
+  return `## 🧩 CHAT 2 · SHELL (HEADER/FOOTER) + COMPONENTES UI MOBILE-FIRST
+
+> Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto YA existe (lo dejó listo el CHAT 1).
+
+### Rol
+Actúa como **desarrollador senior de UI**. Tu trabajo: construir el esqueleto visual (header, footer, contenedores) y la librería de componentes, todo **mobile-first**.
+
+### Contexto del proyecto
+${ctxCompact}
+
+### Reglas mobile-first (resumen)
+- Diseña en **360px primero**; escala con \`sm:\`/\`md:\`/\`lg:\`. Cero scroll horizontal. Objetivos táctiles ≥ 44px. Header con menú móvil accesible.
+
+### Qué construir
+1. **Header responsive**: logo + botón de menú (hamburguesa) en móvil que abre un panel deslizable (Sheet/Dialog) con \`aria-expanded\`, foco gestionado y cierre al tocar un enlace. En \`md:\`+ muestra la navegación horizontal. Sticky con fondo translúcido y buen contraste.
+2. **Footer**: datos del negocio, enlaces, redes sociales, WhatsApp, aviso de privacidad (LFPDPPP / México) y créditos.
+3. **Primitivas shadcn/ui** necesarias: Button (variants primary/secondary/outline/ghost + tamaños táctiles), Input, Textarea, Label, Card, Badge, Skeleton, Accordion, Sheet/Dialog, Sonner/Toast y Separator.
+4. **Botón flotante de WhatsApp**: fixed, bien posicionado (no tapa contenido), tamaño ≥ 48px, \`aria-label\`, visible siempre o tras pasar el hero.
+5. **Contenedores/secciones**: \`container\` con padding lateral correcto en móvil (\`px-4\`/\`px-5\`), espaciado vertical coherente entre secciones.
+
+### Criterios de calidad
+- Cada componente: TypeScript tipado, accesible (foco visible, roles correctos) y consistente con los tokens del CHAT 1.
+- Prueba en **360 / 768 / 1440px**: sin desbordes, menú móvil funcional y footer sin romperse.
+
+Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_2\` + resumen breve (componentes creados). No sigas con la siguiente fase.`;
+}
+
+function buildChat3Contenido(base: PackBase, ctxCompact: string): string {
+  const { context, analysis, spec } = base;
+  const serviciosBloque = context.servicios
+    ? `### Servicios / oferta a mostrar
 El cliente quiere destacar los siguientes servicios u oferta. Crea una sección de servicios (o catálogo) bien armada, con cada ítem:
 ${bullets(
     context.servicios
@@ -488,19 +537,96 @@ ${bullets(
       .filter(Boolean)
       .map((s) => `${s} — con descripción breve, beneficios y CTA de contacto.`)
   )}`
-  : `### Sección de servicios
-Aunque el cliente no detalló servicios, incluye una sección de servicios (o de lo que ofrece) con 3-4 ítems placeholder realistas para su giro, cada uno con descripción, beneficios y CTA de contacto.`}
+    : `### Sección de servicios
+El cliente no detalló servicios. Incluye una sección de servicios (o de lo que ofrece) con 3-4 ítems placeholder realistas para el giro **${analysis.giro ?? "del cliente"}**, cada uno con descripción, beneficios y CTA de contacto.`;
+  return `## 🧩 CHAT 3 · SECCIONES DE CONTENIDO (LA PÁGINA VISIBLE) — MOBILE-FIRST
+
+> Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El shell y los componentes ya existen (CHAT 2).
+
+### Rol
+Actúa como **desarrollador senior de UI/UX y copywriter técnico**. Tu trabajo: construir TODAS las secciones visibles de la página con copy que vende y con imágenes, **mobile-first**. Al terminar, la página debe verse **COMPLETA y profesional en el celular**.
+
+### Contexto del proyecto
+${ctxCompact}
+
+### Estrategia comercial que la página DEBE comunicar
+- **Mensaje de venta:** ${analysis.punto_venta ?? "Comunicar profesionalismo y convertir visitas en clientes."}
+- **El problema que resuelve:** ${analysis.dolor ?? "El cliente pierde oportunidades por no tener presencia digital clara."}
+- **Beneficios de negocio:** ${bullets(analysis.beneficios?.length ? analysis.beneficios : ["Presencia profesional", "Captación de clientes", "Ahorro de tiempo"])}
+- **Propuesta de valor (copy de portada y secciones):** ${analysis.valor_negocio ?? ""}
+- **Costo de omisión (por qué actuar ahora):** ${analysis.costo_omision ?? ""}
+
+> **Regla de oro:** el copy de la portada y de cada sección responde "¿qué gano yo como dueño del negocio?". La página VENDE, no solo describe servicios.
+
+### Secciones a construir (${analysis.categoria} — ${spec.pages.length} bloques)
+${bullets(spec.pages)}
+
+${serviciosBloque}
 
 ${context.estructuraWeb
-  ? `### Sitemap / estructura acordada con el cliente
-El cliente describió la estructura así: "${context.estructuraWeb}". Asegúrate de que la navegación y las secciones de la web reflejen esta estructura de forma completa y coherente.`
-  : `### Estructura completa
-Arma la web COMPLETA y bien estructurada: header con navegación clara, hero, sección de servicios, sobre nosotros (si aplica), testimonios (opcional), contacto con formulario/WhatsApp, y footer con datos legales y enlaces.`}`);
+    ? `### Sitemap / estructura acordada con el cliente
+El cliente describió la estructura así: "${context.estructuraWeb}". Asegúrate de que la navegación y las secciones reflejen esta estructura de forma completa y coherente.`
+    : `### Estructura completa
+Arma la web COMPLETA: hero, servicios, sobre nosotros (si aplica), testimonios (opcional), CTA final y contacto con formulario/WhatsApp.`}
 
-  // ═══ 8. Modelo de datos ═══
-  sections.push(`## 8 · Modelo de datos (Supabase)
+### Imágenes (OBLIGATORIO: nunca cajas vacías)
+La página DEBE verse completa desde el primer deploy. Cuando el cliente no tenga fotos reales, usa imágenes placeholder de alta calidad; **nunca dejes cajas grises, espacios vacíos ni imágenes rotas**.
 
-Aplicar el siguiente esquema en una migración SQL versionada (\`supabase/migrations\`):
+**Fuentes permitidas (gratuitas / licenciadas):**
+- \`https://picsum.photos/seed/<slug-del-negocio>/1200/800\` — foto con semilla estable (no cambia en cada carga).
+- \`https://placehold.co/1200x800/2563eb/ffffff?text=Tu+Negocio\` — placeholder con texto.
+- \`https://images.unsplash.com/...\` — URLs directas de fotos libres (verificar licencia).
+
+**Reglas:**
+- Usa la imagen ADECUADA a cada sección: hero, servicios, galería/portafolio, productos, comida (si es restaurante), local/consultorio (si es clínica, estética, taller, barbería), etc.
+- \`next/image\` con \`fill\` o dimensiones correctas, \`alt\` descriptivo en español y \`loading="lazy"\` (excepto el hero, que va con \`priority\`).
+- No uses imágenes con derechos de autor no licenciadas ni hotlinks frágiles.
+- Crea en el README una sección "Reemplazar imágenes" que indique al cliente cómo poner sus fotos reales sin tocar código.
+
+### SEO
+Metadata dinámica por página, Open Graph, datos estructurados JSON-LD (LocalBusiness), \`sitemap.xml\`, \`robots.txt\` y canonical tags.
+
+### Criterios de calidad
+- En **360px** la página se ve completa: nada se corta, no hay scroll horizontal, los CTA se tocan bien y el hero se lee sin hacer zoom.
+- Escala correcta a **768 / 1024 / 1440px**.
+- Ninguna sección con cajas grises, textos placeholder feos ("lorem ipsum") ni imágenes rotas.
+
+Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_3\` + resumen breve. No sigas con la siguiente fase.`;
+}
+
+function buildChat4Logica(base: PackBase, ctxCompact: string): string {
+  const { context, spec, category } = base;
+  const reqs = buildFunctionalRequirements(context, spec, category).join("\n");
+  return `## 🧩 CHAT 4 · LÓGICA, API ROUTES E INTEGRACIONES
+
+> Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT 3).
+
+### Rol
+Actúa como **desarrollador senior full-stack**. Tu trabajo: dar vida a los formularios, crear las API routes, el modelo de datos y las integraciones, todo con TypeScript estricto y validación Zod.
+
+### Contexto del proyecto
+${ctxCompact}
+
+### Requisitos funcionales a implementar
+${reqs}
+
+> Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
+
+### API routes e integraciones
+${bullets(spec.integrations)}
+
+**Integraciones externas según lo capturado:**
+${bullets([
+    si(context.pagos) ? "Stripe: PaymentIntent + webhooks para confirmar pagos." : "Sin pasarela de pagos (contacto directo).",
+    "WhatsApp: deep links (wa.me) para contacto directo.",
+    "Correos transaccionales: Resend (confirmaciones de cita, pedido o contacto).",
+    si(context.mapas) ? "Mapas: Leaflet (ligero, open-source) o Google Maps." : "Sin mapa.",
+  ].filter(Boolean))}
+
+> Si una credencial real no está disponible, implementa con modo sandbox/datos de prueba y documenta en el README cómo activarla.
+
+### Modelo de datos (Supabase)
+Aplica el esquema en una migración SQL versionada (\`supabase/migrations\`):
 
 \`\`\`sql
 ${dataModelSql(context, spec, category.id)}
@@ -508,66 +634,71 @@ ${dataModelSql(context, spec, category.id)}
 
 **Reglas RLS:**
 ${bullets([
-  "Tablas públicas (catálogo, contenido) → SELECT para anónimos, escritura solo server.",
-  "Tablas sensibles (pedidos, citas, mensajes) → SOLO server (service role) o dueño autenticado.",
-  "Habilitar \`alter table ... enable row level security\` en todas.",
-])}`);
+    "Tablas públicas (catálogo, contenido) → SELECT para anónimos, escritura solo server.",
+    "Tablas sensibles (pedidos, citas, mensajes) → SOLO server (service role) o dueño autenticado.",
+    "Habilitar \`alter table ... enable row level security\` en todas.",
+  ])}
 
-  // ═══ 9. Flujo de usuario ═══
-  sections.push(`## 9 · Flujo de usuario principal
+### Flujo de usuario a validar de extremo a extremo
+${bullets(spec.userFlow.map((f, i) => `${i + 1}. ${f}`))}
 
-${bullets(spec.userFlow.map((f, i) => `${i + 1}. ${f}`))}`);
+### Estados de UI
+Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 2/3).
 
-  // ═══ 10. API routes e integraciones ═══
-  sections.push(`## 10 · API routes e integraciones
+### Seguridad
+- Secretos SOLO en variables de entorno del servidor; el cliente usa solo las keys públicas.
+- Toda API route valida su input con **Zod** y responde JSON tipado.
 
-${bullets(spec.integrations)}
+### Definition of Done
+- Los formularios envían y confirman de extremo a extremo (con datos de prueba).
+- \`npm run build\` compila sin errores ni warnings.
+- README documenta cómo activar cada integración (env vars + pasos).
 
-**Integraciones externas según lo capturado:**
+Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_4\` + resumen breve (rutas API y tablas). No sigas con la siguiente fase.`;
+}
+
+function buildChat5QaDeploy(base: PackBase, ctxCompact: string): string {
+  const { context, analysis, features, entregables } = base;
+  return `## 🧩 CHAT 5 · QA, RENDIMIENTO Y DESPLIEGUE EN VERCEL
+
+> Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo (CHAT 4).
+
+### Rol
+Actúa como **desarrollador senior de calidad y DevOps**. Tu trabajo: auditar, pulir, probar en TODOS los tamaños (celular primero) y desplegar a producción.
+
+### Contexto del proyecto
+${ctxCompact}
+
+### Requisitos no funcionales (auditar y cumplir)
+${bullets([...NFR])}
+
+### Garantía de calidad (Definition of Done)
 ${bullets([
-  si(context.pagos) ? "Stripe: PaymentIntent + webhooks para confirmar pagos." : "Sin pasarela de pagos (contacto directo).",
-  "WhatsApp: deep links (wa.me) para contacto directo.",
-  "Correos transaccionales: Resend (confirmaciones de cita, pedido o contacto).",
-  si(context.mapas) ? "Mapas: Leaflet (ligero, open-source) o Google Maps." : "Sin mapa.",
-].filter(Boolean))}
+    "Compila con \`npm run build\` sin errores y sin warnings de tipos.",
+    "Lighthouse ≥ 90 en las 4 métricas (móvil).",
+    "Responsive probado en 360px / 768px / 1440px.",
+    "Todos los flujos tienen estados de carga, vacío, error y éxito.",
+    "Los formularios validan con Zod y muestran errores claros.",
+    "El código está tipado, formateado (Prettier) y sin imports muertos.",
+    "Los secretos NO están en el código ni en el repo.",
+    "README actualizado con instrucciones de instalación y variables.",
+  ])}
 
-> Si una credencial real no está disponible, implementar con modo sandbox/datos de prueba y documentar en el README cómo activarla.`);
+### Prueba responsive final (celular primero)
+- **360px**: la página se ve perfecta, sin scroll horizontal, CTA táctiles (≥ 44px), menú móvil funcional.
+- **375 / 768 / 1024 / 1440px**: escalada correcta. Corrige lo que falle.
 
-  // ═══ 11. Diseño y UX ═══
-  const estiloTexto = si(context.animaciones)
-    ? `moderno, con micro-interacciones y animaciones sutiles (Framer Motion), respetando la referencia del cliente${context.referencia ? ` (${context.referencia})` : ""}.`
-    : "sobrio, limpio y directo, con foco en la claridad.";
-  sections.push(`## 11 · Diseño y experiencia de usuario
-
+### Criterios de aceptación (para validar con el cliente)
 ${bullets([
-  `Estilo: ${estiloTexto}`,
-  "Sistema de diseño: paleta definida en CSS variables, tipografía legible (Inter/System), componentes shadcn/ui consistentes.",
-  "Estados visuales completos: loading (skeletons), vacío, error y éxito en cada flujo.",
-  "Micro-copy profesional en español (México), tono cercano pero formal.",
-  si(context.animaciones) ? "Animaciones de entrada suaves, sin sacrificar rendimiento (transform/opacity)." : "Movimiento mínimo, transiciones rápidas.",
-  "Favicon, íconos PWA y Open Graph image para compartir en redes.",
-  si(context.pwa) ? "Manifest + service worker para instalación como app en móvil." : "Sin PWA.",
-])}`);
+    "El sitio abre rápido y se ve impecable en celular, tablet y computadora.",
+    ...features.slice(0, 10).map((f) => `"${f.replace(/^[-•]\s*/, "")}" funciona de punta a punta.`),
+    "Los formularios y confirmaciones llegan correctamente (correo/WhatsApp).",
+    si(context.dashboard) ? "El panel permite gestionar la información principal sin fricción." : null,
+    si(context.pagos) ? "Se puede completar un pago de prueba de extremo a extremo." : null,
+    "El proyecto está desplegado en Vercel y el cliente puede compartir el enlace.",
+  ].filter((l): l is string => l !== null))}
 
-  // ═══ 11B. Imágenes y contenido visual ═══
-  sections.push(`## 11B · Imágenes y contenido visual
-
-La página DEBE verse completa y profesional desde el primer deploy. Cuando el cliente no tenga fotos reales, usa imágenes placeholder de alta calidad; nunca dejes cajas grises, espacios vacíos ni imágenes rotas.
-
-**Fuentes de imágenes permitidas (gratuitas / licenciadas):**
-- https://picsum.photos/seed/<slug-del-negocio>/1200/800 — foto con semilla estable (no cambia en cada carga).
-- https://placehold.co/1200x800/2563eb/ffffff?text=Tu+Negocio — placeholder con texto.
-- https://images.unsplash.com/... — URLs directas de fotos libres (verificar licencia).
-
-**Reglas:**
-- Usa la imagen ADECUADA a cada sección: hero de portada, servicios, galería/portafolio, productos, comida (si es restaurante), local/consultorio (si es clínica, estética, taller), etc.
-- Usa el componente \`next/image\` con \`fill\` o dimensiones correctas, \`alt\` descriptivo en español y \`loading="lazy"\` (excepto la imagen del hero, que va con \`priority\`).
-- No uses imágenes con derechos de autor no licenciadas ni hotlinks frágiles.
-- Crea en el README una sección \"Reemplazar imágenes\" que indique al cliente cómo poner sus fotos reales (carpeta/archivo) sin tocar código.`);
-
-  // ═══ 12. Despliegue en Vercel ═══
-  sections.push(`## 12 · Configuración de despliegue en Vercel
-
+### Despliegue en Vercel
 1. Subir el repositorio a GitHub (rama \`main\`).
 2. Importar en Vercel → framework **Next.js** (detección automática).
 3. Variables de entorno (Production):
@@ -581,59 +712,19 @@ STRIPE_SECRET_KEY=         # si hay pagos
 STRIPE_WEBHOOK_SECRET=     # si hay pagos
 \`\`\`
 4. Ejecutar las migraciones de Supabase antes del primer deploy.
-5. Configurar dominios personalizado y SSL (auto).
-6. Verificar con **Lighthouse** en producción antes de entregar.`);
+5. Configurar dominio personalizado y SSL (auto).
+6. Verificar con **Lighthouse** en producción antes de entregar.
 
-  // ═══ 13. QA / Definition of Done ═══
-  sections.push(`## 13 · Garantía de calidad (Definition of Done)
-
-Un ticket/feature se considera terminado cuando:
-
-${bullets([
-  "Compila con \`npm run build\` sin errores y sin warnings de tipos.",
-  "Lighthouse ≥ 90 en las 4 métricas (móvil).",
-  "Responsive probado en 360px / 768px / 1440px.",
-  "Todos los flujos tienen estados de carga, vacío, error y éxito.",
-  "Los formularios validan con Zod y muestran errores claros.",
-  "El código está tipado, formateado (Prettier) y sin imports muertos.",
-  "Los secretos NO están en el código ni en el repo.",
-  "README actualizado con instrucciones de instalación y variables.",
-])}`);
-
-  // ═══ 14. Notas del desarrollador ═══
-  sections.push(`## 14 · Notas del desarrollador
-
-- Trabaja con **criterio senior**: si algo del brief es ambiguo, toma una decisión razonable y documéntala en el README (no dejes la tarea bloqueada).
-- Prioriza la **experiencia del cliente final**: cada pantalla debe verse como un producto terminado.
-- Usa datos de demostración realistas (nombres, productos, horarios) para que el deploy en Vercel se vea vivo desde el primer momento.
-- La página DEBE incluir imágenes en todas las secciones donde aportan (hero, galería, portafolio, productos, comida, local). Usa placeholders de alta calidad (ver sección 11B) para que el sitio se vea completo desde el primer deploy, y deja claro al cliente cómo reemplazarlos por sus fotos reales.
-- No inventes funcionalidades fuera del alcance; si crees que falta algo crítico, agrégalo como \`TODO\` con justificación.
-- Mantén commits atómicos y mensajes claros en español.
-- El resultado final DEBE poder abrirse en producción (Vercel) y entregarse al cliente sin que el cliente tenga que "arreglar" nada técnico.
-
-${analysis.recomendaciones.length ? `**Recomendaciones detectadas:**\n${bullets(analysis.recomendaciones)}` : ""}`);
-
-  // ═══ 15. Criterios de aceptación ═══
-  sections.push(`## 15 · Criterios de aceptación (para validar con el cliente)
-
-${bullets([
-  "El sitio abre rápido y se ve impecable en celular, tablet y computadora.",
-  ...features.slice(0, 10).map((f) => `"${f.replace(/^[-•]\s*/, "")}" funciona de punta a punta.`),
-  "Los formularios y confirmaciones llegan correctamente (correo/WhatsApp).",
-  si(context.dashboard) ? "El panel permite gestionar la información principal sin fricción." : null,
-  si(context.pagos) ? "Se puede completar un pago de prueba de extremo a extremo." : null,
-  "El proyecto está desplegado en Vercel y el cliente puede compartir el enlace.",
-].filter((l): l is string => l !== null))}`);
-
-  // ═══ Entregables ═══
-  sections.push(`## Anexo · Entregables finales
-
+### Entregables finales
 ${bullets(entregables)}
 
----
-*Documento generado automáticamente por el sistema de cotización. Revisar y ajustar con el cliente en el kickoff antes de iniciar desarrollo.*`);
+### Notas finales
+- Trabaja con **criterio senior**: si algo es ambiguo, toma una decisión razonable y documéntala en el README (no dejes la tarea bloqueada).
+- Usa datos de demostración realistas para que el deploy se vea vivo desde el primer momento.
+- El resultado final DEBE poder abrirse en producción y entregarse al cliente sin que el cliente tenga que "arreglar" nada técnico.
+${analysis.recomendaciones.length ? `\n**Recomendaciones detectadas:**\n${bullets(analysis.recomendaciones)}` : ""}
 
-  return sections.join("\n\n");
+Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_5\` + un resumen final del proyecto (URL de producción, cómo se probó en cada tamaño y pendientes opcionales).`;
 }
 
 // ─── Helpers internos ──────────────────────────────────────────────

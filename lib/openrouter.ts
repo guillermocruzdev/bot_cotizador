@@ -75,7 +75,7 @@ INSTRUCCIONES:
 5. Recomienda un stack técnico moderno (Next.js, Tailwind, Supabase, etc.) como tags legibles.
 6. Redacta 'entregables' que el cliente recibirá al finalizar.
 7. Redacta 'recomendaciones' prácticas para el cliente.
-8. Escribe en 'prompt_tecnico' solo un PLAN TÉCNICO RESUMIDO (máx. 600 palabras, en español): funcionalidades técnicas, stack, estructura de páginas, modelo de datos y notas de implementación. Es una referencia; el documento completo de entrega se genera por otra vía.
+8. El campo 'prompt_tecnico' del JSON NO se usa como documento final: el sistema lo sobrescribe de forma determinista con el PACK de prompts por fases (mobile-first) de lib/prompt-builder.ts. Escribe ahí solo un resumen breve (funcionalidades, stack, estructura, modelo de datos) como insumo enriquecido.
 
 INSTRUCCIONES COMERCIALES (CRÍTICAS):
 - Detecta el GIRO del negocio a partir de la conversación (abogado, dentista, mecánico, restaurante, clínica, estética, etc.) y usa su presupuesto típico.
