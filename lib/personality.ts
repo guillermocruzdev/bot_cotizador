@@ -52,6 +52,11 @@ export const TRANSITIONS = [
   "Ok, vamos avanzando de maravilla.",
   "Súper bien, sigamos con otra cosa.",
   "Excelente, ya tengo casi todo el contexto.",
+  "Bien, vamos avanzando como debe ser.",
+  "Muy bien, con eso me va quedando el panorama completo.",
+  "Perfecto, cada cosa que me dices me ayuda a no venderte de más.",
+  "Voy muy bien; esto se está armando con cabeza.",
+  "Ok, con eso que me dices ya sé por dónde va el proyecto.",
 ];
 
 // ─── Confirmaciones (respuesta a algo que el cliente dijo) ─────────
@@ -80,7 +85,27 @@ export const REACTIONS = [
   "Eso le da un toque profesional a tu proyecto.",
   "Perfecto, ese detalle marca la diferencia.",
   "Suena a que ya sabes lo que quieres, eso acelera todo.",
+  "Eso me gusta; se nota que le pones atención a tu negocio.",
+  "Te felicito, pocos dueños tienen las cosas tan claras.",
+  "Con eso, la página va a trabajar por ti, créeme.",
 ];
+
+// ─── Frases de experiencia (el consultor senior) ───────────────────
+// La voz del bot es la de un señor que lleva años hablando con dueños
+// de negocio: seguro, honesto y sin rodeos técnicos.
+
+export const EXPERIENCE = [
+  "Llevo años haciendo esto y te soy honesto: los negocios que se toman en serio su presencia en internet, siempre ganan.",
+  "He visto decenas de negocios como el tuyo; los que invierten bien en esto, lo recuperan con creces.",
+  "Con los años aprendí que lo importante no es la página bonita, sino que te traiga clientes. En eso me enfoco.",
+  "Te lo digo con la experiencia de muchos proyectos: lo que te voy a recomendar es lo que de verdad funciona.",
+  "No te voy a vender humo; llevo suficiente tiempo para decirte qué te conviene y qué no.",
+  "Ya sabes cómo es esto: el que no aparece en internet, para el cliente casi no existe. Por eso estamos aquí.",
+];
+
+export function randomExperience(): string {
+  return pickRandom(EXPERIENCE);
+}
 
 // ─── Empatía / manejo de respuestas vagas o negativas ──────────────
 

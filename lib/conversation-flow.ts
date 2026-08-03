@@ -24,6 +24,7 @@ import {
   pickEmoji,
   randomClosing,
   randomEmpathy,
+  randomExperience,
   randomReaction,
   randomTransition,
 } from "@/lib/personality";
@@ -163,8 +164,8 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "greeting",
     type: "greeting",
     generateMessage: () =>
-      `¡Hola! Soy ${BOT.name}, tu asistente de desarrollo web. No soy una máquina de formularios, prometido ${pickEmoji("saludo")}\n\n` +
-      `Te voy a hacer unas preguntas para entender qué necesita tu negocio. No hay respuestas incorrectas: solo cuéntame de tu proyecto, y con eso te armo una propuesta a tu medida. ¿Listo?`,
+      `¡Qué gusto tenerte por aquí! Soy ${BOT.name}, el consultor que te va a ayudar a que tu negocio crezca por internet. ${pickEmoji("saludo")}\n\n` +
+      `Antes de hablar de precios, quiero entender bien tu negocio: qué haces, a quién le vendes y qué te gustaría lograr. No hay respuestas incorrectas; solo cuéntame con confianza, como si estuvieras platicando con alguien que ya ha visto muchos negocios como el tuyo. ¿Empezamos?`,
     expectedResponseType: "text",
     nextNode: () => "discovery_business",
   },
@@ -174,7 +175,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "discovery_business",
     type: "discovery",
     generateMessage: () =>
-      `Cuéntame, ¿a qué se dedica tu negocio? ¿Tienes web actualmente o estamos empezando desde cero?`,
+      `Cuéntame, ¿qué hace tu negocio hoy? Y si puedes, dime también qué es lo que más te urge lograr con tu página: más clientes, vender más, o simplemente que te tomen más en serio. Eso me ayuda a no venderte de más.`,
     expectedResponseType: "text",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "clarify_discovery_business";
@@ -193,10 +194,10 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: (ctx) => {
       const signals = mentionedSignals(ctx.negocioDescripcion ?? "");
       const mention = signals.length
-        ? `Vi que mencionaste ${signals.join(" y ")}, ¡lo anoto! `
+        ? `Vi que mencionaste ${signals.join(" y ")}, anotado. `
         : "";
       return (
-        `${randomReaction()} ${mention}Entonces me imagino que necesitas algo tipo: **${categoryName(ctx)}**. ¿Te suena?`
+        `${randomExperience()} ${mention}Entonces, por lo que me cuentas, lo que te conviene es algo tipo **${categoryName(ctx)}**. ¿Me equivoco?`
       );
     },
     expectedResponseType: "boolean",
@@ -221,9 +222,9 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: () => {
       const cats = PRICING_CATALOG.map((c) => `• ${c.nombreCliente}`).join("\n");
       return (
-        `No te preocupes, es súper normal no saber exactamente qué necesitas. ${pickEmoji("idea")} Casi todo cae en una de estas:\n\n` +
+        `Tranquilo, esto es más común de lo que crees: casi ningún dueño llega sabiendo exactamente qué necesita. ${pickEmoji("idea")} En mi experiencia, casi todo cae en una de estas:\n\n` +
         `${cats}\n\n` +
-        `¿Cuál se acerca más a lo que tienes en mente? O cuéntame con tus palabras qué te gustaría lograr.`
+        `¿Cuál se parece más a lo que quieres lograr? O cuéntame con tus palabras qué te gustaría que pasara cuando la gente entre a tu página.`
       );
     },
     expectedResponseType: "text",
@@ -248,11 +249,11 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_discovery_business: makeClarifyNode({
     originalId: "discovery_business",
     hints: [
-      "A ver, cuéntame en una frase: ¿qué vendes u ofreces? Por ejemplo: 'doy clases de inglés', 'vendo ropa hecha a mano', 'tengo una estética'...",
+      "A ver, hagámoslo fácil: en una frase, ¿qué le ofreces a tu cliente? Por ejemplo: 'doy clases de inglés', 'vendo ropa hecha a mano', 'tengo una estética'...",
     ],
     forwardNext: "discovery_confirm",
     extraHintAfterFirst: () =>
-      "Te pongo un ejemplo: 'tengo un negocio de comida y quiero que la gente pida por internet'. Solo dime tu giro y qué te gustaría lograr, no necesitas más detalle.",
+      "Te doy un ejemplo como los que veo seguido: 'tengo un negocio de comida y quiero que la gente pida por internet'. Solo dime tu giro y qué te gustaría lograr; no necesitas más detalle.",
   }),
 
   // ══════════ FASE 2b: Alcance de páginas ══════════
@@ -260,7 +261,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "pages",
     type: "discovery",
     generateMessage: (ctx) =>
-      `Perfecto, un proyecto de **${categoryName(ctx)}**. ${pickEmoji("idea")} ¿Cuántas secciones o páginas imaginas? Por ejemplo: Inicio, Servicios, Contacto... ¿Algo sencillo de una sola página, o algo más completo?`,
+      `Perfecto, entonces vamos por un proyecto de **${categoryName(ctx)}**. ${pickEmoji("idea")} Otra cosa: ¿cómo imaginas que la gente recorra tu página? ¿Algo corto y directo, o con varias secciones donde cuentes más de ti? Por ejemplo: Inicio, Servicios, Contacto...`,
     expectedResponseType: "number",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "clarify_pages";
@@ -284,7 +285,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_pages: makeClarifyNode({
     originalId: "pages",
     hints: [
-      "Te ayudo: una página sencilla suele ser Inicio, Servicios y Contacto (todo en una sola página). Un sitio más completo tiene varias páginas separadas: Inicio, Nosotros, Servicios, Galería, Blog, Contacto. ¿Con cuál te sientes más cómodo?",
+      "Te ayudo con lo que he visto: una página sencilla suele ser Inicio, Servicios y Contacto (todo en una sola página). Una más completa tiene varias secciones: Inicio, Nosotros, Servicios, Galería, Contacto. ¿Con cuál te sientes más cómodo?",
     ],
     forwardNext: "technical_auth",
   }),
@@ -294,7 +295,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_auth",
     type: "technical",
     message: (ctx) =>
-      `${randomTransition()} Ahora, un detalle que cambia bastante la complejidad: ¿tus clientes van a crear cuentas? Como un login con correo o con Google. Si la respuesta es no, también está perfecto y simplifica todo.`,
+      `${randomTransition()} Ahora, algo que define mucho el proyecto: ¿tus clientes van a "registrarse" en tu página, o solo van a entrar, ver tu información y contactarte? Muchos negocios no necesitan cuentas; con que te contacten, basta.`,
     field: "autenticacion",
     next: "technical_db",
     clarifyId: "clarify_auth",
@@ -303,7 +304,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_auth: makeClarifyNode({
     originalId: "technical_auth",
     hints: [
-      "Ejemplo: si tus clientes hacen pedidos y quieren ver su historial, sí necesitan cuenta. Si solo te contactan, no la necesitan. ¿Tus clientes van a 'entrar' a algo?",
+      "Mira, ejemplo simple: si tus clientes van a entrar a revisar algo (su historial, sus pedidos), sí necesitan cuenta. Si solo van a verte y escribirte, no. ¿Tus clientes van a 'entrar' a algo?",
     ],
     forwardNext: "technical_db",
   }),
@@ -312,7 +313,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_db",
     type: "technical",
     message: (ctx) =>
-      `Otra cosa: ¿tus clientes van a dejar datos? Como registrarse, hacer pedidos o agendar algo. Si es así, necesitamos una base de datos que guarde esa información de forma segura.`,
+      `Y dime: ¿hay algo que te gustaría guardar de tus clientes? Como sus datos, sus pedidos o sus citas. Si sí, lo hacemos bien guardado y en orden; si solo es mostrar información, también está perfecto.`,
     field: "baseDeDatos",
     next: "technical_payments",
     clarifyId: "clarify_db",
@@ -321,7 +322,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_db: makeClarifyNode({
     originalId: "technical_db",
     hints: [
-      "En corto: ¿guardamos información de tus clientes (nombres, pedidos, citas) o la página solo muestra información? Si hay que guardar, sumamos una base de datos.",
+      "En corto: ¿la página solo muestra tu información, o también necesita guardar cosas de tus clientes (nombres, pedidos, citas)? Si hay que guardar, se hace bien y seguro.",
     ],
     forwardNext: "technical_payments",
   }),
@@ -330,7 +331,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_payments",
     type: "technical",
     message: (ctx) =>
-      `¿La gente va a pagar directamente en la web, o prefieren contactarte por WhatsApp para los pagos? Esto define si integramos una pasarela de pagos (tarjeta, transferencia) o lo dejamos en el contacto directo.`,
+      `Otra cosa que me interesa saber: ¿cómo te pagan hoy tus clientes? ¿Te transfieren, te depositan, o mejor te buscan por WhatsApp? Con eso te digo si te conviene cobrar directo en la página o no.`,
     field: "pagos",
     next: "technical_dashboard",
     condition: (ctx) => {
@@ -343,7 +344,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_payments: makeClarifyNode({
     originalId: "technical_payments",
     hints: [
-      "Te pongo el ejemplo: si vendes cursos en línea y quieres cobrar con tarjeta automáticamente, necesitas pasarela. Si el cliente te deposita y te manda el comprobante, no la necesitas. ¿Cómo le haces hoy con tus ventas?",
+      "Te doy un ejemplo de los que veo: si vendes cursos en línea y quieres cobrar con tarjeta automáticamente, conviene cobrar en la página. Si tu cliente te deposita y te manda el comprobante, no hace falta. ¿Cómo le haces hoy con tus ventas?",
     ],
     forwardNext: "technical_dashboard",
   }),
@@ -352,7 +353,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_dashboard",
     type: "technical",
     message: (ctx) =>
-      `¿Tú o tu equipo necesitan ver estadísticas o administrar algo desde una pantalla? Por ejemplo, ver pedidos, citas o clientes en un solo lugar. A esto le llamamos 'panel de control'.`,
+      `¿Te gustaría tener todo tu negocio en una sola pantalla? Como ver tus pedidos, tus citas o tus clientes sin andar buscando en mil lugares. Eso, créeme, te ahorra un buen tiempo cada semana.`,
     field: "dashboard",
     next: "technical_maps",
     clarifyId: "clarify_dashboard",
@@ -361,7 +362,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_dashboard: makeClarifyNode({
     originalId: "technical_dashboard",
     hints: [
-      "Simple: ¿te gustaría 'entrar' a un lugar privado donde ves toda la información de tu negocio (pedidos, citas, clientes)? Si solo te llegan correos con las alertas, quizá no lo necesitas aún.",
+      "En simple: ¿te gustaría entrar a un lugar privado y ver todo tu negocio en orden (pedidos, citas, clientes)? Si con que te llegue un correo con las alertas te basta, quizá aún no lo necesitas.",
     ],
     forwardNext: "technical_maps",
   }),
@@ -370,7 +371,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_maps",
     type: "technical",
     message: () =>
-      `¿Tienes sucursales, puntos de venta o una ubicación importante que mostrar? Podemos integrar un mapa para que la gente llegue fácil sin preguntar.`,
+      `¿La gente necesita encontrarte físicamente? Si tienes un local o varias sucursales, te pongo un mapa para que lleguen sin perderse ni andar preguntando.`,
     field: "mapas",
     next: "technical_pdfs",
   }),
@@ -379,7 +380,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_pdfs",
     type: "technical",
     message: () =>
-      `¿Generas documentos para tus clientes, como cotizaciones, recibos o reportes? Si es así, podemos automatizarlos y que se descarguen solos.`,
+      `¿Sueles entregar cotizaciones, recibos o reportes a tus clientes? Si es así, podemos hacer que se generen solos y se vean profesionales, sin que tú pierdas tiempo armándolos.`,
     field: "documentos",
     next: "technical_chat",
     condition: (ctx) =>
@@ -392,7 +393,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_chat",
     type: "technical",
     message: () =>
-      `¿Quieres que los clientes te escriban desde la web? Podemos agregar un chat en vivo o, más sencillo, un botón que los lleve directo a tu WhatsApp.`,
+      `¿Quieres que tus clientes te escriban directo desde tu página? Un botón de WhatsApp bien puesto hace maravillas: la gente hoy prefiere escribir que llamar.`,
     field: "chat",
     next: "technical_bookings",
     clarifyId: "clarify_chat",
@@ -401,7 +402,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_chat: makeClarifyNode({
     originalId: "technical_chat",
     hints: [
-      "¿Te gustaría que la gente te contacte sin salir de la página? Un botón flotante de WhatsApp es lo más común y funciona muy bien. ¿Te interesa algo así?",
+      "¿Te gustaría que la gente te contacte sin salir de tu página? Un botón flotante de WhatsApp es lo más usado y funciona muy bien. ¿Te interesa algo así?",
     ],
     forwardNext: "technical_bookings",
   }),
@@ -410,7 +411,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_bookings",
     type: "technical",
     message: () =>
-      `¿Tus clientes agendan horarios o citas? Por ejemplo, elegir día y hora para un servicio. Si no, no pasa nada, lo omitimos.`,
+      `¿Tus clientes agendan contigo? Por ejemplo, eligen día y hora para un servicio. Si es así, eso lo resolvemos muy bien. Si no, lo omitimos y listo, sin complicarte.`,
     field: "citas",
     next: "design",
     condition: (ctx) => ctx.category !== "citas",
@@ -420,7 +421,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "design",
     type: "technical",
     generateMessage: (ctx) =>
-      `${randomTransition()} Una pregunta de estilo: ¿te gusta algo moderno con movimiento y animaciones, o prefieres algo más sobrio y directo? Ambos se ven profesionales, solo cambia la personalidad.`,
+      `${randomTransition()} Por último, en el estilo: ¿cómo quieres que tu negocio "se sienta" cuando te visiten? ¿Algo moderno y con movimiento, o algo sobrio y de confianza? Los dos venden; solo quiero que sea tu cara.`,
     expectedResponseType: "text",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "technical_seo";
@@ -442,7 +443,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_seo",
     type: "technical",
     message: () =>
-      `Otra cosa: ¿quieres que te encuentren en Google cuando busquen tu servicio? El SEO básico lo incluyo siempre, pero puedo profundizarlo para posicionarte mejor en tu zona.`,
+      `¿Te gustaría que te encuentren en Google cuando alguien busque tu servicio, sin depender de pagar publicidad? Eso se logra bien si lo hacemos desde el inicio, y te lo dejo incluido.`,
     field: "seo",
     next: "technical_pwa",
   }),
@@ -451,7 +452,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "technical_pwa",
     type: "technical",
     message: () =>
-      `Y una curiosidad: ¿te gustaría que tu web se pueda instalar en el celular como una app? Es un extra que le da presencia en la pantalla de inicio de tus clientes.`,
+      `Y una última comodidad: ¿te gustaría que tus clientes puedan tener tu página "a la mano" en su celular, como si fuera una app? Es un detalle que suma presencia.`,
     field: "pwa",
     next: "scope_content",
   }),
@@ -461,7 +462,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "scope_content",
     type: "technical",
     message: () =>
-      `Ya casi terminamos con las preguntas técnicas. ¿Tienes ya el contenido listo? (textos, fotos, logo). Si no, no pasa nada: te ayudo a estructurarlo o te recomiendo cómo conseguirlo.`,
+      `Ya casi termino con las preguntas. Una que siempre hago: ¿tienes ya las fotos y los textos de tu negocio? Si no, no te preocupes: yo te ayudo a estructurarlos, y hay opciones para que se vea profesional aunque partamos de cero.`,
     field: "contenidoListo",
     next: "scope_reference",
     clarifyId: "clarify_content",
@@ -470,7 +471,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_content: makeClarifyNode({
     originalId: "scope_content",
     hints: [
-      "Me refiero a las fotos de tu negocio, los textos de presentación y tu logo. Si no los tienes todos, también lo resolvemos: hay opciones de fotos profesionales y textos que yo te ayudo a redactar.",
+      "Me refiero a las fotos de tu negocio, los textos de presentación y tu logo. Si no los tienes todos, también lo resolvemos: hay opciones de fotos profesionales y yo te ayudo a redactar los textos.",
     ],
     forwardNext: "scope_reference",
   }),
@@ -479,7 +480,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "scope_reference",
     type: "discovery",
     generateMessage: () =>
-      `¿Hay alguna página o app que digas "quiero algo así"? Compárteme un link o descríbeme el estilo (colores, forma de mostrar las cosas). Me ayuda mucho a entender tus gustos.`,
+      `¿Hay alguna página que te guste, de la que digas "quiero algo así"? No importa si es de otro giro; dime qué te gusta de ella y con eso afino el estilo a tu gusto.`,
     expectedResponseType: "url",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "scope_deadline";
@@ -501,7 +502,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "scope_deadline",
     type: "technical",
     generateMessage: () =>
-      `¿Cuándo lo necesitas? Sin presión, solo para saber si hay que apretar el paso con la agenda. ${pickEmoji("interes")}`,
+      `¿Para cuándo lo necesitas de verdad? No es para presionarte: es para saber si hay que apurar o podemos ir con calma y hacerlo bien. ${pickEmoji("interes")}`,
     expectedResponseType: "text",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "clarify_deadline";
@@ -515,7 +516,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_deadline: makeClarifyNode({
     originalId: "scope_deadline",
     hints: [
-      "Es para dimensionar la agenda: ¿lo quieres para ya, para el próximo mes, o no hay prisa? Dime lo que se te ocurra, tipo 'para marzo' o 'lo antes posible'.",
+      "Es solo para organizar la agenda: ¿lo quieres para ya, para el próximo mes, o no hay prisa? Dime algo como 'para marzo' o 'lo antes posible'.",
     ],
     forwardNext: "budget",
   }),
@@ -525,7 +526,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "budget",
     type: "budget",
     generateMessage: () =>
-      `Última cosa, y lo digo con cuidado porque sé que es delicado ${pickEmoji("precio")}: ¿tienes un rango de inversión en mente? No es para cobrarte lo máximo, es para ajustar el alcance a lo que realmente necesitas y puedes pagar.`,
+      `Ahora sí, la pregunta que a todos les da un poco de pena, y con razón. ${pickEmoji("precio")} ¿Qué inversión tienes en mente para esto? No te lo pregunto para cobrarte de más: al contrario, es para armarte algo que quepa en tu bolsillo y que de verdad te funcione. Con los años aprendí que lo peor es venderle a alguien algo que no pueda sostener.`,
     expectedResponseType: "text",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "clarify_budget";
@@ -540,7 +541,7 @@ export const FLOW: Record<string, ConversationNode> = {
   clarify_budget: makeClarifyNode({
     originalId: "budget",
     hints: [
-      "No necesitas un número exacto. Piensa en: 'algo básico para empezar', 'un proyecto completo', o un rango tipo '$15,000 - $25,000'. Con eso ajusto el alcance.",
+      "No necesitas un número exacto. Piensa en algo como: 'lo básico para empezar', 'un proyecto completo', o un rango tipo '$15,000 - $25,000'. Con eso ajusto el alcance y no te vendo de más.",
     ],
     forwardNext: "contact_name",
   }),
@@ -550,7 +551,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "contact_name",
     type: "closing",
     generateMessage: () =>
-      `¡Ya casi terminamos, te lo prometo! ${pickEmoji("contacto")} ¿Cómo te llamas, o cuál es el nombre de tu negocio?`,
+      `Perfecto, con esto ya tengo muy claro tu proyecto. ${pickEmoji("contacto")} ¿Me dices cómo te llamas, o el nombre de tu negocio, para dirigirte la propuesta?`,
     expectedResponseType: "text",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "contact_email";
@@ -589,7 +590,7 @@ export const FLOW: Record<string, ConversationNode> = {
     id: "extra_comments",
     type: "closing",
     generateMessage: () =>
-      `¡Perfecto! ${pickEmoji("confirmacion")} ¿Algo más que quieras contarme? Algún detalle que se me haya escapado. Si no, con lo que tengo ya te armo tu propuesta.`,
+      `Muy bien. ${pickEmoji("confirmacion")} ¿Hay algo más que quieras contarme? Algún detalle que se me haya escapado o algo que te traiga preocupado. Si no, con lo que tengo ya te armo tu propuesta.`,
     expectedResponseType: "text",
     nextNode: () => DONE_NODE_ID,
     onReceive: (response, ctx) => {
