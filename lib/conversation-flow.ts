@@ -280,6 +280,10 @@ export const FLOW: Record<string, ConversationNode> = {
       } else {
         ctx.paginas = 3;
       }
+      // Guarda la estructura/secciones que describió el cliente
+      if (t.length > 3 && !/^(no s[ée]|no sé|ni idea|no)$/.test(t)) {
+        ctx.estructuraWeb = response.trim();
+      }
     },
   },
 
@@ -465,7 +469,7 @@ export const FLOW: Record<string, ConversationNode> = {
     message: () =>
       `Ya casi termino con las preguntas. Una que siempre hago: ¿tienes ya las fotos y los textos de tu negocio? Si no, no te preocupes: yo te ayudo a estructurarlos, y hay opciones para que se vea profesional aunque partamos de cero.`,
     field: "contenidoListo",
-    next: "scope_reference",
+    next: "scope_services",
     clarifyId: "clarify_content",
   }),
 
@@ -473,6 +477,35 @@ export const FLOW: Record<string, ConversationNode> = {
     originalId: "scope_content",
     hints: [
       "Me refiero a las fotos de tu negocio, los textos de presentación y tu logo. Si no los tienes todos, también lo resolvemos: hay opciones de fotos profesionales y yo te ayudo a redactar los textos.",
+    ],
+    forwardNext: "scope_services",
+  }),
+
+  // ══════════ SERVICIOS: qué ofrece el negocio y cómo mostrarlo ══════════
+  scope_services: {
+    id: "scope_services",
+    type: "discovery",
+    generateMessage: (ctx) =>
+      `Hablemos de lo que vende: ¿tu negocio ofrece servicios que quieras mostrar en la web? Si sí, dime cuáles (y si quieres, cuántos y si tienen precio). Si no ofreces servicios, dime qué es lo que más quieres destacar para que la gente te contacte. ${pickEmoji("idea")}`,
+    expectedResponseType: "text",
+    nextNode: (response, ctx) => {
+      if (isNoSé(response, ctx)) return "clarify_services";
+      return "scope_reference";
+    },
+    onReceive: (response, ctx) => {
+      const t = response.trim();
+      if (/(no s[ée]|ni idea)/i.test(t)) {
+        ctx.servicios = null;
+      } else {
+        ctx.servicios = t.replace(/[.,;:]+$/g, "") || null;
+      }
+    },
+  },
+
+  clarify_services: makeClarifyNode({
+    originalId: "scope_services",
+    hints: [
+      "Te pongo ejemplos para que sea fácil: si eres una clínica sería 'limpieza dental, ortodoncia, blanqueamiento'. Si eres una estética, 'corte, color, manicure'. Solo dime qué ofreces y con eso armamos la sección de servicios. Si no tienes servicios, también está bien: dime qué quieres que la gente sepa de ti.",
     ],
     forwardNext: "scope_reference",
   }),

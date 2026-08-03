@@ -399,6 +399,8 @@ ${bullets([
   `SEO: ${si(context.seo) ? "sí" : "básico"}. · PWA instalable: ${si(context.pwa) ? "sí" : "no"}.`,
   `Contenido del cliente: ${si(context.contenidoListo) ? "lo tiene listo" : no(context.contenidoListo) ? "necesita ayuda" : "por confirmar"}.`,
   `Presupuesto mencionado: ${context.presupuesto ?? "no especificado"}.`,
+  context.servicios ? `Servicios / oferta a mostrar: **${context.servicios}**.` : "Servicios: no detallados (definir sección de servicios).",
+  context.estructuraWeb ? `Estructura/secciones que el cliente describió: ${context.estructuraWeb}.` : "Estructura: por confirmar con el sitemap de la sección 7.",
   context.referencia ? `Referencia de estilo: ${context.referencia}.` : null,
   context.comentarios ? `Comentarios extra: ${context.comentarios}.` : null,
 ].filter((l): l is string => l !== null))}`);
@@ -474,7 +476,26 @@ ${bullets([
   // ═══ 7. Estructura de páginas ═══
   sections.push(`## 7 · Estructura de páginas / rutas
 
-${bullets(spec.pages)}`);
+${bullets(spec.pages)}
+
+${context.servicios
+  ? `### Servicios / oferta a mostrar
+El cliente quiere destacar los siguientes servicios u oferta. Crea una sección de servicios (o catálogo) bien armada, con cada ítem:
+${bullets(
+    context.servicios
+      .split(/[,;•\n]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((s) => `${s} — con descripción breve, beneficios y CTA de contacto.`)
+  )}`
+  : `### Sección de servicios
+Aunque el cliente no detalló servicios, incluye una sección de servicios (o de lo que ofrece) con 3-4 ítems placeholder realistas para su giro, cada uno con descripción, beneficios y CTA de contacto.`}
+
+${context.estructuraWeb
+  ? `### Sitemap / estructura acordada con el cliente
+El cliente describió la estructura así: "${context.estructuraWeb}". Asegúrate de que la navegación y las secciones de la web reflejen esta estructura de forma completa y coherente.`
+  : `### Estructura completa
+Arma la web COMPLETA y bien estructurada: header con navegación clara, hero, sección de servicios, sobre nosotros (si aplica), testimonios (opcional), contacto con formulario/WhatsApp, y footer con datos legales y enlaces.`}`);
 
   // ═══ 8. Modelo de datos ═══
   sections.push(`## 8 · Modelo de datos (Supabase)

@@ -23,6 +23,42 @@ import { delay, uid } from "@/lib/utils";
 
 export const BOT_NAME = process.env.NEXT_PUBLIC_BOT_NAME || "Alex";
 
+/** Habilita/deshabilita las preguntas con LLM (DeepSeek). "0" = solo determinista. */
+export const LLM_CHAT_ENABLED = process.env.NEXT_PUBLIC_LLM_CHAT !== "0";
+
+/**
+ * Pide al servidor el mensaje del turno redactado por DeepSeek.
+ * Si el LLM no está activo, falla o tarda demasiado → mensaje determinista.
+ */
+async function enhancedReply(opts: {
+  nodeId: string;
+  fallbackReply: string;
+  messages: ChatMessage[];
+  context: ChatContext;
+}): Promise<string> {
+  if (!LLM_CHAT_ENABLED) return opts.fallbackReply;
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(9000),
+      body: JSON.stringify({
+        messages: opts.messages,
+        context: opts.context,
+        nodeId: opts.nodeId,
+        fallbackReply: opts.fallbackReply,
+        botName: BOT_NAME,
+      }),
+    });
+    if (!res.ok) return opts.fallbackReply;
+    const data = (await res.json()) as { ok?: boolean; reply?: string };
+    const reply = data.reply?.trim();
+    return reply && reply.length > 0 ? reply : opts.fallbackReply;
+  } catch {
+    return opts.fallbackReply;
+  }
+}
+
 /**
  * Persistencia del resultado en sessionStorage para sobrevivir a la
  * navegación a /results (que hace un full reload). Sin esto, el store
@@ -207,7 +243,17 @@ export const useChatStore = create<ChatState>((set, get) => {
       if (isReady) {
         const forward = getNode(forwardId);
         set({ currentNodeId: forwardId });
-        if (forward) await botSay(forward.generateMessage(nextCtx));
+        if (forward) {
+          const fallback = forward.generateMessage(nextCtx);
+          set({ isTyping: true });
+          const reply = await enhancedReply({
+            nodeId: forward.id,
+            fallbackReply: fallback,
+            messages: get().messages,
+            context: nextCtx,
+          });
+          await botSay(reply, { delayMs: 500 });
+        }
         return;
       }
       currentId = forwardId;
@@ -243,17 +289,33 @@ export const useChatStore = create<ChatState>((set, get) => {
     if (nextId === "closing") {
       const closingNode = getNode(nextId);
       if (closingNode) {
-        await botSay(closingNode.generateMessage(nextCtx));
+        const fallback = closingNode.generateMessage(nextCtx);
+        set({ isTyping: true });
+        const reply = await enhancedReply({
+          nodeId: closingNode.id,
+          fallbackReply: fallback,
+          messages: get().messages,
+          context: nextCtx,
+        });
+        await botSay(reply, { delayMs: 400 });
         await delay(500);
         await get().finishAndNavigate();
         return;
       }
     }
 
-    // 4. Generar el siguiente mensaje del bot
+    // 4. Generar el siguiente mensaje del bot (LLM si está disponible)
     const next = getNode(nextId);
     if (next) {
-      await botSay(next.generateMessage(nextCtx));
+      const fallback = next.generateMessage(nextCtx);
+      set({ isTyping: true });
+      const reply = await enhancedReply({
+        nodeId: next.id,
+        fallbackReply: fallback,
+        messages: get().messages,
+        context: nextCtx,
+      });
+      await botSay(reply, { delayMs: 500 });
     }
   };
 

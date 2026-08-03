@@ -60,6 +60,10 @@ export interface ChatContext {
   pwa: boolean | null;
   /** ¿El cliente tiene el contenido listo? */
   contenidoListo: boolean | null;
+  /** Servicios / oferta que el cliente quiere mostrar en la web (texto libre) */
+  servicios: string | null;
+  /** Estructura/secciones acordada para la web (texto libre del cliente) */
+  estructuraWeb: string | null;
   /** Rango de presupuesto (texto libre, p.ej. "$10k - $20k") */
   presupuesto: string | null;
   /** Fecha límite / fecha de entrega */
@@ -98,6 +102,8 @@ export function createEmptyContext(): ChatContext {
     seo: null,
     pwa: null,
     contenidoListo: null,
+    servicios: null,
+    estructuraWeb: null,
     presupuesto: null,
     fechaEntrega: null,
     mantenimiento: null,
