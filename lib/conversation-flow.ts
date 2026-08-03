@@ -98,6 +98,9 @@ function makeBooleanNode(opts: {
     expectedResponseType: "boolean",
     condition: opts.condition,
     nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir directo al siguiente,
+      // NO a la clarificación (si no, "" se interpreta como "no sé").
+      if (!response || !response.trim()) return opts.next;
       const intent = classifyIntent(response);
       if (intent.dontKnow) {
         // Ya lo intentó varias veces → avanza sin forzar

@@ -234,8 +234,12 @@ export function classifyIntent(raw: string): Intent {
     return { yes: false, no: false, dontKnow: true, text };
   }
 
-  const yesCount = yesWords.filter((w) => words.includes(w) || text.includes(w)).length;
-  const noCount = noWords.filter((w) => words.includes(w) || text.includes(w)).length;
+  // Palabras completas (no subcadenas): evita que "necesito" cuente como "si",
+  // "suficiente" como "si" o "clínica" como "ni". Las frases (con espacio) sí van como subcadena.
+  const hasSignal = (phrase: string): boolean =>
+    phrase.includes(" ") ? text.includes(phrase) : words.includes(phrase);
+  const yesCount = yesWords.filter(hasSignal).length;
+  const noCount = noWords.filter(hasSignal).length;
 
   if (noCount > 0 && yesCount === 0) return { yes: false, no: true, dontKnow: false, text };
   if (yesCount > 0 && noCount === 0) return { yes: true, no: false, dontKnow: false, text };
