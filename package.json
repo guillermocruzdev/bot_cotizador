@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prompt:preview": "tsx scripts/sample-prompt.ts"
+    "prompt:preview": "tsx scripts/sample-prompt.ts",
+    "proposal:preview": "tsx scripts/sample-commercial.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.1",

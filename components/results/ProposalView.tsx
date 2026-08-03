@@ -17,8 +17,9 @@ import {
   readPersistedResult,
   useChatStore,
 } from "@/lib/chat-store";
-import { downloadProposalPdf } from "@/lib/proposal-pdf";
-import type { AnalysisResult } from "@/lib/types";
+import { buildCommercialProposal } from "@/lib/commercial-proposal";
+import { downloadCommercialProposalPdf } from "@/lib/commercial-proposal-pdf";
+import { createEmptyContext, type AnalysisResult, type ChatContext } from "@/lib/types";
 import { ContactCTA } from "./ContactCTA";
 import { FeatureList } from "./FeatureList";
 import { PriceCard } from "./PriceCard";
@@ -31,11 +32,18 @@ const DEV_NAME = process.env.NEXT_PUBLIC_DEVELOPER_NAME || "";
 
 export function ProposalView() {
   const storeResult = useChatStore((s) => s.result);
+  const storeContext = useChatStore((s) => s.context);
 
   // El resultado puede venir del store (navegación SPA) o del sessionStorage
   // (full reload desde /chat). Rehidrata el store para mantener consistencia.
   const persisted = useMemo(() => readPersistedResult(), []);
   const result: AnalysisResult | null = storeResult ?? persisted?.result ?? null;
+  const context: ChatContext = storeContext ?? persisted?.context ?? createEmptyContext();
+
+  const descargarPropuesta = () => {
+    if (!result) return;
+    downloadCommercialProposalPdf(buildCommercialProposal(result, context));
+  };
 
   if (!result) {
     return (
@@ -88,12 +96,11 @@ export function ProposalView() {
           </div>
         </MessageAnimator>
 
-        {/* ── Precio ── */}
+        {/* ── Precio (exacto, sin rangos) ── */}
         <PriceCard
           categoria={result.categoria}
           nivel={result.nivel}
-          precio_min={result.precio_min}
-          precio_max={result.precio_max}
+          precio_exacto={result.precio_min}
           tiempo_estimado={result.tiempo_estimado}
           giro={result.giro}
           cuota_mensual={result.cuota_mensual}
@@ -185,7 +192,7 @@ export function ProposalView() {
                 <ContactCTA clientName={result.clientName} categoria={result.categoria} />
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <Button
-                    onClick={() => downloadProposalPdf(result, BOT_NAME)}
+                    onClick={descargarPropuesta}
                     className="w-full sm:w-auto"
                   >
                     <Download className="mr-2 h-4 w-4" />

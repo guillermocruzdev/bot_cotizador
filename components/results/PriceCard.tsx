@@ -9,8 +9,8 @@ import { formatMXN } from "@/lib/utils";
 interface PriceCardProps {
   categoria: string;
   nivel: string;
-  precio_min: number;
-  precio_max: number;
+  /** Precio EXACTO de la propuesta (IVA incluido) — nunca rangos */
+  precio_exacto: number;
   tiempo_estimado: string;
   giro?: string;
   cuota_mensual?: number;
@@ -21,8 +21,7 @@ interface PriceCardProps {
 export function PriceCard({
   categoria,
   nivel,
-  precio_min,
-  precio_max,
+  precio_exacto,
   tiempo_estimado,
   giro,
   cuota_mensual,
@@ -52,8 +51,10 @@ export function PriceCard({
           </div>
 
           <p className="text-3xl font-bold tracking-tight sm:text-4xl">
-            {formatMXN(precio_min)} - {formatMXN(precio_max)}
-            <span className="ml-1 text-lg font-medium text-blue-100">MXN</span>
+            {formatMXN(precio_exacto)}
+            <span className="ml-2 text-base font-medium text-blue-100">
+              MXN · IVA incluido
+            </span>
           </p>
 
           {cuota_mensual ? (
