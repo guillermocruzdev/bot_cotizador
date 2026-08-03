@@ -225,20 +225,36 @@ function normalize(text: string): string {
 /**
  * Infiere una categoría a partir de un texto libre (descripción del negocio).
  * Devuelve la categoría con más coincidencias de keywords.
+ *
+ * Las keywords se comparan como PALABRA COMPLETA (con límites), no como
+ * subcadena: evita falsos positivos como "WhatsApp" → "app" (webapp),
+ * "curso" → "cv" (landing) o "solicitado" → "cita" (citas).
  */
 export function inferCategory(text: string): string {
   const t = normalize(text);
+
+  // Frases (con espacio) → subcadena exacta; palabras sueltas → palabra completa.
+  const hasKw = (kw: string): boolean => {
+    const nkw = normalize(kw);
+    if (nkw.includes(" ")) return t.includes(nkw);
+    return new RegExp(`(^|[^a-z0-9])${nkw}([^a-z0-9]|$)`).test(t);
+  };
+
   let best: PricingCategory | null = null;
   let bestScore = 0;
 
   for (const cat of PRICING_CATALOG) {
-    let score = 0;
+    // Dedupe por forma normalizada: "articulos" y "artículos" son la misma
+    // palabra y no deben contar doble.
+    const matched = new Set<string>();
     for (const kw of cat.keywords) {
-      if (t.includes(normalize(kw))) score++;
+      if (hasKw(kw)) matched.add(normalize(kw));
     }
-    // +1 si menciona citas/agendar en la misma frase que algo de ecommerce
-    if (cat.id === "citas" && /agendar|agenda|cita/.test(t)) score += 0.5;
-    if (cat.id === "ecommerce" && /vender|comprar|tienda/.test(t)) score += 0.5;
+    let score = matched.size;
+    // +0.5 si menciona citas/agenda en la frase
+    if (cat.id === "citas" && /\b(agendar|agenda|citas?)\b/.test(t)) score += 0.5;
+    // +0.5 si menciona vender/comprar/tienda en la frase
+    if (cat.id === "ecommerce" && /\b(vender|vendo|comprar|tienda)\b/.test(t)) score += 0.5;
     if (score > bestScore) {
       bestScore = score;
       best = cat;
