@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   CalendarHeart,
   Download,
+  Loader2,
   PackageCheck,
   Wand2,
 } from "lucide-react";
@@ -19,7 +20,7 @@ import {
 } from "@/lib/chat-store";
 import { buildCommercialProposal } from "@/lib/commercial-proposal";
 import { downloadCommercialProposalPdf } from "@/lib/commercial-proposal-pdf";
-import { createEmptyContext, type AnalysisResult, type ChatContext } from "@/lib/types";
+import type { AnalysisResult } from "@/lib/types";
 import { ContactCTA } from "./ContactCTA";
 import { FeatureList } from "./FeatureList";
 import { PriceCard } from "./PriceCard";
@@ -31,19 +32,41 @@ import { WhyThisPrice } from "./WhyThisPrice";
 const DEV_NAME = process.env.NEXT_PUBLIC_DEVELOPER_NAME || "";
 
 export function ProposalView() {
-  const storeResult = useChatStore((s) => s.result);
-  const storeContext = useChatStore((s) => s.context);
+  const result = useChatStore((s) => s.result);
+  const context = useChatStore((s) => s.context);
+  const [ready, setReady] = useState(false);
 
   // El resultado puede venir del store (navegación SPA) o del sessionStorage
-  // (full reload desde /chat). Rehidrata el store para mantener consistencia.
-  const persisted = useMemo(() => readPersistedResult(), []);
-  const result: AnalysisResult | null = storeResult ?? persisted?.result ?? null;
-  const context: ChatContext = storeContext ?? persisted?.context ?? createEmptyContext();
+  // (full reload desde /chat). La hidratación se hace SOLO en el cliente
+  // (useEffect) para evitar errores de hydration al leer sessionStorage
+  // durante el render (el servidor no lo tiene).
+  useEffect(() => {
+    if (!useChatStore.getState().result) {
+      const persisted = readPersistedResult();
+      if (persisted) {
+        useChatStore.setState({
+          result: persisted.result,
+          context: persisted.context,
+          messages: persisted.messages,
+          started: true,
+        });
+      }
+    }
+    setReady(true);
+  }, []);
 
   const descargarPropuesta = () => {
     if (!result) return;
     downloadCommercialProposalPdf(buildCommercialProposal(result, context));
   };
+
+  if (!ready) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-[#fafafa]">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (!result) {
     return (
