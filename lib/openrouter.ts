@@ -10,6 +10,13 @@ import { PRICING_CATALOG, getCategoryById } from "@/lib/pricing-catalog";
 import type { Nivel } from "@/lib/pricing-catalog";
 import { buildFallbackProposal } from "@/lib/pricing-catalog";
 import { buildTechnicalPrompt } from "@/lib/prompt-builder";
+import {
+  ajustarPrecio,
+  detectarGiro,
+  generarExplicacionPrecio,
+  generarValorNegocio,
+  GIROS,
+} from "@/lib/industry-pricing";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
@@ -50,6 +57,11 @@ function buildMessages(
     ].join("\n");
   }).join("\n\n");
 
+  const girosText = GIROS.map(
+    (g) =>
+      `- ${g.nombre} | presupuesto típico: $${g.presupuesto[0].toLocaleString("es-MX")}–$${g.presupuesto[1].toLocaleString("es-MX")} MXN | ${g.pitch}`
+  ).join("\n");
+
   const system = `Eres ${botName}, un consultor experto en desarrollo web en México. 
 Analizas conversaciones con clientes potenciales y generas propuestas profesionales.
 
@@ -60,15 +72,32 @@ para que el cliente entienda perfectamente qué va a recibir.
 CATÁLOGO DE PRECIOS (MXN):
 ${catalogText}
 
+GIROS / INDUSTRIAS Y SU PRESUPUESTO TÍPICO (MXN):
+${girosText}
+
 INSTRUCCIONES:
 1. Determina la categoría (landing, ecommerce, citas, webapp, blog, portafolio) y el nivel (basico/profesional/avanzado) basándote en la conversación.
 2. Calcula un precio realista en MXN usando el catálogo como referencia (base + características que pidió el cliente).
 3. Genera 'funcionalidades' en LENGUAJE HUMANO, describiendo cada cosa como se la explicarías a un cliente (ej: "Calendario donde el paciente elige día y hora").
-4. Explica POR QUÉ ese precio en 2-3 líneas claras.
+4. Explica POR QUÉ ese precio en 2-3 líneas claras, referenciando el presupuesto típico del giro.
 5. Recomienda un stack técnico moderno (Next.js, Tailwind, Supabase, etc.) como tags legibles.
 6. Redacta 'entregables' que el cliente recibirá al finalizar.
 7. Redacta 'recomendaciones' prácticas para el cliente.
 8. Escribe en 'prompt_tecnico' solo un PLAN TÉCNICO RESUMIDO (máx. 600 palabras, en español): funcionalidades técnicas, stack, estructura de páginas, modelo de datos y notas de implementación. Es una referencia; el documento completo de entrega se genera por otra vía.
+
+INSTRUCCIONES COMERCIALES (CRÍTICAS):
+- Detecta el GIRO del negocio a partir de la conversación (abogado, dentista, mecánico, restaurante, clínica, estética, etc.) y usa su presupuesto típico.
+- Ajusta el precio al presupuesto de ese giro: si el estimado técnico excede lo que el giro suele invertir, reduce el rango (alcance ajustado) y comunícalo con honestidad.
+- El precio debe ser ATRACTIVO para cerrar venta: un rango cuyo mínimo se sienta alcanzable para ese negocio.
+- Genera copy de VENTA (no técnico) para que el cliente sienta que la web es una inversión necesaria:
+  - 'giro': nombre del giro (ej: "Consultorio dental").
+  - 'punto_venta': por qué este negocio necesita la web (1-2 frases de valor).
+  - 'dolor': el problema que la web resuelve.
+  - 'beneficios': 2-4 beneficios de negocio concretos en lenguaje de dueño.
+  - 'valor_negocio': párrafo que vende la web como inversión (no gasto), con el rango de precio.
+  - 'costo_omision': qué pierde el cliente si no lo hace (con honestidad, sin presión agresiva).
+  - 'cuota_mensual': redondea (precio_min / 24) para mostrar "desde $X al mes".
+  - 'alcance_ajustado' (true/false) y 'mensaje_alcance' (texto honesto si ajustaste el alcance por presupuesto).
 
 El campo 'categoria' debe ser legible para el cliente (ej: "Sistema de Citas para Consultorio Dental", "Tienda online de ropa artesanal").
 El campo 'nivel' debe ser "Básico", "Profesional" o "Avanzado".
@@ -167,12 +196,17 @@ export async function analyzeWithOpenRouter(opts: {
       return { ok: true, result, fallback: true, error: "JSON inválido del modelo" };
     }
 
+    // Ajuste de precio al presupuesto del giro + copy comercial de respaldo.
+    // Garantiza que el precio quepa en lo que el giro suele invertir y que
+    // los campos de venta siempre existan (aunque la IA los omita).
+    const enriched = enrichCommercial(parsed, opts.context);
+
     // El prompt técnico se genera SIEMPRE de forma determinista (calidad
     // garantizada) usando el análisis de la IA como insumo enriquecido.
     const result: AnalysisResult = {
-      ...parsed,
+      ...enriched,
       clientName: opts.context.clientName ?? parsed.clientName ?? "",
-      prompt_tecnico: buildAiPrompt(parsed, opts.context),
+      prompt_tecnico: buildAiPrompt(enriched, opts.context),
       meta: {
         modelo: DEFAULT_MODEL,
         generado_en: new Date().toISOString(),
@@ -204,6 +238,35 @@ function nivelFromLabel(label: string): Nivel {
 }
 
 /**
+ * Normaliza/ajusta el resultado de la IA a la estrategia de precios por giro:
+ * - Clampa el precio al presupuesto típico del giro (con gancho + alcance ajustado).
+ * - Rellena los campos comerciales (punto_venta, dolor, beneficios, valor, cuota, etc.)
+ *   si la IA los omitió, usando los datos locales del giro.
+ */
+function enrichCommercial(result: AnalysisResult, context: ChatContext): AnalysisResult {
+  const giro = detectarGiro(context.negocioDescripcion, context.category ?? "landing");
+  const aj = ajustarPrecio(result.precio_min, result.precio_max, giro);
+
+  return {
+    ...result,
+    precio_min: aj.precio_min,
+    precio_max: aj.precio_max,
+    cuota_mensual: aj.cuota_mensual,
+    alcance_ajustado: aj.alcance_ajustado,
+    mensaje_alcance: result.mensaje_alcance ?? aj.mensaje_alcance,
+    giro: result.giro ?? giro.nombre,
+    punto_venta: result.punto_venta ?? giro.pitch,
+    dolor: result.dolor ?? giro.dolor,
+    beneficios: result.beneficios?.length ? result.beneficios : giro.beneficios,
+    valor_negocio: result.valor_negocio ?? generarValorNegocio(giro, aj.precio_min, aj.precio_max),
+    costo_omision: result.costo_omision ?? giro.costo_omision,
+    explicacion_precio:
+      result.explicacion_precio ||
+      generarExplicacionPrecio(giro, aj.precio_min, aj.precio_max, aj.alcance_ajustado),
+  };
+}
+
+/**
  * Genera el prompt técnico profesional a partir del análisis de la IA.
  * El documento senior (brief técnico) se arma de forma determinista para
  * garantizar calidad y consistencia, tomando el alcance refinado por DeepSeek.
@@ -212,6 +275,8 @@ function buildAiPrompt(result: AnalysisResult, context: ChatContext): string {
   const categoryId = context.category ?? "landing";
   const category = getCategoryById(categoryId) ?? PRICING_CATALOG[0];
   const nivel = nivelFromLabel(result.nivel ?? "Profesional");
+  const giro = detectarGiro(context.negocioDescripcion, categoryId);
+  const presupuesto_giro = `$${giro.presupuesto[0].toLocaleString("es-MX")}–$${giro.presupuesto[1].toLocaleString("es-MX")} MXN`;
 
   return buildTechnicalPrompt({
     clientName: context.clientName ?? result.clientName ?? "",
@@ -229,6 +294,15 @@ function buildAiPrompt(result: AnalysisResult, context: ChatContext): string {
       stack_tecnico: result.stack_tecnico ?? [],
       entregables: result.entregables ?? [],
       recomendaciones: result.recomendaciones ?? [],
+      giro: result.giro ?? giro.nombre,
+      punto_venta: result.punto_venta ?? giro.pitch,
+      dolor: result.dolor ?? giro.dolor,
+      beneficios: result.beneficios ?? giro.beneficios,
+      valor_negocio: result.valor_negocio ?? "",
+      costo_omision: result.costo_omision ?? giro.costo_omision,
+      presupuesto_giro,
+      cuota_mensual: result.cuota_mensual,
+      alcance_ajustado: result.alcance_ajustado,
     },
   });
 }

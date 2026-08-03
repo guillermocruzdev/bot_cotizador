@@ -179,6 +179,26 @@ export interface AnalysisResult {
     modelo: string;
     generado_en: string;
   };
+
+  // ── Campos comerciales (venta de valor por industria) ──
+  /** Giro del negocio detectado, p.ej. "Consultorio dental" */
+  giro?: string;
+  /** Pitch de venta: por qué este negocio necesita la web */
+  punto_venta?: string;
+  /** El problema/dolor que la web resuelve al cliente */
+  dolor?: string;
+  /** Beneficios de negocio concretos (lenguaje de dueño) */
+  beneficios?: string[];
+  /** Párrafo de valor: por qué es una inversión, no un gasto */
+  valor_negocio?: string;
+  /** "desde $X al mes" (plazo de 24 meses) para reencuadrar el precio */
+  cuota_mensual?: number;
+  /** true si se ajustó el alcance para caber en el presupuesto del giro */
+  alcance_ajustado?: boolean;
+  /** Mensaje honesto cuando se ajustó el alcance */
+  mensaje_alcance?: string | null;
+  /** Costo de omisión: qué pierde el cliente si no lo hace */
+  costo_omision?: string;
 }
 
 // ─── Resultado crudo de la API ─────────────────────────────────────

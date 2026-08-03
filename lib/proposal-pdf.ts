@@ -72,6 +72,44 @@ export function downloadProposalPdf(result: AnalysisResult, botName: string) {
   doc.text("Precio estimado para tu proyecto", MARGIN + 20, y + 54);
   y += 96;
 
+  // ── Por qué tu negocio lo necesita (venta de valor) ──
+  if (result.dolor || result.punto_venta) {
+    y = sectionTitle(doc, y, "Por qué tu negocio lo necesita");
+    if (result.dolor) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(...PRIMARY);
+      doc.text("El problema de hoy:", MARGIN, y);
+      y += 15;
+      y = paragraph(doc, y, result.dolor);
+    }
+    if (result.punto_venta) {
+      y += 4;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(...PRIMARY);
+      doc.text("La solución:", MARGIN, y);
+      y += 15;
+      y = paragraph(doc, y, result.punto_venta);
+    }
+  }
+
+  // ── Beneficios para tu negocio ──
+  if (result.beneficios?.length) {
+    y += 6;
+    y = sectionTitle(doc, y, "Beneficios para tu negocio");
+    for (const b of result.beneficios) {
+      y = bullet(doc, y, b);
+    }
+  }
+
+  // ── Por qué es una inversión ──
+  if (result.valor_negocio) {
+    y += 6;
+    y = sectionTitle(doc, y, "Por qué es una inversión");
+    y = paragraph(doc, y, result.valor_negocio);
+  }
+
   // ── Qué incluye ──
   y = sectionTitle(doc, y, "¿Qué incluye?");
   for (const f of result.funcionalidades) {

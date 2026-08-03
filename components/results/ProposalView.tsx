@@ -24,6 +24,7 @@ import { FeatureList } from "./FeatureList";
 import { PriceCard } from "./PriceCard";
 import { PromptDownloader } from "./PromptDownloader";
 import { TechStackTags } from "./TechStackTags";
+import { ValueSelling } from "./ValueSelling";
 import { WhyThisPrice } from "./WhyThisPrice";
 
 const DEV_NAME = process.env.NEXT_PUBLIC_DEVELOPER_NAME || "";
@@ -94,7 +95,16 @@ export function ProposalView() {
           precio_min={result.precio_min}
           precio_max={result.precio_max}
           tiempo_estimado={result.tiempo_estimado}
+          giro={result.giro}
+          cuota_mensual={result.cuota_mensual}
+          alcance_ajustado={result.alcance_ajustado}
+          mensaje_alcance={result.mensaje_alcance}
         />
+
+        {/* ── Ventas de valor: por qué su negocio lo necesita ── */}
+        <div className="mt-10">
+          <ValueSelling result={result} />
+        </div>
 
         <div className="mt-10 space-y-10">
           {/* ── Qué incluye ── */}

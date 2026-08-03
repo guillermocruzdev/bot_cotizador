@@ -58,6 +58,23 @@ const prompt = buildTechnicalPrompt({
       "Panel de agenda",
     ],
     recomendaciones: ["Agregar mantenimiento mensual"],
+    giro: "Consultorio dental",
+    punto_venta:
+      "Para un consultorio dental, la web es tu recepcionista 24/7: agenda citas mientras atiendes a otros pacientes.",
+    dolor:
+      "Pierdes pacientes porque no pueden ver tus tratamientos ni agendar fuera de tu horario de atención.",
+    beneficios: [
+      "Citas en línea sin llamadas de por medio",
+      "Mostrar tratamientos y precios con claridad",
+      "Recordatorios automáticos que reducen ausencias",
+    ],
+    valor_negocio:
+      "Para tu consultorio dental, esta página no es un gasto: es una herramienta que trabaja para ti todos los días. Con una inversión de $54,630–$57,305 MXN te pones a la altura de los mejores de tu sector y recuperas lo invertido con pocos pacientes nuevos.",
+    costo_omision:
+      "Cada cita que no se agendó por falta de agenda en línea es ingreso que se va a otro consultorio.",
+    presupuesto_giro: "$12,000–$32,000 MXN",
+    cuota_mensual: 2276,
+    alcance_ajustado: false,
   },
 });
 

@@ -11,7 +11,8 @@ Aplicación full-stack (Next.js 14 App Router + TypeScript + Tailwind + shadcn/u
 - 🗣️ **Bot "Alex" con personalidad**: saluda, reacciona a lo que dice el cliente, usa frases de transición variadas y emojis con moderación.
 - 🧠 **Flujo conversacional en árbol**: si el cliente dice "no sé", el bot da ejemplos y pide clarificación en vez de avanzar mecánicamente. Recuerda lo dicho hace 2-3 mensajes.
 - 💬 **Chat estilo WhatsApp**: burbujas, typing indicator animado, scroll suave, 100% responsive.
-- 🧾 **Pantalla de resultados tipo propuesta**: precio grande en MXN, "¿Qué incluye?", "¿Por qué este precio?", tags de tecnología, entregables y CTAs (PDF, WhatsApp, ajustar alcance).
+- 🧾 **Pantalla de resultados tipo propuesta que vende**: explica el problema que resuelve, el valor para el negocio, beneficios concretos y costo de omisión; reencuadra el precio ("desde $X al mes") y cierra con CTAs (PDF, WhatsApp, ajustar alcance).
+- 💰 **Precios ajustados por industria**: detecta el giro (dentista, mecánico, abogado, restaurante, clínica...) y ajusta el rango a lo que ese giro normalmente invierte (datos configurables en `lib/industry-pricing.ts`). Precio con "gancho" alcanzable + cuota mensual + explicación honesta si se ajusta el alcance.
 - 🤖 **Prompt técnico para Roo Code**: se genera en segundo plano y se descarga como `.txt`. Es un **brief técnico de nivel senior** (17 secciones: resumen ejecutivo, ficha del proyecto, alcance, requisitos funcionales/no funcionales, stack, arquitectura, modelo de datos SQL, flujo de usuario, integraciones, diseño, despliegue en Vercel, Definition of Done y criterios de aceptación) pensado para que Roo Code + DeepSeek entreguen trabajo profesional listo para producción.
 - 🗄️ **Supabase**: guarda leads y propuestas.
 - 🔁 **Fallback local**: si no hay `OPENROUTER_API_KEY` o la IA falla, la propuesta se genera con un motor local de precios (útil para desarrollo).
@@ -114,8 +115,11 @@ supabase/schema.sql           # Esquema de base de datos
 - **Nombre / personalidad del bot**: `lib/personality.ts`
 - **Preguntas y flujo**: `lib/conversation-flow.ts`
 - **Precios y categorías**: `lib/pricing-catalog.ts`
+- **Precios por industria (giros, presupuestos, copy de venta)**: `lib/industry-pricing.ts` ← ajusta aquí los rangos de inversión por giro con tus datos reales de mercado
 - **Prompt técnico (brief para Roo Code)**: `lib/prompt-builder.ts` — previsualízalo con `npm run prompt:preview`
 - **Colores**: variables CSS en `app/globals.css`
 - **Modelo de IA**: `DEFAULT_MODEL` en `lib/openrouter.ts`
+
+> El precio final = estimado técnico (catálogo) **ajustado al presupuesto típico del giro**, con un mínimo "gancho" alcanzable, cuota mensual (÷24) y copy de venta de valor. Si el estimado excede lo que el giro suele invertir, se reduce el alcance y se comunica con honestidad.
 
 > El `prompt_tecnico` se genera **siempre** de forma determinista en `lib/prompt-builder.ts` (calidad garantizada), tomando el alcance refinado por DeepSeek cuando la API está configurada, o el catálogo local como respaldo.

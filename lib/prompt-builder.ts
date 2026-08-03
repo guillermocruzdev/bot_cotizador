@@ -25,6 +25,16 @@ export interface PromptAnalysis {
   stack_tecnico: string[];
   entregables: string[];
   recomendaciones: string[];
+  // ── Comercial / venta de valor ──
+  giro?: string;
+  punto_venta?: string;
+  dolor?: string;
+  beneficios?: string[];
+  valor_negocio?: string;
+  costo_omision?: string;
+  presupuesto_giro?: string;
+  cuota_mensual?: number;
+  alcance_ajustado?: boolean;
 }
 
 export interface PromptBuildOptions {
@@ -340,6 +350,30 @@ El objetivo es construir **${analysis.categoria.toLowerCase()}** para **${client
 
 Esta pieza debe sentirse como un producto terminado: diseño cuidado, contenido realista (aunque sea placeholder de alta calidad), código limpio, documentado y con todas las integraciones funcionando con datos de prueba cuando no se disponga de credenciales reales.`);
 
+  // ═══ 1B. Estrategia comercial ═══
+  if (analysis.giro || analysis.punto_venta) {
+    sections.push(`## 1B · Estrategia comercial y propuesta de valor
+
+El cliente pertenece al giro: **${analysis.giro ?? "negocio local"}** (presupuesto típico del giro: ${analysis.presupuesto_giro ?? "según mercado"}).
+
+### Por qué el cliente necesita esta web (mensaje de venta)
+${analysis.punto_venta ?? "Comunicar profesionalismo y convertir visitas en clientes."}
+
+### El problema que resuelve
+${analysis.dolor ?? "El cliente pierde oportunidades porque no tiene una presencia digital clara."}
+
+### Beneficios de negocio (comunicar en la web y en la entrega)
+${bullets(analysis.beneficios?.length ? analysis.beneficios : ["Presencia profesional", "Captación de clientes", "Ahorro de tiempo"])}
+
+### Propuesta de valor (copy para la portada y secciones)
+${analysis.valor_negocio ?? ""}
+
+### Costo de omisión (por qué conviene actuar ahora)
+${analysis.costo_omision ?? ""}
+
+> **Nota para el desarrollador:** la web debe COMUNICAR este valor. El copy de la portada y de cada sección debe responder \"¿qué gano yo como dueño de negocio?\". No entregar una página que solo describe servicios: entregar una página que vende, con un mensaje claro de beneficio para el cliente.`);
+  }
+
   // ═══ 2. Contexto y objetivos ═══
   sections.push(`## 2 · Contexto y objetivos de negocio
 
@@ -353,6 +387,7 @@ ${bullets([
 
 ### Datos relevantes capturados en la entrevista
 ${bullets([
+  analysis.giro ? `Giro del negocio: **${analysis.giro}** (presupuesto típico del giro: ${analysis.presupuesto_giro ?? "según mercado"}).` : null,
   `Páginas/secciones estimadas: ${context.paginas ?? "por definir"}.`,
   `Autenticación: ${si(context.autenticacion) ? "sí" : no(context.autenticacion) ? "no" : "no definido"}.`,
   `Base de datos: ${si(context.baseDeDatos) ? "sí" : no(context.baseDeDatos) ? "no" : "no definido"}.`,

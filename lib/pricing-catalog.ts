@@ -13,6 +13,12 @@
 
 import type { ChatContext } from "@/lib/types";
 import { buildTechnicalPrompt } from "@/lib/prompt-builder";
+import {
+  ajustarPrecio,
+  detectarGiro,
+  generarExplicacionPrecio,
+  generarValorNegocio,
+} from "@/lib/industry-pricing";
 
 export type Nivel = "basico" | "profesional" | "avanzado";
 
@@ -280,7 +286,13 @@ export function buildFallbackProposal(
   context: ChatContext
 ) {
   const cat = getCategoryById(categoryId) ?? PRICING_CATALOG[0];
-  const { precio_min, precio_max, nivel } = estimatePrice(categoryId, activeFeatureIds);
+  const giro = detectarGiro(context.negocioDescripcion, categoryId);
+
+  // Estimado técnico + ajuste al presupuesto del giro (con gancho)
+  const { precio_min: estMin, precio_max: estMax, nivel } = estimatePrice(categoryId, activeFeatureIds);
+  const ajustado = ajustarPrecio(estMin, estMax, giro);
+  const precio_min = ajustado.precio_min;
+  const precio_max = ajustado.precio_max;
 
   const funcionalidades = [
     "Página principal con la información de tu negocio",
@@ -294,6 +306,11 @@ export function buildFallbackProposal(
   const stack = cat.stack;
   const entregables = cat.entregables;
   const nivelLabel = nivel === "basico" ? "Básico" : nivel === "profesional" ? "Profesional" : "Avanzado";
+
+  // Copy comercial
+  const explicacion_precio = generarExplicacionPrecio(giro, precio_min, precio_max, ajustado.alcance_ajustado);
+  const valor_negocio = generarValorNegocio(giro, precio_min, precio_max);
+  const presupuesto_giro = `$${giro.presupuesto[0].toLocaleString("es-MX")}–$${giro.presupuesto[1].toLocaleString("es-MX")} MXN`;
 
   const promptTecnico = buildTechnicalPrompt({
     clientName,
@@ -314,6 +331,15 @@ export function buildFallbackProposal(
         "Considera agregar mantenimiento mensual para mantener todo actualizado.",
         "Prepara fotos y textos reales de tu negocio para el lanzamiento.",
       ],
+      giro: giro.nombre,
+      punto_venta: giro.pitch,
+      dolor: giro.dolor,
+      beneficios: giro.beneficios,
+      valor_negocio,
+      costo_omision: giro.costo_omision,
+      presupuesto_giro,
+      cuota_mensual: ajustado.cuota_mensual,
+      alcance_ajustado: ajustado.alcance_ajustado,
     },
   });
 
@@ -326,12 +352,22 @@ export function buildFallbackProposal(
     tiempo_estimado: cat.tiempo[nivel],
     stack_tecnico: stack,
     funcionalidades: Array.from(new Set(funcionalidades)),
-    explicacion_precio: cat.explicacionPrecio,
+    explicacion_precio,
     recomendaciones: [
       "Considera agregar mantenimiento mensual para mantener todo actualizado.",
       "Prepara fotos y textos reales de tu negocio para el lanzamiento.",
     ],
     entregables,
     prompt_tecnico: promptTecnico,
+    // ── Campos comerciales ──
+    giro: giro.nombre,
+    punto_venta: giro.pitch,
+    dolor: giro.dolor,
+    beneficios: giro.beneficios,
+    valor_negocio,
+    cuota_mensual: ajustado.cuota_mensual,
+    alcance_ajustado: ajustado.alcance_ajustado,
+    mensaje_alcance: ajustado.mensaje_alcance,
+    costo_omision: giro.costo_omision,
   };
 }
