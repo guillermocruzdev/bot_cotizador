@@ -1,5 +1,7 @@
 # 🤖 Bot Cotizador — Chatbot de cotización web
 
+> 🚀 **En producción:** https://botcotizador.vercel.app — conectado a GitHub (`main`): cada push se despliega automáticamente en Vercel.
+
 Aplicación full-stack (Next.js 14 App Router + TypeScript + Tailwind + shadcn/ui + Supabase) que entrevista a clientes potenciales de forma **conversacional** (no como formulario), analiza sus respuestas con **DeepSeek vía OpenRouter** y genera una propuesta personalizada con precio estimado en MXN, alcance, tecnología y un **prompt técnico listo para Roo Code**.
 
 ---
