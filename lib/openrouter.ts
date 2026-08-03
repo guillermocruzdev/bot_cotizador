@@ -11,12 +11,14 @@ import type { Nivel } from "@/lib/pricing-catalog";
 import { buildFallbackProposal } from "@/lib/pricing-catalog";
 import { buildTechnicalPrompt } from "@/lib/prompt-builder";
 import {
+  adaptarCopyGiro,
   ajustarPrecio,
   detectarGiro,
   generarExplicacionPrecio,
   generarValorNegocio,
   GIROS,
 } from "@/lib/industry-pricing";
+import { calcularTotalDeterminista } from "@/lib/quote-engine";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
@@ -245,7 +247,18 @@ function nivelFromLabel(label: string): Nivel {
  */
 function enrichCommercial(result: AnalysisResult, context: ChatContext): AnalysisResult {
   const giro = detectarGiro(context.negocioDescripcion, context.category ?? "landing");
+  // Copy adaptado a las funciones que el cliente realmente declinó
+  const copy = adaptarCopyGiro(giro, context);
   const aj = ajustarPrecio(result.precio_min, result.precio_max, giro);
+  // Total EXACTO que verá la UI: el copy cita este número, no un rango suelto.
+  const totalExacto = calcularTotalDeterminista({
+    giro: giro.nombre,
+    clientName: context.clientName,
+    clientPhone: context.clientPhone,
+    negocioDescripcion: context.negocioDescripcion,
+    category: context.category,
+    paginas: context.paginas,
+  });
 
   return {
     ...result,
@@ -255,11 +268,13 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     alcance_ajustado: aj.alcance_ajustado,
     mensaje_alcance: result.mensaje_alcance ?? aj.mensaje_alcance,
     giro: result.giro ?? giro.nombre,
-    punto_venta: result.punto_venta ?? giro.pitch,
-    dolor: result.dolor ?? giro.dolor,
-    beneficios: result.beneficios?.length ? result.beneficios : giro.beneficios,
-    valor_negocio: result.valor_negocio ?? generarValorNegocio(giro, aj.precio_min, aj.precio_max),
-    costo_omision: result.costo_omision ?? giro.costo_omision,
+    punto_venta: result.punto_venta ?? copy.pitch,
+    dolor: result.dolor ?? copy.dolor,
+    beneficios: result.beneficios?.length ? result.beneficios : copy.beneficios,
+    valor_negocio:
+      result.valor_negocio ??
+      generarValorNegocio(giro.nombre, copy.pitch, aj.precio_min, aj.precio_max, totalExacto ?? undefined),
+    costo_omision: result.costo_omision ?? copy.costo_omision,
     explicacion_precio:
       result.explicacion_precio ||
       generarExplicacionPrecio(giro, aj.precio_min, aj.precio_max, aj.alcance_ajustado),
@@ -276,6 +291,7 @@ function buildAiPrompt(result: AnalysisResult, context: ChatContext): string {
   const category = getCategoryById(categoryId) ?? PRICING_CATALOG[0];
   const nivel = nivelFromLabel(result.nivel ?? "Profesional");
   const giro = detectarGiro(context.negocioDescripcion, categoryId);
+  const copy = adaptarCopyGiro(giro, context);
   const presupuesto_giro = `$${giro.presupuesto[0].toLocaleString("es-MX")}–$${giro.presupuesto[1].toLocaleString("es-MX")} MXN`;
 
   return buildTechnicalPrompt({
@@ -295,11 +311,13 @@ function buildAiPrompt(result: AnalysisResult, context: ChatContext): string {
       entregables: result.entregables ?? [],
       recomendaciones: result.recomendaciones ?? [],
       giro: result.giro ?? giro.nombre,
-      punto_venta: result.punto_venta ?? giro.pitch,
-      dolor: result.dolor ?? giro.dolor,
-      beneficios: result.beneficios ?? giro.beneficios,
-      valor_negocio: result.valor_negocio ?? "",
-      costo_omision: result.costo_omision ?? giro.costo_omision,
+      punto_venta: result.punto_venta ?? copy.pitch,
+      dolor: result.dolor ?? copy.dolor,
+      beneficios: result.beneficios ?? copy.beneficios,
+      valor_negocio:
+        result.valor_negocio ??
+        generarValorNegocio(giro.nombre, copy.pitch, result.precio_min, result.precio_max),
+      costo_omision: result.costo_omision ?? copy.costo_omision,
       presupuesto_giro,
       cuota_mensual: result.cuota_mensual,
       alcance_ajustado: result.alcance_ajustado,

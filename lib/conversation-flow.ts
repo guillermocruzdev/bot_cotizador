@@ -20,6 +20,7 @@ import {
   classifyIntent,
   extractBudgetAmount,
   extractDeadline,
+  extractName,
   extractSubject,
   pickEmoji,
   randomClosing,
@@ -558,7 +559,7 @@ export const FLOW: Record<string, ConversationNode> = {
       return "contact_email";
     },
     onReceive: (response, ctx) => {
-      ctx.clientName = extractSubject(response);
+      ctx.clientName = extractName(response);
     },
   },
 
@@ -578,7 +579,7 @@ export const FLOW: Record<string, ConversationNode> = {
         ctx.clientEmail = emailMatch[0];
         // Si incluyó un nombre junto al correo y aún no tenemos, lo tomamos
         if (!ctx.clientName) {
-          ctx.clientName = extractSubject(response.replace(emailMatch[0], "")).replace(/[,.]$/g, "") || null;
+          ctx.clientName = extractName(response.replace(emailMatch[0], "")) || null;
         }
       } else {
         ctx.clientEmail = response.trim();

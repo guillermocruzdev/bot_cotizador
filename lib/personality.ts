@@ -258,6 +258,49 @@ export function extractSubject(raw: string): string {
 }
 
 /**
+ * Extrae el NOMBRE del cliente (o de su negocio) de la respuesta.
+ *
+ * Maneja los formatos comunes de presentación y evita el bug clásico de
+ * tomar la primera palabra ("Soy Laura..." → debe ser "Laura", no "Soy").
+ *
+ *   "Soy Laura, de la Clínica Dental Sonrisa, en Querétaro" → "Laura"
+ *   "Mi nombre es Juan"                                      → "Juan"
+ *   "Soy de la panadería La Espiga"                          → "Panadería La Espiga"
+ *   "Clínica Dental Sonrisa"                                 → "Clínica Dental Sonrisa"
+ */
+export function extractName(raw: string): string | null {
+  let t = (raw ?? "").trim();
+  if (!t) return null;
+
+  // 1) Prefijos de presentación personal
+  t = t.replace(
+    /^(yo\s+soy|soy|me llamo|mi nombre es|mi negocio se llama|nos llamamos|somos|es)\s+/i,
+    ""
+  );
+  // 2) Prefijos de saludo
+  t = t.replace(
+    /^(hola|buenas|buen día|buenos días|buenas tardes|buenas noches|qué tal|que tal)\s*[,:.]?\s*/i,
+    ""
+  );
+  // 3) "de la / del / de " inicial (cuando solo da el negocio: "de la panadería X")
+  t = t.replace(/^(de la|del|de)\s+/i, "");
+
+  // 4) Tomar la primera parte antes de contexto: " de ", " en ", o coma.
+  //    "Soy Laura, de la Clínica..." → "Laura"
+  //    "Soy de la panadería La Espiga" → "Panadería La Espiga" (sin "de"/","/"en")
+  const first = t.split(/\s+(?:de|en)\s+|,/)[0].trim();
+
+  // 5) Limpiar signos de puntuación finales y capitalizar la primera letra
+  const name = first.replace(/[,.:;!?¿¡]+$/g, "").trim();
+
+  // Ignorar respuestas vacías o genéricas
+  if (name.length < 2) return null;
+  if (/^(no|nada|ninguno|no sé|no se|nose)$/i.test(name)) return null;
+
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+/**
  * Detecta si la respuesta contiene una cifra monetaria (p.ej. "$20k", "30000 pesos")
  */
 export function extractBudgetAmount(raw: string): string | null {

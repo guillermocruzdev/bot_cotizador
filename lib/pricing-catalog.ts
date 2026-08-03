@@ -14,11 +14,13 @@
 import type { ChatContext } from "@/lib/types";
 import { buildTechnicalPrompt } from "@/lib/prompt-builder";
 import {
+  adaptarCopyGiro,
   ajustarPrecio,
   detectarGiro,
   generarExplicacionPrecio,
   generarValorNegocio,
 } from "@/lib/industry-pricing";
+import { calcularTotalDeterminista } from "@/lib/quote-engine";
 
 export type Nivel = "basico" | "profesional" | "avanzado";
 
@@ -289,12 +291,23 @@ export function buildFallbackProposal(
 ) {
   const cat = getCategoryById(categoryId) ?? PRICING_CATALOG[0];
   const giro = detectarGiro(context.negocioDescripcion, categoryId);
+  // Copy adaptado a las funciones que el cliente realmente declinó
+  const copy = adaptarCopyGiro(giro, context);
 
   // Estimado técnico + ajuste al presupuesto del giro (con gancho)
   const { precio_min: estMin, precio_max: estMax, nivel } = estimatePrice(categoryId, activeFeatureIds);
   const ajustado = ajustarPrecio(estMin, estMax, giro);
   const precio_min = ajustado.precio_min;
   const precio_max = ajustado.precio_max;
+  // Total EXACTO que verá la UI: el copy cita este número, no un rango suelto.
+  const totalExacto = calcularTotalDeterminista({
+    giro: giro.nombre,
+    clientName: context.clientName,
+    clientPhone: context.clientPhone,
+    negocioDescripcion: context.negocioDescripcion,
+    category: context.category,
+    paginas: context.paginas,
+  });
 
   const funcionalidades = [
     "Página principal con la información de tu negocio",
@@ -309,9 +322,9 @@ export function buildFallbackProposal(
   const entregables = cat.entregables;
   const nivelLabel = nivel === "basico" ? "Básico" : nivel === "profesional" ? "Profesional" : "Avanzado";
 
-  // Copy comercial
+  // Copy comercial (adaptado + citando el total exacto cuando existe)
   const explicacion_precio = generarExplicacionPrecio(giro, precio_min, precio_max, ajustado.alcance_ajustado);
-  const valor_negocio = generarValorNegocio(giro, precio_min, precio_max);
+  const valor_negocio = generarValorNegocio(giro.nombre, copy.pitch, precio_min, precio_max, totalExacto ?? undefined);
   const presupuesto_giro = `$${giro.presupuesto[0].toLocaleString("es-MX")}–$${giro.presupuesto[1].toLocaleString("es-MX")} MXN`;
 
   const promptTecnico = buildTechnicalPrompt({
@@ -334,11 +347,11 @@ export function buildFallbackProposal(
         "Prepara fotos y textos reales de tu negocio para el lanzamiento.",
       ],
       giro: giro.nombre,
-      punto_venta: giro.pitch,
-      dolor: giro.dolor,
-      beneficios: giro.beneficios,
+      punto_venta: copy.pitch,
+      dolor: copy.dolor,
+      beneficios: copy.beneficios,
       valor_negocio,
-      costo_omision: giro.costo_omision,
+      costo_omision: copy.costo_omision,
       presupuesto_giro,
       cuota_mensual: ajustado.cuota_mensual,
       alcance_ajustado: ajustado.alcance_ajustado,
@@ -363,13 +376,13 @@ export function buildFallbackProposal(
     prompt_tecnico: promptTecnico,
     // ── Campos comerciales ──
     giro: giro.nombre,
-    punto_venta: giro.pitch,
-    dolor: giro.dolor,
-    beneficios: giro.beneficios,
+    punto_venta: copy.pitch,
+    dolor: copy.dolor,
+    beneficios: copy.beneficios,
     valor_negocio,
     cuota_mensual: ajustado.cuota_mensual,
     alcance_ajustado: ajustado.alcance_ajustado,
     mensaje_alcance: ajustado.mensaje_alcance,
-    costo_omision: giro.costo_omision,
+    costo_omision: copy.costo_omision,
   };
 }

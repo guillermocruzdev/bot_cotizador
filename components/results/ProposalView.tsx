@@ -22,10 +22,10 @@ import { generateProposal } from "@/lib/generate-proposal";
 import {
   buildClientData,
   calculateQuote,
+  derivarTipoWeb,
   detectarCiudad,
   formatPesos,
   type ClientData,
-  type TipoWeb,
 } from "@/lib/quote-engine";
 import type { AnalysisResult } from "@/lib/types";
 import { ContactCTA } from "./ContactCTA";
@@ -37,14 +37,6 @@ import { ValueSelling } from "./ValueSelling";
 import { WhyThisPrice } from "./WhyThisPrice";
 
 const DEV_NAME = process.env.NEXT_PUBLIC_DEVELOPER_NAME || "";
-
-/** Mapea la categoría detectada al tipo de web de la cotización. */
-function derivarTipoWeb(category: string | null, paginas: number | null): TipoWeb {
-  if (category === "citas") return "agenda";
-  if (category === "ecommerce" || category === "webapp") return "corporativo";
-  if (paginas && paginas > 3) return "corporativo";
-  return "landing";
-}
 
 export function ProposalView() {
   const result = useChatStore((s) => s.result);

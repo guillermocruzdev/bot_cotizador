@@ -83,9 +83,9 @@ export function PriceCard({
             <p className="text-sm text-gray-700">{mensaje_alcance}</p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Este rango está pensado para tu tipo de negocio y lo que
-              normalmente se invierte en él. El precio final se confirma al
-              detallar el alcance, pero no se moverá de aquí para arriba.
+              Este precio está pensado para tu tipo de negocio y lo que
+              normalmente se invierte en él. Es exacto e incluye todo lo que
+              acordamos; no se moverá de aquí para arriba.
             </p>
           )}
         </CardContent>

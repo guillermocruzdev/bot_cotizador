@@ -243,3 +243,47 @@ export function detectarCiudad(descripcion: string | null): string | null {
   }
   return null;
 }
+
+// ─── Total determinista (alinea copy y UI con el motor) ────────────
+
+/** Convierte la categoría inferida + nº de páginas al tipo de web. */
+export function derivarTipoWeb(
+  category: string | null,
+  paginas: number | null
+): TipoWeb {
+  if (category === "citas") return "agenda";
+  if (category === "ecommerce" || category === "webapp") return "corporativo";
+  if (paginas && paginas > 3) return "corporativo";
+  return "landing";
+}
+
+/**
+ * Calcula el total EXACTO (IVA incluido) que el cliente verá en la UI, a
+ * partir del contexto de la conversación. Se usa en el servidor para que el
+ * copy comercial ("Piensa en esto", "¿Por qué este precio?") cite SIEMPRE
+ * el mismo número que el motor, sin rangos que lo contradigan.
+ */
+export function calcularTotalDeterminista(opts: {
+  giro: string;
+  clientName: string | null;
+  clientPhone: string | null;
+  negocioDescripcion: string | null;
+  category: string | null;
+  paginas: number | null;
+}): number | null {
+  try {
+    const cd = buildClientData({
+      nombre: opts.clientName ?? "",
+      giro: opts.giro,
+      telefono: opts.clientPhone ?? null,
+      ubicacion: detectarCiudad(opts.negocioDescripcion),
+      tipoWeb: derivarTipoWeb(opts.category, opts.paginas),
+      dominioHosting: true,
+      branding: false,
+      presupuesto: null,
+    });
+    return calculateQuote(cd).total;
+  } catch {
+    return null;
+  }
+}

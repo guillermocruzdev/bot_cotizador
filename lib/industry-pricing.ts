@@ -15,6 +15,8 @@
  * con datos reales de tu mercado en la tabla `GIROS`.
  */
 
+import type { ChatContext } from "@/lib/types";
+
 export type Tier = "alto" | "medio" | "ajustado";
 
 export interface Giro {
@@ -491,14 +493,122 @@ export function ajustarPrecio(estMin: number, estMax: number, giro: Giro): Preci
   };
 }
 
-/** Párrafo de valor: por qué esta web es una inversión para ESTE giro */
-export function generarValorNegocio(giro: Giro, min: number, max: number): string {
+/** Párrafo de valor: por qué esta web es una inversión para ESTE giro.
+ *  Si se pasa `totalExacto`, el párrafo cita ese número exacto (el mismo
+ *  que muestra la UI) en vez de un rango, para no contradecir el precio. */
+export function generarValorNegocio(
+  giroNombre: string,
+  pitch: string,
+  min: number,
+  max: number,
+  totalExacto?: number
+): string {
+  const inversion =
+    totalExacto != null
+      ? `una inversión de $${Math.round(totalExacto).toLocaleString("es-MX")} MXN`
+      : `una inversión de $${min.toLocaleString("es-MX")}–$${max.toLocaleString("es-MX")} MXN`;
   return (
-    `Para tu ${giro.nombre.toLowerCase()}, esta página no es un gasto: es una herramienta que trabaja para ti todos los días. ` +
-    `${giro.pitch} ` +
-    `Con una inversión de $${min.toLocaleString("es-MX")}–$${max.toLocaleString("es-MX")} MXN, ` +
+    `Para tu ${giroNombre.toLowerCase()}, esta página no es un gasto: es una herramienta que trabaja para ti todos los días. ` +
+    `${pitch} ` +
+    `Con ${inversion}, ` +
     `te pones a la altura de los mejores de tu sector y recuperas lo invertido con pocos clientes nuevos.`
   );
+}
+
+// ─── Copy adaptado a lo que el cliente REALMENTE pidió ─────────────
+
+/**
+ * Palabras que, si el cliente las declinó (ctx[x] === false), hacen que
+ * una frase de copy quede obsoleta (prometer "citas en línea" cuando el
+ * cliente dijo que no las quiere, por ejemplo).
+ */
+type FeatureKey = "citas" | "pagos" | "dashboard" | "autenticacion" | "chat";
+const FEATURE_KEYWORDS: Record<FeatureKey, string[]> = {
+  citas: [
+    "cita", "citas", "agenda", "agendar", "reserva", "reservas", "reservar",
+    "recordatorio", "recordatorios", "inasistenci", "turno", "horario", "horarios",
+  ],
+  pagos: [
+    "pago", "pagos", "cobrar", "pedido", "pedidos", "carrito", "venta en línea",
+    "venta en linea", "vender en línea", "vender en linea", "comprar",
+  ],
+  dashboard: ["panel", "reporte", "reportes", "dashboard"],
+  autenticacion: ["registro", "cuenta", "cuentas", "login", "usuario", "usuarios"],
+  chat: ["chat", "mensajería", "mensajeria"],
+};
+
+/** Copy neutral de presentación (presencia + Google + WhatsApp). */
+const COPY_LANDING_NEUTRAL = {
+  pitch:
+    "tu web es tu mejor carta de presentación: aparece cuando te buscan y convierte visitas en contactos por WhatsApp.",
+  dolor:
+    "Hoy tus clientes deciden a quién contratar por internet; si no apareces con profesionalismo, eligen a tu competencia.",
+  beneficios: [
+    "Presencia profesional que genera confianza",
+    "Aparecer en Google cuando te buscan",
+    "Convertir visitas en llamadas y WhatsApp",
+  ],
+  costo_omision:
+    "Cada cliente que te buscó y no te encontró terminó contratando a otro.",
+};
+
+export interface GiroCopyAdaptado {
+  pitch: string;
+  dolor: string;
+  beneficios: string[];
+  costo_omision: string;
+}
+
+/**
+ * Adapta el copy del giro a las respuestas reales del cliente.
+ *
+ * Si el cliente declinó citas, pagos, panel, cuentas o chat, el copy ya no
+ * promete esas funciones: se filtra a la versión neutral de presentación
+ * (presencia + Google + WhatsApp) para no contradecir la conversación.
+ */
+export function adaptarCopyGiro(
+  giro: Giro,
+  ctx: Pick<ChatContext, "citas" | "pagos" | "dashboard" | "autenticacion" | "chat">
+): GiroCopyAdaptado {
+  const mencionaDeclinado = (texto: string): boolean => {
+    const t = normalize(texto);
+    return (Object.keys(FEATURE_KEYWORDS) as FeatureKey[]).some(
+      (feat) => {
+        if (ctx[feat] !== false) return false;
+        return FEATURE_KEYWORDS[feat].some((kw) => t.includes(normalize(kw)));
+      }
+    );
+  };
+
+  const beneficios = giro.beneficios.filter((b) => !mencionaDeclinado(b));
+
+  const necesitaNeutral =
+    mencionaDeclinado(giro.pitch) ||
+    mencionaDeclinado(giro.dolor) ||
+    mencionaDeclinado(giro.costo_omision) ||
+    beneficios.length < 2;
+
+  if (necesitaNeutral) {
+    // Conserva los beneficios propios del giro que NO contradicen al cliente,
+    // y completa con los neutrales (sin duplicados, máx. 3).
+    const combinados = [...beneficios, ...COPY_LANDING_NEUTRAL.beneficios];
+    const unicos = combinados.filter(
+      (b, i) => combinados.findIndex((x) => normalize(x) === normalize(b)) === i
+    );
+    return {
+      pitch: COPY_LANDING_NEUTRAL.pitch,
+      dolor: COPY_LANDING_NEUTRAL.dolor,
+      beneficios: unicos.slice(0, 3),
+      costo_omision: COPY_LANDING_NEUTRAL.costo_omision,
+    };
+  }
+
+  return {
+    pitch: giro.pitch,
+    dolor: giro.dolor,
+    beneficios,
+    costo_omision: giro.costo_omision,
+  };
 }
 
 /** Explicación del precio con contexto de industria */
