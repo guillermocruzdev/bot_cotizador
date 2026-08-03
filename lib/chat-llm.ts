@@ -13,9 +13,7 @@
  */
 
 import type { ChatContext, ChatMessage } from "@/lib/types";
-import { DEFAULT_MODEL } from "@/lib/openrouter";
-
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+import { chatCompletion, getLlmProvider } from "@/lib/llm-client";
 
 /**
  * Objetivo de cada turno: qué debe preguntar Alex en ese nodo.
@@ -158,37 +156,20 @@ function cleanReply(raw: string): string {
  * Devuelve `fallbackReply` si no hay API key, hay error o la respuesta es inválida.
  */
 export async function generateNextMessage(opts: GenerateOpts): Promise<string> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) return opts.fallbackReply;
+  if (!getLlmProvider()) return opts.fallbackReply;
 
   try {
-    const res = await fetch(OPENROUTER_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-        "HTTP-Referer": "https://bot-cotizador.vercel.app",
-        "X-Title": "Bot Cotizador",
-      },
-      body: JSON.stringify({
-        model: DEFAULT_MODEL,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT(opts.botName) },
-          { role: "user", content: buildUserPrompt(opts) },
-        ],
-        temperature: 0.8,
-        max_tokens: 160,
-      }),
-      cache: "no-store",
+    const completion = await chatCompletion({
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT(opts.botName) },
+        { role: "user", content: buildUserPrompt(opts) },
+      ],
+      temperature: 0.8,
+      max_tokens: 160,
     });
 
-    if (!res.ok) return opts.fallbackReply;
-
-    const data = (await res.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const content = data.choices?.[0]?.message?.content ?? "";
-    const reply = cleanReply(content);
+    if (!completion?.content) return opts.fallbackReply;
+    const reply = cleanReply(completion.content);
     return reply || opts.fallbackReply;
   } catch {
     return opts.fallbackReply;

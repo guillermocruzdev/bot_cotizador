@@ -10,6 +10,7 @@ import { PRICING_CATALOG, getCategoryById } from "@/lib/pricing-catalog";
 import type { Nivel } from "@/lib/pricing-catalog";
 import { buildFallbackProposal } from "@/lib/pricing-catalog";
 import { buildTechnicalPrompt } from "@/lib/prompt-builder";
+import { chatCompletion, getLlmProvider } from "@/lib/llm-client";
 import {
   adaptarCopyGiro,
   ajustarPrecio,
@@ -20,23 +21,12 @@ import {
 } from "@/lib/industry-pricing";
 import { calcularTotalDeterminista } from "@/lib/quote-engine";
 
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-
-// Modelo por defecto: DeepSeek Chat v3 (accesible vía OpenRouter)
+// Modelo por defecto (OpenRouter). DeepSeek nativo usa "deepseek-chat".
 export const DEFAULT_MODEL = "deepseek/deepseek-chat-v3-0324:free";
-// Alternativas:
-// "deepseek/deepseek-chat-v3-0324"
-// "deepseek/deepseek-r1"
 
 interface OpenRouterMessage {
   role: "system" | "user" | "assistant";
   content: string;
-}
-
-interface OpenRouterResponse {
-  choices?: {
-    message?: { content?: string };
-  }[];
 }
 
 /** Convierte el chat en el formato de mensajes para OpenRouter */
@@ -150,50 +140,33 @@ export async function analyzeWithOpenRouter(opts: {
   context: ChatContext;
   botName: string;
 }): Promise<{ ok: boolean; result: AnalysisResult; fallback: boolean; error?: string }> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-
-  // Sin API key → respaldo local
-  if (!apiKey) {
+  // Sin proveedor LLM configurado → respaldo local (propuesta determinista)
+  if (!getLlmProvider()) {
     const result = localFallback(opts);
-    return { ok: true, result, fallback: true, error: "Sin OPENROUTER_API_KEY" };
+    return {
+      ok: true,
+      result,
+      fallback: true,
+      error: "Sin API key LLM (configura OPENROUTER_API_KEY o DEEPSEEK_API_KEY)",
+    };
   }
 
   try {
     const messages = buildMessages(opts.transcript, opts.context, opts.botName);
 
-    const res = await fetch(OPENROUTER_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-        "HTTP-Referer": "https://bot-cotizador.vercel.app",
-        "X-Title": "Bot Cotizador",
-      },
-      body: JSON.stringify({
-        model: DEFAULT_MODEL,
-        messages,
-        temperature: 0.7,
-        max_tokens: 3000,
-        response_format: { type: "json_object" },
-      }),
-      cache: "no-store",
+    const completion = await chatCompletion({
+      messages,
+      temperature: 0.7,
+      max_tokens: 3000,
+      json: true,
     });
 
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      const result = localFallback(opts);
-      return { ok: true, result, fallback: true, error: `OpenRouter HTTP ${res.status}: ${body.slice(0, 300)}` };
-    }
-
-    const data = (await res.json()) as OpenRouterResponse;
-    const content = data.choices?.[0]?.message?.content;
-
-    if (!content) {
+    if (!completion?.content) {
       const result = localFallback(opts);
       return { ok: true, result, fallback: true, error: "Respuesta vacía del modelo" };
     }
 
-    const parsed = parseModelJson(content);
+    const parsed = parseModelJson(completion.content);
     if (!parsed) {
       const result = localFallback(opts);
       return { ok: true, result, fallback: true, error: "JSON inválido del modelo" };
@@ -211,7 +184,7 @@ export async function analyzeWithOpenRouter(opts: {
       clientName: opts.context.clientName ?? parsed.clientName ?? "",
       prompt_tecnico: buildAiPrompt(enriched, opts.context),
       meta: {
-        modelo: DEFAULT_MODEL,
+        modelo: completion.model,
         generado_en: new Date().toISOString(),
       },
     };
