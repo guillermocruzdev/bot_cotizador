@@ -78,7 +78,9 @@ export const PRICING_CATALOG: PricingCategory[] = [
   {
     id: "ecommerce",
     nombreCliente: "Tienda online con carrito y pagos",
-    keywords: ["tienda", "vender", "ventas", "vendo", "productos", "carrito", "pedidos", "comprar", "catalogo en linea", "venta online", "shop", "mercancia", "articulos"],
+    // OJO: NO incluir "ventas"/"vendedor" sueltos → "gerente de ventas" no es
+    // una tienda online. Usar señales específicas de venta en línea.
+    keywords: ["tienda", "vender", "vendo", "productos", "carrito", "pedidos", "comprar", "catalogo en linea", "catalogo en línea", "venta online", "venta en linea", "venta en línea", "vender en linea", "vender en línea", "shop", "mercancia", "mercancía", "articulos", "artículos", "compras en linea"],
     base: { basico: 20000, profesional: 35000, avanzado: 60000 },
     tiempo: { basico: "10-15 días", profesional: "15-25 días", avanzado: "25-40 días" },
     features: [
