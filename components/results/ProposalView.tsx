@@ -23,6 +23,7 @@ import {
   buildClientData,
   calculateQuote,
   detectarCiudad,
+  formatPesos,
   type ClientData,
   type TipoWeb,
 } from "@/lib/quote-engine";
@@ -189,14 +190,21 @@ export function ProposalView() {
             <TechStackTags stack={result.stack_tecnico} delay={0.25} />
           </section>
 
-          {/* ── Por qué este precio ── */}
+          {/* ── Por qué este precio (siempre exacto, sin rangos) ── */}
           <section>
             <MessageAnimator delay={0.3}>
               <h2 className="mb-4 text-lg font-semibold text-gray-900">
                 ¿Por qué este precio?
               </h2>
             </MessageAnimator>
-            <WhyThisPrice explanation={result.explicacion_precio} delay={0.35} />
+            <WhyThisPrice
+              explanation={
+                quoteTotal != null
+                  ? `Tu inversión exacta es ${formatPesos(quoteTotal)} (IVA incluido). La calculé con una tabla de precios transparente según el tipo de web que necesitas, sin sorpresas ni rangos.`
+                  : result.explicacion_precio
+              }
+              delay={0.35}
+            />
           </section>
 
           {/* ── Entregables ── */}
