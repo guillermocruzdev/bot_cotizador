@@ -100,6 +100,7 @@ INSTRUCCIONES COMERCIALES (CRÍTICAS):
   - 'costo_omision': qué pierde el cliente si no lo hace (con honestidad, sin presión agresiva).
   - 'cuota_mensual': redondea (precio_min / 24) para mostrar "desde $X al mes".
   - 'alcance_ajustado' (true/false) y 'mensaje_alcance' (texto honesto si ajustaste el alcance por presupuesto).
+- NO prometas funciones que el cliente rechazó explícitamente en la conversación. Si el cliente dijo que NO quiere citas/agenda en línea, pagos en línea, panel o cuentas, tu copy NO debe ofrecerlos (ej: no escribas "agenda citas 24/7" si el cliente las declinó); enfócate en presencia, Google y contacto directo.
 
 El campo 'categoria' debe ser legible para el cliente (ej: "Sistema de Citas para Consultorio Dental", "Tienda online de ropa artesanal").
 El campo 'nivel' debe ser "Básico", "Profesional" o "Avanzado".
@@ -260,6 +261,17 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     paginas: context.paginas,
   });
 
+  // Si el cliente declinó alguna función clave (citas, pagos, panel, etc.),
+  // el copy comercial SIEMPRE es el adaptado local: garantiza que la
+  // propuesta nunca prometa funciones que el cliente rechazó, aunque la IA
+  // haya escrito lo contrario.
+  const tieneDeclinadas =
+    context.citas === false ||
+    context.pagos === false ||
+    context.dashboard === false ||
+    context.autenticacion === false ||
+    context.chat === false;
+
   return {
     ...result,
     precio_min: aj.precio_min,
@@ -268,13 +280,23 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     alcance_ajustado: aj.alcance_ajustado,
     mensaje_alcance: result.mensaje_alcance ?? aj.mensaje_alcance,
     giro: result.giro ?? giro.nombre,
-    punto_venta: result.punto_venta ?? copy.pitch,
-    dolor: result.dolor ?? copy.dolor,
-    beneficios: result.beneficios?.length ? result.beneficios : copy.beneficios,
-    valor_negocio:
-      result.valor_negocio ??
-      generarValorNegocio(giro.nombre, copy.pitch, aj.precio_min, aj.precio_max, totalExacto ?? undefined),
-    costo_omision: result.costo_omision ?? copy.costo_omision,
+    punto_venta: tieneDeclinadas ? copy.pitch : (result.punto_venta ?? copy.pitch),
+    dolor: tieneDeclinadas ? copy.dolor : (result.dolor ?? copy.dolor),
+    beneficios: tieneDeclinadas
+      ? copy.beneficios
+      : result.beneficios?.length
+      ? result.beneficios
+      : copy.beneficios,
+    // El valor de negocio SIEMPRE cita el total exacto (mismo número que la
+    // UI), nunca un rango que lo contradiga.
+    valor_negocio: generarValorNegocio(
+      giro.nombre,
+      copy.pitch,
+      aj.precio_min,
+      aj.precio_max,
+      totalExacto ?? undefined
+    ),
+    costo_omision: tieneDeclinadas ? copy.costo_omision : (result.costo_omision ?? copy.costo_omision),
     explicacion_precio:
       result.explicacion_precio ||
       generarExplicacionPrecio(giro, aj.precio_min, aj.precio_max, aj.alcance_ajustado),
