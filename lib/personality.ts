@@ -230,20 +230,32 @@ export function classifyIntent(raw: string): Intent {
     "quien sabe", "quién sabe", "no me decido", "no decido",
   ];
 
-  if (dontKnowWords.some((phrase) => text.includes(phrase))) {
-    return { yes: false, no: false, dontKnow: true, text };
+  // "no sé" es DUDA, no una negación real. Se retira del texto antes de
+  // contar señales para que una respuesta sustancial con sí/no claro (aunque
+  // contenga "no sé") gane sobre la duda.
+  let reduced = text;
+  for (const phrase of dontKnowWords) {
+    reduced = reduced.split(phrase).join(" ");
   }
+  const reducedWords = reduced.split(/[\s,.;:!?¿¡()]+/).filter((w) => w.length > 1);
 
   // Palabras completas (no subcadenas): evita que "necesito" cuente como "si",
   // "suficiente" como "si" o "clínica" como "ni". Las frases (con espacio) sí van como subcadena.
   const hasSignal = (phrase: string): boolean =>
-    phrase.includes(" ") ? text.includes(phrase) : words.includes(phrase);
+    phrase.includes(" ") ? reduced.includes(phrase) : reducedWords.includes(phrase);
   const yesCount = yesWords.filter(hasSignal).length;
   const noCount = noWords.filter(hasSignal).length;
 
+  // Señales claras de SÍ o NO en una respuesta sustancial tienen prioridad
+  // sobre cualquier duda contenida.
   if (noCount > 0 && yesCount === 0) return { yes: false, no: true, dontKnow: false, text };
   if (yesCount > 0 && noCount === 0) return { yes: true, no: false, dontKnow: false, text };
   if (yesCount > 0 && noCount > 0) return { yes: false, no: false, dontKnow: false, text };
+
+  // Sin señal clara: solo entonces cuenta la duda o la vaguedad.
+  if (dontKnowWords.some((phrase) => text.includes(phrase))) {
+    return { yes: false, no: false, dontKnow: true, text };
+  }
 
   // Respuesta vacía o solo conectores → no sé
   if (words.filter((w) => !STOPWORDS.has(w)).length === 0) {
@@ -304,24 +316,64 @@ export function extractName(raw: string): string | null {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-/**
- * Detecta si la respuesta contiene una cifra monetaria (p.ej. "$20k", "30000 pesos")
- */
-export function extractBudgetAmount(raw: string): string | null {
-  const match = raw.match(/(?:\$|mxn|pesos)?\s*([\d,]+)\s*(k|mil|pesos|mxn)?/i);
-  if (!match) return null;
-  return `${match[1]}${match[2] ? " " + match[2].toLowerCase() : ""}`;
+/** Convierte una cifra + multiplicador a número: "8"→8, "10 mil"→10000, "15k"→15000 */
+function budgetToNumber(num: string, mult: string | undefined): number {
+  let s = num.trim();
+  // Coma como separador de miles ("8,000" → 8000); si no, es decimal ("8,5" → 8.5)
+  if (/,\d{3}$/.test(s)) {
+    s = s.replace(/,/g, "");
+  } else {
+    s = s.replace(",", ".");
+  }
+  const n = parseFloat(s);
+  if (Number.isNaN(n)) return 0;
+  const m = mult === "mil" || mult === "k" ? 1000 : 1;
+  return Math.round(n * m);
 }
 
 /**
- * Detecta si el usuario menciona una fecha ("para marzo", "la próxima semana", "en 2 meses")
+ * Detecta y NORMALIZA una cifra monetaria (p.ej. "20 mil" → "20000",
+ * "15k" → "15000", "unos 8 o 10 mil pesos" → "8000 a 10000").
+ * Devuelve el texto limpio (sin "$", "pesos", ni la frase completa).
+ */
+export function extractBudgetAmount(raw: string): string | null {
+  if (!raw) return null;
+  const t = raw.toLowerCase().replace(/[$]/g, "").trim();
+
+  // Rango: "8 o 10 mil", "8 mil a 10 mil", "$8,000 - $10,000", "entre 10 y 15 mil"
+  // El multiplicador (k/mil) del segundo número aplica a ambos en "8 o 10 mil".
+  const range = t.match(
+    /(\d+(?:[.,]\d+)?)\s*(k|mil)?\s*(?:o|a|al|hasta|entre|y|-|–|~|más o menos)\s*(\d+(?:[.,]\d+)?)\s*(k|mil)?/
+  );
+  if (range) {
+    const lo = budgetToNumber(range[1], range[2] ?? range[4]);
+    const hi = budgetToNumber(range[3], range[4]);
+    if (lo > 0 && hi > 0 && hi >= lo) {
+      return lo === hi ? String(lo) : `${lo} a ${hi}`;
+    }
+  }
+
+  // Valor único: "20 mil" → 20000, "15k" → 15000, "$8,500" → 8500
+  const single = t.match(/(\d+(?:[.,]\d+)?)\s*(k|mil)?/);
+  if (single) {
+    const v = budgetToNumber(single[1], single[2]);
+    if (v > 0) return String(v);
+  }
+  return null;
+}
+
+/**
+ * Detecta si el usuario menciona una fecha ("para marzo", "la próxima semana",
+ * "en 2 meses", "en unas 3 semanas", "para el próximo mes"). Devuelve solo
+ * la frase de fecha, nunca la oración completa.
  */
 export function extractDeadline(raw: string): string | null {
   const lower = raw.toLowerCase();
   const patterns = [
     /para\s+(antes\s+de\s+)?(la próxima semana|la siguiente semana|este mes|el próximo mes|el mes que viene|ya|urgente|cuanto antes)/i,
     /para\s+(?:el\s+|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
-    /en\s+\d+\s*(días|dias|semanas|meses)/i,
+    /en\s+unas?\s+\d+\s*(d[ií]as|semanas|meses)/i,
+    /en\s+\d+\s*(d[ií]as|semanas|meses)/i,
     /(antes\s+del?\s+\d+)/i,
   ];
   for (const p of patterns) {
@@ -329,4 +381,54 @@ export function extractDeadline(raw: string): string | null {
     if (m) return m[0].trim();
   }
   return null;
+}
+
+/**
+ * Normaliza un teléfono/WhatsApp mexicano a formato legible E.164:
+ * - Tolera espacios, guiones, paréntesis y "+" (solo extrae dígitos).
+ * - 10 dígitos → antepone +52: "81 2345 6789" → "+52 81 2345 6789".
+ * - Si ya trae +52/+521 se conserva (incluido el 1 móvil legacy).
+ * - Devuelve null si hay menos de 10 dígitos (para re-preguntar).
+ */
+export function normalizePhone(raw: string): string | null {
+  if (!raw) return null;
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length < 10) return null;
+
+  let prefix = "+52";
+  let national = digits;
+  if (digits.startsWith("521") && digits.length >= 13) {
+    // Móvil legacy: +52 1 + 10 dígitos → conservar el 1
+    prefix = "+52 1";
+    national = digits.slice(3);
+  } else if (digits.startsWith("52") && digits.length >= 12) {
+    // Ya trae código de país +52 + 10 dígitos
+    national = digits.slice(2);
+  } else if (digits.startsWith("1") && digits.length === 11) {
+    // Móvil mexicano con 1 inicial (1 + 10 locales)
+    national = digits.slice(1);
+  }
+
+  if (national.length > 10) national = national.slice(0, 10);
+  if (national.length < 10) return null;
+
+  // Formato legible: +52 <área 2> <4> <4>
+  return `${prefix} ${national.slice(0, 2)} ${national.slice(2, 6)} ${national.slice(6, 10)}`;
+}
+
+/** Regex estricta de correo (con TLD de al menos 2 letras) */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+/**
+ * Extrae un correo válido de una respuesta libre (tolera texto extra:
+ * "mi correo es laura@clinica.com" → "laura@clinica.com").
+ * Devuelve null si no hay un correo válido (para re-preguntar).
+ */
+export function extractEmail(raw: string): string | null {
+  if (!raw) return null;
+  const match = raw.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
+  if (!match) return null;
+  const candidate = match[0];
+  if (!EMAIL_REGEX.test(candidate)) return null;
+  return candidate.toLowerCase();
 }

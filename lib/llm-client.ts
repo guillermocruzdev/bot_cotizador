@@ -49,8 +49,15 @@ export interface ChatCompletionResult {
   provider: LlmProvider;
 }
 
+/** Estados HTTP transitorios que conviene reintentar (429 = rate limit, 5xx). */
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+/** Backoff exponencial entre reintentos (ms). 2 reintentos → 700ms y 1800ms. */
+const RETRY_DELAYS = [700, 1800];
+
 /**
  * Llama al proveedor LLM activo y devuelve el contenido de la respuesta.
+ * Reintenta con backoff exponencial ante 429/5xx/errores de red (hasta 2
+ * reintentos). NO reintenta en 400 (error del prompt: no se arregla solo).
  * Devuelve null si no hay proveedor/key configurados (el llamador decide el respaldo).
  */
 export async function chatCompletion(
@@ -83,25 +90,45 @@ export async function chatCompletion(
     headers["X-Title"] = "Bot Cotizador";
   }
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-    cache: "no-store",
-  });
+  const attempt = async (): Promise<ChatCompletionResult> => {
+    const res = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`LLM ${provider} HTTP ${res.status}: ${text.slice(0, 200)}`);
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      const err = new Error(`LLM ${provider} HTTP ${res.status}: ${text.slice(0, 200)}`);
+      (err as Error & { status?: number }).status = res.status;
+      throw err;
+    }
+
+    const data = (await res.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
+
+    return {
+      content: data.choices?.[0]?.message?.content ?? null,
+      model,
+      provider,
+    };
+  };
+
+  let lastError: unknown = null;
+  for (let attemptNumber = 0; attemptNumber <= RETRY_DELAYS.length; attemptNumber += 1) {
+    try {
+      return await attempt();
+    } catch (err) {
+      lastError = err;
+      const status = (err as Error & { status?: number }).status;
+      // Sin status = error de red → reintentar. Con status, solo si es transitorio.
+      const retryable = status === undefined ? true : RETRYABLE_STATUS.has(status);
+      if (!retryable || attemptNumber === RETRY_DELAYS.length) throw lastError;
+      await new Promise((r) => setTimeout(r, RETRY_DELAYS[attemptNumber]));
+    }
   }
 
-  const data = (await res.json()) as {
-    choices?: { message?: { content?: string } }[];
-  };
-
-  return {
-    content: data.choices?.[0]?.message?.content ?? null,
-    model,
-    provider,
-  };
+  throw lastError;
 }

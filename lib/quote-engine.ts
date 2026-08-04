@@ -84,8 +84,13 @@ export function buildClientData(raw: Partial<ClientData>, opts?: { strict?: bool
     throw new Error("Faltan datos obligatorios del cliente (nombre y giro).");
   }
 
+  // El teléfono viene normalizado como "+52 81 2345 6789"; se compacta a
+  // dígitos antes de validar para que el formato legible pase el regex.
   let telefono: string | null = (raw.telefono ?? "").trim() || null;
-  if (telefono && !TELEFONO_REGEX.test(telefono)) telefono = null;
+  if (telefono) {
+    const compacto = telefono.replace(/\D/g, "");
+    telefono = TELEFONO_REGEX.test(compacto) ? `+${compacto}` : null;
+  }
 
   const tipoWeb: TipoWeb =
     raw.tipoWeb === "corporativo" || raw.tipoWeb === "agenda" ? raw.tipoWeb : "landing";

@@ -80,6 +80,10 @@ export interface ChatContext {
   transcript: string;
   /** Contador de veces que dijo "no sé" (para no abusar de ejemplos) */
   noSeContador: number;
+  /** Intentos fallidos pidiendo el teléfono (máx 2 antes de continuar) */
+  phoneIntentos: number;
+  /** Intentos fallidos pidiendo el email (máx 2 antes de continuar) */
+  emailIntentos: number;
 }
 
 export function createEmptyContext(): ChatContext {
@@ -112,6 +116,8 @@ export function createEmptyContext(): ChatContext {
     negocioDescripcion: null,
     transcript: "",
     noSeContador: 0,
+    phoneIntentos: 0,
+    emailIntentos: 0,
   };
 }
 

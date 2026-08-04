@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prompt:preview": "tsx scripts/sample-prompt.ts",
     "proposal:preview": "tsx scripts/sample-commercial.ts",
-    "quote:preview": "tsx scripts/sample-quote.ts"
+    "quote:preview": "tsx scripts/sample-quote.ts",
+    "test:regression": "tsx scripts/regression-test.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.1",

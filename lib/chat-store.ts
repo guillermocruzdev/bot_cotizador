@@ -117,6 +117,8 @@ interface ChatState {
   sendUserMessage: (text: string) => Promise<void>;
   botSay: (content: string, options?: { delayMs?: number; force?: boolean }) => Promise<void>;
   finishAndNavigate: () => Promise<void>;
+  /** Reintenta /api/analyze si la llamada anterior falló (botón "Reintentar") */
+  retryAnalyze: () => Promise<void>;
   reset: () => void;
 }
 
@@ -229,15 +231,16 @@ export const useChatStore = create<ChatState>((set, get) => {
 
     // ── Passthrough del saludo ───────────────────────────────
     // El saludo NO consume la primera respuesta. Si el usuario dice
-    // solo "listo/sí/dale", avanzamos a la primera pregunta. Si responde
-    // algo sustancial (ej. "soy dentista y quiero citas online"), esa
-    // respuesta se procesa como la respuesta a la primera pregunta.
+    // solo "listo/sí/dale/empecemos", avanzamos a la primera pregunta. Si
+    // responde algo sustancial (ej. "soy dentista y quiero citas online"),
+    // esa respuesta se procesa como la respuesta a la primera pregunta.
+    // Conservador: frases cortas de arranque; nunca una descripción de negocio.
     if (node.type === "greeting") {
       const forwardId = node.nextNode("", nextCtx);
       const t = text.trim();
       const isReady =
-        t.length <= 12 &&
-        /^(s[ií]|listo|dale|ok|okay|claro|adelante|vamos|va|sip|sep|simon|listo|d[áa]le)$/i.test(
+        t.length <= 24 &&
+        /^(s[ií]|listo|dale|ok|okay|claro|adelante|vamos|va|sip|sep|sim[oó]n|d[áa]le|empecemos|empieza|comencemos|s[ií],\s*(empecemos|vamos|dale|adelante|claro|listo)|dale,\s*vamos|claro que s[ií]|s[ií] vamos|vamos a ello|manos a la obra)$/i.test(
           t
         );
       if (isReady) {
@@ -337,6 +340,13 @@ export const useChatStore = create<ChatState>((set, get) => {
     setTimeout(() => get().startConversation(), 120);
   };
 
+  const retryAnalyze = async () => {
+    // Solo rellamar si hay un error pendiente (falló /api/analyze).
+    if (get().error) {
+      await get().finishAndNavigate();
+    }
+  };
+
   return {
     messages: [],
     context: createEmptyContext(),
@@ -351,6 +361,7 @@ export const useChatStore = create<ChatState>((set, get) => {
     sendUserMessage,
     botSay,
     finishAndNavigate,
+    retryAnalyze,
     reset,
   };
 });

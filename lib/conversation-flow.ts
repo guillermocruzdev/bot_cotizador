@@ -20,8 +20,10 @@ import {
   classifyIntent,
   extractBudgetAmount,
   extractDeadline,
+  extractEmail,
   extractName,
   extractSubject,
+  normalizePhone,
   pickEmoji,
   randomClosing,
   randomEmpathy,
@@ -50,23 +52,57 @@ function isNoSé(response: string, ctx: ChatContext): boolean {
   return classifyIntent(response).dontKnow;
 }
 
-/** Extrae señales técnicas de una respuesta larga (memoria de corto plazo) */
+/** Patrones de señales técnicas y el campo de contexto que activan */
+const SIGNAL_PATTERNS: Array<{
+  re: RegExp;
+  field: "pagos" | "citas" | "dashboard" | "autenticacion" | "baseDeDatos";
+}> = [
+  { re: /(pagar|pago|pagos|comprar|vender|paypal|stripe|tarjeta|transferencia)/, field: "pagos" },
+  { re: /(cita|citas|agendar|reservar|reserva|turno)/, field: "citas" },
+  { re: /(panel|dashboard|administrar|admin|reportes|estad[íi]sticas)/, field: "dashboard" },
+  { re: /(cuenta|cuentas|registrarse|registro|login|usuarios)/, field: "autenticacion" },
+  { re: /(base de datos|guardar datos|guardamos)/, field: "baseDeDatos" },
+];
+
+/**
+ * ¿La palabra en `matchIndex` está precedida de negación en su cláusula?
+ * Retrocede hasta el último separador de cláusula (coma, punto, punto y coma,
+ * "pero", "aunque") y busca negaciones: "no ...", "sin ...", "no necesito ...".
+ */
+function isNegated(t: string, matchIndex: number): boolean {
+  if (matchIndex <= 0) return false;
+  let start = -1;
+  for (const sep of [",", ";", ".", "pero", "aunque"]) {
+    const idx = t.lastIndexOf(sep, matchIndex - 1);
+    if (idx > start) start = idx;
+  }
+  const clause = t.slice(start + 1, matchIndex);
+  return /(^|\s)(no|sin|nunca|jam[áa]s|nada de|no necesito|no quiero|no me interesa|no tengo)\s+/i.test(
+    clause
+  );
+}
+
+/**
+ * Extrae señales técnicas de una respuesta larga (memoria de corto plazo),
+ * CONSCIENTE DE NEGACIÓN: "No necesito reservar mesas" NO activa `citas`.
+ */
 function extractSignals(response: string, ctx: ChatContext): void {
   const t = response.toLowerCase();
-  if (/(pagar|pago|pagos|comprar|vender|paypal|stripe|tarjeta|transferencia)/.test(t) && ctx.pagos === null) {
-    ctx.pagos = true;
-  }
-  if (/(cita|citas|agendar|reservar|reserva|turno)/.test(t) && ctx.citas === null) {
-    ctx.citas = true;
-  }
-  if (/(panel|dashboard|administrar|admin|reportes|estad[íi]sticas)/.test(t) && ctx.dashboard === null) {
-    ctx.dashboard = true;
-  }
-  if (/(cuenta|cuentas|registrarse|registro|login|usuarios)/.test(t) && ctx.autenticacion === null) {
-    ctx.autenticacion = true;
-  }
-  if (/(base de datos|guardar datos|guardamos)/.test(t) && ctx.baseDeDatos === null) {
-    ctx.baseDeDatos = true;
+  for (const { re, field } of SIGNAL_PATTERNS) {
+    if (ctx[field] !== null) continue;
+    // Ojo: el flag "g" es OBLIGATORIO para que exec() avance lastIndex entre
+    // coincidencias (sin él, exec siempre devuelve la misma y hay loop infinito).
+    const rx = new RegExp(re.source, re.flags + "g");
+    let m: RegExpExecArray | null;
+    let activated = false;
+    while ((m = rx.exec(t)) !== null) {
+      if (!isNegated(t, m.index)) {
+        activated = true;
+        break;
+      }
+      if (m.index === rx.lastIndex) rx.lastIndex += 1; // evita loop infinito
+    }
+    if (activated) (ctx as unknown as Record<string, unknown>)[field] = true;
   }
 }
 
@@ -79,6 +115,100 @@ function mentionedSignals(response: string): string[] {
   if (/(panel|dashboard|administrar)/.test(t)) signals.push("lo del panel para administrar");
   if (/(cuenta|cuentas|registrarse|login)/.test(t)) signals.push("lo de las cuentas de usuario");
   return signals;
+}
+
+/** Frases de ruido que NO son secciones de una web */
+const SECTION_NOISE = new Set([
+  "me gusta lo primero", "me gusta", "yo quiero", "quiero", "así como", "algo como",
+  "tipo", "como", "una sola página", "una pagina", "una página", "simple", "sencillo",
+  "solo", "sola", "algo corto", "algo", "así", "asi", "varias secciones", "varias",
+  "más", "mas", "de ti", "de mi", "donde cuentes", "donde cuente", "cuentes",
+  "que", "no sé", "no se", "ni idea", "la verdad", "pues", "bueno", "depende",
+  "lo primero", "primero", "primera", "no", "nada", "completo", "directo",
+]);
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/**
+ * Extrae una lista limpia de secciones de una respuesta libre.
+ * "me gusta lo primero, una sola página, algo así como Inicio, Menú, Ubicación y Contacto"
+ * → "Inicio, Menú, Ubicación, Contacto"
+ */
+function extractSections(raw: string): string | null {
+  const t = raw.replace(/[.,;:!?¿¡]+$/g, "").trim();
+  if (!t) return null;
+
+  // Quitar prefijos de opinión/vacilación
+  const cleaned = t
+    .replace(/^(yo\s+)?(me gusta|quiero|me encantaría|así como|algo como|tipo|como)\s+/i, "")
+    .replace(/^(lo primero|la primera|primero|primera)\s*[,:]?\s*/i, "");
+
+  const parts = cleaned
+    .split(/,|;|\n| y | e /i)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  const sections: string[] = [];
+  for (const part of parts) {
+    const lower = part.toLowerCase();
+    if (
+      /^(no s[ée]|ni idea|nada|una sola página|una pagina|una página|simple|sencillo|solo|sola|algo corto|depende|no|lo primero|primero|primera)$/.test(
+        lower
+      )
+    ) {
+      continue;
+    }
+    // "algo así como X" / "así como X" → tomar X
+    let p = part.replace(/^(algo\s+)?as[ií]\s+como\s+/i, "").trim();
+    p = p.replace(/^(la|el|los|las|una|un|unos|unas|lo|secci[oó]n)\s+/i, "").trim();
+    p = p.replace(/[.,;:!?¿¡]+$/g, "").trim();
+    if (!p || p.length < 2) continue;
+    if (SECTION_NOISE.has(p.toLowerCase())) continue;
+    sections.push(capitalize(p));
+  }
+
+  return sections.length ? sections.join(", ") : null;
+}
+
+/**
+ * Normaliza una lista de servicios: divide por comas/puntos/saltos/"y", quita
+ * artículos iniciales y devuelve un string limpio (compatible con prompt-builder).
+ */
+function normalizeServices(raw: string): string | null {
+  const t = raw.replace(/[.,;:]+$/g, "").trim();
+  if (!t || /^(no s[ée]|ni idea|no|nada)$/i.test(t)) return null;
+  const items = t
+    .split(/,|;|\n|\.| y | e /i)
+    .map((s) => s.replace(/^(la|el|los|las|una|un|unos|unas|lo)\s+/i, "").trim())
+    .filter((s) => s.length > 0);
+  return items.length ? items.join(", ") : null;
+}
+
+/**
+ * ¿El cliente está DECLINANDO dar el dato de contacto (en vez de dar uno
+ * inválido o dudar)? Un "no tengo/no doy correo/teléfono" avanza sin forzar;
+ * una duda ("no sé", "no me acuerdo") o un dato inválido re-pregunta.
+ */
+function isDecliningContact(raw: string): boolean {
+  const t = raw.toLowerCase().trim();
+  if (/(no s[ée]|no se|no me acuerdo|no recuerdo|ni idea)/.test(t)) return false;
+  if (
+    /^(no|nop|nope|ninguno|ninguna|no gracias|no tengo|no doy|no quiero|no me interesa|no manejo|no uso)\b/.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  if (
+    /(no tengo|no doy|no quiero|no me interesa|no manejo|no uso)\s+(?:correo|email|mail|tel[ée]fono|celular|whatsapp|n[uú]mero|dato)/i.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  return false;
 }
 
 /** Fábrica de nodos "sí / no" con clarificación integrada */
@@ -283,9 +413,11 @@ export const FLOW: Record<string, ConversationNode> = {
       } else {
         ctx.paginas = 3;
       }
-      // Guarda la estructura/secciones que describió el cliente
-      if (t.length > 3 && !/^(no s[ée]|no sé|ni idea|no)$/.test(t)) {
-        ctx.estructuraWeb = response.trim();
+      // Guarda la estructura/secciones LIMPIA que describió el cliente
+      // ("me gusta lo primero, una sola página, Inicio, Menú..." → "Inicio, Menú").
+      const sections = extractSections(response);
+      if (sections) {
+        ctx.estructuraWeb = sections;
       }
     },
   },
@@ -422,7 +554,9 @@ export const FLOW: Record<string, ConversationNode> = {
       `¿Tus clientes agendan contigo? Por ejemplo, eligen día y hora para un servicio. Si es así, eso lo resolvemos muy bien. Si no, lo omitimos y listo, sin complicarte.`,
     field: "citas",
     next: "design",
-    condition: (ctx) => ctx.category !== "citas",
+    // No preguntar de más si ya quedó claro que no agenda (lo dijo en la
+    // descripción del negocio y extractSignals lo registró como false).
+    condition: (ctx) => ctx.category !== "citas" && ctx.citas !== false,
   }),
 
   design: {
@@ -496,12 +630,8 @@ export const FLOW: Record<string, ConversationNode> = {
       return "scope_reference";
     },
     onReceive: (response, ctx) => {
-      const t = response.trim();
-      if (/(no s[ée]|ni idea)/i.test(t)) {
-        ctx.servicios = null;
-      } else {
-        ctx.servicios = t.replace(/[.,;:]+$/g, "") || null;
-      }
+      // Normaliza la lista: "corte, barba y afeitado" → "corte, barba, afeitado".
+      ctx.servicios = normalizeServices(response);
     },
   },
 
@@ -571,7 +701,8 @@ export const FLOW: Record<string, ConversationNode> = {
     },
     onReceive: (response, ctx) => {
       const amount = extractBudgetAmount(response);
-      ctx.presupuesto = amount ?? extractSubject(response);
+      // No guardar frases de duda como presupuesto
+      ctx.presupuesto = amount ?? (isNoSé(response, ctx) ? null : extractSubject(response));
     },
   },
 
@@ -606,20 +737,65 @@ export const FLOW: Record<string, ConversationNode> = {
       `¡Gracias${ctx.clientName ? `, ${ctx.clientName.split(" ")[0]}` : ""}! Y un correo para enviarte la propuesta cuando esté lista, ¿cuál es? ${pickEmoji("contacto")}`,
     expectedResponseType: "url",
     nextNode: (response, ctx) => {
-      if (isNoSé(response, ctx)) return "contact_phone";
+      // Rechazo claro ("no tengo/no doy correo") → avanzar sin email (no forzar)
+      if (isDecliningContact(response) && !/@/.test(response)) {
+        ctx.emailIntentos = 0;
+        return "contact_phone";
+      }
+      // Email inválido → re-preguntar (máx 2 intentos), sin guardar basura
+      if (ctx.clientEmail === null) {
+        if (ctx.emailIntentos >= 2) {
+          ctx.emailIntentos = 0;
+          return "contact_phone";
+        }
+        ctx.emailIntentos += 1;
+        return "clarify_email";
+      }
+      ctx.emailIntentos = 0;
       return "contact_phone";
     },
     onReceive: (response, ctx) => {
-      const emailMatch = response.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
-      if (emailMatch) {
-        ctx.clientEmail = emailMatch[0];
+      const email = extractEmail(response);
+      if (email) {
+        ctx.clientEmail = email;
         // Si incluyó un nombre junto al correo y aún no tenemos, lo tomamos
         if (!ctx.clientName) {
-          ctx.clientName = extractName(response.replace(emailMatch[0], "")) || null;
+          ctx.clientName = extractName(response.replace(email, "")) || null;
         }
       } else {
-        ctx.clientEmail = response.trim();
+        // NO guardar basura: "no sé", un texto, un correo incompleto...
+        ctx.clientEmail = null;
       }
+    },
+  },
+
+  clarify_email: {
+    id: "clarify_email",
+    type: "clarification",
+    generateMessage: () =>
+      `Sin problema, a veces se escapa un dedo. Un correo se ve así: nombre@tucorreo.com. ¿Me lo escribes? Lo necesito para enviarte la propuesta cuando esté lista. ${pickEmoji("contacto")}`,
+    expectedResponseType: "text",
+    nextNode: (response, ctx) => {
+      const email = extractEmail(response);
+      if (email) {
+        ctx.clientEmail = email;
+        ctx.emailIntentos = 0;
+        return "contact_phone";
+      }
+      if (isDecliningContact(response) && !/@/.test(response)) {
+        ctx.emailIntentos = 0;
+        return "contact_phone";
+      }
+      if (ctx.emailIntentos >= 2) {
+        ctx.emailIntentos = 0;
+        ctx.clientEmail = null;
+        return "contact_phone";
+      }
+      ctx.emailIntentos += 1;
+      return "clarify_email";
+    },
+    onReceive: (response, ctx) => {
+      ctx.clientEmail = extractEmail(response);
     },
   },
 
@@ -630,16 +806,59 @@ export const FLOW: Record<string, ConversationNode> = {
       `Y para cualquier detalle rápido, ¿un teléfono o WhatsApp donde pueda localizarte? Lo pongo en la propuesta para que me contactes sin fricción cuando quieras avanzar. ${pickEmoji("contacto")}`,
     expectedResponseType: "text",
     nextNode: (response, ctx) => {
-      if (isNoSé(response, ctx)) return "extra_comments";
+      // Rechazo claro ("no tengo/no doy teléfono") → avanzar sin teléfono (no forzar)
+      if (isDecliningContact(response) && !/\d/.test(response)) {
+        ctx.phoneIntentos = 0;
+        return "extra_comments";
+      }
+      // Teléfono inválido (menos de 10 dígitos) → re-preguntar (máx 2 intentos)
+      if (ctx.clientPhone === null) {
+        if (ctx.phoneIntentos >= 2) {
+          ctx.phoneIntentos = 0;
+          return "extra_comments";
+        }
+        ctx.phoneIntentos += 1;
+        return "clarify_phone";
+      }
+      ctx.phoneIntentos = 0;
       return "extra_comments";
     },
     onReceive: (response, ctx) => {
       const t = response.toLowerCase();
-      if (/(no|ninguno|no tengo|no doy)/.test(t)) {
+      const explicitNo = /(no tengo|no doy|ninguno|no)/.test(t) && !/\d/.test(response);
+      // Guarda el número LIMPIO (normalizado), nunca la frase completa.
+      ctx.clientPhone = explicitNo ? null : normalizePhone(response);
+    },
+  },
+
+  clarify_phone: {
+    id: "clarify_phone",
+    type: "clarification",
+    generateMessage: () =>
+      `Con gusto te lo anoto como salga: ¿un teléfono o WhatsApp de 10 dígitos, tipo 81 2345 6789? Solo los números, para que te lleguen los datos de la propuesta sin errores. ${pickEmoji("contacto")}`,
+    expectedResponseType: "text",
+    nextNode: (response, ctx) => {
+      if (isDecliningContact(response) && !/\d/.test(response)) {
         ctx.clientPhone = null;
-      } else {
-        ctx.clientPhone = extractSubject(response);
+        ctx.phoneIntentos = 0;
+        return "extra_comments";
       }
+      const phone = normalizePhone(response);
+      if (phone === null) {
+        if (ctx.phoneIntentos >= 2) {
+          ctx.phoneIntentos = 0;
+          ctx.clientPhone = null;
+          return "extra_comments";
+        }
+        ctx.phoneIntentos += 1;
+        return "clarify_phone";
+      }
+      ctx.clientPhone = phone;
+      ctx.phoneIntentos = 0;
+      return "extra_comments";
+    },
+    onReceive: (response, ctx) => {
+      ctx.clientPhone = normalizePhone(response);
     },
   },
 

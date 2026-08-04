@@ -74,6 +74,38 @@ export function resolveGoal(nodeId: string): string {
   return TURN_GOALS[base] ?? TURN_GOALS[base === nodeId ? nodeId : base] ?? "Haz una pregunta clara y útil para avanzar en la entrevista.";
 }
 
+// ─── Circuit breaker (protección de la sesión) ──────────────────────
+// Si 2 llamadas consecutivas al LLM fallan (rate limit, 5xx...), la charla
+// continúa con mensajes DETERMINISTAS sin volver a llamar a la API durante
+// una ventana de tiempo. Objetivo: que la llamada final /api/analyze no
+// llegue con la cuenta ya rate-limiteada por las ~23 llamadas previas del chat.
+let consecutiveFailures = 0;
+const OPEN_THRESHOLD = 2;
+const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutos
+let openedAt = 0;
+
+/** ¿El circuito está abierto? (si sí, se salta la API y se responde determinista) */
+export function isCircuitOpen(): boolean {
+  if (openedAt === 0) return false;
+  if (Date.now() - openedAt < COOLDOWN_MS) return true;
+  // Cooldown expirado: se cierra y se intenta de nuevo
+  openedAt = 0;
+  consecutiveFailures = 0;
+  return false;
+}
+
+function reportLlmSuccess(): void {
+  consecutiveFailures = 0;
+  openedAt = 0;
+}
+
+function reportLlmFailure(): void {
+  consecutiveFailures += 1;
+  if (consecutiveFailures >= OPEN_THRESHOLD && openedAt === 0) {
+    openedAt = Date.now();
+  }
+}
+
 /** Contexto compacto (solo lo que ya sabemos del cliente). */
 function compactContext(context: ChatContext): string {
   const known: Record<string, unknown> = {};
@@ -153,10 +185,14 @@ function cleanReply(raw: string): string {
 
 /**
  * Genera el mensaje del siguiente turno usando DeepSeek.
- * Devuelve `fallbackReply` si no hay API key, hay error o la respuesta es inválida.
+ * Devuelve `fallbackReply` si no hay API key, hay error, la respuesta es
+ * inválida o el circuit breaker está abierto (charla determinista).
  */
 export async function generateNextMessage(opts: GenerateOpts): Promise<string> {
   if (!getLlmProvider()) return opts.fallbackReply;
+
+  // Circuit breaker abierto: responder determinista SIN llamar a la API.
+  if (isCircuitOpen()) return opts.fallbackReply;
 
   try {
     const completion = await chatCompletion({
@@ -168,10 +204,19 @@ export async function generateNextMessage(opts: GenerateOpts): Promise<string> {
       max_tokens: 160,
     });
 
-    if (!completion?.content) return opts.fallbackReply;
+    if (!completion?.content) {
+      reportLlmFailure();
+      return opts.fallbackReply;
+    }
     const reply = cleanReply(completion.content);
-    return reply || opts.fallbackReply;
+    if (!reply) {
+      reportLlmFailure();
+      return opts.fallbackReply;
+    }
+    reportLlmSuccess();
+    return reply;
   } catch {
+    reportLlmFailure();
     return opts.fallbackReply;
   }
 }
