@@ -17,6 +17,7 @@ import {
   adaptarCopyGiro,
   ajustarPrecio,
   detectarGiro,
+  filtrarPorDeclinados,
   generarExplicacionPrecio,
   generarValorNegocio,
 } from "@/lib/industry-pricing";
@@ -56,7 +57,7 @@ export const PRICING_CATALOG: PricingCategory[] = [
   {
     id: "landing",
     nombreCliente: "Página de presentación para tu negocio",
-    keywords: ["presentar", "presentación", "información", "servicios", "landing", "vitrina", "mostrar", "folleto", "tarjeta", "curriculum", "cv", "profesional", "consultorio"],
+    keywords: ["presentar", "presentación", "información", "servicios", "landing", "vitrina", "mostrar", "folleto", "tarjeta", "curriculum", "cv", "profesional", "consultorio", "catálogo", "catalogo", "me encuentren", "que me encuentren", "página sencilla", "pagina sencilla", "página simple", "pagina simple", "mostrar mis", "mostrar mi", "presentar mis", "presentar mi", "solo información", "solo informacion"],
     base: { basico: 8000, profesional: 15000, avanzado: 25000 },
     tiempo: { basico: "3-5 días", profesional: "5-8 días", avanzado: "8-12 días" },
     features: [
@@ -80,9 +81,22 @@ export const PRICING_CATALOG: PricingCategory[] = [
   {
     id: "ecommerce",
     nombreCliente: "Tienda online con carrito y pagos",
-    // OJO: NO incluir "ventas"/"vendedor" sueltos → "gerente de ventas" no es
-    // una tienda online. Usar señales específicas de venta en línea.
-    keywords: ["tienda", "vender", "vendo", "productos", "carrito", "pedidos", "comprar", "catalogo en linea", "catalogo en línea", "venta online", "venta en linea", "venta en línea", "vender en linea", "vender en línea", "shop", "mercancia", "mercancía", "articulos", "artículos", "compras en linea"],
+    // OJO: "tienda", "vender" o "productos" SUELTOS no son ecommerce: una
+    // "tienda de ropa que solo quiere que la encuentren" es una LANDING.
+    // Solo cuentan señales de VENTA EN LÍNEA real: carrito, pagos, envíos,
+    // "vender por internet", "tienda online", etc.
+    keywords: [
+      "tienda online", "tienda en linea", "tienda en línea",
+      "vender en linea", "vender en línea", "vender por internet", "venta por internet",
+      "venta online", "venta en linea", "venta en línea",
+      "comprar en linea", "comprar en línea", "compras en linea", "compras en línea",
+      "catalogo en linea", "catálogo en línea",
+      "carrito", "checkout", "pasarela",
+      "pago en linea", "pago en línea", "pagar en linea", "pagar en línea",
+      "pagos en linea", "pagos en línea",
+      "pedidos online", "pedidos en linea", "pedidos en línea", "hacer pedidos",
+      "envio", "envíos", "envios", "shop", "mercancia", "mercancía",
+    ],
     base: { basico: 20000, profesional: 35000, avanzado: 60000 },
     tiempo: { basico: "10-15 días", profesional: "15-25 días", avanzado: "25-40 días" },
     features: [
@@ -252,9 +266,20 @@ export function inferCategory(text: string): string {
     }
     let score = matched.size;
     // +0.5 si menciona citas/agenda en la frase
-    if (cat.id === "citas" && /\b(agendar|agenda|citas?)\b/.test(t)) score += 0.5;
-    // +0.5 si menciona vender/comprar/tienda en la frase
-    if (cat.id === "ecommerce" && /\b(vender|vendo|comprar|tienda)\b/.test(t)) score += 0.5;
+    if (cat.id === "citas" && /\b(agendar|agenda|citas?|reservar|horario)\b/.test(t)) score += 0.5;
+    // +0.5 si hay señales claras de VENTA EN LÍNEA (carrito, pagos, envíos, "por internet")
+    if (
+      cat.id === "ecommerce" &&
+      /(vender\s+(en linea|en línea|por internet|mi|mis|tus)|vendo\s+(en linea|en línea|por internet|mi|mis|tus)|comprar\s+(en linea|en línea|online)|compras\s+(en linea|en línea|online)|tienda\s+(online|en linea|en línea)|carrito|checkout|pasarela|pagar\s+(en linea|en línea|online)|pago\s+(en linea|en línea|online)|pagos?\s+(en linea|en línea|online)|pedidos?\s+(online|en linea|en línea)|hacer\s+pedidos|env[ií]os|shop\s+online)/.test(t)
+    )
+      score += 0.5;
+    // +0.5 si pide algo sencillo de presentación/catálogo (empates favorecen a landing)
+    if (
+      cat.id === "landing" &&
+      (/\b(catálogo|catalogo|presentación|presentacion|presentar|mostrar|me encuentren|que me encuentren|página sencilla|pagina sencilla|página simple|pagina simple|vitrina|solo información|solo informacion|básic|basic)\b/.test(t) ||
+        /no muy caro|no tan caro|algo sencillo|algo básico|algo basico/.test(t))
+    )
+      score += 0.5;
     if (score > bestScore) {
       bestScore = score;
       best = cat;
@@ -263,6 +288,32 @@ export function inferCategory(text: string): string {
 
   if (!best || bestScore === 0) return "landing";
   return best.id;
+}
+
+/**
+ * Resuelve la categoría FINAL considerando lo que el cliente DECLINÓ durante
+ * la conversación (no solo lo inferido del texto):
+ * - "ecommerce" sin pagos en línea → no es una tienda online real, es una
+ *   landing con catálogo (evita cobrar $20,300 por una página básica).
+ * - "webapp" sin panel, sin base de datos y sin login → no es plataforma.
+ */
+export function resolverCategoria(
+  ctx: Pick<
+    ChatContext,
+    "category" | "pagos" | "dashboard" | "baseDeDatos" | "autenticacion"
+  >
+): string | null {
+  const cat = ctx.category;
+  if (!cat) return null;
+  if (cat === "ecommerce" && ctx.pagos === false) return "landing";
+  if (
+    cat === "webapp" &&
+    ctx.dashboard === false &&
+    ctx.baseDeDatos === false &&
+    ctx.autenticacion === false
+  )
+    return "landing";
+  return cat;
 }
 
 /** Nivel por cantidad de features activas */
@@ -305,13 +356,16 @@ export function buildFallbackProposal(
   clientName: string,
   context: ChatContext
 ) {
-  const cat = getCategoryById(categoryId) ?? PRICING_CATALOG[0];
-  const giro = detectarGiro(context.negocioDescripcion, categoryId);
+  // La categoría final considera lo que el cliente DECLINÓ (p.ej. una
+  // "tienda de ropa" que no quiere pagos en línea es una landing, no ecommerce).
+  const categoryIdResuelto = resolverCategoria(context) ?? categoryId;
+  const cat = getCategoryById(categoryIdResuelto) ?? PRICING_CATALOG[0];
+  const giro = detectarGiro(context.negocioDescripcion, categoryIdResuelto);
   // Copy adaptado a las funciones que el cliente realmente declinó
   const copy = adaptarCopyGiro(giro, context);
 
   // Estimado técnico + ajuste al presupuesto del giro (con gancho)
-  const { precio_min: estMin, precio_max: estMax, nivel } = estimatePrice(categoryId, activeFeatureIds);
+  const { precio_min: estMin, precio_max: estMax, nivel } = estimatePrice(categoryIdResuelto, activeFeatureIds);
   const ajustado = ajustarPrecio(estMin, estMax, giro);
   const precio_min = ajustado.precio_min;
   const precio_max = ajustado.precio_max;
@@ -321,7 +375,7 @@ export function buildFallbackProposal(
     clientName: context.clientName,
     clientPhone: context.clientPhone,
     negocioDescripcion: context.negocioDescripcion,
-    category: context.category,
+    category: categoryIdResuelto,
     paginas: context.paginas,
   });
 
@@ -374,31 +428,34 @@ export function buildFallbackProposal(
     },
   });
 
-  return {
-    clientName,
-    categoria: cat.nombreCliente,
-    nivel: nivelLabel,
-    precio_min,
-    precio_max,
-    tiempo_estimado: cat.tiempo[nivel],
-    stack_tecnico: stack,
-    funcionalidades: Array.from(new Set(funcionalidades)),
-    explicacion_precio,
-    recomendaciones: [
-      "Considera agregar mantenimiento mensual para mantener todo actualizado.",
-      "Prepara fotos y textos reales de tu negocio para el lanzamiento.",
-    ],
-    entregables,
-    prompt_tecnico: promptTecnico,
-    // ── Campos comerciales ──
-    giro: giro.nombre,
-    punto_venta: copy.pitch,
-    dolor: copy.dolor,
-    beneficios: copy.beneficios,
-    valor_negocio,
-    cuota_mensual: ajustado.cuota_mensual,
-    alcance_ajustado: ajustado.alcance_ajustado,
-    mensaje_alcance: ajustado.mensaje_alcance,
-    costo_omision: copy.costo_omision,
-  };
+  return filtrarPorDeclinados(
+    {
+      clientName,
+      categoria: cat.nombreCliente,
+      nivel: nivelLabel,
+      precio_min,
+      precio_max,
+      tiempo_estimado: cat.tiempo[nivel],
+      stack_tecnico: stack,
+      funcionalidades: Array.from(new Set(funcionalidades)),
+      explicacion_precio,
+      recomendaciones: [
+        "Considera agregar mantenimiento mensual para mantener todo actualizado.",
+        "Prepara fotos y textos reales de tu negocio para el lanzamiento.",
+      ],
+      entregables,
+      prompt_tecnico: promptTecnico,
+      // ── Campos comerciales ──
+      giro: giro.nombre,
+      punto_venta: copy.pitch,
+      dolor: copy.dolor,
+      beneficios: copy.beneficios,
+      valor_negocio,
+      cuota_mensual: ajustado.cuota_mensual,
+      alcance_ajustado: ajustado.alcance_ajustado,
+      mensaje_alcance: ajustado.mensaje_alcance,
+      costo_omision: copy.costo_omision,
+    },
+    context
+  );
 }

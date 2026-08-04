@@ -61,9 +61,6 @@ export function PriceCard({
             <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-sm font-medium text-white">
               <TrendingDown className="h-4 w-4" />
               Desde {formatMXN(cuota_mensual)} al mes
-              <span className="font-normal text-blue-100">
-                (es más de lo que gastas en publicidad en un mes)
-              </span>
             </p>
           ) : null}
 

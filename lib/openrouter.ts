@@ -6,7 +6,7 @@
  */
 
 import type { AnalysisResult, ChatContext, ChatMessage } from "@/lib/types";
-import { PRICING_CATALOG, getCategoryById } from "@/lib/pricing-catalog";
+import { PRICING_CATALOG, getCategoryById, resolverCategoria } from "@/lib/pricing-catalog";
 import type { Nivel } from "@/lib/pricing-catalog";
 import { buildFallbackProposal } from "@/lib/pricing-catalog";
 import { buildTechnicalPrompt } from "@/lib/prompt-builder";
@@ -15,6 +15,7 @@ import {
   adaptarCopyGiro,
   ajustarPrecio,
   detectarGiro,
+  filtrarPorDeclinados,
   generarExplicacionPrecio,
   generarValorNegocio,
   GIROS,
@@ -220,7 +221,10 @@ function nivelFromLabel(label: string): Nivel {
  *   si la IA los omitió, usando los datos locales del giro.
  */
 function enrichCommercial(result: AnalysisResult, context: ChatContext): AnalysisResult {
-  const giro = detectarGiro(context.negocioDescripcion, context.category ?? "landing");
+  // La categoría FINAL considera lo que el cliente DECLINÓ (p.ej. una tienda
+  // de ropa sin pagos en línea es landing, no ecommerce) → mismo número que UI.
+  const categoria = resolverCategoria(context) ?? "landing";
+  const giro = detectarGiro(context.negocioDescripcion, categoria);
   // Copy adaptado a las funciones que el cliente realmente declinó
   const copy = adaptarCopyGiro(giro, context);
   const aj = ajustarPrecio(result.precio_min, result.precio_max, giro);
@@ -230,7 +234,7 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     clientName: context.clientName,
     clientPhone: context.clientPhone,
     negocioDescripcion: context.negocioDescripcion,
-    category: context.category,
+    category: categoria,
     paginas: context.paginas,
   });
 
@@ -245,7 +249,7 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     context.autenticacion === false ||
     context.chat === false;
 
-  return {
+  return filtrarPorDeclinados({
     ...result,
     precio_min: aj.precio_min,
     precio_max: aj.precio_max,
@@ -273,7 +277,7 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     explicacion_precio:
       result.explicacion_precio ||
       generarExplicacionPrecio(giro, aj.precio_min, aj.precio_max, aj.alcance_ajustado),
-  };
+  }, context);
 }
 
 /**
@@ -282,7 +286,7 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
  * garantizar calidad y consistencia, tomando el alcance refinado por DeepSeek.
  */
 function buildAiPrompt(result: AnalysisResult, context: ChatContext): string {
-  const categoryId = context.category ?? "landing";
+  const categoryId = resolverCategoria(context) ?? "landing";
   const category = getCategoryById(categoryId) ?? PRICING_CATALOG[0];
   const nivel = nivelFromLabel(result.nivel ?? "Profesional");
   const giro = detectarGiro(context.negocioDescripcion, categoryId);

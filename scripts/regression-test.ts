@@ -26,7 +26,13 @@ import {
   START_NODE_ID,
   getNode,
 } from "../lib/conversation-flow";
-import { buildClientData } from "../lib/quote-engine";
+import { buildClientData, calculateQuote } from "../lib/quote-engine";
+import {
+  buildFallbackProposal,
+  inferCategory,
+  resolverCategoria,
+} from "../lib/pricing-catalog";
+import { filtrarPorDeclinados } from "../lib/industry-pricing";
 
 let failures = 0;
 let passed = 0;
@@ -359,6 +365,168 @@ checkLanding("Restaurante (Carmen)", [
   "222 333 4455",
   "nada más",
 ]);
+
+// Tienda de ropa que pide una LANDING básica: antes se clasificaba como
+// ecommerce y la propuesta salía en $20,300 (precio de webapp). Ahora debe
+// cerrar en landing (con pagos/pdfs SALTADOS por ser landing) y el total
+// determinista debe ser el de landing ($12,760).
+checkLanding("Tienda de ropa (María)", [
+  "Tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro",
+  "sí",
+  "Una sola página de corrido, con inicio, catálogo y contacto",
+  "no", // cuentas
+  "no", // base de datos
+  "no", // panel
+  "no", // mapa
+  "sí", // WhatsApp
+  "no", // citas
+  "moderno pero sencillo", // diseño
+  "sí", // SEO
+  "no", // PWA
+  "tengo algunas fotos pero no muy profesionales", // contenido
+  "unas 30 prendas con su precio y descripción", // servicios/catálogo
+  "no tengo", // referencia
+  "en unas 3 semanas", // fecha
+  "unos 6 o 7 mil pesos", // presupuesto
+  "Me llamo María y mi tienda se llama Moda GDL", // nombre
+  "maria.moda@gmail.com", // email
+  "33 1234 5678", // teléfono
+  "no, con eso es suficiente", // comentarios
+]);
+
+// ─── FASE G · Coherencia de precio (landing básica vs tienda online) ──
+
+section("G · Categoría y precio coherentes (tienda de ropa ≠ tienda online)");
+{
+  // Una tienda de ropa que pide una página sencilla NO es ecommerce.
+  assert(
+    inferCategory(
+      "Tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre"
+    ) === "landing",
+    "tienda de ropa + página sencilla → landing (no ecommerce)"
+  );
+  // Venta en línea real SÍ es ecommerce.
+  assert(
+    inferCategory(
+      "Quiero una tienda online con carrito, pagos y envíos para vender mi ropa por internet"
+    ) === "ecommerce",
+    "venta en línea con carrito/pagos → ecommerce"
+  );
+  assert(
+    inferCategory("Tengo una tienda de ropa y quiero vender por internet con carrito") ===
+      "ecommerce",
+    "tienda + vender por internet → ecommerce"
+  );
+}
+{
+  // Presupuesto con "no sé cuánto cobran" + monto: NO re-pregunta y guarda
+  // el monto real (antes se perdía y se guardaba la siguiente respuesta).
+  const ctx = createEmptyContext();
+  const resp =
+    "Pues la verdad no sé cuánto cobran, yo pensaba en unos 6 o 7 mil pesos";
+  fireOnReceive("budget", resp, ctx);
+  assert(
+    ctx.presupuesto === "6000 a 7000",
+    `presupuesto capturado pese al "no sé" (${ctx.presupuesto})`
+  );
+  assert(
+    FLOW.budget.nextNode(resp, ctx) === "contact_name",
+    "con monto avanza (no re-pregunta el presupuesto)"
+  );
+}
+{
+  // Resolver: ecommerce sin pagos → landing (no cobrar $20,300 por una landing).
+  const ctx = createEmptyContext();
+  ctx.category = "ecommerce";
+  ctx.pagos = false;
+  assert(resolverCategoria(ctx) === "landing", "ecommerce + pagos=false → landing");
+  ctx.pagos = true;
+  assert(resolverCategoria(ctx) === "ecommerce", "ecommerce + pagos=true → ecommerce");
+  // webapp sin panel/db/login → landing
+  const ctx2 = createEmptyContext();
+  ctx2.category = "webapp";
+  ctx2.dashboard = false;
+  ctx2.baseDeDatos = false;
+  ctx2.autenticacion = false;
+  assert(resolverCategoria(ctx2) === "landing", "webapp sin panel/db/login → landing");
+}
+{
+  // filtrarPorDeclinados: quita mapa y base de datos si el cliente los declinó.
+  const ctx = createEmptyContext();
+  ctx.mapas = false;
+  ctx.baseDeDatos = false;
+  const res = filtrarPorDeclinados(
+    {
+      funcionalidades: [
+        "Página única con catálogo",
+        "Alta en Google Maps y Google My Business para que te ubiquen en el mapa",
+      ],
+      entregables: ["Botón de WhatsApp", "Alta en Google My Business para el mapa"],
+      stack_tecnico: ["Next.js", "Supabase (para catálogo simple)", "Tailwind CSS"],
+      recomendaciones: [],
+    },
+    ctx
+  );
+  assert(
+    !res.funcionalidades!.some((f) => /mapa|my business/i.test(f)),
+    "funcionalidades sin promesas de mapa cuando mapas=false"
+  );
+  assert(
+    !res.entregables!.some((e) => /mapa|my business/i.test(e)),
+    "entregables sin Google Maps cuando mapas=false"
+  );
+  assert(
+    !res.stack_tecnico!.some((s) => /supabase/i.test(s)),
+    "stack sin Supabase cuando baseDeDatos=false"
+  );
+  assert(res.funcionalidades!.length === 1, "solo queda la funcionalidad limpia");
+}
+{
+  // Precio determinista coherente: landing + dominio/hosting → $12,760.
+  const total = calculateQuote(
+    buildClientData({
+      nombre: "María",
+      giro: "Tienda / comercio local",
+      tipoWeb: "landing",
+      dominioHosting: true,
+      branding: false,
+    })
+  ).total;
+  assert(total === 12760, `landing + dominio/hosting → $12,760 (obtuve ${total})`);
+  assert(
+    Math.round(total / 24) === 532,
+    `cuota UI = total/24 → $532/mes (obtuve ${Math.round(total / 24)})`
+  );
+}
+{
+  // Propuesta de respaldo (fallback) coherente para María: landing sin mapa
+  // ni Supabase, aunque el texto mencione "tienda de ropa".
+  const ctx = createEmptyContext();
+  ctx.clientName = "María";
+  ctx.negocioDescripcion =
+    "Tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro";
+  ctx.category = inferCategory(ctx.negocioDescripcion);
+  ctx.pagos = false;
+  ctx.mapas = false;
+  ctx.baseDeDatos = false;
+  ctx.dashboard = false;
+  ctx.autenticacion = false;
+  ctx.presupuesto = "6000 a 7000";
+  const propuesta = buildFallbackProposal(ctx.category!, [], "María", ctx);
+  assert(ctx.category === "landing", "María (tienda de ropa sencilla) resuelve a landing");
+  assert(
+    /presentación|landing/i.test(propuesta.categoria),
+    `categoría de propuesta es de presentación (${propuesta.categoria})`
+  );
+  assert(
+    !propuesta.funcionalidades.some((f) => /mapa|my business/i.test(f)),
+    "funcionalidades sin mapa cuando mapas=false"
+  );
+  assert(
+    !propuesta.stack_tecnico.some((s) => /supabase/i.test(s)),
+    "stack sin Supabase cuando baseDeDatos=false"
+  );
+}
 
 // ─── Resumen ───────────────────────────────────────────────────────
 

@@ -696,6 +696,9 @@ export const FLOW: Record<string, ConversationNode> = {
       `Ahora sí, la pregunta que a todos les da un poco de pena, y con razón. ${pickEmoji("precio")} ¿Qué inversión tienes en mente para esto? No te lo pregunto para cobrarte de más: al contrario, es para armarte algo que quepa en tu bolsillo y que de verdad te funcione. Con los años aprendí que lo peor es venderle a alguien algo que no pueda sostener.`,
     expectedResponseType: "text",
     nextNode: (response, ctx) => {
+      // Si ya dio un monto/rango, avanzamos aunque la frase diga
+      // "no sé cuánto cobran" (la duda es retórica si ya dio un número).
+      if (extractBudgetAmount(response)) return "contact_name";
       if (isNoSé(response, ctx)) return "clarify_budget";
       return "contact_name";
     },

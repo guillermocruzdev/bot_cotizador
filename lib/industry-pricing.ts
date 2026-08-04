@@ -611,6 +611,113 @@ export function adaptarCopyGiro(
   };
 }
 
+// ─── Filtro de contenido por funciones declinadas ───────────────────
+
+/** Palabras clave por función: si el cliente la DECLINÓ, se retira cualquier
+ *  ítem que la prometa de funcionalidades/entregables/recomendaciones/stack,
+ *  para no contradecir lo que el cliente dijo en la conversación. */
+const DECLINED_FILTERS: Array<{
+  campo: keyof Pick<
+    ChatContext,
+    | "mapas" | "baseDeDatos" | "dashboard" | "autenticacion"
+    | "pagos" | "citas" | "documentos" | "pwa" | "chat"
+  >;
+  keywords: string[];
+}> = [
+  {
+    campo: "mapas",
+    keywords: [
+      "mapa", "google maps", "google my business", "my business", "en el mapa",
+      "lleguen sin perderse", "cómo llegar", "como llegar", "mapa para",
+      "mapa con tu", "te ubiquen en el mapa",
+    ],
+  },
+  {
+    campo: "baseDeDatos",
+    keywords: [
+      "base de datos", "supabase", "postgres", "guardar datos",
+      "guardar información", "almacenar", "guardar pedidos", "guardar citas",
+    ],
+  },
+  {
+    campo: "dashboard",
+    keywords: [
+      "panel", "dashboard", "panel de control", "administrar pedidos",
+      "administrar citas", "ver todos los mensajes", "todos los mensajes",
+      "ver pedidos", "ver citas", "panel para",
+    ],
+  },
+  {
+    campo: "autenticacion",
+    keywords: [
+      "crear cuenta", "cuenta de", "cuentas de", "registrarse", "login",
+      "iniciar sesión", "área de clientes", "usuario con", "usuarios con",
+      "historial",
+    ],
+  },
+  {
+    campo: "pagos",
+    keywords: [
+      "pago con", "pagar en", "pagos en", "pago en", "tarjeta", "stripe",
+      "paypal", "pasarela", "cobrar", "cobro", "cobros", "checkout",
+    ],
+  },
+  {
+    campo: "citas",
+    keywords: [
+      "cita", "citas", "agenda", "agendar", "reservar", "reserva",
+      "calendario", "turno", "horario en línea",
+    ],
+  },
+  {
+    campo: "documentos",
+    keywords: [
+      "pdf", "cotización", "cotizaciones", "recibos", "reportes", "factura",
+      "facturas",
+    ],
+  },
+  {
+    campo: "pwa",
+    keywords: [
+      "instalable", "como app", "pwa", "instalar en el celular",
+      "se sienta como una app",
+    ],
+  },
+  {
+    campo: "chat",
+    keywords: ["mensajería interna", "chat interno", "mensajes internos"],
+  },
+];
+
+/**
+ * Retira de la propuesta (funcionalidades, entregables, recomendaciones y
+ * stack) cualquier ítem que prometa una función que el cliente DECLINÓ.
+ * Ej: si dijo "no quiero mapa", se quita "Alta en Google Maps / My Business".
+ */
+export function filtrarPorDeclinados<T extends {
+  funcionalidades?: string[];
+  entregables?: string[];
+  recomendaciones?: string[];
+  stack_tecnico?: string[];
+}>(analysis: T, ctx: ChatContext): T {
+  const prohibido: string[] = [];
+  for (const f of DECLINED_FILTERS) {
+    if (ctx[f.campo] === false) prohibido.push(...f.keywords);
+  }
+  if (prohibido.length === 0) return analysis;
+  const clean = (arr: string[] | undefined): string[] | undefined =>
+    arr
+      ? arr.filter((s) => !prohibido.some((kw) => normalize(s).includes(kw)))
+      : arr;
+  return {
+    ...analysis,
+    funcionalidades: clean(analysis.funcionalidades),
+    entregables: clean(analysis.entregables),
+    recomendaciones: clean(analysis.recomendaciones),
+    stack_tecnico: clean(analysis.stack_tecnico),
+  };
+}
+
 /** Explicación del precio con contexto de industria */
 export function generarExplicacionPrecio(
   giro: Giro,

@@ -27,6 +27,7 @@ import {
   formatPesos,
   type ClientData,
 } from "@/lib/quote-engine";
+import { resolverCategoria } from "@/lib/pricing-catalog";
 import type { AnalysisResult } from "@/lib/types";
 import { ContactCTA } from "./ContactCTA";
 import { FeatureList } from "./FeatureList";
@@ -37,6 +38,13 @@ import { ValueSelling } from "./ValueSelling";
 import { WhyThisPrice } from "./WhyThisPrice";
 
 const DEV_NAME = process.env.NEXT_PUBLIC_DEVELOPER_NAME || "";
+
+/** Máximo del presupuesto que dijo el cliente ("6000 a 7000" → 7000). */
+function maxBudget(presupuesto: string | null): number | null {
+  if (!presupuesto) return null;
+  const nums = presupuesto.match(/\d+/g)?.map(Number) ?? [];
+  return nums.length ? Math.max(...nums) : null;
+}
 
 export function ProposalView() {
   const result = useChatStore((s) => s.result);
@@ -70,7 +78,10 @@ export function ProposalView() {
         giro: result.giro || result.categoria || "",
         telefono: context.clientPhone ?? null,
         ubicacion: detectarCiudad(context.negocioDescripcion),
-        tipoWeb: derivarTipoWeb(context.category, context.paginas),
+        // La categoría final considera lo que el cliente declinó (una tienda
+        // de ropa sin pagos en línea es landing, no ecommerce) → el total
+        // mostrado coincide con el de la propuesta y el PDF.
+        tipoWeb: derivarTipoWeb(resolverCategoria(context), context.paginas),
         dominioHosting: true,
         branding: false,
         presupuesto: null,
@@ -78,6 +89,25 @@ export function ProposalView() {
     : null;
 
   const quoteTotal = clientData ? calculateQuote(clientData).total : null;
+
+  // Cuota mensual SIEMPRE derivada del mismo precio mostrado (precio/24),
+  // para que "Desde $X al mes" nunca contradiga el total exacto.
+  const cuotaMensual =
+    quoteTotal != null
+      ? Math.max(Math.round(quoteTotal / 24), 150)
+      : result?.cuota_mensual;
+
+  // Honestidad: si el cliente dio un presupuesto menor al total, se lo
+  // decimos claro en vez de que la propuesta lo contradiga en silencio.
+  const presupuestoMax = maxBudget(context.presupuesto);
+  const mensajeAlcance =
+    quoteTotal != null && presupuestoMax != null && presupuestoMax < quoteTotal
+      ? `Me dijiste que tu presupuesto era de hasta ${formatPesos(
+          presupuestoMax
+        )}, y el proyecto que armamos parte de ${formatPesos(
+          quoteTotal
+        )} (IVA incluido). Te lo digo con claridad: si necesitas que quepa en tu presupuesto, dime y ajusto el alcance (por ejemplo, menos productos o sin SEO) hasta llegar a un precio que sí te quede cómodo. Prefiero ser honesto contigo que venderte algo que no puedas sostener.`
+      : null;
 
   const descargarPropuesta = () => {
     if (!clientData) return;
@@ -150,9 +180,9 @@ export function ProposalView() {
           precio_exacto={quoteTotal ?? result.precio_min}
           tiempo_estimado={result.tiempo_estimado}
           giro={result.giro}
-          cuota_mensual={result.cuota_mensual}
-          alcance_ajustado={result.alcance_ajustado}
-          mensaje_alcance={result.mensaje_alcance}
+          cuota_mensual={cuotaMensual}
+          alcance_ajustado={Boolean(mensajeAlcance) || result.alcance_ajustado}
+          mensaje_alcance={mensajeAlcance ?? result.mensaje_alcance}
         />
 
         {/* ── Ventas de valor: por qué su negocio lo necesita ── */}
