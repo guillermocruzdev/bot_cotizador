@@ -4,10 +4,10 @@ import { CheckCircle2 } from "lucide-react";
 import { MessageAnimator } from "@/components/chat/MessageAnimator";
 
 export function FeatureList({
-  features,
+  features = [],
   delay = 0,
 }: {
-  features: string[];
+  features?: string[];
   delay?: number;
 }) {
   return (

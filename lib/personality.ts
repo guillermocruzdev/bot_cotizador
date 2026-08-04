@@ -243,7 +243,17 @@ export function classifyIntent(raw: string): Intent {
   // "suficiente" como "si" o "clínica" como "ni". Las frases (con espacio) sí van como subcadena.
   const hasSignal = (phrase: string): boolean =>
     phrase.includes(" ") ? reduced.includes(phrase) : reducedWords.includes(phrase);
-  const yesCount = yesWords.filter(hasSignal).length;
+
+  // Palabras de afirmación AMBIGUAS: pueden ser pronombres o muletillas en frases
+  // NEGADAS ("eso no lo quiero", "no, ya no me interesa", "no, claro que no",
+  // "no, justo eso no"). Si la respuesta trae una negación fuerte ("no", "nunca",
+  // "jamás", "tampoco", "ni", "nada"...), esas palabras NO cuentan como "sí":
+  // solo cuentan las afirmaciones inequívocas ("sí", "sipi", "así es", ...).
+  const negated = noWords.some(hasSignal);
+  const AMBIGUOUS_YES = new Set(["eso", "ya", "bueno", "claro", "justo", "dale", "ok", "okay"]);
+  const yesCount = yesWords.filter(
+    (w) => hasSignal(w) && (!negated || !AMBIGUOUS_YES.has(w))
+  ).length;
   const noCount = noWords.filter(hasSignal).length;
 
   // Señales claras de SÍ o NO en una respuesta sustancial tienen prioridad

@@ -12,7 +12,7 @@
  * Ejecutar: npm run test:regression  (o: npx tsx scripts/regression-test.ts)
  */
 
-import { createEmptyContext, type ChatContext } from "../lib/types";
+import { createEmptyContext, normalizarArraysResultado, type ChatContext, type AnalysisResult } from "../lib/types";
 import {
   classifyIntent,
   extractBudgetAmount,
@@ -32,7 +32,7 @@ import {
   inferCategory,
   resolverCategoria,
 } from "../lib/pricing-catalog";
-import { filtrarPorDeclinados } from "../lib/industry-pricing";
+import { filtrarPorDeclinados, adaptarCopyGiro, detectarGiro } from "../lib/industry-pricing";
 
 let failures = 0;
 let passed = 0;
@@ -155,11 +155,34 @@ section("B1 · classifyIntent (dontKnow de baja prioridad)");
   assert(classifyIntent("no sé").dontKnow === true, '"no sé" → dontKnow');
 }
 
+section('B1b · classificaIntent: "no" con palabras ambiguas (eso/ya/claro/justo)');
+{
+  // "eso" en "eso no lo quiero" es PRONOMBRE, no confirmación → debe ser no:true
+  // (antes caía en la rama ambigua yes+no → no:false → citas quedaba en null y
+  // la propuesta prometía "agenda de citas" que el cliente declinó).
+  assert(
+    classifyIntent("No, no, eso no lo quiero. La gente me llama o me escribe y yo les aparto su lugar por teléfono").no === true,
+    '"No, no, eso no lo quiero…" → no:true'
+  );
+  assert(classifyIntent("No, no, eso no lo quiero").no === true, '"No, no, eso no lo quiero" → no:true');
+  assert(classifyIntent("no, no, no quiero eso").no === true, '"no, no, no quiero eso" → no:true');
+  assert(classifyIntent("no, ya no me interesa").no === true, '"no, ya no me interesa" → no:true');
+  assert(classifyIntent("no, claro que no").no === true, '"no, claro que no" → no:true');
+  // Sin negación, "eso" SÍ es confirmación
+  assert(classifyIntent("eso").yes === true, '"eso" solo → yes:true');
+  assert(
+    classifyIntent("Sí, ese botón del WhatsApp es justo lo que quiero").yes === true,
+    '"Sí, … justo lo que quiero" → yes:true'
+  );
+}
+
 section("B2 · extractSignals consciente de negación");
 {
+  // Rechazo explícito → citas=false: el bot YA SABE que no las quiere y no
+  // volverá a preguntarlas (antes quedaba null = "desconocido" y preguntaba).
   const ctx = createEmptyContext();
   fireOnReceive("discovery_business", "No necesito reservar mesas en línea", ctx);
-  assert(ctx.citas === null, '"No necesito reservar mesas en línea" → citas NO se activa');
+  assert(ctx.citas === false, '"No necesito reservar mesas en línea" → citas=false (rechazo conocido)');
 }
 {
   const ctx = createEmptyContext();
@@ -169,7 +192,42 @@ section("B2 · extractSignals consciente de negación");
 {
   const ctx = createEmptyContext();
   fireOnReceive("discovery_business", "No quiero un panel de administración", ctx);
-  assert(ctx.dashboard === null, '"No quiero panel" → dashboard NO se activa');
+  assert(ctx.dashboard === false, '"No quiero panel" → dashboard=false (rechazo conocido)');
+}
+{
+  // Duda ≠ rechazo: "no sé si quiero X" se deja en null → el bot confirma después.
+  const ctx = createEmptyContext();
+  fireOnReceive("discovery_business", "No sé si quiero que agenden citas en línea", ctx);
+  assert(ctx.citas === null, '"No sé si quiero citas" → null (duda, no rechazo)');
+}
+{
+  // "no quiero pagar publicidad" NO debe marcar pagos=false ("pagar" suelto no
+  // es cobro en línea; evita degradar un ecommerce real a landing por error).
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Quiero una tienda online con carrito, pero no quiero pagar publicidad",
+    ctx
+  );
+  assert(ctx.pagos === null, '"no quiero pagar publicidad" → pagos sigue null');
+}
+{
+  // Rechazo claro de pagos en línea → pagos=false.
+  const ctx = createEmptyContext();
+  fireOnReceive("discovery_business", "No quiero pagos en línea, mejor que me contacten por WhatsApp", ctx);
+  assert(ctx.pagos === false, '"no quiero pagos en línea" → pagos=false');
+}
+{
+  // Rechazos encadenados con "ni": "no quiero pagos, ni panel, ni cuentas".
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "No quiero pagos en línea, ni panel de administración, ni cuentas para pacientes",
+    ctx
+  );
+  assert(ctx.pagos === false, '"ni panel/ni cuentas": pagos=false');
+  assert(ctx.dashboard === false, '"ni panel/ni cuentas": dashboard=false');
+  assert(ctx.autenticacion === false, '"ni panel/ni cuentas": autenticacion=false');
 }
 
 section("B3 · extractBudgetAmount (rangos y normalización)");
@@ -202,6 +260,20 @@ section("E1 · estructuraWeb limpia");
   fireOnReceive("pages", "no sé", ctx2);
   assert(ctx2.estructuraWeb === null, "'no sé' no guarda estructura");
 }
+{
+  // Redacción natural con prefijo de afirmación y relleno final: debe quedar
+  // SOLO la lista de secciones, sin "Sí, así" ni "Con eso me conformo".
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "pages",
+    "Sí, así una sola página: inicio, mis servicios, la ubicación con el mapa y el contacto. Con eso me conformo",
+    ctx
+  );
+  assert(
+    ctx.estructuraWeb === "Inicio, Mis servicios, Ubicación con el mapa, Contacto",
+    `estructuraWeb limpia con prefijo/relleno → "Inicio, Mis servicios, Ubicación con el mapa, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+}
 
 section("E2 · scope_services normalizado");
 {
@@ -212,10 +284,17 @@ section("E2 · scope_services normalizado");
 
 // ─── FASE F · 4 conversaciones de producción cierran en landing ────
 
-function simulate(answers: string[]): { ctx: ChatContext; visited: string[]; used: number } {
+function simulate(answers: string[]): {
+  ctx: ChatContext;
+  visited: string[];
+  used: number;
+  /** Nodos donde SÍ se consumió una respuesta (los saltados no aparecen) */
+  asked: string[];
+} {
   const ctx = createEmptyContext();
   let nodeId: string = START_NODE_ID;
   const visited: string[] = [];
+  const asked: string[] = [];
   let used = 0;
   let guard = 0;
   while (nodeId !== DONE_NODE_ID && guard < 200) {
@@ -229,6 +308,7 @@ function simulate(answers: string[]): { ctx: ChatContext; visited: string[]; use
     if (used >= answers.length) throw new Error(`Faltaron respuestas; en nodo ${nodeId}`);
     const answer = answers[used];
     used += 1;
+    asked.push(nodeId);
     node.onReceive?.(answer, ctx);
     nodeId = node.nextNode(answer, ctx);
     visited.push(nodeId);
@@ -242,7 +322,7 @@ function simulate(answers: string[]): { ctx: ChatContext; visited: string[]; use
     }
   }
   if (nodeId !== DONE_NODE_ID) throw new Error(`No cerró; terminó en ${nodeId}`);
-  return { ctx, visited, used };
+  return { ctx, visited, used, asked };
 }
 
 /** Verifica que la conversación cerró en landing sin redundancia. */
@@ -394,6 +474,35 @@ checkLanding("Tienda de ropa (María)", [
   "no, con eso es suficiente", // comentarios
 ]);
 
+// Taller mecánico que declina CITAS (con "eso" como pronombre: "eso no lo
+// quiero"). Antes el "no" no se detectaba → ctx.citas=null → el copy prometía
+// "agenda de citas" que el cliente rechazó. Ahora debe cerrar en landing con
+// citas=false y el copy neutro.
+const TALLER_RICARDO_ANSWERS = [
+  "Pues mire, yo tengo un taller mecánico aquí en Toluca, el Taller El Toro. La gente me busca mucho por el teléfono y por el WhatsApp, pero cuando buscan en Google no salgo. Quiero una página bien sencilla, algo básico, para que me encuentren y me hablen. No quiero nada muy caro",
+  "sí, sí, así está bien. Algo sencillo, como le digo",
+  "Sí, así una sola página: inicio, mis servicios, la ubicación con el mapa y el contacto. Con eso me conformo",
+  "No, no, que ni se registren. Ellos nada más me marcan o me escriben por el WhatsApp", // cuentas
+  "No, no necesito guardar nada de mis clientes. Con que me encuentren y me contacten, ya la hizo", // base de datos
+  "No, no necesito ningún panel. Con que me lleguen las llamadas y los mensajes del WhatsApp, con eso me basta", // panel
+  "Sí, sí tengo mi local aquí en Toluca. Me gustaría el mapa para que la gente llegue sin pedir indicaciones", // mapa
+  "Sí, ese botón del WhatsApp es justo lo que quiero. La gente me escribe mucho por ahí", // WhatsApp
+  "No, no, eso no lo quiero. La gente me llama o me escribe y yo les aparto su lugar por teléfono, sin necesidad de andar con agenda en línea", // citas
+  "Pues algo sobrio, de confianza, que se vea serio. Nada de muchas cosas con movimiento ni nada muy elegante, ¿eh?", // diseño
+  "Sí, claro, eso es justo lo que quiero: que cuando busquen taller mecánico en Toluca salga mi taller", // SEO
+  "No, no, eso no. Con que la página se vea bien en el celular, ya con eso basta. No necesito que se instale como app", // PWA
+  "Pues tengo unas fotos del taller que saqué con mi celular, pero no son muy profesionales. El logo del Toro lo tengo pero está medio sencillo. Si me ayuda con los textos, mejor", // contenido
+  "Pues le ofrezco a la gente cambio de aceite, frenos, afinación y también el escaneo de la computadora del carro. Sin precios mejor, porque cada coche es distinto; con una breve descripción de cada uno está bien", // servicios
+  "No, no, la verdad no tengo ninguna página de referencia. Con que se vea limpia y seria, me doy por bien servido", // referencia
+  "Pues no hay mucha prisa, la verdad. Cuando se pueda, con calma, no le urge", // fecha
+  "Pues mire, la verdad yo pensaba en unos 5 o 6 mil pesos, no más. ¿Cree que con eso alcance para algo bien hecho?", // presupuesto
+  "Me llamo Ricardo Mendoza, y el negocio se llama Taller El Toro", // nombre
+  "ricardo.tallertoro@gmail.com", // email
+  "722 123 4567, ese es el que uso para el negocio", // teléfono
+  "No, ya con eso es todo, muchas gracias", // comentarios
+];
+checkLanding("Taller (Ricardo)", TALLER_RICARDO_ANSWERS);
+
 // ─── FASE G · Coherencia de precio (landing básica vs tienda online) ──
 
 section("G · Categoría y precio coherentes (tienda de ropa ≠ tienda online)");
@@ -526,6 +635,134 @@ section("G · Categoría y precio coherentes (tienda de ropa ≠ tienda online)"
     !propuesta.stack_tecnico.some((s) => /supabase/i.test(s)),
     "stack sin Supabase cuando baseDeDatos=false"
   );
+}
+
+// ─── FASE H · El copy respeta funciones que el cliente DECLINÓ ─────
+// (bug: "eso no lo quiero" daba citas=null → el copy del taller mecánico
+// prometía "agenda de citas" que el cliente rechazó).
+
+section("H · Copy sin prometer lo declinado (taller mecánico, citas=false)");
+{
+  // El "no" con "eso" como pronombre registra el rechazo real de citas.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "technical_bookings",
+    "No, no, eso no lo quiero. La gente me llama o me escribe y yo les aparto su lugar por teléfono",
+    ctx
+  );
+  assert(ctx.citas === false, "technical_bookings: 'eso no lo quiero' → citas=false (antes null)");
+}
+{
+  // Con citas=false el copy del giro mecánico (que prometía "agenda de citas")
+  // cae al neutro: pitch, beneficios y costo_omision sin mencionar citas.
+  const ctx = createEmptyContext();
+  ctx.citas = false;
+  const giro = detectarGiro("tengo un taller mecánico en Toluca", "landing");
+  const copy = adaptarCopyGiro(giro, ctx);
+  assert(giro.nombre.includes("Taller"), "giro detectado: Taller mecánico / automotriz");
+  assert(!/agenda|citas/i.test(copy.pitch), "pitch sin prometer citas cuando citas=false");
+  assert(
+    !copy.beneficios.some((b) => /agenda|citas/i.test(b)),
+    "beneficios sin citas cuando citas=false"
+  );
+  assert(!/agenda|citas/i.test(copy.costo_omision), "costo_omision sin citas cuando citas=false");
+}
+{
+  // Conversación completa de Ricardo: landing, citas=false y la propuesta
+  // fallback usa copy NEUTRO (nunca promete "agenda de citas").
+  const { ctx } = simulate(TALLER_RICARDO_ANSWERS);
+  assert(ctx.category === "landing", "[Taller Ricardo] categoría landing");
+  assert(ctx.citas === false, "[Taller Ricardo] citas=false tras la conversación");
+  const prop = buildFallbackProposal(ctx.category!, [], "Ricardo Mendoza", ctx);
+  const copyTexto = [
+    prop.punto_venta,
+    prop.dolor,
+    ...(prop.beneficios ?? []),
+    prop.costo_omision,
+  ].join(" ");
+  assert(
+    !/agenda|citas/i.test(copyTexto),
+    "[Taller Ricardo] propuesta fallback sin prometer citas en el copy"
+  );
+  assert(
+    !prop.stack_tecnico.some((s) => /supabase/i.test(s)),
+    "[Taller Ricardo] stack sin Supabase (landing básica)"
+  );
+}
+
+// ─── FASE I · No repreguntar lo que el cliente ya rechazó ──────────
+// Si el cliente dice desde su descripción "no quiero pagos en línea, ni panel,
+// ni cuentas", el bot NO debe volver a preguntarlas: solo confirma lo que SÍ
+// quiere (citas en línea, mapa, WhatsApp) y pregunta lo que aún no se sabe.
+
+section("I · No repreguntar lo que ya rechazó en la descripción");
+{
+  const { ctx, asked } = simulate([
+    "Tengo una clínica dental y quiero que mis pacientes agenden citas en línea, pero NO quiero pagos en línea, ni panel de administración, ni cuentas para pacientes",
+    "sí, así es", // discovery_confirm
+    "Inicio, Servicios, Ubicación y Contacto, una sola página", // pages
+    "no, no necesito guardar datos de mis pacientes", // technical_db
+    "sí, quiero el mapa de la clínica", // technical_maps
+    "sí, que me escriban por WhatsApp", // technical_chat
+    "moderno pero de confianza", // design
+    "sí, que me encuentren en Google", // technical_seo
+    "no, sin instalarse como app", // technical_pwa
+    "sí, ya tengo fotos de la clínica", // scope_content
+    "limpieza dental, ortodoncia y blanqueamiento", // scope_services
+    "ninguna referencia", // scope_reference
+    "para el próximo mes", // scope_deadline
+    "unos 20 mil pesos", // budget
+    "Soy la Dra. Laura", // contact_name
+    "laura@clinica.com", // contact_email
+    "81 2345 6789", // contact_phone
+    "no, gracias", // extra_comments
+  ]);
+  assert(ctx.category === "citas", "[Clínica] categoría citas");
+  assert(ctx.citas === true, "[Clínica] citas=true (lo quiere, se confirma)");
+  assert(ctx.pagos === false, "[Clínica] pagos=false (lo rechazó en la descripción)");
+  assert(ctx.dashboard === false, "[Clínica] dashboard=false");
+  assert(ctx.autenticacion === false, "[Clínica] autenticacion=false");
+  // No se preguntaron los temas que el cliente ya rechazó:
+  const noPreguntadas = ["technical_auth", "technical_payments", "technical_dashboard", "technical_pdfs", "technical_bookings"];
+  const preguntadas = noPreguntadas.filter((id) => asked.includes(id));
+  assert(
+    preguntadas.length === 0,
+    `[Clínica] no repregunta lo rechazado (solo preguntó: ${preguntadas.join(", ") || "ninguno"})`
+  );
+  // Sí se preguntan los que faltaban por confirmar (mapa, WhatsApp, SEO, etc.):
+  assert(
+    ["technical_db", "technical_maps", "technical_chat", "technical_seo", "technical_pwa"].every((id) =>
+      asked.includes(id)
+    ),
+    "[Clínica] sí pregunta lo que aún no se sabía (db, mapa, chat, seo, pwa)"
+  );
+}
+
+// ─── FASE J · La propuesta siempre trae arrays (el LLM puede omitirlos) ──
+// Si DeepSeek regresa un JSON sin stack_tecnico/funcionalidades/entregables/
+// recomendaciones, la UI (TechStackTags/FeatureList) hacía .map() sobre
+// undefined y TUMBABA toda la página /results.
+
+section("J · Arrays garantizados en el resultado (no rompe /results)");
+{
+  const r = normalizarArraysResultado({
+    categoria: "X",
+    precio_min: 1,
+    precio_max: 2,
+  } as Partial<AnalysisResult>);
+  assert(Array.isArray(r.stack_tecnico), "stack_tecnico garantizado como array");
+  assert(Array.isArray(r.funcionalidades), "funcionalidades garantizado como array");
+  assert(Array.isArray(r.entregables), "entregables garantizado como array");
+  assert(Array.isArray(r.recomendaciones), "recomendaciones garantizado como array");
+  assert((r.stack_tecnico as string[]).length === 0, "stack vacío en lugar de undefined");
+  // No pisa arrays ya presentes:
+  const r2 = normalizarArraysResultado({
+    categoria: "X",
+    precio_min: 1,
+    precio_max: 2,
+    stack_tecnico: ["Next.js", "Tailwind"],
+  } as Partial<AnalysisResult>);
+  assert(Array.isArray(r2.stack_tecnico) && (r2.stack_tecnico as string[]).length === 2, "conserva arrays ya presentes");
 }
 
 // ─── Resumen ───────────────────────────────────────────────────────

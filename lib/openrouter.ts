@@ -5,7 +5,7 @@
  * al cliente.
  */
 
-import type { AnalysisResult, ChatContext, ChatMessage } from "@/lib/types";
+import { normalizarArraysResultado, type AnalysisResult, type ChatContext, type ChatMessage } from "@/lib/types";
 import { PRICING_CATALOG, getCategoryById, resolverCategoria } from "@/lib/pricing-catalog";
 import type { Nivel } from "@/lib/pricing-catalog";
 import { buildFallbackProposal } from "@/lib/pricing-catalog";
@@ -249,7 +249,9 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     context.autenticacion === false ||
     context.chat === false;
 
-  return filtrarPorDeclinados({
+  // Garantiza arrays siempre presentes: el LLM puede omitir stack/funciones/
+  // entregables/recomendaciones y la UI hace .map() sobre ellos.
+  return filtrarPorDeclinados(normalizarArraysResultado({
     ...result,
     precio_min: aj.precio_min,
     precio_max: aj.precio_max,
@@ -277,7 +279,7 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     explicacion_precio:
       result.explicacion_precio ||
       generarExplicacionPrecio(giro, aj.precio_min, aj.precio_max, aj.alcance_ajustado),
-  }, context);
+  }), context);
 }
 
 /**

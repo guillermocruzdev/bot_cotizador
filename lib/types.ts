@@ -86,6 +86,22 @@ export interface ChatContext {
   emailIntentos: number;
 }
 
+/**
+ * Garantiza que los arrays de la propuesta SIEMPRE existan. La IA (DeepSeek)
+ * puede omitir `stack_tecnico`, `funcionalidades`, `entregables` o
+ * `recomendaciones`, y la UI (TechStackTags/FeatureList) hace `.map()`:
+ * un campo faltante no debe tumbar la pantalla de resultados (/results).
+ */
+export function normalizarArraysResultado<T extends Partial<AnalysisResult>>(r: T): T {
+  return {
+    ...r,
+    funcionalidades: Array.isArray(r.funcionalidades) ? r.funcionalidades : [],
+    stack_tecnico: Array.isArray(r.stack_tecnico) ? r.stack_tecnico : [],
+    entregables: Array.isArray(r.entregables) ? r.entregables : [],
+    recomendaciones: Array.isArray(r.recomendaciones) ? r.recomendaciones : [],
+  };
+}
+
 export function createEmptyContext(): ChatContext {
   return {
     clientName: null,

@@ -3,10 +3,10 @@
 import { MessageAnimator } from "@/components/chat/MessageAnimator";
 
 export function TechStackTags({
-  stack,
+  stack = [],
   delay = 0,
 }: {
-  stack: string[];
+  stack?: string[];
   delay?: number;
 }) {
   return (

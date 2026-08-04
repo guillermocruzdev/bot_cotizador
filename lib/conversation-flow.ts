@@ -64,30 +64,74 @@ const SIGNAL_PATTERNS: Array<{
   { re: /(base de datos|guardar datos|guardamos)/, field: "baseDeDatos" },
 ];
 
-/**
- * ¿La palabra en `matchIndex` está precedida de negación en su cláusula?
- * Retrocede hasta el último separador de cláusula (coma, punto, punto y coma,
- * "pero", "aunque") y busca negaciones: "no ...", "sin ...", "no necesito ...".
- */
-function isNegated(t: string, matchIndex: number): boolean {
-  if (matchIndex <= 0) return false;
+/** Cláusula en la que aparece una coincidencia (hasta el último separador). */
+function clauseBefore(t: string, matchIndex: number): string {
+  if (matchIndex <= 0) return "";
   let start = -1;
   for (const sep of [",", ";", ".", "pero", "aunque"]) {
     const idx = t.lastIndexOf(sep, matchIndex - 1);
     if (idx > start) start = idx;
   }
-  const clause = t.slice(start + 1, matchIndex);
-  return /(^|\s)(no|sin|nunca|jam[áa]s|nada de|no necesito|no quiero|no me interesa|no tengo)\s+/i.test(
-    clause
+  return t.slice(start + 1, matchIndex);
+}
+
+/**
+ * ¿La palabra en `matchIndex` está precedida de negación en su cláusula?
+ * Retrocede hasta el último separador de cláusula (coma, punto, punto y coma,
+ * "pero", "aunque") y busca negaciones: "no ...", "sin ...", "no necesito ...",
+ * y encadenadas con "ni" ("no quiero pagos, ni panel, ni cuentas").
+ */
+function isNegated(t: string, matchIndex: number): boolean {
+  if (matchIndex <= 0) return false;
+  return /(^|\s)(no|sin|nunca|jam[áa]s|nada de|no necesito|no quiero|no me interesa|no me gusta|no tengo|ni)\s+/i.test(
+    clauseBefore(t, matchIndex)
   );
 }
 
 /**
+ * ¿La cláusula es una DUDA ("no sé si quiero X", "no tengo idea si quiero X")
+ * en vez de un rechazo claro? Una duda NO se interpreta como "no lo quiero":
+ * el bot debe confirmar, no asumir que lo rechaza.
+ */
+function isDoubt(t: string, matchIndex: number): boolean {
+  if (matchIndex <= 0) return false;
+  return /(no s[ée]|no tengo idea|no estoy segur[oa]|no me decido|quien sabe|quién sabe|ni idea|no sé bien|no lo s[ée])/.test(
+    clauseBefore(t, matchIndex)
+  );
+}
+
+/**
+ * Patrones de RECHAZO explícito (para extraer lo que el cliente NO quiere):
+ * se usan SOLO con negación ("no quiero X", "sin X") y con keywords MÁS
+ * específicas que las de activación. Ej: "no quiero pagar publicidad" NO pone
+ * pagos=false (ahí "pagar" no es cobro en línea); "no quiero pagos en línea" SÍ.
+ */
+const NEGATIVE_SIGNAL_PATTERNS: Array<{
+  re: RegExp;
+  field: "pagos" | "citas" | "dashboard" | "autenticacion" | "baseDeDatos";
+}> = [
+  {
+    re: /(pagos? en l[ií]nea|pagos? online|pago en l[ií]nea|cobrar? en l[ií]nea|cobros? en l[ií]nea|tarjeta|pasarela|checkout|stripe|paypal|venta en l[ií]nea|pagos? con tarjeta)/,
+    field: "pagos",
+  },
+  { re: /(cita|citas|agendar|reserva|reservar|turno|agenda|agendan)/, field: "citas" },
+  { re: /(panel|dashboard|reportes|estad[íi]sticas)/, field: "dashboard" },
+  { re: /(cuenta|cuentas|registrarse|registro|login|usuarios)/, field: "autenticacion" },
+  { re: /(base de datos|guardar datos|guardamos)/, field: "baseDeDatos" },
+];
+
+/**
  * Extrae señales técnicas de una respuesta larga (memoria de corto plazo),
- * CONSCIENTE DE NEGACIÓN: "No necesito reservar mesas" NO activa `citas`.
+ * CONSCIENTE DE NEGACIÓN:
+ * - "Quiero que agenden citas" → citas=true (el cliente SÍ lo quiere → el nodo
+ *   solo confirmará).
+ * - "No necesito reservar mesas" → citas=false (el bot YA SABE que no lo
+ *   quiere → el nodo se salta y no vuelve a preguntar).
+ * - "No sé si quiero citas" → se deja en null (duda → se confirma después).
  */
 function extractSignals(response: string, ctx: ChatContext): void {
   const t = response.toLowerCase();
+  // 1) Activación (lo que el cliente SÍ menciona que quiere).
   for (const { re, field } of SIGNAL_PATTERNS) {
     if (ctx[field] !== null) continue;
     // Ojo: el flag "g" es OBLIGATORIO para que exec() avance lastIndex entre
@@ -103,6 +147,22 @@ function extractSignals(response: string, ctx: ChatContext): void {
       if (m.index === rx.lastIndex) rx.lastIndex += 1; // evita loop infinito
     }
     if (activated) (ctx as unknown as Record<string, unknown>)[field] = true;
+  }
+  // 2) Rechazo explícito (lo que el cliente NO quiere): los nodos condicionales
+  //    se saltarán esas preguntas. Una duda no cuenta como rechazo.
+  for (const { re, field } of NEGATIVE_SIGNAL_PATTERNS) {
+    if (ctx[field] !== null) continue;
+    const rx = new RegExp(re.source, re.flags + "g");
+    let m: RegExpExecArray | null;
+    let rejected = false;
+    while ((m = rx.exec(t)) !== null) {
+      if (isNegated(t, m.index) && !isDoubt(t, m.index)) {
+        rejected = true;
+        break;
+      }
+      if (m.index === rx.lastIndex) rx.lastIndex += 1; // evita loop infinito
+    }
+    if (rejected) (ctx as unknown as Record<string, unknown>)[field] = false;
   }
 }
 
@@ -135,15 +195,44 @@ function capitalize(s: string): string {
  * Extrae una lista limpia de secciones de una respuesta libre.
  * "me gusta lo primero, una sola página, algo así como Inicio, Menú, Ubicación y Contacto"
  * → "Inicio, Menú, Ubicación, Contacto"
+ * "Sí, así una sola página: inicio, mis servicios, la ubicación con el mapa y el contacto. Con eso me conformo"
+ * → "Inicio, Mis servicios, Ubicación con el mapa, Contacto"
  */
 function extractSections(raw: string): string | null {
   const t = raw.replace(/[.,;:!?¿¡]+$/g, "").trim();
   if (!t) return null;
 
   // Quitar prefijos de opinión/vacilación
-  const cleaned = t
-    .replace(/^(yo\s+)?(me gusta|quiero|me encantaría|así como|algo como|tipo|como)\s+/i, "")
-    .replace(/^(lo primero|la primera|primero|primera)\s*[,:]?\s*/i, "");
+  let cleaned = t
+    .replace(/^(yo\s+)?(me gusta|quiero|me encantaría|así como|algo como|tipo|como|as[ií])\s+/i, "")
+    .replace(/^(lo primero|la primera|primero|primera)\s*[,:]?\s*/i, "")
+    .replace(/^(lo que quiero es|lo que busco es|lo que necesito es)\s+/i, "");
+
+  // Prefijos de afirmación/muletilla: "sí,", "bueno,", "pues,", "la verdad,", "ok,", "claro,"...
+  // y el "así" que queda tras ellos ("Sí, así una sola página:..." → "así una sola página:...").
+  cleaned = cleaned
+    .replace(
+      /^((s[ií]|bueno|pues|la verdad|ver[aá]s|mira|ok|okay|claro|perfecto|excelente|de acuerdo)\s*[,:]?\s*)+/i,
+      ""
+    )
+    .replace(/^as[ií]\s*[,:]?\s*/i, "");
+
+  // Frases de estructura que NO son secciones: "una sola página", "de corrido"...
+  // "una sola página: inicio" → ": inicio" → "inicio"
+  cleaned = cleaned
+    .replace(
+      /\b(una sola página|una pagina|una página sencilla|una pagina sencilla|una página simple|una pagina simple|simple|sencillo|de corrido|varias secciones)\b/gi,
+      " "
+    )
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[\s:,]+/, "");
+
+  // Relleno final de conformidad: "con eso me conformo", "con eso me basta"...
+  cleaned = cleaned.replace(
+    /[.,;]\s*(con eso me conformo|con eso me basta|con eso me doy por bien servido|con eso la hago|con eso me arreglo|nada más|eso es todo|ya con eso)\s*$/i,
+    ""
+  );
 
   const parts = cleaned
     .split(/,|;|\n| y | e /i)
@@ -438,6 +527,8 @@ export const FLOW: Record<string, ConversationNode> = {
       `${randomTransition()} Ahora, algo que define mucho el proyecto: ¿tus clientes van a "registrarse" en tu página, o solo van a entrar, ver tu información y contactarte? Muchos negocios no necesitan cuentas; con que te contacten, basta.`,
     field: "autenticacion",
     next: "technical_db",
+    // Si el cliente ya dijo que no quiere cuentas/registro, no volver a preguntar.
+    condition: (ctx) => ctx.autenticacion !== false,
     clarifyId: "clarify_auth",
   }),
 
@@ -456,6 +547,8 @@ export const FLOW: Record<string, ConversationNode> = {
       `Y dime: ¿hay algo que te gustaría guardar de tus clientes? Como sus datos, sus pedidos o sus citas. Si sí, lo hacemos bien guardado y en orden; si solo es mostrar información, también está perfecto.`,
     field: "baseDeDatos",
     next: "technical_payments",
+    // Si el cliente ya dijo que no guarda datos, no volver a preguntar.
+    condition: (ctx) => ctx.baseDeDatos !== false,
     clarifyId: "clarify_db",
   }),
 
@@ -476,7 +569,9 @@ export const FLOW: Record<string, ConversationNode> = {
     next: "technical_dashboard",
     condition: (ctx) => {
       const cat = ctx.category ?? "landing";
-      return !["landing", "portafolio", "blog"].includes(cat);
+      // No se pregunta en landings y tampoco si el cliente ya dijo que NO quiere
+      // pagos en línea ("no quiero pagos en línea" en su descripción).
+      return !["landing", "portafolio", "blog"].includes(cat) && ctx.pagos !== false;
     },
     clarifyId: "clarify_payments",
   }),
@@ -496,6 +591,8 @@ export const FLOW: Record<string, ConversationNode> = {
       `¿Te gustaría tener todo tu negocio en una sola pantalla? Como ver tus pedidos, tus citas o tus clientes sin andar buscando en mil lugares. Eso, créeme, te ahorra un buen tiempo cada semana.`,
     field: "dashboard",
     next: "technical_maps",
+    // Si el cliente ya dijo que no quiere panel, no volver a preguntar.
+    condition: (ctx) => ctx.dashboard !== false,
     clarifyId: "clarify_dashboard",
   }),
 
