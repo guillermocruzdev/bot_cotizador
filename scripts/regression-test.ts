@@ -26,7 +26,7 @@ import {
   START_NODE_ID,
   getNode,
 } from "../lib/conversation-flow";
-import { buildClientData, calculateQuote } from "../lib/quote-engine";
+import { buildClientData, calculateQuote, derivarTipoWeb } from "../lib/quote-engine";
 import {
   buildFallbackProposal,
   inferCategory,
@@ -275,6 +275,53 @@ section("E1 · estructuraWeb limpia");
   );
 }
 
+// ─── FASE E1b · extractSections descarta lo que está ANTES de la 1ª sección ──
+// Bug: una respuesta que mezcla la estructura con una opinión previa
+// ("La primera, algo minimalista con fotos grandes. Pues imagino una sola
+// página de corrido: inicio, ...") dejaba el prefijo como sección basura.
+// Ahora se toma la lista desde la primera sección real, ignorando el prefijo.
+
+section("E1b · estructuraWeb sin residuo antes de la primera sección");
+{
+  // Ejemplo problemático real: debe quedarse SOLO con las 4 secciones reales.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "pages",
+    "La primera, algo minimalista con fotos grandes. Pues imagino una sola página de corrido: inicio, mis productos, cómo llegar y el contacto.",
+    ctx
+  );
+  assert(
+    ctx.estructuraWeb === "Inicio, Mis productos, Cómo llegar, Contacto",
+    `sin residuo antes de la 1ª sección → "Inicio, Mis productos, Cómo llegar, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+}
+{
+  // FASE E1 sigue igual (caso sin ":"): la estructura limpia se conserva.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "pages",
+    "me gusta lo primero, una sola página, algo así como Inicio, Menú, Ubicación y Contacto",
+    ctx
+  );
+  assert(
+    ctx.estructuraWeb === "Inicio, Menú, Ubicación, Contacto",
+    `E1 intacto → "Inicio, Menú, Ubicación, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+}
+{
+  // FASE K sigue igual: prefijo de afirmación y relleno final sin residuos.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "pages",
+    "Sí, así una sola página: inicio, mis servicios, la ubicación con el mapa y el contacto. Con eso me conformo",
+    ctx
+  );
+  assert(
+    ctx.estructuraWeb === "Inicio, Mis servicios, Ubicación con el mapa, Contacto",
+    `FASE K intacta → "Inicio, Mis servicios, Ubicación con el mapa, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+}
+
 section("E2 · scope_services normalizado");
 {
   const ctx = createEmptyContext();
@@ -362,10 +409,9 @@ checkLanding("Clínica dental", [
   "no", // citas (no agenda en línea)
   "moderno", // diseño
   "sí", // SEO
-  "no", // PWA
+  // PWA y página de referencia: se SALTAN para landing (Tarea C)
   "sí", // contenido listo
   "limpieza dental, ortodoncia y blanqueamiento", // servicios
-  "no tengo", // referencia
   "para el próximo mes", // fecha
   "unos 20 mil", // presupuesto
   "Soy Laura", // nombre
@@ -386,10 +432,9 @@ checkLanding("Yoga", [
   "no",
   "sobrio",
   "sí",
-  "no",
+  // PWA y referencia: se SALTAN para landing (Tarea C)
   "no",
   "clases grupales, clases privadas y retiros",
-  "no tengo referencia",
   "para ya",
   "15k",
   "Me llamo Andrea",
@@ -410,10 +455,9 @@ checkLanding("Barbería (Diego)", [
   "no",
   "moderno",
   "sí",
-  "no",
+  // PWA y referencia: se SALTAN para landing (Tarea C)
   "sí",
   "corte, barba, afeitado y cejas",
-  "ninguna",
   "lo antes posible",
   "unos 12 mil",
   "Soy Diego",
@@ -434,10 +478,9 @@ checkLanding("Restaurante (Carmen)", [
   "no",
   "moderno y cálido",
   "sí",
-  "no",
+  // PWA y referencia: se SALTAN para landing (Tarea C)
   "no",
   "comida casera, desayunos y comida corrida",
-  "no tengo",
   "para el próximo mes",
   "entre 10 y 15 mil",
   "Carmen",
@@ -462,10 +505,9 @@ checkLanding("Tienda de ropa (María)", [
   "no", // citas
   "moderno pero sencillo", // diseño
   "sí", // SEO
-  "no", // PWA
+  // PWA y referencia: se SALTAN para landing (Tarea C)
   "tengo algunas fotos pero no muy profesionales", // contenido
   "unas 30 prendas con su precio y descripción", // servicios/catálogo
-  "no tengo", // referencia
   "en unas 3 semanas", // fecha
   "unos 6 o 7 mil pesos", // presupuesto
   "Me llamo María y mi tienda se llama Moda GDL", // nombre
@@ -490,10 +532,9 @@ const TALLER_RICARDO_ANSWERS = [
   "No, no, eso no lo quiero. La gente me llama o me escribe y yo les aparto su lugar por teléfono, sin necesidad de andar con agenda en línea", // citas
   "Pues algo sobrio, de confianza, que se vea serio. Nada de muchas cosas con movimiento ni nada muy elegante, ¿eh?", // diseño
   "Sí, claro, eso es justo lo que quiero: que cuando busquen taller mecánico en Toluca salga mi taller", // SEO
-  "No, no, eso no. Con que la página se vea bien en el celular, ya con eso basta. No necesito que se instale como app", // PWA
+  // PWA y referencia: se SALTAN para landing (Tarea C)
   "Pues tengo unas fotos del taller que saqué con mi celular, pero no son muy profesionales. El logo del Toro lo tengo pero está medio sencillo. Si me ayuda con los textos, mejor", // contenido
   "Pues le ofrezco a la gente cambio de aceite, frenos, afinación y también el escaneo de la computadora del carro. Sin precios mejor, porque cada coche es distinto; con una breve descripción de cada uno está bien", // servicios
-  "No, no, la verdad no tengo ninguna página de referencia. Con que se vea limpia y seria, me doy por bien servido", // referencia
   "Pues no hay mucha prisa, la verdad. Cuando se pueda, con calma, no le urge", // fecha
   "Pues mire, la verdad yo pensaba en unos 5 o 6 mil pesos, no más. ¿Cree que con eso alcance para algo bien hecho?", // presupuesto
   "Me llamo Ricardo Mendoza, y el negocio se llama Taller El Toro", // nombre
@@ -763,6 +804,415 @@ section("J · Arrays garantizados en el resultado (no rompe /results)");
     stack_tecnico: ["Next.js", "Tailwind"],
   } as Partial<AnalysisResult>);
   assert(Array.isArray(r2.stack_tecnico) && (r2.stack_tecnico as string[]).length === 2, "conserva arrays ya presentes");
+}
+
+// ─── FASE K · Confirmación con lista de rechazos (Carlos) ──────────
+// Bug: un "Sí, así es… nada de vender por internet ni nada de eso" daba
+// {yes:false} (ambigüedad por "nada"/"ni"), discovery_confirm mandaba al
+// cliente a discovery_examples y TODO el flujo corría un nodo desfasado:
+// la estructura quedaba como basura, chat=false (aunque quería WhatsApp),
+// y seo/citas/pwa/dashboard en null. La confirmación inequívoca debe ganar
+// cuando la negación solo viene de una lista ("nada/ni/tampoco").
+
+section("K · Confirmación con lista de rechazos (Carlos)");
+{
+  assert(
+    classifyIntent(
+      "Sí, sí, así es. Algo sencillo que se vea bien y donde la gente pueda ver mis fotos y me pueda contactar. Nada de andar vendiendo por internet ni nada de eso"
+    ).yes === true,
+    '"Sí, así es… nada de X ni Y" → yes:true (lista de rechazos no anula la confirmación)'
+  );
+  assert(
+    classifyIntent("Sí, sí, así es. Nada de andar vendiendo por internet.").yes === true,
+    '"Sí, así es. Nada de X." → yes:true'
+  );
+  // Un "no" fuerte SÍ rompe la confirmación (sigue siendo ambigua).
+  const amb = classifyIntent("Sí, pero no quiero vender por internet");
+  assert(amb.yes === false && amb.no === false, '"Sí, pero no quiero X" → ambigua (no falso sí)');
+}
+{
+  // Conversación completa de Carlos (tienda de ropa, landing) SIN desfase:
+  // discovery_confirm debe ir a pages, y cada señal debe quedar limpia.
+  const { ctx } = simulate([
+    "Hola, tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro",
+    "Sí, sí, así es. Algo sencillo que se vea bien y donde la gente pueda ver mis fotos y me pueda contactar. Nada de andar vendiendo por internet ni nada de eso",
+    "Una sola página de corrido: inicio, mis productos, cómo llegar y el contacto",
+    "No, no quiero cuentas ni registros, la gente solo va a ver y me va a escribir",
+    "No, no quiero guardar nada de mis clientes, nada de base de datos, solo que me contacten",
+    "No, no quiero ningún panel, con que me escriban por WhatsApp me basta",
+    "Sí, quiero el mapa de mi tienda para que la gente llegue sin pedir indicaciones",
+    "Sí, quiero el botón de WhatsApp para que me escriban directo desde la página",
+    "No, no necesito citas en línea, mi tienda no es de citas",
+    "Algo moderno pero sobrio, con fotos grandes y que se vea limpio",
+    "Sí, lo más importante es que me encuentren en Google cuando busquen tienda de ropa en Guadalajara",
+    // PWA y referencia: se SALTAN para landing (Tarea C)
+    "Tengo fotos de mi mercancía y el logo, pero los textos me ayudarías tú",
+    "Camisas de vestir, pantalones de mezclilla y trajes para caballero",
+    "Lo quiero para el próximo mes",
+    "Unos 10 mil pesos, no más de eso",
+    "Me llamo Carlos, y la tienda se llama La Tijera de Oro",
+    "Mi correo es carlos.tijeradeoro@gmail.com",
+    "33 1234 5678, ese es mi WhatsApp",
+    "No, con eso es todo",
+  ]);
+  assert(ctx.category === "landing", "[Carlos] categoría landing");
+  assert(ctx.chat === true, "[Carlos] chat=true (sí quiere WhatsApp)");
+  assert(ctx.citas === false, "[Carlos] citas=false (declinó citas en línea)");
+  assert(ctx.seo === true, "[Carlos] seo=true (sí quiere Google)");
+  assert(ctx.baseDeDatos === false, "[Carlos] baseDeDatos=false (no guarda datos)");
+  assert(ctx.dashboard === false, "[Carlos] dashboard=false (no quiere panel)");
+  assert(ctx.autenticacion === false, "[Carlos] autenticacion=false (no quiere cuentas)");
+  assert(ctx.mapas === true, "[Carlos] mapas=true (sí quiere el mapa)");
+  assert(ctx.pwa === null, "[Carlos] pwa se SALTÓ (ya no se pregunta para landing)");
+  assert(ctx.paginas === 1, "[Carlos] paginas=1 (una sola página)");
+  assert(
+    /inicio.*productos.*c[oó]mo llegar.*contacto/i.test(ctx.estructuraWeb ?? ""),
+    `[Carlos] estructuraWeb con secciones limpias (${ctx.estructuraWeb})`
+  );
+  assert(
+    /camisas.*pantalones.*trajes/i.test(ctx.servicios ?? ""),
+    `[Carlos] servicios con la lista de ropa (${ctx.servicios})`
+  );
+  assert(ctx.clientName === "Carlos", `[Carlos] nombre limpio (${ctx.clientName})`);
+  assert(ctx.clientEmail === "carlos.tijeradeoro@gmail.com", "[Carlos] email limpio");
+  assert(ctx.clientPhone === "+52 33 1234 5678", "[Carlos] teléfono limpio +52");
+  assert(ctx.presupuesto === "10000", `[Carlos] presupuesto 10000 (${ctx.presupuesto})`);
+}
+
+// ─── FASE P2 · Presupuesto dicho junto con el plazo (no re-preguntar) ──
+// Bug: si el cliente mencionaba su monto al responder el plazo, la máquina
+// guardaba fechaEntrega pero perdía el monto, y el nodo budget volvía a
+// preguntar ("¿qué inversión tienes en mente?"). Ahora scope_deadline captura
+// el monto y budget se salta por condición.
+
+section("P2 · Presupuesto capturado desde scope_deadline y budget saltado");
+{
+  // Plazo + monto: se captura el presupuesto y budget se salta.
+  const ctx = createEmptyContext();
+  const resp =
+    "Para mediados del próximo mes está bien. Y de presupuesto, la verdad no sé cuánto cobran, pero yo pensaba en unos 10 mil pesos, no más.";
+  fireOnReceive("scope_deadline", resp, ctx);
+  assert(
+    ctx.presupuesto === "10000",
+    `[P2] monto capturado desde scope_deadline → 10000 (obtuve: ${ctx.presupuesto})`
+  );
+  assert(ctx.fechaEntrega !== null, `[P2] fechaEntrega también se captura (${ctx.fechaEntrega})`);
+  assert(
+    FLOW.scope_deadline.nextNode(resp, ctx) === "budget",
+    "[P2] scope_deadline sigue apuntando a budget"
+  );
+  // budget se salta por condición; el skip (respuesta vacía) va a contact_name.
+  assert(
+    FLOW.budget.condition?.(ctx) === false,
+    "[P2] budget.condition = false con presupuesto capturado"
+  );
+  assert(
+    FLOW.budget.nextNode("", ctx) === "contact_name",
+    "[P2] skip de budget → contact_name, no re-pregunta"
+  );
+}
+{
+  // Plazo SIN monto → budget SÍ se pregunta (sin regresión).
+  const ctx = createEmptyContext();
+  fireOnReceive("scope_deadline", "Lo quiero para el próximo mes", ctx);
+  assert(ctx.presupuesto === null, "[P2] plazo sin monto → presupuesto sigue null");
+  assert(FLOW.budget.condition?.(ctx) === true, "[P2] budget.condition = true (sí se pregunta)");
+}
+{
+  // Flujo completo con monto en el plazo: budget se salta y el flujo llega a
+  // contact_name sin re-preguntar (asked = nodos donde SÍ se consumió respuesta).
+  const { ctx, asked } = simulate([
+    "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
+    "sí",
+    "Inicio, Clases, Horarios y Contacto",
+    "no",
+    "no",
+    "no",
+    "sí",
+    "sí",
+    "no",
+    "sobrio",
+    "sí",
+    "no",
+    "clases grupales, clases privadas y retiros",
+    "para ya, y de presupuesto unos 15 mil pesos",
+    "Me llamo Andrea",
+    "andrea@yoga.com",
+    "81 9999 8888",
+    "todo bien",
+  ]);
+  assert(
+    ctx.presupuesto === "15000",
+    `[P2-flujo] presupuesto capturado en el plazo (${ctx.presupuesto})`
+  );
+  assert(
+    !asked.includes("budget") && !asked.includes("clarify_budget"),
+    "[P2-flujo] budget NO se preguntó (saltado)"
+  );
+  assert(asked.includes("contact_name"), "[P2-flujo] el flujo llegó a contact_name");
+  assert(ctx.fechaEntrega !== null, "[P2-flujo] fechaEntrega también capturada");
+}
+{
+  // Flujo completo SIN monto en el plazo: budget SÍ se pregunta y avanza.
+  const { ctx, asked } = simulate([
+    "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
+    "sí",
+    "Inicio, Clases, Horarios y Contacto",
+    "no",
+    "no",
+    "no",
+    "sí",
+    "sí",
+    "no",
+    "sobrio",
+    "sí",
+    "no",
+    "clases grupales, clases privadas y retiros",
+    "para ya",
+    "unos 15 mil",
+    "Me llamo Andrea",
+    "andrea@yoga.com",
+    "81 9999 8888",
+    "todo bien",
+  ]);
+  assert(
+    ctx.presupuesto === "15000",
+    `[P2-flujo] presupuesto capturado en budget (${ctx.presupuesto})`
+  );
+  assert(asked.includes("budget"), "[P2-flujo] budget SÍ se preguntó (sin monto previo)");
+}
+
+// ─── FASE E1c · extractSections: introductor libre y ":" que cierra la lista ──
+// A1: "La página que sueño para mi negocio es: inicio, servicios y contacto"
+//     dejaba el prefijo como sección. Ahora corta tras el ":" si el prefijo
+//     termina en verbo de intención ("es/será/quiero/imagino/...").
+// A2: "inicio, servicios y contacto: con eso me basta" colaba el texto tras el
+//     ":" no introductor. Ahora ese relleno final se descarta.
+
+section("E1c · extractSections: introductor libre y ':' que cierra la lista");
+{
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "pages",
+    "La página que sueño para mi negocio es: inicio, servicios y contacto",
+    ctx
+  );
+  assert(
+    ctx.estructuraWeb === "Inicio, Servicios, Contacto",
+    `A1 → "Inicio, Servicios, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+}
+{
+  const ctx = createEmptyContext();
+  fireOnReceive("pages", "inicio, servicios y contacto: con eso me basta", ctx);
+  assert(
+    ctx.estructuraWeb === "Inicio, Servicios, Contacto",
+    `A2 → "Inicio, Servicios, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+}
+{
+  // E1b intacto: lead-in clásico sigue limpiando el prefijo de opinión.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "pages",
+    "La primera, algo minimalista con fotos grandes. Pues imagino una sola página de corrido: inicio, mis productos, cómo llegar y el contacto.",
+    ctx
+  );
+  assert(
+    ctx.estructuraWeb === "Inicio, Mis productos, Cómo llegar, Contacto",
+    `E1b intacto → "Inicio, Mis productos, Cómo llegar, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+}
+
+// ─── FASE P2b · Presupuesto con verbos de dinero (junto al plazo) ──
+// B1: "para marzo, tengo 10000" (sin "pesos"/"mil") debe capturar "10000".
+// B2: "en 3 meses" / "para el próximo mes, en unas 3 semanas" NO capturan nada.
+
+section("P2b · verbos de dinero capturan el monto junto al plazo");
+{
+  const ctx = createEmptyContext();
+  fireOnReceive("scope_deadline", "para marzo, tengo 10000", ctx);
+  assert(
+    ctx.presupuesto === "10000",
+    `[B1] "para marzo, tengo 10000" → presupuesto 10000 (obtuve: ${ctx.presupuesto})`
+  );
+  assert(ctx.fechaEntrega === "para marzo", `[B1] fecha capturada (${ctx.fechaEntrega})`);
+  assert(FLOW.budget.condition?.(ctx) === false, "[B1] budget se salta (monto ya capturado)");
+}
+{
+  const ctx = createEmptyContext();
+  fireOnReceive("scope_deadline", "en 3 meses", ctx);
+  assert(
+    ctx.presupuesto === null,
+    `[B2] "en 3 meses" → presupuesto null (obtuve: ${ctx.presupuesto})`
+  );
+  assert(FLOW.budget.condition?.(ctx) === true, "[B2] budget sí se pregunta");
+}
+{
+  const ctx = createEmptyContext();
+  fireOnReceive("scope_deadline", "para el próximo mes, en unas 3 semanas", ctx);
+  assert(
+    ctx.presupuesto === null,
+    `[B2] "para el próximo mes, en unas 3 semanas" → presupuesto null (obtuve: ${ctx.presupuesto})`
+  );
+  assert(ctx.fechaEntrega !== null, "[B2] la fecha sí se captura");
+  // Conversación F de María intacta: "en unas 3 semanas" no captura presupuesto.
+  const ctxM = createEmptyContext();
+  fireOnReceive("scope_deadline", "en unas 3 semanas", ctxM);
+  assert(ctxM.presupuesto === null, "[B2-María] 'en unas 3 semanas' no captura presupuesto");
+}
+
+// ─── FASE C · Nodos poco relevantes se saltan por categoría ─────────
+// Para landing/portafolio/blog: technical_pwa (app instalable), scope_reference
+// (página de referencia) y technical_pdfs ya se saltan → discovery más corto.
+
+section("C · nodos poco relevantes se saltan para landing");
+{
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  assert(FLOW.technical_pwa.condition?.(ctx) === false, "[C] technical_pwa.condition=false para landing");
+  assert(FLOW.scope_reference.condition?.(ctx) === false, "[C] scope_reference.condition=false para landing");
+  assert(FLOW.technical_pdfs.condition?.(ctx) === false, "[C] technical_pdfs.condition=false para landing");
+  ctx.category = "ecommerce";
+  assert(FLOW.technical_pwa.condition?.(ctx) === true, "[C] technical_pwa.condition=true para ecommerce");
+  assert(FLOW.scope_reference.condition?.(ctx) === true, "[C] scope_reference.condition=true para ecommerce");
+  ctx.category = "citas";
+  assert(FLOW.technical_pwa.condition?.(ctx) === true, "[C] technical_pwa.condition=true para citas");
+}
+{
+  // Flujo real de landing: los nodos saltados NO aparecen en asked[].
+  const { ctx, asked } = simulate([
+    "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
+    "sí",
+    "Inicio, Clases, Horarios y Contacto",
+    "no",
+    "no",
+    "no",
+    "sí",
+    "sí",
+    "no",
+    "sobrio",
+    "sí",
+    "no",
+    "clases grupales, clases privadas y retiros",
+    "para ya",
+    "unos 15 mil",
+    "Me llamo Andrea",
+    "andrea@yoga.com",
+    "81 9999 8888",
+    "todo bien",
+  ]);
+  assert(ctx.category === "landing", "[C] yoga → landing");
+  assert(!asked.includes("technical_pwa"), "[C] technical_pwa NO se pregunta para landing");
+  assert(!asked.includes("scope_reference"), "[C] scope_reference NO se pregunta para landing");
+  assert(!asked.includes("technical_pdfs"), "[C] technical_pdfs NO se pregunta para landing");
+}
+
+// ─── FASE D · No preguntar lo que ya sabe (captura temprana) ───────
+// Datos que el cliente suelta en CUALQUIER respuesta quedan capturados y el
+// nodo se salta por condition (mismo patrón que budget en P2).
+
+section("D · captura temprana en discovery_business");
+{
+  // Ejemplo del enunciado: nombre + presupuesto + plazo dichos de entrada.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Soy Laura, tengo una clínica dental, quiero que agenden citas en línea, para marzo y tengo unos 20 mil",
+    ctx
+  );
+  assert(ctx.clientName === "Laura", `[D] nombre capturado (${ctx.clientName})`);
+  assert(ctx.presupuesto === "20000", `[D] presupuesto capturado (${ctx.presupuesto})`);
+  assert(ctx.fechaEntrega === "para marzo", `[D] fechaEntrega capturada (${ctx.fechaEntrega})`);
+  assert(ctx.citas === true, "[D] señal de citas capturada");
+  assert(FLOW.scope_deadline.condition?.(ctx) === false, "[D] scope_deadline se salta");
+  assert(FLOW.budget.condition?.(ctx) === false, "[D] budget se salta");
+  assert(FLOW.contact_name.condition?.(ctx) === false, "[D] contact_name se salta");
+  // El skip con respuesta vacía va al siguiente (no cae en clarificación).
+  assert(FLOW.scope_deadline.nextNode("", ctx) === "budget", "[D] skip de scope_deadline → budget");
+  assert(FLOW.contact_name.nextNode("", ctx) === "contact_email", "[D] skip de contact_name → contact_email");
+}
+{
+  // "no sé / no me acuerdo / ninguno" NO captura (FASE G y A3 respetadas).
+  const ctx = createEmptyContext();
+  fireOnReceive("discovery_business", "no sé, no me acuerdo, no tengo nada de eso", ctx);
+  assert(ctx.clientName === null, "[D] 'no sé' no captura nombre");
+  assert(ctx.presupuesto === null, "[D] 'no sé' no captura presupuesto");
+  assert(ctx.fechaEntrega === null, "[D] 'no sé' no captura fecha");
+  // "Tengo una clínica..." NO debe quedar como nombre (sin intro de presentación).
+  const ctx2 = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Tengo una clínica dental y quiero una página de presentación",
+    ctx2
+  );
+  assert(ctx2.clientName === null, "[D] 'Tengo una clínica...' no se guarda como nombre");
+}
+
+// ─── FASE D/E · Flujo completo autollenado: nada se re-pregunta ──
+// El formulario/propuesta se autollena con TODO lo capturado en el contexto
+// (Tarea E): nombre, email, teléfono, presupuesto, servicios, estructura, fecha.
+
+section("D/E · flujo completo autollenado (nada se re-pregunta)");
+{
+  const { ctx, asked } = simulate([
+    "Soy Laura, tengo una clínica dental, quiero una página de presentación con mis servicios y contacto. Para marzo, y tengo unos 20 mil. Mi correo es laura@clinica.com y mi teléfono es 81 2345 6789",
+    "sí, así es",
+    "Inicio, Servicios, Contacto",
+    "no", // cuentas
+    "no", // base de datos
+    "no", // panel
+    "sí", // mapa
+    "sí", // WhatsApp
+    "no", // citas
+    "moderno", // diseño
+    "sí", // SEO
+    "sí", // contenido
+    "limpieza dental y consultas", // servicios
+    "81 2345 6789", // teléfono
+    "no, gracias", // comentarios
+  ]);
+  // Todos los campos quedan poblados sin que el cliente repita nada.
+  assert(ctx.clientName === "Laura", `[D/E] nombre (${ctx.clientName})`);
+  assert(ctx.clientEmail === "laura@clinica.com", `[D/E] email (${ctx.clientEmail})`);
+  assert(ctx.clientPhone === "+52 81 2345 6789", `[D/E] teléfono (${ctx.clientPhone})`);
+  assert(ctx.presupuesto === "20000", `[D/E] presupuesto (${ctx.presupuesto})`);
+  assert(ctx.fechaEntrega === "para marzo", `[D/E] fecha (${ctx.fechaEntrega})`);
+  assert(ctx.category === "landing", "[D/E] categoría landing");
+  assert(ctx.estructuraWeb === "Inicio, Servicios, Contacto", `[D/E] estructura (${ctx.estructuraWeb})`);
+  assert(ctx.servicios === "limpieza dental, consultas", `[D/E] servicios (${ctx.servicios})`);
+  assert(ctx.paginas === 3, `[D/E] paginas (${ctx.paginas})`);
+  // Los nodos con dato ya capturado NO se vuelven a preguntar.
+  for (const id of ["scope_deadline", "budget", "contact_name", "contact_email"]) {
+    assert(!asked.includes(id), `[D/E] ${id} NO se pregunta (dato ya capturado)`);
+  }
+  // El teléfono no se captura temprano (normalizePhone mezclaría dígitos del
+  // presupuesto) → se pide en su nodo, una sola vez.
+  assert(
+    asked.includes("contact_phone"),
+    "[D/E] contact_phone SÍ se pregunta (no se dio teléfono temprano)"
+  );
+  // Tarea C: pwa/reference/pdfs saltados para landing.
+  for (const id of ["technical_pwa", "scope_reference", "technical_pdfs"]) {
+    assert(!asked.includes(id), `[C/D] ${id} NO se pregunta para landing`);
+  }
+  // Tarea E: la propuesta se deriva del contexto sin que el cliente repita datos.
+  const clientData = buildClientData({
+    nombre: ctx.clientName || "",
+    giro: "clínica dental",
+    telefono: ctx.clientPhone,
+    tipoWeb: derivarTipoWeb(resolverCategoria(ctx) ?? "landing", ctx.paginas),
+    dominioHosting: true,
+    branding: false,
+  });
+  assert(clientData.nombre === "Laura", "[E] ClientData.nombre autocompletado");
+  assert(clientData.telefono === "+528123456789", "[E] ClientData.telefono autocompletado");
+  const quote = calculateQuote(clientData);
+  assert(
+    quote.total === 12760,
+    `[E] total determinista desde el contexto → $12,760 (obtuve ${quote.total})`
+  );
+  assert(resolverCategoria(ctx) === "landing", "[E] resolverCategoria → landing");
 }
 
 // ─── Resumen ───────────────────────────────────────────────────────

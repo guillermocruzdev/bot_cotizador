@@ -147,7 +147,7 @@ export function ProposalView() {
     );
   }
 
-  const firstName = result.clientName?.split(" ")[0];
+  const firstName = (result.clientName || context.clientName || "")?.split(" ")[0];
 
   return (
     <div className="min-h-dvh bg-[#fafafa] pb-16">
@@ -273,7 +273,10 @@ export function ProposalView() {
                 <CardTitle className="text-lg">¿Siguiente paso?</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <ContactCTA clientName={result.clientName} categoria={result.categoria} />
+                <ContactCTA
+                  clientName={result.clientName || context.clientName || ""}
+                  categoria={result.categoria}
+                />
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <Button
                     onClick={descargarPropuesta}

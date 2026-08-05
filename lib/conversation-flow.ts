@@ -166,6 +166,56 @@ function extractSignals(response: string, ctx: ChatContext): void {
   }
 }
 
+/** Señal de presupuesto: abre la captura de un monto en respuestas libres.
+ * Evita capturar "en 3 meses" como dinero. Incluye verbos de intención de
+ * dinero ("para marzo, tengo 10000") para que el monto dicho junto al plazo
+ * no se pierda ni se vuelva a preguntar. */
+const BUDGET_SIGNAL =
+  /(presupuesto|inversi[oó]n|cobran|cobrar|cobro|cuesta|cueste|costo|costar|pesos?|\$|monto|gastar|gasto|alcanza|alcance|mil|k\b|rango|no m[áa]s|tengo|contaba|ando pensando|pensaba invertir|le puedo dar|tengo pensado)/i;
+
+/**
+ * Captura temprana de datos de contacto/negocio que el cliente suelte en
+ * CUALQUIER respuesta (no solo en su nodo): nombre, email, presupuesto (con
+ * guard de señal de dinero), plazo y teléfono. Solo se guarda si aún están
+ * vacíos, y "no sé / no me acuerdo / ninguno" NO captura (los extractores ya
+ * devuelven null). El nombre solo se toma con intro clara de presentación
+ * ("soy/me llamo/mi nombre es...") para no guardar "Tengo una clínica..."
+ * como nombre. El plazo NO usa extractSubject como respaldo: eso solo aplica
+ * en el nodo scope_deadline donde el cliente responde la fecha a propósito.
+ * El TELÉFONO NO se captura aquí: normalizePhone sobre una respuesta larga
+ * mezclaría dígitos del presupuesto ("20 mil ... 81 2345 6789" → "+52 20 ..."),
+ * así que se pide en su propio nodo contact_phone.
+ */
+function captureEarlyData(response: string, ctx: ChatContext): void {
+  if (!ctx.clientName) {
+    const intro = response
+      .replace(
+        /^(hola|buenas|buen d[ií]a|buenos d[ií]as|buenas tardes|buenas noches|qu[ée] tal|que tal)\s*[,:]?\s*/i,
+        ""
+      )
+      .trim();
+    if (
+      /^(yo\s+soy|soy|me llamo|mi nombre es|mi negocio se llama|nos llamamos|somos|es)\b/i.test(
+        intro
+      )
+    ) {
+      ctx.clientName = extractName(response);
+    }
+  }
+  if (!ctx.clientEmail) {
+    const email = extractEmail(response);
+    if (email) ctx.clientEmail = email;
+  }
+  if (ctx.presupuesto == null && BUDGET_SIGNAL.test(response)) {
+    const amount = extractBudgetAmount(response);
+    if (amount) ctx.presupuesto = amount;
+  }
+  if (ctx.fechaEntrega == null) {
+    const d = extractDeadline(response);
+    if (d) ctx.fechaEntrega = d;
+  }
+}
+
 /** Detecta señales mencionadas en la respuesta para confirmarlas al cliente */
 function mentionedSignals(response: string): string[] {
   const t = response.toLowerCase();
@@ -189,6 +239,50 @@ const SECTION_NOISE = new Set([
 
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/** Introductores de lista que anuncian las secciones (antes de ":" o como conector) */
+const SECTION_LEAD_IN =
+  /(una sola página|una pagina|una página sencilla|una pagina sencilla|de corrido|varias secciones|algo así como|algo como|así como|imagino|pienso|por ejemplo|tipo|quiero|me gusta)/i;
+
+/** Verbo de intención al final del prefijo (antes de ":") que anuncia la lista.
+ * "La página que sueño para mi negocio es: inicio, ..." → cortar tras los dos
+ * puntos aunque no haya un lead-in conocido (el "es" es señal de que sigue la
+ * enumeración). */
+const INTENT_VERB_END =
+  /(es|será|quiero|imagino|necesito|pienso|deseo|sueño con|me gustaría)\s*$/i;
+
+/**
+ * Descarta lo que está ANTES de la primera sección real.
+ * La respuesta suele mezclar una opinión ("Algo minimalista con fotos grandes.
+ * Pues imagino...") con la enumeración real. Las secciones empiezan:
+ *  - tras los dos puntos de la lista ("...una sola página de corrido: inicio, ..."),
+ *  - o tras un conector introductorio ("... Pues imagino inicio, ...",
+ *    "..., algo así como Inicio, Menú, ...").
+ * Solo se corta cuando hay una señal clara de que ahí empieza la enumeración,
+ * para no recortar una respuesta que ya es solo una lista.
+ */
+function cutBeforeSections(s: string): string {
+  // 1) La lista va tras los dos puntos y antes hay un introductor de lista
+  //    conocido ("...una sola página de corrido: ...") o un verbo de intención
+  //    al final del prefijo ("La página que sueño es: ...").
+  const colon = s.lastIndexOf(":");
+  if (
+    colon >= 0 &&
+    (SECTION_LEAD_IN.test(s.slice(0, colon)) || INTENT_VERB_END.test(s.slice(0, colon)))
+  ) {
+    const after = s.slice(colon + 1).trim();
+    if (after) return after;
+  }
+  // 2) Sin ":", la lista va tras un conector introductorio en medio de la frase.
+  const m = s.match(
+    /(?:^|\s)(?:pues\s+)?(?:me\s+)?imagino\s+|(?:^|\s)pienso\s+|(?:^|\s)algo\s+as[ií]\s+como\s+/i
+  );
+  if (m && m.index !== undefined) {
+    const after = s.slice(m.index + m[0].length).trim();
+    if (after) return after;
+  }
+  return s;
 }
 
 /**
@@ -217,6 +311,12 @@ function extractSections(raw: string): string | null {
     )
     .replace(/^as[ií]\s*[,:]?\s*/i, "");
 
+  // Descarta lo que está ANTES de la primera sección real: si la respuesta
+  // mezcla la estructura con una opinión previa ("algo minimalista con fotos
+  // grandes. Pues imagino..."), las secciones empiezan tras los dos puntos o
+  // tras un conector introductorio; todo lo anterior es relleno.
+  cleaned = cutBeforeSections(cleaned);
+
   // Frases de estructura que NO son secciones: "una sola página", "de corrido"...
   // "una sola página: inicio" → ": inicio" → "inicio"
   cleaned = cleaned
@@ -229,8 +329,11 @@ function extractSections(raw: string): string | null {
     .replace(/^[\s:,]+/, "");
 
   // Relleno final de conformidad: "con eso me conformo", "con eso me basta"...
+  // El ":" también puede CERRAR la lista en vez de abrirla ("inicio, servicios
+  // y contacto: con eso me basta") → el texto tras un ":" no introductor es
+  // relleno final de la misma familia (Tarea A2).
   cleaned = cleaned.replace(
-    /[.,;]\s*(con eso me conformo|con eso me basta|con eso me doy por bien servido|con eso la hago|con eso me arreglo|nada más|eso es todo|ya con eso)\s*$/i,
+    /[.,;:]\s*(con eso me conformo|con eso me basta|con eso me doy por bien servido|con eso la hago|con eso me arreglo|nada más|eso es todo|ya con eso)\s*$/i,
     ""
   );
 
@@ -408,6 +511,7 @@ export const FLOW: Record<string, ConversationNode> = {
       ctx.negocioDescripcion = extractSubject(response);
       ctx.category = inferCategory(response);
       extractSignals(response, ctx);
+      captureEarlyData(response, ctx);
     },
   },
 
@@ -436,6 +540,7 @@ export const FLOW: Record<string, ConversationNode> = {
         // Deja que discovery_examples re-infiera
         ctx.category = null;
       }
+      captureEarlyData(response, ctx);
     },
   },
 
@@ -508,6 +613,7 @@ export const FLOW: Record<string, ConversationNode> = {
       if (sections) {
         ctx.estructuraWeb = sections;
       }
+      captureEarlyData(response, ctx);
     },
   },
 
@@ -694,6 +800,10 @@ export const FLOW: Record<string, ConversationNode> = {
       `Y una última comodidad: ¿te gustaría que tus clientes puedan tener tu página "a la mano" en su celular, como si fuera una app? Es un detalle que suma presencia.`,
     field: "pwa",
     next: "scope_content",
+    // Para landing/portafolio/blog la PWA (instalable como app) es poco
+    // relevante: se salta y ahorra un turno del discovery.
+    condition: (ctx) =>
+      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing"),
   }),
 
   // ══════════ FASE 4: Alcance y expectativas ══════════
@@ -704,6 +814,8 @@ export const FLOW: Record<string, ConversationNode> = {
       `Ya casi termino con las preguntas. Una que siempre hago: ¿tienes ya las fotos y los textos de tu negocio? Si no, no te preocupes: yo te ayudo a estructurarlos, y hay opciones para que se vea profesional aunque partamos de cero.`,
     field: "contenidoListo",
     next: "scope_services",
+    // Si ya sabemos si el contenido está listo, no volver a preguntar.
+    condition: (ctx) => ctx.contenidoListo == null,
     clarifyId: "clarify_content",
   }),
 
@@ -722,13 +834,18 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: (ctx) =>
       `Hablemos de lo que vende: ¿tu negocio ofrece servicios que quieras mostrar en la web? Si sí, dime cuáles (y si quieres, cuántos y si tienen precio). Si no ofreces servicios, dime qué es lo que más quieres destacar para que la gente te contacte. ${pickEmoji("idea")}`,
     expectedResponseType: "text",
+    // Si el cliente ya dio los servicios en otra respuesta, no volver a preguntar.
+    condition: (ctx) => ctx.servicios == null,
     nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
+      if (!response || !response.trim()) return "scope_reference";
       if (isNoSé(response, ctx)) return "clarify_services";
       return "scope_reference";
     },
     onReceive: (response, ctx) => {
       // Normaliza la lista: "corte, barba y afeitado" → "corte, barba, afeitado".
       ctx.servicios = normalizeServices(response);
+      captureEarlyData(response, ctx);
     },
   },
 
@@ -746,7 +863,13 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: () =>
       `¿Hay alguna página que te guste, de la que digas "quiero algo así"? No importa si es de otro giro; dime qué te gusta de ella y con eso afino el estilo a tu gusto.`,
     expectedResponseType: "url",
+    // Para landing/portafolio/blog la página de referencia es poco relevante
+    // (el estilo lo cubre el nodo design): se salta y ahorra un turno.
+    condition: (ctx) =>
+      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing"),
     nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
+      if (!response || !response.trim()) return "scope_deadline";
       if (isNoSé(response, ctx)) return "scope_deadline";
       const t = response.toLowerCase();
       if (/(ninguna|no|nada|no tengo)/.test(t)) return "scope_deadline";
@@ -759,6 +882,7 @@ export const FLOW: Record<string, ConversationNode> = {
       } else {
         ctx.referencia = extractSubject(response);
       }
+      captureEarlyData(response, ctx);
     },
   },
 
@@ -768,12 +892,25 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: () =>
       `¿Para cuándo lo necesitas de verdad? No es para presionarte: es para saber si hay que apurar o podemos ir con calma y hacerlo bien. ${pickEmoji("interes")}`,
     expectedResponseType: "text",
+    // Si el cliente ya dio la fecha en otra respuesta, no volver a preguntar.
+    condition: (ctx) => ctx.fechaEntrega == null,
     nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
+      if (!response || !response.trim()) return "budget";
       if (isNoSé(response, ctx)) return "clarify_deadline";
       return "budget";
     },
     onReceive: (response, ctx) => {
       ctx.fechaEntrega = extractDeadline(response) ?? extractSubject(response);
+      // Si el cliente ya soltó su monto aquí (ej. "para el próximo mes... y de
+      // presupuesto unos 10 mil pesos" o "para marzo, tengo 10000"), capturarlo
+      // para no re-preguntar. Solo si hay señal de presupuesto (verbos de dinero
+      // incluidos): evita capturar "en 3 meses" como monto.
+      if (ctx.presupuesto == null && BUDGET_SIGNAL.test(response)) {
+        const amount = extractBudgetAmount(response);
+        if (amount) ctx.presupuesto = amount;
+      }
+      captureEarlyData(response, ctx);
     },
   },
 
@@ -792,7 +929,12 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: () =>
       `Ahora sí, la pregunta que a todos les da un poco de pena, y con razón. ${pickEmoji("precio")} ¿Qué inversión tienes en mente para esto? No te lo pregunto para cobrarte de más: al contrario, es para armarte algo que quepa en tu bolsillo y que de verdad te funcione. Con los años aprendí que lo peor es venderle a alguien algo que no pueda sostener.`,
     expectedResponseType: "text",
+    // Si el cliente ya dio su monto (p. ej. al responder el plazo), no re-preguntar.
+    condition: (ctx) => ctx.presupuesto == null,
     nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir directo al siguiente,
+      // igual que los nodos booleanos, para no caer en la clarificación.
+      if (!response || !response.trim()) return "contact_name";
       // Si ya dio un monto/rango, avanzamos aunque la frase diga
       // "no sé cuánto cobran" (la duda es retórica si ya dio un número).
       if (extractBudgetAmount(response)) return "contact_name";
@@ -821,12 +963,17 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: () =>
       `Perfecto, con esto ya tengo muy claro tu proyecto. ${pickEmoji("contacto")} ¿Me dices cómo te llamas, o el nombre de tu negocio, para dirigirte la propuesta?`,
     expectedResponseType: "text",
+    // Si el cliente ya dio su nombre en la descripción, no volver a preguntar.
+    condition: (ctx) => ctx.clientName == null,
     nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
+      if (!response || !response.trim()) return "contact_email";
       if (isNoSé(response, ctx)) return "contact_email";
       return "contact_email";
     },
     onReceive: (response, ctx) => {
       ctx.clientName = extractName(response);
+      captureEarlyData(response, ctx);
     },
   },
 
@@ -836,6 +983,8 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: (ctx) =>
       `¡Gracias${ctx.clientName ? `, ${ctx.clientName.split(" ")[0]}` : ""}! Y un correo para enviarte la propuesta cuando esté lista, ¿cuál es? ${pickEmoji("contacto")}`,
     expectedResponseType: "url",
+    // Si el cliente ya dio su correo en otra respuesta, no volver a preguntar.
+    condition: (ctx) => ctx.clientEmail == null,
     nextNode: (response, ctx) => {
       // Rechazo claro ("no tengo/no doy correo") → avanzar sin email (no forzar)
       if (isDecliningContact(response) && !/@/.test(response)) {
@@ -905,6 +1054,8 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: (ctx) =>
       `Y para cualquier detalle rápido, ¿un teléfono o WhatsApp donde pueda localizarte? Lo pongo en la propuesta para que me contactes sin fricción cuando quieras avanzar. ${pickEmoji("contacto")}`,
     expectedResponseType: "text",
+    // Si el cliente ya dio su teléfono en otra respuesta, no volver a preguntar.
+    condition: (ctx) => ctx.clientPhone == null,
     nextNode: (response, ctx) => {
       // Rechazo claro ("no tengo/no doy teléfono") → avanzar sin teléfono (no forzar)
       if (isDecliningContact(response) && !/\d/.test(response)) {

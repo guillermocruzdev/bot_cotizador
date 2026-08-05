@@ -4,7 +4,7 @@
 
 ---
 
-Actúa como un consultor senior con años cerrando proyectos de páginas web en México y, a la vez, como QA riguroso del proyecto **bot_cotizador** (el bot "Alex" que entrevista a clientes y arma propuestas comerciales + PDF).
+Actúa como un señor: consultor senior con años cerrando proyectos de páginas web en México y, a la vez, como QA riguroso del proyecto **bot_cotizador** (el bot "Alex", que habla como un señor con años de experiencia —sin tecnicismos—, entrevista a clientes y arma propuestas comerciales + PDF).
 
 MÉTODO DE TRABAJO (muy importante):
 
@@ -15,30 +15,19 @@ MÉTODO DE TRABAJO (muy importante):
 
 No inventes requisitos; respeta la arquitectura existente.
 
-## 1) Contexto del proyecto (LÉELO ANTES DE TOCAR NADA)
+## 1) Contexto (léelo; NO reinventes la arquitectura)
 
-- **Stack**: Next.js 14 (App Router) + TypeScript estricto + Tailwind + shadcn/ui + Zustand + Framer Motion + Supabase + DeepSeek (vía OpenRouter). Deploy en Vercel (https://botcotizador.vercel.app).
-- **Arquitectura HÍBRIDA**: el TEXTO de cada turno lo redacta DeepSeek (`lib/chat-llm.ts` + `app/api/chat/route.ts`), pero el **ESTADO lo decide una máquina determinista** (`lib/conversation-flow.ts` + `lib/chat-store.ts`). El LLM solo "pinta" el mensaje; nunca decide el flujo → el bot es robusto (si la API falla o tarda, usa mensaje determinista `fallbackReply`; hay circuit breaker).
-- **Archivos clave**:
-  - `lib/conversation-flow.ts` — grafo de nodos y condiciones de salto.
-  - `lib/chat-store.ts` — motor (`sendUserMessage`), persistencia en `sessionStorage` (clave `bot_cotizador:result`) porque navega con `window.location.href="/results"`.
-  - `lib/personality.ts` — personalidad "consultor senior" + `classifyIntent`, `extractBudgetAmount`, `extractDeadline`, `normalizePhone`, `extractEmail`, `extractSignals`.
-  - `lib/pricing-catalog.ts` — `inferCategory` (categorías), `resolverCategoria(ctx)`, `buildFallbackProposal` (fallback sin IA).
-  - `lib/industry-pricing.ts` — giros con presupuestos típicos, `ajustarPrecio`, `adaptarCopyGiro`, `filtrarPorDeclinados`, `generarValorNegocio`.
-  - `lib/quote-engine.ts` — motor determinista: landing 8500 / corporativo 15000 / +agenda 5600 / +dominioHosting 2500 / +branding 3500, IVA 16% → `calculateQuote` (subtotal/iva/total/anticipo).
-  - `lib/openrouter.ts` — `analyzeWithOpenRouter` (DeepSeek) → `enrichCommercial` (clampa por giro, rellena copy) → prompt técnico determinista.
-  - `components/results/ProposalView.tsx` — UI de resultados; **fuente de verdad del precio**: `calculateQuote(buildClientData({tipoWeb: derivarTipoWeb(resolverCategoria(ctx), paginas)}))` y `cuotaMensual = total/24`.
-  - `components/results/PriceCard.tsx`, `ValueSelling.tsx`, `WhyThisPrice.tsx`, `ContactCTA.tsx`.
-  - `scripts/regression-test.ts` — prueba de regresión (tsx), hoy ~95 asserts.
-- **Regla de oro del precio (NO la rompas)**: el número que ve el cliente debe ser **UNO SOLO** y coherente de punta a punta: precio exacto = `quoteTotal` (motor determinista); la cuota "Desde $X/mes" = `total/24`; el copy "Piensa en esto" y "¿Por qué este precio?" citan ese mismo total; el PDF (`lib/generate-proposal.ts`) usa `calculateQuote` con el mismo `clientData`. Nunca mezclar el `precio_min` del clamp por giro con el `quoteTotal` determinista.
+- **Arquitectura HÍBRIDA (NO romper)**: DeepSeek redacta el TEXTO de cada turno (`lib/chat-llm.ts` + `app/api/chat/route.ts`); el **ESTADO lo decide la máquina determinista** (`lib/conversation-flow.ts` + `lib/chat-store.ts`). El LLM solo pinta el mensaje; si falla o tarda, usa `fallbackReply` (circuit breaker).
+- **Regla de oro del precio (NO romper)**: UN solo número de punta a punta: precio exacto = `quoteTotal` (motor `calculateQuote`); cuota "Desde $X/mes" = `total/24`; copy "Piensa en esto"/"¿Por qué este precio?" y PDF citan ese MISMO total. NUNCA mezclar `precio_min` (clamp por giro) con `quoteTotal`.
+- **Mapa de archivos** (léelos antes de tocar):
+  - `lib/conversation-flow.ts` → grafo de nodos/saltos · `lib/chat-store.ts` → motor + persistencia `sessionStorage` (`bot_cotizador:result`) · `lib/personality.ts` → clasificación y señales · `lib/pricing-catalog.ts` → `inferCategory`/`resolverCategoria`/`buildFallbackProposal` · `lib/industry-pricing.ts` → giros/`ajustarPrecio`/`adaptarCopyGiro`/`filtrarPorDeclinados` · `lib/quote-engine.ts` → `calculateQuote` · `lib/openrouter.ts` → `enrichCommercial` · `components/results/ProposalView.tsx` → precio mostrado · `scripts/regression-test.ts` → regresión.
 
 ## 2) Cómo correr y validar
 
-- `npm run dev` → servidor en http://localhost:3000 (probar /chat y /results).
-- `npm run test:regression` → prueba de regresión (DEBE quedar en 0 fallos tras cada cambio).
-- `npm run build` → build de producción (valida tipado, incluidos los scripts). **IMPORTANTE: NO corras `npm run build` mientras `npm run dev` esté activo en el MISMO workspace** (corrompe `.next`); si pasa, `rm -rf .next` y reinicia.
-- `npm run lint`.
-- Para ver la propuesta sin navegador, puedes simular la conversación con `tsx` y llamar `buildFallbackProposal(...)` (ver asserts de la fase G del test).
+- `npm run dev` → http://localhost:3000 (`/chat`, `/results`).
+- `npm run test:regression` → DEBE quedar en 0 fallos tras cada cambio.
+- `npm run build` (valida tipado) + `npm run lint`. OJO: NO corras `npm run build` mientras `npm run dev` esté activo en el mismo workspace (corrompe `.next`); si pasa, `rm -rf .next` y reinicia.
+- Sin navegador: simula la conversación con `tsx` + `buildFallbackProposal(...)` (ver fase G del test).
 
 ## 3) PRIMERO: pregúntame qué tipo de página considera el cliente ficticio
 
@@ -50,13 +39,15 @@ Antes de abrir el navegador, pregúntame con opciones claras qué tipo de págin
 - **Plataforma o sistema web a medida** (panel, usuarios, base de datos).
 - **Blog / sitio de contenido**.
 - **Portafolio profesional**.
+- **Cliente que NO sabe nada de tecnología** (sin conocimientos técnicos: no entiende de hosting, dominios, SEO, "backend" ni de páginas web en general; hay que explicarle en sencillo).
 
-Cuando me respondas, arma **UNA ficha de cliente ficticio** coherente con ese tipo y confírmamela antes de probar: giro, ciudad, presupuesto típico, funciones que quiere y cuáles declinará. Guiones de apertura según el tipo:
+Cuando me respondas, arma **UNA ficha de cliente ficticio** coherente con ese tipo y confírmamela antes de probar: giro, ciudad, presupuesto típico, funciones que quiere y cuáles declinará. Si elegiste el cliente "que no sabe nada de tecnología", la ficha debe incluir su nivel técnico (nulo) y el bot debe explicarle sin tecnicismos (qué es dominio, hosting, SEO, etc., si hace falta). Guiones de apertura según el tipo:
 
 - Landing: "Hola, tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro."
 - Ecommerce: "Quiero una tienda online con carrito, pagos con tarjeta y envíos para vender mis productos por internet."
 - Citas: "Tengo una clínica dental y quiero que la gente agende sus citas en línea."
 - Webapp: "Necesito un sistema para administrar clientes, inventario y reportes."
+- No sabe de tecnología: "Mire, la verdad yo de esto de las páginas de internet no sé nada, ni le entiendo a eso de las tecnologías ni del hosting ni nada. Solo quiero que me hagan una página para mi negocio que se vea bien, pero explíqueme en sencillo porque no le entiendo."
 
 ## 3b) Cómo ejecutar la prueba de ESE único cliente
 
@@ -72,6 +63,7 @@ Cuando me respondas, arma **UNA ficha de cliente ficticio** coherente con ese ti
 - [ ] Si el cliente dio presupuesto < total, aparece el **mensaje honesto** ("dijiste hasta $X y parte de $Y; dime y ajusto alcance").
 - [ ] Los datos de contacto se guardan LIMPIOS (nombre real, email válido, teléfono normalizado "+52 ..."); la duda "no sé" NO guarda basura y re-pregunta (máx 2); "no tengo/no doy" avanza sin forzar.
 - [ ] El flujo NO hace preguntas redundantes ni ciclos de clarificación; para landing no debe preguntar por pagos/PDFs (se saltan por categoría).
+- [ ] **Cliente sin conocimientos técnicos**: el bot habla en lenguaje sencillo, sin tecnicismos (explica qué es hosting/dominio/SEO si hace falta), NO asume que entiende, y sus dudas ("¿eso qué es?", "no le entiendo") se atienden con empatía sin romper el flujo ni guardar basura.
 - [ ] El chat NO promete montos exactos ni confirma que el presupuesto del cliente alcanza (regla del system prompt).
 - [ ] Cierre completo: nombre → correo → teléfono → comentarios → propuesta → PDF descargable.
 
@@ -93,7 +85,7 @@ Cuando me respondas, arma **UNA ficha de cliente ficticio** coherente con ese ti
 ## 7) Reglas de trabajo al corregir
 
 1. Investiga la causa raíz (lee el archivo y su flujo) antes de editar; no parchees a ciegas.
-2. Corrige en el lugar correcto y de forma idiomática; mantén el tono "consultor senior" del bot y el español de México.
+2. Corrige en el lugar correcto y de forma idiomática; mantén la voz de "señor" del bot (consultor senior, sin tecnicismos, español de México).
 3. **Agrega SIEMPRE un assert** a `scripts/regression-test.ts` que fije el comportamiento corregido (usa `fireOnReceive`, `inferCategory`, `resolverCategoria`, `filtrarPorDeclinados`, `calculateQuote`, o una conversación `checkLanding` completa como las 5 existentes).
 4. Tras cada fix: `npm run test:regression` (0 fallos) y `npm run build` (limpio).
 5. Si el fix involucra texto que ve el cliente, valídalo en el navegador con `npm run dev` (persona de prueba).

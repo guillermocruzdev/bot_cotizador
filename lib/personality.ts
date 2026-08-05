@@ -260,7 +260,19 @@ export function classifyIntent(raw: string): Intent {
   // sobre cualquier duda contenida.
   if (noCount > 0 && yesCount === 0) return { yes: false, no: true, dontKnow: false, text };
   if (yesCount > 0 && noCount === 0) return { yes: true, no: false, dontKnow: false, text };
-  if (yesCount > 0 && noCount > 0) return { yes: false, no: false, dontKnow: false, text };
+  if (yesCount > 0 && noCount > 0) {
+    // Confirmación con lista de cosas que NO quiere: "Sí, así es… nada de
+    // vender por internet ni nada de eso" es un SÍ, no una contradicción.
+    // "nada/ni/tampoco" niegan ELEMENTOS de la lista, no la frase completa.
+    // Solo un "no" fuerte (no, nop, nunca, jamás, para nada…) rompe la
+    // confirmación. Sin él, la afirmación inequívoca gana.
+    const strongNo =
+      hasSignal("no") || hasSignal("nop") || hasSignal("nope") ||
+      hasSignal("negativo") || hasSignal("jamás") || hasSignal("jamas") ||
+      hasSignal("nunca") || hasSignal("para nada");
+    if (!strongNo) return { yes: true, no: false, dontKnow: false, text };
+    return { yes: false, no: false, dontKnow: false, text };
+  }
 
   // Sin señal clara: solo entonces cuenta la duda o la vaguedad.
   if (dontKnowWords.some((phrase) => text.includes(phrase))) {
