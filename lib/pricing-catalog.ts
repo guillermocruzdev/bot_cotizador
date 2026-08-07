@@ -11,7 +11,7 @@
  * también sirve de fallback si la API falla.
  */
 
-import type { ChatContext } from "@/lib/types";
+import type { AnalysisResult, ChatContext } from "@/lib/types";
 import { buildTechnicalPrompt } from "@/lib/prompt-builder";
 import {
   adaptarCopyGiro,
@@ -22,6 +22,7 @@ import {
   generarValorNegocio,
 } from "@/lib/industry-pricing";
 import { calcularTotalDeterminista } from "@/lib/quote-engine";
+import { botsParaResultado, totalBotsMensual, totalBotsSetup } from "@/lib/bots-catalog";
 
 export type Nivel = "basico" | "profesional" | "avanzado";
 
@@ -300,7 +301,7 @@ export function inferCategory(text: string): string {
 export function resolverCategoria(
   ctx: Pick<
     ChatContext,
-    "category" | "pagos" | "dashboard" | "baseDeDatos" | "autenticacion"
+    "category" | "pagos" | "dashboard" | "baseDeDatos" | "autenticacion" | "citas"
   >
 ): string | null {
   const cat = ctx.category;
@@ -313,6 +314,9 @@ export function resolverCategoria(
     ctx.autenticacion === false
   )
     return "landing";
+  // "citas" sin citas (el cliente las rechazó al confirmar) no es un sistema
+  // de citas: es una landing de presentación.
+  if (cat === "citas" && ctx.citas === false) return "landing";
   return cat;
 }
 
@@ -367,8 +371,12 @@ export function buildFallbackProposal(
   // Estimado técnico + ajuste al presupuesto del giro (con gancho)
   const { precio_min: estMin, precio_max: estMax, nivel } = estimatePrice(categoryIdResuelto, activeFeatureIds);
   const ajustado = ajustarPrecio(estMin, estMax, giro);
-  const precio_min = ajustado.precio_min;
-  const precio_max = ajustado.precio_max;
+  // Bots de LangChain (add-on): si el cliente eligió, su setup (IVA incluido)
+  // se suma al total EXACTO y ese número pasa a ser el precio de la propuesta.
+  const botsIds = context.bots ?? [];
+  const botsSeleccionados = botsParaResultado(botsIds);
+  const botsTotal = totalBotsSetup(botsIds);
+  const botsCuota = totalBotsMensual(botsIds);
   // Total EXACTO que verá la UI: el copy cita este número, no un rango suelto.
   const totalExacto = calcularTotalDeterminista({
     giro: giro.nombre,
@@ -377,11 +385,26 @@ export function buildFallbackProposal(
     negocioDescripcion: context.negocioDescripcion,
     category: categoryIdResuelto,
     paginas: context.paginas,
+    bots: botsIds,
   });
+  // Con bots, el precio EXACTO (base + bots) manda sobre el clamp del giro.
+  const precio_min =
+    botsSeleccionados.length && totalExacto != null
+      ? totalExacto
+      : ajustado.precio_min;
+  const precio_max =
+    botsSeleccionados.length && totalExacto != null
+      ? Math.max(totalExacto, ajustado.precio_max)
+      : ajustado.precio_max;
 
+  const citasItem =
+    context.citas === true
+      ? "Apartado para que tus clientes pidan o agenden cita (día y hora)"
+      : null;
   const funcionalidades = [
     "Página principal con la información de tu negocio",
     "Diseño que se ve perfecto en celular, tablet y computadora",
+    ...(citasItem ? [citasItem] : []),
     ...activeFeatureIds
       .map((id) => cat.features.find((f) => f.id === id)?.labelCliente)
       .filter((x): x is string => Boolean(x)),
@@ -394,7 +417,7 @@ export function buildFallbackProposal(
 
   // Copy comercial (adaptado + citando el total exacto cuando existe)
   const explicacion_precio = generarExplicacionPrecio(giro, precio_min, precio_max, ajustado.alcance_ajustado);
-  const valor_negocio = generarValorNegocio(giro.nombre, copy.pitch, precio_min, precio_max, totalExacto ?? undefined);
+  const valor_negocio = generarValorNegocio(giro.nombre, precio_min, precio_max, totalExacto ?? undefined);
   const presupuesto_giro = `$${giro.presupuesto[0].toLocaleString("es-MX")}–$${giro.presupuesto[1].toLocaleString("es-MX")} MXN`;
 
   const promptTecnico = buildTechnicalPrompt({
@@ -428,7 +451,7 @@ export function buildFallbackProposal(
     },
   });
 
-  return filtrarPorDeclinados(
+  const base: AnalysisResult = filtrarPorDeclinados(
     {
       clientName,
       categoria: cat.nombreCliente,
@@ -458,4 +481,32 @@ export function buildFallbackProposal(
     },
     context
   );
+
+  // ── Bots de LangChain (add-on determinista: aparecen en propuesta, prompt y PDF) ──
+  if (botsSeleccionados.length) {
+    base.bots = botsSeleccionados;
+    base.bots_total = botsTotal;
+    base.bots_cuota_mensual = botsCuota;
+    base.funcionalidades = [
+      ...(base.funcionalidades ?? []),
+      ...botsSeleccionados.map((b) => b.funcionalidad),
+    ];
+    base.entregables = [
+      ...(base.entregables ?? []),
+      ...botsSeleccionados.map(
+        (b) => `Bot "${b.nombre}" entrenado y configurado con la información de tu negocio`
+      ),
+    ];
+    base.stack_tecnico = [...(base.stack_tecnico ?? []), "LangChain", "DeepSeek"];
+    base.recomendaciones = [
+      ...(base.recomendaciones ?? []),
+      `Mantén tus asistentes (${botsSeleccionados
+        .map((b) => b.nombre)
+        .join(", ")}) siempre activos con la suscripción mensual de $${botsCuota.toLocaleString(
+        "es-MX"
+      )} MXN, que cubre el motor de IA y las actualizaciones.`,
+    ];
+  }
+
+  return base;
 }

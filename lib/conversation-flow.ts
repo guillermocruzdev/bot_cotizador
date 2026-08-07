@@ -32,6 +32,7 @@ import {
   randomTransition,
 } from "@/lib/personality";
 import { PRICING_CATALOG, getCategoryById, inferCategory } from "@/lib/pricing-catalog";
+import { detectarBotsRecomendados, extraerBotsDeRespuesta } from "@/lib/bots-catalog";
 
 export const START_NODE_ID = "greeting";
 
@@ -317,6 +318,16 @@ function extractSections(raw: string): string | null {
   // tras un conector introductorio; todo lo anterior es relleno.
   cleaned = cutBeforeSections(cleaned);
 
+  // Relleno de cierre "así de sencillo/simple/fácil": se retira ANTES de
+  // quitar "sencillo"/"simple" sueltos (si no, "así de sencillo" quedaba
+  // como "así de" → sección basura "Así de").
+  cleaned = cleaned
+    .replace(/[.,;:]?\s*as[ií] de (sencillo|simple|f[áa]cil|directo|f[áa]cil de usar)\s*$/i, "")
+    .replace(/\s+as[ií] de (sencillo|simple|f[áa]cil)\s+/gi, " ")
+    .replace(/[.,;:]?\s*as[ií] de\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
   // Frases de estructura que NO son secciones: "una sola página", "de corrido"...
   // "una sola página: inicio" → ": inicio" → "inicio"
   cleaned = cleaned
@@ -333,7 +344,7 @@ function extractSections(raw: string): string | null {
   // y contacto: con eso me basta") → el texto tras un ":" no introductor es
   // relleno final de la misma familia (Tarea A2).
   cleaned = cleaned.replace(
-    /[.,;:]\s*(con eso me conformo|con eso me basta|con eso me doy por bien servido|con eso la hago|con eso me arreglo|nada más|eso es todo|ya con eso)\s*$/i,
+    /[.,;:]\s*(con eso me conformo|con eso me basta|con eso me doy por bien servido|con eso la hago|con eso me arreglo|nada m[áa]s|eso es todo|ya con eso|algo as[ií]|nada complicado|m[áa]s o menos)\s*$/i,
     ""
   );
 
@@ -445,15 +456,22 @@ function makeBooleanNode(opts: {
   };
 }
 
-/** Fábrica de nodos de clarificación (cuando el cliente dice "no sé") */
+/** Fábrica de nodos de clarificación (cuando el cliente dice "no sé").
+ *  IMPORTANTE: `id` es la CLAVE con la que el nodo queda registrado en FLOW
+ *  (p. ej. "clarify_db"). El self-loop ("no sé" repetido) debe regresar ESA
+ *  clave y no `clarify_${originalId}`: el original es "technical_db" pero el
+ *  nodo vive bajo "clarify_db", así que regresar "clarify_technical_db" hacía
+ *  que el chat buscara un nodo inexistente y se congelara. */
 function makeClarifyNode(opts: {
+  /** Clave con la que el nodo queda registrado en FLOW (ej. "clarify_db") */
+  id: string;
   originalId: string;
   hints: string[];
   forwardNext: string;
   extraHintAfterFirst?: (ctx: ChatContext) => string;
 }): ConversationNode {
   return {
-    id: `clarify_${opts.originalId}`,
+    id: opts.id,
     type: "clarification",
     generateMessage: (ctx) => {
       const first = randomEmpathy();
@@ -473,7 +491,7 @@ function makeClarifyNode(opts: {
           ctx.noSeContador = 0;
           return opts.forwardNext;
         }
-        return `clarify_${opts.originalId}`;
+        return opts.id;
       }
       ctx.noSeContador = 0;
       original.onReceive?.(response, ctx);
@@ -511,6 +529,14 @@ export const FLOW: Record<string, ConversationNode> = {
       ctx.negocioDescripcion = extractSubject(response);
       ctx.category = inferCategory(response);
       extractSignals(response, ctx);
+      // Si el cliente RECHAZÓ las citas explícitamente ("no quiero citas en
+      // línea"), la categoría no puede ser "citas": inferCategory cuenta las
+      // keywords ("clínica", "citas en línea") aunque estén negadas. Baja a
+      // landing para que el flujo no pregunte PWA/referencia de más ni cobre
+      // como sistema de citas.
+      if (ctx.category === "citas" && ctx.citas === false) {
+        ctx.category = "landing";
+      }
       captureEarlyData(response, ctx);
     },
   },
@@ -575,6 +601,7 @@ export const FLOW: Record<string, ConversationNode> = {
   },
 
   clarify_discovery_business: makeClarifyNode({
+    id: "clarify_discovery_business",
     originalId: "discovery_business",
     hints: [
       "A ver, hagámoslo fácil: en una frase, ¿qué le ofreces a tu cliente? Por ejemplo: 'doy clases de inglés', 'vendo ropa hecha a mano', 'tengo una estética'...",
@@ -618,6 +645,7 @@ export const FLOW: Record<string, ConversationNode> = {
   },
 
   clarify_pages: makeClarifyNode({
+    id: "clarify_pages",
     originalId: "pages",
     hints: [
       "Te ayudo con lo que he visto: una página sencilla suele ser Inicio, Servicios y Contacto (todo en una sola página). Una más completa tiene varias secciones: Inicio, Nosotros, Servicios, Galería, Contacto. ¿Con cuál te sientes más cómodo?",
@@ -639,6 +667,7 @@ export const FLOW: Record<string, ConversationNode> = {
   }),
 
   clarify_auth: makeClarifyNode({
+    id: "clarify_auth",
     originalId: "technical_auth",
     hints: [
       "Mira, ejemplo simple: si tus clientes van a entrar a revisar algo (su historial, sus pedidos), sí necesitan cuenta. Si solo van a verte y escribirte, no. ¿Tus clientes van a 'entrar' a algo?",
@@ -659,6 +688,7 @@ export const FLOW: Record<string, ConversationNode> = {
   }),
 
   clarify_db: makeClarifyNode({
+    id: "clarify_db",
     originalId: "technical_db",
     hints: [
       "En corto: ¿la página solo muestra tu información, o también necesita guardar cosas de tus clientes (nombres, pedidos, citas)? Si hay que guardar, se hace bien y seguro.",
@@ -683,6 +713,7 @@ export const FLOW: Record<string, ConversationNode> = {
   }),
 
   clarify_payments: makeClarifyNode({
+    id: "clarify_payments",
     originalId: "technical_payments",
     hints: [
       "Te doy un ejemplo de los que veo: si vendes cursos en línea y quieres cobrar con tarjeta automáticamente, conviene cobrar en la página. Si tu cliente te deposita y te manda el comprobante, no hace falta. ¿Cómo le haces hoy con tus ventas?",
@@ -703,6 +734,7 @@ export const FLOW: Record<string, ConversationNode> = {
   }),
 
   clarify_dashboard: makeClarifyNode({
+    id: "clarify_dashboard",
     originalId: "technical_dashboard",
     hints: [
       "En simple: ¿te gustaría entrar a un lugar privado y ver todo tu negocio en orden (pedidos, citas, clientes)? Si con que te llegue un correo con las alertas te basta, quizá aún no lo necesitas.",
@@ -743,6 +775,7 @@ export const FLOW: Record<string, ConversationNode> = {
   }),
 
   clarify_chat: makeClarifyNode({
+    id: "clarify_chat",
     originalId: "technical_chat",
     hints: [
       "¿Te gustaría que la gente te contacte sin salir de tu página? Un botón flotante de WhatsApp es lo más usado y funciona muy bien. ¿Te interesa algo así?",
@@ -757,9 +790,10 @@ export const FLOW: Record<string, ConversationNode> = {
       `¿Tus clientes agendan contigo? Por ejemplo, eligen día y hora para un servicio. Si es así, eso lo resolvemos muy bien. Si no, lo omitimos y listo, sin complicarte.`,
     field: "citas",
     next: "design",
-    // No preguntar de más si ya quedó claro que no agenda (lo dijo en la
-    // descripción del negocio y extractSignals lo registró como false).
-    condition: (ctx) => ctx.category !== "citas" && ctx.citas !== false,
+    // Solo se pregunta si AÚN NO SABEMOS si agenda: si el cliente ya dijo que
+    // SÍ quiere citas ("quiero que agenden cita en línea") o que NO, no se
+    // vuelve a preguntar (mismo patrón que los demás booleanos técnicos).
+    condition: (ctx) => ctx.category !== "citas" && ctx.citas == null,
   }),
 
   design: {
@@ -799,11 +833,52 @@ export const FLOW: Record<string, ConversationNode> = {
     message: () =>
       `Y una última comodidad: ¿te gustaría que tus clientes puedan tener tu página "a la mano" en su celular, como si fuera una app? Es un detalle que suma presencia.`,
     field: "pwa",
-    next: "scope_content",
+    next: "technical_bots",
     // Para landing/portafolio/blog la PWA (instalable como app) es poco
     // relevante: se salta y ahorra un turno del discovery.
     condition: (ctx) =>
       !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing"),
+  }),
+
+  // ══════════ FASE 3.5: Bots de LangChain (asistentes inteligentes) ══════════
+  // Se ofrece un asistente IA (bot) entrenado con la info del negocio. El bot
+  // es un add-on que se agrega a la cotización, a la propuesta y al prompt
+  // técnico. `extraerBotsDeRespuesta` decide qué bots eligió el cliente
+  // (reglas deterministas, 0 LLM): "ninguno" → bots vacío.
+  technical_bots: {
+    id: "technical_bots",
+    type: "technical",
+    generateMessage: (ctx) => {
+      const rec = detectarBotsRecomendados(ctx);
+      const lista = rec
+        .map((b) => `• **${b.nombre}**: ${b.descripcion}`)
+        .join("\n");
+      return (
+        `${randomExperience()} Una cosa más que suma muchísimo hoy: un **asistente inteligente (bot)** que atiende a tus clientes por ti — responde dudas de día y de noche, agenda citas o hasta arma cotizaciones. ${pickEmoji("idea")} Por lo que me contaste, te recomendaría:\n\n` +
+        `${lista}\n\n` +
+        `¿Quieres que te incluya alguno en tu propuesta? Dime cuál (por ejemplo "el de citas"), o si prefieres "ninguno".`
+      );
+    },
+    expectedResponseType: "text",
+    nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir al siguiente.
+      if (!response || !response.trim()) return "scope_content";
+      if (isNoSé(response, ctx)) return "clarify_bots";
+      return "scope_content";
+    },
+    onReceive: (response, ctx) => {
+      ctx.bots = extraerBotsDeRespuesta(response, ctx);
+      captureEarlyData(response, ctx);
+    },
+  },
+
+  clarify_bots: makeClarifyNode({
+    id: "clarify_bots",
+    originalId: "technical_bots",
+    hints: [
+      "Te explico simple: un bot es como tener a alguien de tu equipo contestando 24/7 en tu página. Por ejemplo, el de preguntas frecuentes responde horarios y precios, y el de citas agenda por ti. ¿Cuál te llamaría más la atención?",
+    ],
+    forwardNext: "scope_content",
   }),
 
   // ══════════ FASE 4: Alcance y expectativas ══════════
@@ -820,6 +895,7 @@ export const FLOW: Record<string, ConversationNode> = {
   }),
 
   clarify_content: makeClarifyNode({
+    id: "clarify_content",
     originalId: "scope_content",
     hints: [
       "Me refiero a las fotos de tu negocio, los textos de presentación y tu logo. Si no los tienes todos, también lo resolvemos: hay opciones de fotos profesionales y yo te ayudo a redactar los textos.",
@@ -850,6 +926,7 @@ export const FLOW: Record<string, ConversationNode> = {
   },
 
   clarify_services: makeClarifyNode({
+    id: "clarify_services",
     originalId: "scope_services",
     hints: [
       "Te pongo ejemplos para que sea fácil: si eres una clínica sería 'limpieza dental, ortodoncia, blanqueamiento'. Si eres una estética, 'corte, color, manicure'. Solo dime qué ofreces y con eso armamos la sección de servicios. Si no tienes servicios, también está bien: dime qué quieres que la gente sepa de ti.",
@@ -901,7 +978,11 @@ export const FLOW: Record<string, ConversationNode> = {
       return "budget";
     },
     onReceive: (response, ctx) => {
-      ctx.fechaEntrega = extractDeadline(response) ?? extractSubject(response);
+      // "no sé" no debe guardarse como fecha de entrega (queda null y el
+      // nodo de clarificación avanza; si no, la propuesta decía "para: no sé").
+      ctx.fechaEntrega =
+        extractDeadline(response) ??
+        (isNoSé(response, ctx) ? null : extractSubject(response));
       // Si el cliente ya soltó su monto aquí (ej. "para el próximo mes... y de
       // presupuesto unos 10 mil pesos" o "para marzo, tengo 10000"), capturarlo
       // para no re-preguntar. Solo si hay señal de presupuesto (verbos de dinero
@@ -915,6 +996,7 @@ export const FLOW: Record<string, ConversationNode> = {
   },
 
   clarify_deadline: makeClarifyNode({
+    id: "clarify_deadline",
     originalId: "scope_deadline",
     hints: [
       "Es solo para organizar la agenda: ¿lo quieres para ya, para el próximo mes, o no hay prisa? Dime algo como 'para marzo' o 'lo antes posible'.",
@@ -949,6 +1031,7 @@ export const FLOW: Record<string, ConversationNode> = {
   },
 
   clarify_budget: makeClarifyNode({
+    id: "clarify_budget",
     originalId: "budget",
     hints: [
       "No necesitas un número exacto. Piensa en algo como: 'lo básico para empezar', 'un proyecto completo', o un rango tipo '$15,000 - $25,000'. Con eso ajusto el alcance y no te vendo de más.",

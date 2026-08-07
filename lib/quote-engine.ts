@@ -16,6 +16,8 @@
 
 // ─── Tipos de web ──────────────────────────────────────────────────
 
+import { totalBotsSetup } from "@/lib/bots-catalog";
+
 export type TipoWeb = "landing" | "corporativo" | "agenda";
 
 export const TIPO_WEB_INFO: Record<
@@ -267,6 +269,10 @@ export function derivarTipoWeb(
  * partir del contexto de la conversación. Se usa en el servidor para que el
  * copy comercial ("Piensa en esto", "¿Por qué este precio?") cite SIEMPRE
  * el mismo número que el motor, sin rangos que lo contradigan.
+ *
+ * Si el cliente eligió bots de LangChain, su setup (IVA incluido) se suma
+ * al total exacto: la UI, la propuesta y el copy citan SIEMPRE el mismo
+ * número (el bot es un add-on de precio fijo del catálogo).
  */
 export function calcularTotalDeterminista(opts: {
   giro: string;
@@ -275,6 +281,8 @@ export function calcularTotalDeterminista(opts: {
   negocioDescripcion: string | null;
   category: string | null;
   paginas: number | null;
+  /** Bots de LangChain seleccionados (ids): su setup se suma al total */
+  bots?: string[];
 }): number | null {
   try {
     const cd = buildClientData({
@@ -287,7 +295,9 @@ export function calcularTotalDeterminista(opts: {
       branding: false,
       presupuesto: null,
     });
-    return calculateQuote(cd).total;
+    const base = calculateQuote(cd).total;
+    const botsExtra = totalBotsSetup(opts.bots ?? []);
+    return base + botsExtra;
   } catch {
     return null;
   }

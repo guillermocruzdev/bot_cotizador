@@ -21,6 +21,7 @@ import {
   GIROS,
 } from "@/lib/industry-pricing";
 import { calcularTotalDeterminista } from "@/lib/quote-engine";
+import { botsParaResultado, totalBotsMensual, totalBotsSetup } from "@/lib/bots-catalog";
 
 // Modelo por defecto (OpenRouter). DeepSeek nativo usa "deepseek-chat".
 export const DEFAULT_MODEL = "deepseek/deepseek-chat-v3-0324:free";
@@ -228,6 +229,12 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
   // Copy adaptado a las funciones que el cliente realmente declinó
   const copy = adaptarCopyGiro(giro, context);
   const aj = ajustarPrecio(result.precio_min, result.precio_max, giro);
+  // Bots de LangChain (add-on): el setup se suma al total EXACTO y el precio
+  // final de la propuesta incluye los bots que eligió el cliente.
+  const botsIds = context.bots ?? [];
+  const botsSeleccionados = botsParaResultado(botsIds);
+  const botsTotal = totalBotsSetup(botsIds);
+  const botsCuota = totalBotsMensual(botsIds);
   // Total EXACTO que verá la UI: el copy cita este número, no un rango suelto.
   const totalExacto = calcularTotalDeterminista({
     giro: giro.nombre,
@@ -236,7 +243,13 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     negocioDescripcion: context.negocioDescripcion,
     category: categoria,
     paginas: context.paginas,
+    bots: botsIds,
   });
+  // Con bots, el precio EXACTO (base + bots) manda sobre el clamp del giro.
+  const precioFinal =
+    botsSeleccionados.length && totalExacto != null
+      ? totalExacto
+      : aj.precio_min;
 
   // Si el cliente declinó alguna función clave (citas, pagos, panel, etc.),
   // el copy comercial SIEMPRE es el adaptado local: garantiza que la
@@ -251,10 +264,10 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
 
   // Garantiza arrays siempre presentes: el LLM puede omitir stack/funciones/
   // entregables/recomendaciones y la UI hace .map() sobre ellos.
-  return filtrarPorDeclinados(normalizarArraysResultado({
+  const final = filtrarPorDeclinados(normalizarArraysResultado({
     ...result,
-    precio_min: aj.precio_min,
-    precio_max: aj.precio_max,
+    precio_min: precioFinal,
+    precio_max: Math.max(precioFinal, aj.precio_max),
     cuota_mensual: aj.cuota_mensual,
     alcance_ajustado: aj.alcance_ajustado,
     mensaje_alcance: result.mensaje_alcance ?? aj.mensaje_alcance,
@@ -270,7 +283,6 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     // UI), nunca un rango que lo contradiga.
     valor_negocio: generarValorNegocio(
       giro.nombre,
-      copy.pitch,
       aj.precio_min,
       aj.precio_max,
       totalExacto ?? undefined
@@ -280,6 +292,49 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
       result.explicacion_precio ||
       generarExplicacionPrecio(giro, aj.precio_min, aj.precio_max, aj.alcance_ajustado),
   }), context);
+
+  // Si el cliente SÍ quiere citas, la propuesta debe mencionar el apartado de
+  // agenda (aunque la categoría resuelva a landing) — nunca prometerlo si lo
+  // declinó, ni duplicarlo si la IA ya lo incluyó.
+  if (context.citas === true) {
+    const yaMenciona = (final.funcionalidades ?? []).some((f) =>
+      /cita|agend|reserva|horario/i.test(f)
+    );
+    if (!yaMenciona) {
+      final.funcionalidades = [
+        ...(final.funcionalidades ?? []),
+        "Apartado para que tus clientes pidan o agenden cita (día y hora)",
+      ];
+    }
+  }
+
+  // ── Bots de LangChain (add-on determinista: aparecen en propuesta, prompt y PDF) ──
+  if (botsSeleccionados.length) {
+    final.bots = botsSeleccionados;
+    final.bots_total = botsTotal;
+    final.bots_cuota_mensual = botsCuota;
+    final.funcionalidades = [
+      ...(final.funcionalidades ?? []),
+      ...botsSeleccionados.map((b) => b.funcionalidad),
+    ];
+    final.entregables = [
+      ...(final.entregables ?? []),
+      ...botsSeleccionados.map(
+        (b) => `Bot "${b.nombre}" entrenado y configurado con la información de tu negocio`
+      ),
+    ];
+    final.stack_tecnico = [...(final.stack_tecnico ?? []), "LangChain", "DeepSeek"];
+    final.recomendaciones = [
+      ...(final.recomendaciones ?? []),
+      `Mantén tus asistentes (${botsSeleccionados
+        .map((b) => b.nombre)
+        .join(", ")}) siempre activos con la suscripción mensual de $${botsCuota.toLocaleString(
+        "es-MX"
+      )} MXN, que cubre el motor de IA y las actualizaciones.`,
+    ];
+  }
+
+  return final;
 }
 
 /**
@@ -317,7 +372,7 @@ function buildAiPrompt(result: AnalysisResult, context: ChatContext): string {
       beneficios: result.beneficios ?? copy.beneficios,
       valor_negocio:
         result.valor_negocio ??
-        generarValorNegocio(giro.nombre, copy.pitch, result.precio_min, result.precio_max),
+        generarValorNegocio(giro.nombre, result.precio_min, result.precio_max),
       costo_omision: result.costo_omision ?? copy.costo_omision,
       presupuesto_giro,
       cuota_mensual: result.cuota_mensual,

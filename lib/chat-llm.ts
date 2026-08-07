@@ -51,6 +51,8 @@ const TURN_GOALS: Record<string, string> = {
     "Pregunta si quiere aparecer en Google cuando alguien busque su servicio o negocio.",
   technical_pwa:
     "Pregunta si quiere que la web se sienta como una app instalable en el celular.",
+  technical_bots:
+    "Ofrece un asistente inteligente (bot) que atiende a los clientes del negocio: responde dudas 24/7, agenda citas o cotiza. Recomienda 1-3 opciones útiles para su tipo de negocio (preguntas frecuentes, citas, ventas, captura de leads, promociones, etc.) y pregunta cuál le gustaría incluir en la propuesta. Si no le interesa, que lo diga sin problema.",
   scope_content:
     "Pregunta si ya tiene fotos, textos y logo, o si necesita ayuda para crearlos.",
   scope_services:
@@ -114,7 +116,7 @@ function compactContext(context: ChatContext): string {
     "autenticacion", "baseDeDatos", "pagos", "dashboard", "mapas", "documentos",
     "chat", "citas", "animaciones", "seo", "pwa", "contenidoListo", "servicios",
     "estructuraWeb", "presupuesto", "fechaEntrega", "referencia", "comentarios",
-    "negocioDescripcion",
+    "negocioDescripcion", "trato",
   ];
   for (const k of keys) {
     const v = context[k];
@@ -142,7 +144,10 @@ Tu única tarea en ESTE turno es redactar el siguiente mensaje que el consultor 
 REGLAS DE ORO:
 - Haz EXACTAMENTE UNA pregunta clara y concreta que ayude a CONSTRUIR MEJOR la web (alcance, servicios, estructura, contenido, presupuesto, contacto).
 - Si el contexto ya contiene la respuesta, NO vuelvas a preguntar eso.
+- Sigue ESTRICTAMENTE el OBJETIVO DE ESTE TURNO. No cambies de tema ni adelantes preguntas de turnos futuros (fotos/textos, presupuesto, datos de contacto, etc.) salvo que ese sea el objetivo del turno.
 - Tono: consultor con experiencia, empático, natural, en español de México. Cero tecnicismos.
+- Usa un SOLO tratamiento (tú o usted) en todo el mensaje: si el cliente te habla de 'usted', respóndele con 'usted'; si te tutea, tutea. NUNCA mezcles 'tú' y 'usted' dentro del mismo mensaje.
+- NO uses la muletilla "una última cosa / una última pregunta / una última duda" más de una vez en TODA la conversación: varía las transiciones (por ejemplo, "Ya casi terminamos con esto", "Otra cosa que me ayuda a afinar", "Una pregunta más sobre tu proyecto"). No repitas la misma frase de transición turno tras turno.
 - Si el objetivo es sobre SERVICIOS: pregunta si tiene servicios que mostrar y cuáles (con ejemplos de su giro si los conoces).
 - Si el objetivo es sobre la ESTRUCTURA de la web: propón la estructura completa (p. ej. Inicio, Servicios, Nosotros, Contacto) y confirma con el cliente.
 - Máximo 2 emojis. Máximo 50 palabras. NO menciones precios salvo que el objetivo sea presupuesto.

@@ -117,6 +117,32 @@ export function downloadCommercialProposalPdf(p: CommercialProposal) {
   bullets(doc, M, 260, p.solucionBullets);
   paragraph(doc, M, 560, `En resumen: ${p.cliente.negocio} dejará de perder oportunidades y empezará a recibir clientes de forma constante, con una imagen a la altura del trabajo que ya hace.`);
 
+  // Asistentes IA (bots de LangChain): bloque informativo dentro de "La solución".
+  if (p.bots.length) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(...ACCENT);
+    doc.text("Asistentes inteligentes incluidos:", M, 598);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(...DARK);
+    let by = 620;
+    for (const b of p.bots.slice(0, 3)) {
+      const lines = doc.splitTextToSize(`• ${b.nombre}: ${b.descripcion}`, CW - 18);
+      doc.text(lines, M + 14, by);
+      by += lines.length * 15 + 6;
+    }
+    if (p.bots_cuota_mensual) {
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...GRAY);
+      const lines = doc.splitTextToSize(
+        `Suscripción mensual de los asistentes: ${fmt(p.bots_cuota_mensual)} (motor de IA + actualizaciones)`,
+        CW
+      );
+      doc.text(lines, M, by + 4);
+    }
+  }
+
   // ─────────────── PÁGINA 3 · ENTREGABLES ───────────────
   beginSection(doc, p, "3", "Entregables y su valor");
   paragraph(doc, M, 150, "Esto es exactamente lo que recibirá, en qué formato y con qué valor:");

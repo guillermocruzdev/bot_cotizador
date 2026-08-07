@@ -84,6 +84,12 @@ export interface ChatContext {
   phoneIntentos: number;
   /** Intentos fallidos pidiendo el email (máx 2 antes de continuar) */
   emailIntentos: number;
+  /** Tratamiento que usa el cliente: "tu" o "usted" (null si aún no se sabe).
+   *  Los mensajes de respaldo (deterministas) se adaptan a este tratamiento. */
+  trato: "tu" | "usted" | null;
+  /** Bots de LangChain que el cliente eligió (ids de lib/bots-catalog.ts).
+   *  [] = no quiere bots. Se detectan/confirman en el nodo technical_bots. */
+  bots: string[];
 }
 
 /**
@@ -134,6 +140,8 @@ export function createEmptyContext(): ChatContext {
     noSeContador: 0,
     phoneIntentos: 0,
     emailIntentos: 0,
+    trato: null,
+    bots: [],
   };
 }
 
@@ -227,6 +235,25 @@ export interface AnalysisResult {
   mensaje_alcance?: string | null;
   /** Costo de omisión: qué pierde el cliente si no lo hace */
   costo_omision?: string;
+
+  // ── Bots de LangChain (asistentes inteligentes del negocio) ──
+  /** Bots seleccionados (id, nombre, precio, etc.) */
+  bots?: BotInfoResultado[];
+  /** Total de setup de los bots (MXN, IVA incluido) — se suma a la cotización */
+  bots_total?: number;
+  /** Cuota mensual total de los bots (hosting DeepSeek + mantenimiento) */
+  bots_cuota_mensual?: number;
+}
+
+/** Info mínima de un bot dentro del resultado (sin importar lib/bots-catalog para evitar ciclos) */
+export interface BotInfoResultado {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  resultado: string;
+  funcionalidad: string;
+  precio: number;
+  cuota_mensual: number;
 }
 
 // ─── Resultado crudo de la API ─────────────────────────────────────

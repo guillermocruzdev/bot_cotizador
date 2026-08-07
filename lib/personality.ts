@@ -19,6 +19,125 @@ export const BOT = {
   avatarGradient: "from-blue-500 to-indigo-500",
 };
 
+// ─── Tratamiento (tú / usted) ───────────────────────────────────────
+// El cliente puede hablar de "tú" o de "usted". El LLM ya adapta su texto,
+// pero los mensajes DETERMINISTAS (fallback) están escritos en "tú": si el
+// cliente habla de "usted", el bot debe responderle SIEMPRE de "usted" sin
+// mezclar. detectTrato() detecta el tratamiento y toUsted() convierte el
+// mensaje de respaldo a la forma formal.
+
+/** ¿El texto del cliente usa "usted" (formal) en vez de "tú"? */
+export function detectTrato(raw: string): "tu" | "usted" | null {
+  const t = raw.toLowerCase();
+  // OJO: `\b` de JS es ASCII (no ve acentos) → el pronombre "tú" (tildado) se
+  // detecta con un lookahead de no-letra tras la "ú".
+  const tu =
+    /\btu\b/.test(t) || /\btú(?=[\s.,;:!?¿¡"')\]}]|$)/.test(t);
+  const usted = /\busted\b/.test(t);
+  // Señales inequívocas de "usted": pronombres/verbos formales.
+  const usosUsted =
+    usted ||
+    /\b(le\s|les\s|su\s|sus\s|puede|quiere|tiene|necesita|d[íi]game|mire|f[íi]jese|perm[íi]tame|ay[úu]deme|h[áa]game|expl[íi]queme)\b/.test(
+      t
+    );
+  // Señales inequívocas de "tú": pronombres/verbos informales.
+  const usosTu =
+    tu ||
+    /\b(te\s|tu\s|tus\s|tienes|quieres|puedes|dime|cu[ée]ntame|mira|f[íi]jate|p[oó]ngase)\b/.test(
+      t
+    );
+  if (usosUsted && !usosTu) return "usted";
+  if (usosTu && !usosUsted) return "tu";
+  return null;
+}
+
+/**
+ * Convierte un mensaje determinista escrito en "tú" a la forma "usted".
+ * Heurístico y conservador: cubre las formas reales que usan los mensajes
+ * del flujo (conversation-flow.ts). Las frases más largas (reflexivos,
+ * "te lo", "te llamas") se reemplazan ANTES del "te" genérico para no
+ * producir "le lo" ni "le llamas".
+ */
+const USTED_PHRASES: Array<[RegExp, string]> = [
+  [/no te preocupes/gi, "no se preocupe"],
+  [/te llamas\b/gi, "se llama"],
+  [/te lo\b/gi, "se lo"],
+  [/te la\b/gi, "se la"],
+  [/te los\b/gi, "se los"],
+  [/te las\b/gi, "se las"],
+  // Verbo + pronombre enclítico ("armarte" → "armarle")
+  [/tenerte\b/gi, "tenerle"],
+  [/contactarte\b/gi, "contactarle"],
+  [/venderte\b/gi, "venderle"],
+  [/cobrarte\b/gi, "cobrarle"],
+  [/armarte\b/gi, "armarle"],
+  [/localizarte\b/gi, "localizarle"],
+  [/dirigirte\b/gi, "dirigirle"],
+  [/enviarte\b/gi, "enviarle"],
+  [/presionarte\b/gi, "presionarle"],
+  [/complicarte\b/gi, "complicarle"],
+  [/ayudarte\b/gi, "ayudarle"],
+  [/orientarte\b/gi, "orientarle"],
+  [/encontrarte\b/gi, "encontrarle"],
+  [/invitarte\b/gi, "invitarle"],
+  // Imperativos
+  [/cu[ée]ntame\b/gi, "cuénteme"],
+  [/dime\b/gi, "dígame"],
+  [/cr[ée]eme\b/gi, "créame"],
+  [/rel[áa]jate\b/gi, "relájese"],
+  [/\bmira\b/gi, "mire"],
+  [/sabes\b/gi, "sabe"],
+  [/\bverte\b/gi, "verle"],
+  // Pronombres: "tú" (pronombre tildado) → "usted"; "tu" (posesivo sin tilde)
+  // → "su". "tus" debe ir antes de "tu". OJO: `\b` de JS es ASCII y no
+  // detecta el borde tras la "ú" tildada → se usa un lookahead de no-letra.
+  [/\btú(?=[\s.,;:!?¿¡"')\]}]|$)/g, "usted"],
+  [/\btus\b/gi, "sus"],
+  [/\bcontigo\b/gi, "con usted"],
+  [/\bde ti\b/gi, "de usted"],
+  [/\btuyo\b/gi, "suyo"],
+  [/\btuya\b/gi, "suya"],
+  [/\btuyos\b/gi, "suyos"],
+  [/\btuyas\b/gi, "suyas"],
+  [/\btu\b/gi, "su"],
+  // Verbos de 2ª persona → 3ª persona de "usted"
+  [/mencionaste\b/gi, "mencionó"],
+  [/\bdices\b/gi, "dice"],
+  [/\bcuentas\b/gi, "cuenta"],
+  [/\bcrees\b/gi, "cree"],
+  [/\bquieras\b/gi, "quiera"],
+  [/\bquieres\b/gi, "quiere"],
+  [/\btienes\b/gi, "tiene"],
+  [/\bpuedes\b/gi, "puede"],
+  [/\bpuedas\b/gi, "pueda"],
+  [/\bnecesitas\b/gi, "necesita"],
+  [/\bhaces\b/gi, "hace"],
+  [/\bvendes\b/gi, "vende"],
+  [/\bestuvieras\b/gi, "estuviera"],
+  [/\bpierdas\b/gi, "pierda"],
+  [/\bcontactes\b/gi, "contacte"],
+  [/\bcuentes\b/gi, "cuente"],
+  [/\bimaginas\b/gi, "imagina"],
+  [/\brecorras\b/gi, "recorra"],
+  [/\bpongas\b/gi, "ponga"],
+  [/\btengas\b/gi, "tenga"],
+  [/\bescribes\b/gi, "escribe"],
+  [/\bdigas\b/gi, "diga"],
+  [/\bpreocupes\b/gi, "preocupe"],
+  [/\bdeseas\b/gi, "desea"],
+  [/\bdejes\b/gi, "deje"],
+  // "te" → "le" (objeto indirecto) al final, para no chocar con lo anterior
+  [/\bte\b/gi, "le"],
+];
+
+export function toUsted(text: string): string {
+  let out = text;
+  for (const [re, replacement] of USTED_PHRASES) {
+    out = out.replace(re, replacement);
+  }
+  return out;
+}
+
 // ─── Saludos ────────────────────────────────────────────────────────
 
 export const GREETINGS = [
@@ -323,10 +442,16 @@ export function extractName(raw: string): string | null {
   // 3) "de la / del / de " inicial (cuando solo da el negocio: "de la panadería X")
   t = t.replace(/^(de la|del|de)\s+/i, "");
 
-  // 4) Tomar la primera parte antes de contexto: " de ", " en ", o coma.
-  //    "Soy Laura, de la Clínica..." → "Laura"
-  //    "Soy de la panadería La Espiga" → "Panadería La Espiga" (sin "de"/","/"en")
-  const first = t.split(/\s+(?:de|en)\s+|,/)[0].trim();
+  // 4) Tomar la primera parte antes de contexto: " de ", " en ", coma, o una
+  //    conjunción que inicia otra idea ("Soy Ana y tengo una estética..." →
+  //    "Ana"; "Me llamo María y mi tienda se llama Moda GDL" → "María").
+  //    OJO: "y" solo corta cuando va seguido de un VERBO ("y tengo", "y quiero",
+  //    "y mi negocio"...), para no partir nombres compuestos ("María y Asociados").
+  const first = t
+    .split(
+      /\s+(?:de|en)\s+|,|;\s*|\s+y\s+(?=(?:tengo|quiero|necesito|vendo|ofrezco|atiendo|trabajo|hago|soy|es|est[áa]|estoy|damos|manejo|tenemos|me gustar[ií]a|me interesa|mi negocio|mi tienda|mi consultorio|mi empresa|mi despacho|mi cl[ií]nica|mi taller|mi local|mi barber[ií]a|mi estudio|mi firma)\b)/i
+    )[0]
+    .trim();
 
   // 5) Limpiar signos de puntuación finales y capitalizar la primera letra
   const name = first.replace(/[,.:;!?¿¡]+$/g, "").trim();

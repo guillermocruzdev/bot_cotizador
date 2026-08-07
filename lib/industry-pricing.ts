@@ -498,7 +498,6 @@ export function ajustarPrecio(estMin: number, estMax: number, giro: Giro): Preci
  *  que muestra la UI) en vez de un rango, para no contradecir el precio. */
 export function generarValorNegocio(
   giroNombre: string,
-  pitch: string,
   min: number,
   max: number,
   totalExacto?: number
@@ -507,9 +506,11 @@ export function generarValorNegocio(
     totalExacto != null
       ? `una inversión de $${Math.round(totalExacto).toLocaleString("es-MX")} MXN`
       : `una inversión de $${min.toLocaleString("es-MX")}–$${max.toLocaleString("es-MX")} MXN`;
+  // Ojo: NO se repite el `pitch` (ese ya se muestra en "La solución que te
+  // propongo"). Este párrafo aporta solo el marco de INVERSIÓN, para no
+  // duplicar la misma frase en dos secciones de la propuesta.
   return (
     `Para tu ${giroNombre.toLowerCase()}, esta página no es un gasto: es una herramienta que trabaja para ti todos los días. ` +
-    `${pitch} ` +
     `Con ${inversion}, ` +
     `te pones a la altura de los mejores de tu sector y recuperas lo invertido con pocos clientes nuevos.`
   );

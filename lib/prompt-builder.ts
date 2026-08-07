@@ -20,6 +20,7 @@
 
 import type { ChatContext } from "@/lib/types";
 import type { Nivel, PricingCategory } from "@/lib/pricing-catalog";
+import { getBotById, totalBotsMensual, type BotSpec } from "@/lib/bots-catalog";
 
 export interface PromptAnalysis {
   categoria: string;
@@ -294,6 +295,14 @@ function buildFunctionalRequirements(ctx: ChatContext, spec: CategorySpec, categ
   // Requisitos específicos de la categoría (síntesis del flujo)
   reqs.push(`- **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: ${spec.userFlow.length} pasos documentados en la sección 9.`);
 
+  // Bots de LangChain seleccionados por el cliente (add-on)
+  if (ctx.bots?.length) {
+    const bots = ctx.bots.map((id) => getBotById(id)?.nombre ?? id).join(", ");
+    reqs.push(
+      `- **RF-17** · [Alta] Integrar los asistentes IA (${bots}) con LangChain + DeepSeek: widget de chat flotante, memoria por sesión, validación con Zod y las API routes correspondientes.`
+    );
+  }
+
   return reqs;
 }
 
@@ -376,7 +385,12 @@ function buildCompactContext(base: PackBase): string {
     context.servicios ? `SERVICIOS/OFERTA A MOSTRAR: ${context.servicios}.` : null,
     context.estructuraWeb ? `ESTRUCTURA ACORDADA CON EL CLIENTE: ${context.estructuraWeb}.` : null,
     context.negocioDescripcion ? `NEGOCIO: "${context.negocioDescripcion}".` : null,
-    "REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español, placeholders visuales de alta calidad, sin cajas vacías ni imágenes rotas.",
+    context.bots?.length
+      ? `BOTS IA SELECCIONADOS: ${context.bots
+          .map((id) => getBotById(id)?.nombre ?? id)
+          .join(", ")} — se implementan con LangChain + DeepSeek (ver CHAT 4).`
+      : null,
+    "REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales).",
   ].filter((l): l is string => l !== null);
   return lines.join("\n");
 }
@@ -429,6 +443,7 @@ function buildPreamble(base: PackBase, ctxCompact: string): string {
 | Despliegue | Vercel (producción) |
 | Fecha de entrega acordada | ${context.fechaEntrega || "Por definir"} |
 | Mantenimiento | ${si(context.mantenimiento) ? "Sí, plan mensual" : "No incluido (opcional)"} |
+| Asistentes IA (bots) | ${context.bots?.length ? context.bots.map((id) => getBotById(id)?.nombre ?? id).join(", ") : "No incluidos"} |
 
 ### Contexto global del proyecto
 
@@ -455,7 +470,14 @@ Dejar la base funcionando con \`npm run dev\`: sistema de diseño definido (toke
 
 ### Pasos
 1. **Scaffold**: crea el proyecto Next.js 14+ (App Router) con TypeScript estricto, Tailwind CSS y shadcn/ui configurado. Si el proyecto ya existe, verifica que compile y que ESLint + Prettier estén listos.
-2. **Design tokens**: define en \`globals.css\` (CSS variables) la paleta, tipografía, radios, sombras y escala de espaciado según el estilo del cliente (**${buildEstiloTexto(base)}**). Conecta las variables a \`tailwind.config\` (colores, fuentes, breakpoints y \`container\`).
+2. **Design tokens** (sistema de diseño con PRESENCIA): define en \`globals.css\` (CSS variables) y conecta a \`tailwind.config\` (colores, fuentes, breakpoints y \`container\`) según el estilo del cliente (**${buildEstiloTexto(base)}**):
+   - **Paleta**: color de marca + escala completa (50→950), color de acento y de superficie; soporte de **modo oscuro** (variante \`dark\` de Tailwind) aunque se use claro por defecto.
+   - **Tipografía**: jerarquía clara (display / h1-h4 / body / caption) con escalas \`clamp()\`; fuente display para titulares (si el giro lo amerita) + Inter (o similar) para texto.
+   - **Espaciado y ritmo de sección**: escala de espaciado, contenedor con \`max-w\` y padding correcto en móvil; ritmo vertical consistente entre secciones (\`py-16/24\` en desktop, \`py-12/16\` en móvil).
+   - **Elevación y profundidad**: escala de sombras suaves y \`ring\` para tarjetas; **gradientes/mesh sutiles** para dar vida (fondo del hero, acentos de CTA, bandas de sección).
+   - **Radios y bordes**: escala \`--radius-*\` coherente (tarjetas, botones, inputs).
+   - **Movimiento**: tokens de duración/easing (p. ej. \`--ease-out-expo\`) para micro-interacciones y reveal suave; respeta \`prefers-reduced-motion\`.
+   - **Estados**: focus ring visible (accesible) + hover/active en todo elemento interactivo.
 3. **Layout raíz**: \`app/layout.tsx\` con \`lang="es"\`, fuentes (Inter o similar), metadata (title = nombre del negocio, description y Open Graph) y el contenido mínimo (el header/footer se construyen en el CHAT 2).
 4. **Base CSS**: reset, \`overflow-x-hidden\` en el cuerpo (regla mobile-first), utilidad de contenedor/sección, estilos base de encabezados, enlaces y foco accesible.
 5. **Estructura de carpetas**: crea la estructura recomendada:
@@ -514,9 +536,10 @@ ${ctxCompact}
 ### Qué construir
 1. **Header responsive**: logo + botón de menú (hamburguesa) en móvil que abre un panel deslizable (Sheet/Dialog) con \`aria-expanded\`, foco gestionado y cierre al tocar un enlace. En \`md:\`+ muestra la navegación horizontal. Sticky con fondo translúcido y buen contraste.
 2. **Footer**: datos del negocio, enlaces, redes sociales, WhatsApp, aviso de privacidad (LFPDPPP / México) y créditos.
-3. **Primitivas shadcn/ui** necesarias: Button (variants primary/secondary/outline/ghost + tamaños táctiles), Input, Textarea, Label, Card, Badge, Skeleton, Accordion, Sheet/Dialog, Sonner/Toast y Separator.
+3. **Primitivas shadcn/ui** necesarias: Button (variants primary/secondary/outline/ghost + tamaños táctiles + estados hover/pressed/focus y loaders), Input, Textarea, Label, Card (con hover lift), Badge, Skeleton, Accordion, Sheet/Dialog, Sonner/Toast, Separator y Tooltip.
 4. **Botón flotante de WhatsApp**: fixed, bien posicionado (no tapa contenido), tamaño ≥ 48px, \`aria-label\`, visible siempre o tras pasar el hero.
-5. **Contenedores/secciones**: \`container\` con padding lateral correcto en móvil (\`px-4\`/\`px-5\`), espaciado vertical coherente entre secciones.
+5. **Contenedores/secciones**: \`container\` con padding lateral correcto en móvil (\`px-4\`/\`px-5\`), espaciado vertical coherente entre secciones y **ritmo visual** consistente en todas las secciones (eyebrow + titular + subtítulo).
+6. **Base de "vida" (movimiento y estados)**: crea un helper de reveal suave (p. ej. \`Reveal\` con IntersectionObserver o Framer Motion) para animar entradas (fade+up sutil) al hacer scroll; define hover/pressed/focus en todos los elementos interactivos; transiciones CSS cortas; y respeta \`prefers-reduced-motion\` (las animaciones se desactivan).
 
 ### Criterios de calidad
 - Cada componente: TypeScript tipado, accesible (foco visible, roles correctos) y consistente con los tokens del CHAT 1.
@@ -558,6 +581,28 @@ ${ctxCompact}
 
 > **Regla de oro:** el copy de la portada y de cada sección responde "¿qué gano yo como dueño del negocio?". La página VENDE, no solo describe servicios.
 
+### Presencia y acabado profesional (OBLIGATORIO en cada sección)
+Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
+
+- **Hero con impacto**: eyebrow (frase de contexto, p. ej. "Carpintería en Monterrey"), titular grande que vende el beneficio, subtítulo breve, **doble CTA** (primario "Cotiza ahora" / secundario "Ver trabajos") y **prueba social** (stats: años, proyectos, clientes; o logo/valoraciones). Fondo con vida: gradiente/mesh sutil, forma decorativa o imagen real con overlay — nunca un fondo plano vacío.
+- **Ritmo de sección**: eyebrow + titular + subtítulo consistentes; espaciado generoso; alterna fondos (blanco / gris suave / acento) para separar secciones.
+- **Servicios**: tarjetas con ícono, título, descripción, beneficios y CTA; **hover lift** (sombra + elevación sutil + borde de acento).
+- **Sobre nosotros / por qué elegirnos**: historia corta + diferenciadores (checklist) + foto del equipo/local con overlay.
+- **Testimonios**: 3 tarjetas con nombre, rol/negocio, avatar (placeholder realista), valoración en estrellas y frase textual creíble.
+- **FAQ** (si aplica): 4-6 preguntas reales del giro en acordeón; aporta confianza y reduce fricción.
+- **CTA final**: banda con gradiente de la marca, titular corto y botón primario grande (WhatsApp o formulario).
+- **Contacto**: formulario + datos (teléfono, correo, dirección, horario) + mapa si aplica.
+
+### Vida y movimiento (sutil, no ruido)
+- Reveal al hacer scroll (fade+up suave) en secciones y tarjetas; **nada aparece de golpe sin estilo**.
+- Hover/pressed/focus en todo lo interactivo; micro-interacción en CTAs (ligera escala o sombra).
+- Contadores animados en stats si las incluyes (0→N al entrar en viewport).
+- Todo respeta \`prefers-reduced-motion\` (las animaciones se desactivan).
+- Rendimiento: anima solo \`transform/opacity\` (nunca \`width/height/top/left\`), con CSS/Framer Motion ligero.
+
+### Cero "lorem ipsum", cero cajas vacías
+Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
+
 ### Secciones a construir (${analysis.categoria} — ${spec.pages.length} bloques)
 ${bullets(spec.pages)}
 
@@ -594,6 +639,111 @@ Metadata dinámica por página, Open Graph, datos estructurados JSON-LD (LocalBu
 Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_3\` + resumen breve. No sigas con la siguiente fase.`;
 }
 
+/**
+ * Sección de bots de LangChain (CHAT 4): instrucciones para que Roo Code
+ * implemente los asistentes IA que el cliente eligió. Usa el catálogo de
+ * bots (lib/bots-catalog.ts) → cada bot trae su arquitectura LangChain,
+ * system prompt e integraciones, 100% determinista (0 tokens de diseño).
+ */
+function buildBotsSection(base: PackBase): string {
+  const botsIds = base.context.bots ?? [];
+  const specs = botsIds
+    .map((id) => getBotById(id))
+    .filter((b): b is BotSpec => Boolean(b));
+  if (!specs.length) return "";
+  const cuota = totalBotsMensual(botsIds);
+  return `### 🤖 Bots de LangChain (asistentes inteligentes del negocio)
+
+El cliente eligió **${specs.length} asistente(s) IA**. Implementa cada uno con **LangChain + DeepSeek** (\`ChatOpenAI\` con \`baseURL\` \`https://api.deepseek.com\`, modelo \`deepseek-chat\`). Son parte de la propuesta y deben quedar funcionando de punta a punta.
+
+${specs
+    .map(
+      (b, i) => `**Bot ${i + 1} · ${b.nombre}**
+- **Qué hace:** ${b.descripcion}
+- **Resultado de negocio:** ${b.resultado}
+- **Arquitectura LangChain:** ${b.arquitecturaLangChain}
+- **System prompt:**
+\`\`\`
+${b.systemPrompt}
+\`\`\`
+- **API routes a crear:** ${b.integraciones.map((x) => "`" + x + "`").join(", ")}`
+    )
+    .join("\n\n")}
+
+**Requisitos transversales (LangChain + full-stack):**
+
+1. **Motor (SIEMPRE DeepSeek):** \`new ChatOpenAI({ model: "deepseek-chat", apiKey: process.env.DEEPSEEK_API_KEY, baseURL: "https://api.deepseek.com", temperature: 0.6, maxRetries: 2 })\`. El SDK de OpenAI añade /chat/completions al baseURL. Respeta el límite de \`temperature <= 1.0\` de DeepSeek.
+
+2. **Memoria por sesión (patrón correcto):** usa **LangGraph** (\`MemorySaver\` + \`thread_id\`) para hilar la conversación (o \`RunnableWithMessageHistory\` si es una cadena simple, no un agente). **NO uses \`ConversationBufferWindowMemory\`**: es legacy y no funciona con agentes de tool-calling. Cada sesión del widget recibe un \`thread_id\` (id de sesión del navegador) que se pasa en \`config\`.
+
+3. **Plantilla base del bot (copia y adapta por bot):**
+\`\`\`typescript
+// app/api/bots/<tipo>/route.ts
+import { ChatOpenAI } from "@langchain/openai";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { z } from "zod";
+
+export const runtime = "nodejs";      // LLM requiere Node, no edge
+export const maxDuration = 60;        // DeepSeek suele tardar > 10s
+
+const BotInputSchema = z.object({
+  input: z.string().min(1).max(500),
+  sessionId: z.string().min(1),
+});
+
+const model = new ChatOpenAI({
+  model: "deepseek-chat",
+  apiKey: process.env.DEEPSEEK_API_KEY, // SOLO server, nunca exponer
+  baseURL: "https://api.deepseek.com",  // el SDK añade /chat/completions
+  temperature: 0.6,
+  maxRetries: 2,
+});
+
+const prompt = ChatPromptTemplate.fromMessages([
+  ["system", BOT_SYSTEM_PROMPT],
+  ["human", "{input}"],
+]);
+const chain = prompt.pipe(model);
+
+export async function POST(req: Request) {
+  const parsed = BotInputSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) {
+    return Response.json({ ok: false, error: "Entrada inválida" }, { status: 400 });
+  }
+  try {
+    // Timeout: nunca dejar al cliente esperando
+    const res = await Promise.race([
+      chain.invoke({ input: parsed.data.input }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 9000)),
+    ]);
+    return Response.json({ ok: true, reply: String(res.content) });
+  } catch (err) {
+    // Fallback determinista: reintenta 1 vez con backoff; si falla, mensaje amable + escalar a WhatsApp
+    return Response.json({
+      ok: true,
+      reply: "En este momento no pude responder, pero con gusto te atiendo por WhatsApp.",
+    });
+  }
+}
+\`\`\`
+
+4. **Robustez:** timeout en cada llamada LLM (8-9s) + 1 reintento con backoff ante 429/5xx + **fallback determinista** que nunca cuelga (mensaje amable + escalar a WhatsApp). La API route responde SIEMPRE JSON \`{ ok, reply }\` incluso en error.
+
+5. **Datos:** si el bot guarda leads/citas/tickets/cotizaciones, usa el **client service-role de Supabase SOLO en el servidor**, valida con Zod y escribe en las tablas del modelo de datos de este chat (RLS). Nunca devuelvas datos sensibles en las respuestas.
+
+6. **Widget:** burbuja de chat flotante (objetivo táctil ≥ 44px, mobile-first) con estados carga/error/vacío e indicador de "escribiendo..."; opcional streaming por SSE; protección básica anti-spam (límite de mensajes por sesión, p. ej. 30/hora).
+
+7. **Vercel serverless:** en las rutas de los bots declara \`export const runtime = "nodejs"\` y \`export const maxDuration = 60\` — las llamadas a DeepSeek exceden el timeout por defecto de 10s de las serverless functions.
+
+8. **Suscripción/mantenimiento:** la mensualidad del cliente ($${cuota.toLocaleString("es-MX")} MXN/mes) cubre el hosting del LLM (DeepSeek) y el mantenimiento. Documenta en el README las env vars (DEEPSEEK_API_KEY), cómo desplegar/monitorear y el costo estimado por mensaje.
+
+**Definition of Done de los bots (parte del CHAT 4):**
+- El bot responde de punta a punta desde el widget: mensaje → API route → DeepSeek → respuesta en pantalla.
+- No se cuelga: timeout + fallback siempre devuelven una respuesta JSON.
+- Guarda datos con validación Zod + Supabase service-role (si aplica) sin exponer secretos.
+- La ruta compila y corre en Node con \`maxDuration = 60\`; \`npm run build\` pasa sin errores.`;
+}
+
 function buildChat4Logica(base: PackBase, ctxCompact: string): string {
   const { context, spec, category } = base;
   const reqs = buildFunctionalRequirements(context, spec, category).join("\n");
@@ -624,6 +774,8 @@ ${bullets([
   ].filter(Boolean))}
 
 > Si una credencial real no está disponible, implementa con modo sandbox/datos de prueba y documenta en el README cómo activarla.
+
+${buildBotsSection(base)}
 
 ### Modelo de datos (Supabase)
 Aplica el esquema en una migración SQL versionada (\`supabase/migrations\`):
@@ -683,6 +835,15 @@ ${bullets([
     "Los secretos NO están en el código ni en el repo.",
     "README actualizado con instrucciones de instalación y variables.",
   ])}
+
+### Pulido visual final (presencia y vida)
+Antes de desplegar, revisa la página como si la viera un cliente exigente y corrige cualquier "hueco":
+- Ninguna sección vacía, gris o "a medio terminar"; no hay bloques sin estilo ni textos "lorem ipsum".
+- El hero se ve impactante en el primer segundo (titular + CTA + prueba social), en los 5 tamaños.
+- Micro-interacciones y reveals funcionan suaves (y se desactivan con \`prefers-reduced-motion\`).
+- Hover/pressed/focus definidos en botones, tarjetas y enlaces; nada se siente "muerto" o plano.
+- Espaciado y ritmo visual consistentes entre secciones; alternancia de fondos coherente.
+- Las imágenes placeholder se ven profesionales y la guía "Reemplazar imágenes/textos" del README permite al cliente cambiarlas sin tocar código.
 
 ### Prueba responsive final (celular primero)
 - **360px**: la página se ve perfecta, sin scroll horizontal, CTA táctiles (≥ 44px), menú móvil funcional.

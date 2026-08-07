@@ -15,10 +15,12 @@
 import { createEmptyContext, normalizarArraysResultado, type ChatContext, type AnalysisResult } from "../lib/types";
 import {
   classifyIntent,
+  detectTrato,
   extractBudgetAmount,
   extractDeadline,
   extractEmail,
   normalizePhone,
+  toUsted,
 } from "../lib/personality";
 import {
   DONE_NODE_ID,
@@ -26,7 +28,14 @@ import {
   START_NODE_ID,
   getNode,
 } from "../lib/conversation-flow";
-import { buildClientData, calculateQuote, derivarTipoWeb } from "../lib/quote-engine";
+import { buildClientData, calculateQuote, calcularTotalDeterminista, derivarTipoWeb } from "../lib/quote-engine";
+import {
+  detectarBotsRecomendados,
+  extraerBotsDeRespuesta,
+  getBotById,
+  totalBotsMensual,
+  totalBotsSetup,
+} from "../lib/bots-catalog";
 import {
   buildFallbackProposal,
   inferCategory,
@@ -409,6 +418,7 @@ checkLanding("Clínica dental", [
   "no", // citas (no agenda en línea)
   "moderno", // diseño
   "sí", // SEO
+  "el de preguntas frecuentes, por favor", // bots (LangChain): FAQ
   // PWA y página de referencia: se SALTAN para landing (Tarea C)
   "sí", // contenido listo
   "limpieza dental, ortodoncia y blanqueamiento", // servicios
@@ -432,6 +442,7 @@ checkLanding("Yoga", [
   "no",
   "sobrio",
   "sí",
+  "ninguno", // bots (LangChain): sin asistentes IA
   // PWA y referencia: se SALTAN para landing (Tarea C)
   "no",
   "clases grupales, clases privadas y retiros",
@@ -455,6 +466,7 @@ checkLanding("Barbería (Diego)", [
   "no",
   "moderno",
   "sí",
+  "ninguno", // bots (LangChain): sin asistentes IA
   // PWA y referencia: se SALTAN para landing (Tarea C)
   "sí",
   "corte, barba, afeitado y cejas",
@@ -478,6 +490,7 @@ checkLanding("Restaurante (Carmen)", [
   "no",
   "moderno y cálido",
   "sí",
+  "el de promociones", // bots (LangChain): promos
   // PWA y referencia: se SALTAN para landing (Tarea C)
   "no",
   "comida casera, desayunos y comida corrida",
@@ -505,6 +518,7 @@ checkLanding("Tienda de ropa (María)", [
   "no", // citas
   "moderno pero sencillo", // diseño
   "sí", // SEO
+  "ninguno", // bots (LangChain): sin asistentes IA
   // PWA y referencia: se SALTAN para landing (Tarea C)
   "tengo algunas fotos pero no muy profesionales", // contenido
   "unas 30 prendas con su precio y descripción", // servicios/catálogo
@@ -532,6 +546,7 @@ const TALLER_RICARDO_ANSWERS = [
   "No, no, eso no lo quiero. La gente me llama o me escribe y yo les aparto su lugar por teléfono, sin necesidad de andar con agenda en línea", // citas
   "Pues algo sobrio, de confianza, que se vea serio. Nada de muchas cosas con movimiento ni nada muy elegante, ¿eh?", // diseño
   "Sí, claro, eso es justo lo que quiero: que cuando busquen taller mecánico en Toluca salga mi taller", // SEO
+  "Ninguno, la verdad, con la página me basta", // bots (LangChain): sin asistentes IA
   // PWA y referencia: se SALTAN para landing (Tarea C)
   "Pues tengo unas fotos del taller que saqué con mi celular, pero no son muy profesionales. El logo del Toro lo tengo pero está medio sencillo. Si me ayuda con los textos, mejor", // contenido
   "Pues le ofrezco a la gente cambio de aceite, frenos, afinación y también el escaneo de la computadora del carro. Sin precios mejor, porque cada coche es distinto; con una breve descripción de cada uno está bien", // servicios
@@ -748,6 +763,7 @@ section("I · No repreguntar lo que ya rechazó en la descripción");
     "moderno pero de confianza", // design
     "sí, que me encuentren en Google", // technical_seo
     "no, sin instalarse como app", // technical_pwa
+    "ninguno", // bots (LangChain): sin asistentes IA
     "sí, ya tengo fotos de la clínica", // scope_content
     "limpieza dental, ortodoncia y blanqueamiento", // scope_services
     "ninguna referencia", // scope_reference
@@ -845,6 +861,7 @@ section("K · Confirmación con lista de rechazos (Carlos)");
     "No, no necesito citas en línea, mi tienda no es de citas",
     "Algo moderno pero sobrio, con fotos grandes y que se vea limpio",
     "Sí, lo más importante es que me encuentren en Google cuando busquen tienda de ropa en Guadalajara",
+    "ninguno", // bots (LangChain): sin asistentes IA
     // PWA y referencia: se SALTAN para landing (Tarea C)
     "Tengo fotos de mi mercancía y el logo, pero los textos me ayudarías tú",
     "Camisas de vestir, pantalones de mezclilla y trajes para caballero",
@@ -933,6 +950,7 @@ section("P2 · Presupuesto capturado desde scope_deadline y budget saltado");
     "no",
     "sobrio",
     "sí",
+    "ninguno", // bots (LangChain): sin asistentes IA
     "no",
     "clases grupales, clases privadas y retiros",
     "para ya, y de presupuesto unos 15 mil pesos",
@@ -966,6 +984,7 @@ section("P2 · Presupuesto capturado desde scope_deadline y budget saltado");
     "no",
     "sobrio",
     "sí",
+    "ninguno", // bots (LangChain): sin asistentes IA
     "no",
     "clases grupales, clases privadas y retiros",
     "para ya",
@@ -1093,6 +1112,7 @@ section("C · nodos poco relevantes se saltan para landing");
     "no",
     "sobrio",
     "sí",
+    "ninguno", // bots (LangChain): sin asistentes IA
     "no",
     "clases grupales, clases privadas y retiros",
     "para ya",
@@ -1167,6 +1187,7 @@ section("D/E · flujo completo autollenado (nada se re-pregunta)");
     "no", // citas
     "moderno", // diseño
     "sí", // SEO
+    "ninguno", // bots (LangChain): sin asistentes IA
     "sí", // contenido
     "limpieza dental y consultas", // servicios
     "81 2345 6789", // teléfono
@@ -1213,6 +1234,362 @@ section("D/E · flujo completo autollenado (nada se re-pregunta)");
     `[E] total determinista desde el contexto → $12,760 (obtuve ${quote.total})`
   );
   assert(resolverCategoria(ctx) === "landing", "[E] resolverCategoria → landing");
+}
+
+// ─── FASE QA · Bugs detectados en la revisión QA de las 10 personas ──
+
+section("QA1 · clarificación sin nodos colgados (no congela el chat)");
+{
+  // BUG: makeClarifyNode generaba su self-loop como "clarify_technical_db"
+  // (derivado de originalId) pero el nodo vive bajo "clarify_db" → el bot
+  // buscaba un nodo inexistente y el chat se congelaba con "no sé" repetido.
+  // Ahora el self-loop regresa la clave real ("clarify_db").
+  const ctx = createEmptyContext();
+  let node = "technical_db";
+  node = FLOW.technical_db.nextNode("no sé", ctx);
+  assert(node === "clarify_db", "technical_db 'no sé' → clarify_db (existe)");
+  assert(FLOW[node] !== undefined, "clarify_db existe en FLOW (no se congela)");
+  node = FLOW[node].nextNode("no sé", ctx);
+  assert(node === "clarify_db", "clarify_db 'no sé' otra vez → clarify_db (mismo id)");
+  assert(FLOW[node] !== undefined, "el self-loop apunta a un nodo existente");
+  node = FLOW[node].nextNode("no sé", ctx);
+  assert(node === "technical_payments", "tras 2 'no sé' en clarify_db avanza a technical_payments");
+  assert(FLOW[node] !== undefined, "technical_payments existe");
+}
+{
+  // Misma garantía para todos los clarify_* técnicos: su self-loop nunca debe
+  // apuntar a un id derivado de originalId que no existe como clave.
+  const selfLoops = [
+    ["technical_auth", "clarify_auth"],
+    ["technical_db", "clarify_db"],
+    ["technical_payments", "clarify_payments"],
+    ["technical_dashboard", "clarify_dashboard"],
+    ["technical_chat", "clarify_chat"],
+    ["scope_content", "clarify_content"],
+    ["scope_services", "clarify_services"],
+    ["scope_deadline", "clarify_deadline"],
+  ] as const;
+  for (const [, clarifyId] of selfLoops) {
+    assert(FLOW[clarifyId] !== undefined, `${clarifyId} registrado en FLOW`);
+    const ctxC = createEmptyContext();
+    const nodeC = FLOW[clarifyId].nextNode("no sé", ctxC);
+    assert(
+      nodeC === clarifyId || FLOW[nodeC] !== undefined,
+      `${clarifyId} self-loop no apunta a un nodo inexistente (→ ${nodeC})`
+    );
+  }
+}
+{
+  // Flujo completo "no sé crónico": NO congela y avanza (clarify máx 2 veces).
+  const ctx = createEmptyContext();
+  let node = "technical_db";
+  node = FLOW[node].nextNode("no sé", ctx); // clarify_db
+  node = FLOW[node].nextNode("no sé", ctx); // clarify_db
+  node = FLOW[node].nextNode("no sé", ctx); // forwardNext
+  assert(node === "technical_payments", "no sé crónico en db → avanza a technical_payments");
+}
+
+section("QA2 · extractName sin arrastrar la frase completa");
+{
+  const ctx = createEmptyContext();
+  fireOnReceive("contact_name", "Soy Ana y tengo una estética. Quiero una página para mostrar mis servicios", ctx);
+  assert(ctx.clientName === "Ana", `"Soy Ana y tengo una estética…" → nombre "Ana" (obtuve: ${ctx.clientName})`);
+  const ctx2 = createEmptyContext();
+  fireOnReceive("contact_name", "Me llamo María y mi tienda se llama Moda GDL", ctx2);
+  assert(ctx2.clientName === "María", `"Me llamo María y mi tienda…" → "María" (obtuve: ${ctx2.clientName})`);
+  // Sin romper los casos previos:
+  const ctx3 = createEmptyContext();
+  fireOnReceive("contact_name", "Me llamo Carlos, y la tienda se llama La Tijera de Oro", ctx3);
+  assert(ctx3.clientName === "Carlos", `"Me llamo Carlos, …" → "Carlos" (obtuve: ${ctx3.clientName})`);
+  const ctx4 = createEmptyContext();
+  fireOnReceive("contact_name", "Mi negocio se llama Taller El Toro", ctx4);
+  assert(ctx4.clientName === "Taller El Toro", `"Mi negocio se llama Taller El Toro" → "Taller El Toro" (obtuve: ${ctx4.clientName})`);
+}
+
+section("QA3 · extractSections sin 'así de sencillo' como sección");
+{
+  const ctx = createEmptyContext();
+  fireOnReceive("pages", "Una sola página: inicio, mis productos y el contacto, así de sencillo", ctx);
+  assert(
+    ctx.estructuraWeb === "Inicio, Mis productos, Contacto",
+    `"…el contacto, así de sencillo" → "Inicio, Mis productos, Contacto" (obtuve: ${ctx.estructuraWeb})`
+  );
+  const ctx2 = createEmptyContext();
+  fireOnReceive("pages", "Una sola página: inicio, mis productos y el contacto así de sencillo", ctx2);
+  assert(
+    ctx2.estructuraWeb === "Inicio, Mis productos, Contacto",
+    `sin coma antes de "así de sencillo" también se limpia (obtuve: ${ctx2.estructuraWeb})`
+  );
+}
+
+section("QA4 · categoría 'citas' respeta el rechazo explícito");
+{
+  // "…no quiero citas en línea" → inferCategory devuelve "citas" por las
+  // keywords ("clínica", "citas"), pero el cliente las RECHAZÓ → landing.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Soy la Dra. Laura, tengo una clínica dental. Quiero una landing page de una sola página. No quiero pagos en línea, ni panel, ni cuentas, ni citas en línea",
+    ctx
+  );
+  assert(ctx.category === "landing", `clínica + "ni citas en línea" → landing (obtuve: ${ctx.category})`);
+  assert(ctx.citas === false, "[QA4] citas=false (rechazo conocido)");
+  assert(resolverCategoria(ctx) === "landing", "[QA4] resolverCategoria → landing");
+  // Si SÍ las quiere, se mantiene "citas".
+  const ctx2 = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Tengo una clínica dental y quiero que mis pacientes agenden citas en línea",
+    ctx2
+  );
+  assert(ctx2.category === "citas", `clínica + "quiero agendar citas" → citas (obtuve: ${ctx2.category})`);
+  assert(resolverCategoria(ctx2) === "citas", "[QA4] resolverCategoria mantiene citas cuando citas=true");
+}
+
+section("QA5 · no repreguntar citas que ya pidió (technical_bookings se salta)");
+{
+  // Persona 1: la clínica pide citas en su descripción → technical_bookings
+  // NO debe volver a preguntar (antes se confirmaba y descuadraba el flujo).
+  const { ctx, asked } = simulate([
+    "Soy la Dra. Laura de la Clínica Dental La Sonrisa. Quiero una página para presentar mis servicios y que mis pacientes puedan pedir cita. No quiero pagos en línea, ni panel de administración, ni cuentas para pacientes",
+    "sí, así es",
+    "Inicio, Servicios, Cómo llegar y Contacto, una sola página",
+    "no, no guardo datos de pacientes",
+    "sí, quiero el mapa de la clínica",
+    "sí, que me escriban por WhatsApp",
+    "moderno pero de confianza",
+    "sí, que me encuentren en Google",
+    "ninguno", // bots (LangChain): sin asistentes IA
+    "sí, ya tengo fotos",
+    "limpieza dental, ortodoncia y blanqueamiento",
+    "para el próximo mes",
+    "unos 10 mil pesos",
+    "laura.sonrisa@gmail.com",
+    "81 2345 6789",
+    "no, gracias",
+  ]);
+  assert(ctx.category === "landing", "[QA5] clínica con citas → landing");
+  assert(ctx.citas === true, "[QA5] citas=true (lo pidió en la descripción)");
+  assert(
+    !asked.includes("technical_bookings"),
+    "[QA5] technical_bookings NO se pregunta (citas ya conocidas)"
+  );
+  // La propuesta fallback menciona el apartado de agenda (citas=true).
+  const prop = buildFallbackProposal(ctx.category!, [], "Laura", ctx);
+  assert(
+    prop.funcionalidades.some((f) => /cita|agend/i.test(f)),
+    "[QA5] propuesta landing menciona el apartado de agenda (citas=true)"
+  );
+  assert(
+    !prop.funcionalidades.some((f) => /pago|panel/i.test(f)),
+    "[QA5] la propuesta no promete pagos ni panel"
+  );
+}
+
+section("QA6 · cliente que ya lo dijo todo: no repreguntar lo rechazado");
+{
+  const { ctx, asked } = simulate([
+    "Soy la Dra. Laura, tengo una clínica dental. Quiero una landing page de una sola página con Inicio, Servicios y Contacto, con botón de WhatsApp y mapa. No quiero pagos en línea, ni panel, ni cuentas, ni citas en línea. Para marzo, y tengo unos 20 mil. Mi correo es laura@clinica.com y mi teléfono es 81 2345 6789",
+    "sí, así es",
+    "una sola página, Inicio, Servicios y Contacto",
+    "no, no necesito guardar datos",
+    "sí, el mapa de la clínica",
+    "sí, botón de WhatsApp",
+    "moderno",
+    "sí",
+    "ninguno", // bots (LangChain): sin asistentes IA
+    "sí, tengo fotos",
+    "limpieza dental y ortodoncia",
+    "81 2345 6789",
+    "no, gracias",
+  ]);
+  assert(ctx.category === "landing", "[QA6] categoría landing (rechazo de citas respetado)");
+  for (const id of [
+    "technical_auth",
+    "technical_payments",
+    "technical_dashboard",
+    "technical_bookings",
+    "technical_pwa",
+    "scope_reference",
+    "scope_deadline",
+    "budget",
+    "contact_name",
+    "contact_email",
+  ]) {
+    assert(!asked.includes(id), `[QA6] ${id} NO se pregunta (ya respondido/rechazado o saltado)`);
+  }
+  assert(ctx.clientName === "La Dra. Laura", `[QA6] nombre capturado temprano (${ctx.clientName})`);
+  assert(ctx.presupuesto === "20000", `[QA6] presupuesto capturado (${ctx.presupuesto})`);
+  assert(asked.includes("contact_phone"), "[QA6] teléfono se pide en su nodo (una vez)");
+}
+
+section("QA7 · scope_deadline no guarda 'no sé' como fecha");
+{
+  const ctx = createEmptyContext();
+  fireOnReceive("scope_deadline", "no sé", ctx);
+  assert(ctx.fechaEntrega === null, `[QA7] "no sé" en plazo → fecha null (obtuve: ${ctx.fechaEntrega})`);
+  const ctx2 = createEmptyContext();
+  fireOnReceive("scope_deadline", "para el próximo mes", ctx2);
+  assert(ctx2.fechaEntrega === "para el próximo mes", "[QA7] fecha normal sigue capturándose");
+}
+
+section("QA8 · Tratamiento (cliente que habla de usted)");
+{
+  assert(detectTrato("Mire, ¿usted me puede ayudar con eso?") === "usted", '[QA8] "¿usted…?" → usted');
+  assert(detectTrato("oye, ¿tú me ayudas?") === "tu", '[QA8] "¿tú…?" → tu');
+  assert(detectTrato("Hola, quiero una página sencilla") === null, "[QA8] neutro → null");
+  // toUsted convierte un mensaje determinista de "tú" a "usted" sin mezclar.
+  const disc = toUsted(
+    "Cuéntame, ¿qué hace tu negocio hoy? Y si puedes, dime también qué es lo que más te urge lograr con tu página."
+  );
+  assert(/cu[ée]nteme/.test(disc), `[QA8] "cuéntame" → "cuénteme" (${disc})`);
+  assert(/su negocio/.test(disc), `[QA8] "tu negocio" → "su negocio" (${disc})`);
+  assert(/d[íi]game/.test(disc), `[QA8] "dime" → "dígame" (${disc})`);
+  assert(/le urge/.test(disc), `[QA8] "te urge" → "le urge" (${disc})`);
+  assert(!/\btu\b|\bdime\b|\bcu[ée]ntame\b/.test(disc), "[QA8] sin residuos de tuteo");
+  // "sin que tú pierdas" → "sin que usted pierda"
+  const t = toUsted("podemos hacer que se generen solos, sin que tú pierdas tiempo armándolos");
+  assert(/sin que usted pierda tiempo/.test(t), `[QA8] "tú pierdas" → "usted pierda" (${t})`);
+  // Presupuesto: no promete ni mezcla.
+  const b = toUsted(
+    "No te lo pregunto para cobrarte de más: es para armarte algo que quepa en tu bolsillo"
+  );
+  assert(/No se lo pregunto para cobrarle de más/.test(b), `[QA8] presupuesto usted (${b})`);
+  assert(/armarle algo que quepa en su bolsillo/.test(b), `[QA8] presupuesto usted 2 (${b})`);
+  // No rompe un correo con "tu" dentro ("nombre@tucorreo.com").
+  const email = toUsted("Un correo se ve así: nombre@tucorreo.com. ¿Me lo escribes?");
+  assert(/nombre@tucorreo\.com/.test(email), `[QA8] correo intacto (${email})`);
+  assert(/Me lo escribe/.test(email), `[QA8] "escribes" → "escribe" (${email})`);
+}
+
+// ─── FASE BOTS · Asistentes IA con LangChain (add-on) ──────────────
+// El bot ofrece asistentes inteligentes (lib/bots-catalog.ts) que se suman a
+// la cotización, a la propuesta y al prompt técnico. Se detectan por reglas
+// (0 LLM) y se confirman en el nodo technical_bots.
+
+section("BOTS · detección y selección de asistentes IA");
+{
+  // Recomendaciones según lo que dijo el cliente (reglas, 0 LLM).
+  const ctxCitas = createEmptyContext();
+  ctxCitas.category = "citas";
+  ctxCitas.citas = true;
+  const recCitas = detectarBotsRecomendados(ctxCitas);
+  assert(recCitas.some((b) => b.id === "bot_citas"), "[BOTS] citas → recomienda bot_citas");
+
+  const ctxEcom = createEmptyContext();
+  ctxEcom.category = "ecommerce";
+  ctxEcom.pagos = true;
+  const recEcom = detectarBotsRecomendados(ctxEcom);
+  assert(recEcom.some((b) => b.id === "bot_ventas"), "[BOTS] ecommerce+pagos → recomienda bot_ventas");
+  assert(
+    recEcom.some((b) => b.id === "bot_recomendador"),
+    "[BOTS] ecommerce → recomienda bot_recomendador"
+  );
+
+  const ctxLanding = createEmptyContext();
+  ctxLanding.category = "landing";
+  const recLanding = detectarBotsRecomendados(ctxLanding);
+  assert(recLanding.some((b) => b.id === "bot_leads"), "[BOTS] landing → recomienda bot_leads");
+  assert(recLanding.some((b) => b.id === "bot_faq"), "[BOTS] landing → recomienda bot_faq");
+  assert(recLanding.length <= 3, "[BOTS] máximo 3 recomendaciones (no abruma)");
+}
+{
+  // Extracción desde una respuesta libre.
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  assert(
+    extraerBotsDeRespuesta("el de citas y el de preguntas frecuentes", ctx)
+      .sort()
+      .join(",") === "bot_citas,bot_faq",
+    "[BOTS] 'el de citas y el de preguntas frecuentes' → bot_citas + bot_faq"
+  );
+  assert(extraerBotsDeRespuesta("ninguno", ctx).length === 0, "[BOTS] 'ninguno' → sin bots");
+  assert(extraerBotsDeRespuesta("no, gracias", ctx).length === 0, "[BOTS] 'no, gracias' → sin bots");
+  assert(extraerBotsDeRespuesta("sí", ctx).length > 0, "[BOTS] 'sí' genérico → recomendaciones");
+}
+{
+  // Precios accesibles: setup y mensualidad (DeepSeek hosting).
+  const ids = ["bot_faq", "bot_citas"];
+  assert(totalBotsSetup(ids) === 3500 + 5900, `[BOTS] setup total (${totalBotsSetup(ids)})`);
+  assert(
+    totalBotsMensual(ids) === 199 + 299,
+    `[BOTS] cuota mensual total (${totalBotsMensual(ids)})`
+  );
+  assert(getBotById("bot_faq")?.precioSetup === 3500, "[BOTS] FAQ setup accesible $3,500");
+  assert(getBotById("bot_ventas")?.precioSetup === 8500, "[BOTS] ventas setup $8,500");
+}
+{
+  // Flujo completo con bots: se capturan en ctx.bots y el precio del fallback
+  // incluye el setup de los bots (precio exacto coherente con la UI).
+  const { ctx } = simulate([
+    "Tengo una clínica dental y quiero una página de presentación. Quiero que mis pacientes agenden citas en línea, y me gustaría un bot que responda dudas frecuentes",
+    "sí, así es",
+    "Inicio, Servicios y Contacto",
+    "no", // cuentas
+    "no", // base de datos
+    "no", // pagos en línea
+    "no", // panel
+    "sí", // mapa
+    "sí", // WhatsApp
+    "moderno", // diseño
+    "sí", // SEO
+    "no, sin instalarse como app", // PWA
+    "el de citas y el de preguntas frecuentes", // bots (LangChain)
+    "sí", // contenido
+    "limpieza dental, ortodoncia y blanqueamiento", // servicios
+    "ninguna referencia", // referencia
+    "para el próximo mes", // fecha
+    "unos 20 mil", // presupuesto
+    "Soy Laura", // nombre
+    "laura@clinica.com", // email
+    "81 2345 6789", // teléfono
+    "nada, gracias", // comentarios
+  ]);
+  assert(ctx.bots.includes("bot_citas"), `[BOTS] citas elegido (${ctx.bots})`);
+  assert(ctx.bots.includes("bot_faq"), `[BOTS] faq elegido (${ctx.bots})`);
+
+  const prop = buildFallbackProposal(ctx.category ?? "landing", [], "Laura", ctx);
+  assert((prop.bots?.length ?? 0) === 2, "[BOTS] la propuesta trae los 2 bots");
+  assert((prop.bots_total ?? 0) === 9400, `[BOTS] bots_total en la propuesta (${prop.bots_total})`);
+  assert(
+    prop.funcionalidades.some((f) => /asistente|bot/i.test(f)),
+    "[BOTS] la propuesta menciona los asistentes en 'qué incluye'"
+  );
+  assert(
+    prop.stack_tecnico.includes("LangChain") && prop.stack_tecnico.includes("DeepSeek"),
+    "[BOTS] el stack incluye LangChain + DeepSeek"
+  );
+  // El precio exacto del fallback incluye el setup de los bots.
+  assert(
+    prop.precio_min >= 9400,
+    `[BOTS] el precio incluye el setup de los bots (${prop.precio_min})`
+  );
+}
+{
+  // calcularTotalDeterminista suma los bots al total exacto (mismo número que la UI).
+  const base =
+    calcularTotalDeterminista({
+      giro: "consultorio dental",
+      clientName: "Laura",
+      clientPhone: null,
+      negocioDescripcion: "clínica dental",
+      category: "landing",
+      paginas: 1,
+    }) ?? 0;
+  const conBots =
+    calcularTotalDeterminista({
+      giro: "consultorio dental",
+      clientName: "Laura",
+      clientPhone: null,
+      negocioDescripcion: "clínica dental",
+      category: "landing",
+      paginas: 1,
+      bots: ["bot_faq"],
+    }) ?? 0;
+  assert(
+    conBots === base + 3500,
+    `[BOTS] total determinista + bot_faq = base + 3500 (${base} → ${conBots})`
+  );
 }
 
 // ─── Resumen ───────────────────────────────────────────────────────

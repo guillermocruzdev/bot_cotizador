@@ -18,7 +18,7 @@ import {
   getNode,
   isDoneNode,
 } from "@/lib/conversation-flow";
-import { randomClosing } from "@/lib/personality";
+import { randomClosing, detectTrato, toUsted } from "@/lib/personality";
 import { delay, uid } from "@/lib/utils";
 
 export const BOT_NAME = process.env.NEXT_PUBLIC_BOT_NAME || "Alex";
@@ -57,6 +57,18 @@ async function enhancedReply(opts: {
   } catch {
     return opts.fallbackReply;
   }
+}
+
+/**
+ * Mensaje determinista de un nodo, ADAPTADO al tratamiento del cliente:
+ * si habla de "usted", el fallback se convierte a la forma formal (el LLM ya
+ * respeta el trato por el system prompt, pero el respaldo no debe mezclar).
+ */
+function fallbackFor(nodeId: string, ctx: ChatContext): string {
+  const node = getNode(nodeId);
+  if (!node || typeof node.generateMessage !== "function") return "";
+  const msg = node.generateMessage(ctx);
+  return ctx.trato === "usted" ? toUsted(msg) : msg;
 }
 
 /**
@@ -228,6 +240,10 @@ export const useChatStore = create<ChatState>((set, get) => {
     if (!node) return;
 
     const nextCtx: ChatContext = { ...get().context };
+    // Detecta el tratamiento ("tú"/"usted") de la respuesta del cliente para
+    // que el bot (y su fallback determinista) nunca mezcle tratamientos.
+    const trato = detectTrato(text);
+    if (trato) nextCtx.trato = trato;
 
     // ── Passthrough del saludo ───────────────────────────────
     // El saludo NO consume la primera respuesta. Si el usuario dice
@@ -247,7 +263,7 @@ export const useChatStore = create<ChatState>((set, get) => {
         const forward = getNode(forwardId);
         set({ currentNodeId: forwardId });
         if (forward) {
-          const fallback = forward.generateMessage(nextCtx);
+          const fallback = fallbackFor(forward.id, nextCtx);
           set({ isTyping: true });
           const reply = await enhancedReply({
             nodeId: forward.id,
@@ -282,7 +298,8 @@ export const useChatStore = create<ChatState>((set, get) => {
 
     // 3c. ¿Terminó? Mostrar cierre y analizar
     if (isDoneNode(nextId)) {
-      await botSay(randomClosing());
+      const closing = nextCtx.trato === "usted" ? toUsted(randomClosing()) : randomClosing();
+      await botSay(closing);
       await delay(600);
       await get().finishAndNavigate();
       return;
@@ -292,7 +309,7 @@ export const useChatStore = create<ChatState>((set, get) => {
     if (nextId === "closing") {
       const closingNode = getNode(nextId);
       if (closingNode) {
-        const fallback = closingNode.generateMessage(nextCtx);
+        const fallback = fallbackFor(closingNode.id, nextCtx);
         set({ isTyping: true });
         const reply = await enhancedReply({
           nodeId: closingNode.id,
@@ -310,7 +327,7 @@ export const useChatStore = create<ChatState>((set, get) => {
     // 4. Generar el siguiente mensaje del bot (LLM si está disponible)
     const next = getNode(nextId);
     if (next) {
-      const fallback = next.generateMessage(nextCtx);
+      const fallback = fallbackFor(next.id, nextCtx);
       set({ isTyping: true });
       const reply = await enhancedReply({
         nodeId: next.id,

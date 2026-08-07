@@ -28,6 +28,7 @@ import {
   type ClientData,
 } from "@/lib/quote-engine";
 import { resolverCategoria } from "@/lib/pricing-catalog";
+import { totalBotsMensual, totalBotsSetup } from "@/lib/bots-catalog";
 import type { AnalysisResult } from "@/lib/types";
 import { ContactCTA } from "./ContactCTA";
 import { FeatureList } from "./FeatureList";
@@ -88,7 +89,14 @@ export function ProposalView() {
       })
     : null;
 
-  const quoteTotal = clientData ? calculateQuote(clientData).total : null;
+  // Bots de LangChain (add-on): su setup se suma al total exacto y aportan una
+  // suscripción mensual propia (motor de IA + mantenimiento).
+  const botsSeleccionados = context.bots ?? [];
+  const botsTotal = totalBotsSetup(botsSeleccionados);
+  const botsCuota = totalBotsMensual(botsSeleccionados);
+
+  const quoteTotal =
+    clientData != null ? calculateQuote(clientData).total + botsTotal : null;
 
   // Cuota mensual SIEMPRE derivada del mismo precio mostrado (precio/24),
   // para que "Desde $X al mes" nunca contradiga el total exacto.
@@ -201,6 +209,58 @@ export function ProposalView() {
             </MessageAnimator>
             <FeatureList features={result.funcionalidades} delay={0.15} />
           </section>
+
+          {/* ── Bots de LangChain (asistentes inteligentes) ── */}
+          {(result.bots?.length ?? 0) > 0 && (
+            <section>
+              <MessageAnimator delay={0.18}>
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                  🤖 Tus asistentes inteligentes
+                </h2>
+                <p className="mb-4 -mt-2 text-sm text-muted-foreground">
+                  Estos bots atienden a tus clientes por ti con IA (LangChain +
+                  DeepSeek) y ya están incluidos en tu propuesta.
+                </p>
+              </MessageAnimator>
+              <div className="space-y-3">
+                {result.bots!.map((b) => (
+                  <div
+                    key={b.id}
+                    className="rounded-xl border border-indigo-100 bg-white p-4 shadow-sm"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[15px] font-semibold text-gray-900">
+                          {b.nombre}
+                        </p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">
+                          {b.descripcion}
+                        </p>
+                        <p className="mt-1.5 text-sm text-gray-700">
+                          ✨ {b.resultado}
+                        </p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className="text-sm font-semibold text-indigo-600">
+                          {formatPesos(b.precio)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          +${b.cuota_mensual.toLocaleString("es-MX")}/mes
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {botsCuota > 0 && (
+                  <p className="pt-1 text-sm text-muted-foreground">
+                    Tus asistentes se mantienen activos con una suscripción
+                    mensual de {formatPesos(botsCuota)}, que cubre el motor de
+                    IA y las actualizaciones.
+                  </p>
+                )}
+              </div>
+            </section>
+          )}
 
           {/* ── Tecnología ── */}
           <section>

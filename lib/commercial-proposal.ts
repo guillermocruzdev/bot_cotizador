@@ -125,6 +125,10 @@ export interface CommercialProposal {
   solucionIntro: string;
   solucionBullets: string[];
   entregables: EntregableValor[];
+  /** Asistentes IA (bots de LangChain) incluidos: setup y mensualidad */
+  bots: { nombre: string; descripcion: string; valor: number; cuota_mensual: number }[];
+  /** Cuota mensual total de los bots (motor de IA + mantenimiento) */
+  bots_cuota_mensual: number;
   total: number;
   subtotal: number;
   iva: number;
@@ -204,6 +208,17 @@ export function buildCommercialProposal(
     valor: i === n - 1 ? Math.max(Math.round(subtotal - valorBase * (n - 1)), 0) : valorBase,
   }));
 
+  // Bots de LangChain: se muestran como parte de la solución. Su setup ya
+  // está incluido en result.precio_min (el servidor lo sumó al total exacto),
+  // así que aquí solo se informan; la mensualidad se muestra por separado.
+  const bots = (result.bots ?? []).map((b) => ({
+    nombre: b.nombre,
+    descripcion: b.descripcion,
+    valor: b.precio,
+    cuota_mensual: b.cuota_mensual,
+  }));
+  const bots_cuota_mensual = bots.reduce((a, b) => a + b.cuota_mensual, 0);
+
   const porQueAhora =
     "Cada semana sin esto, su negocio sigue dejando oportunidades frente a competidores que sí aparecen en internet. Los precios y la agenda de este proyecto son los de hoy: al confirmar el anticipo, se bloquean ambos. Esperar solo le cuesta más caro en clientes perdidos.";
   const proceso = [
@@ -232,6 +247,8 @@ export function buildCommercialProposal(
     solucionIntro: result.punto_venta || "Una página que trabaja para su negocio todos los días.",
     solucionBullets,
     entregables,
+    bots,
+    bots_cuota_mensual,
     total,
     subtotal,
     iva,
@@ -302,6 +319,15 @@ No le hablaremos de tecnología: le hablaremos de **resultados** para su negocio
 - ${p.solucionBullets.join("\n- ")}
 
 En resumen: **${p.cliente.negocio}** dejará de perder oportunidades y empezará a recibir clientes de forma constante, con una imagen a la altura del trabajo que ya hace.
+
+${p.bots.length ? `**Asistentes inteligentes incluidos:**
+
+${p.bots
+    .map((b) => `- **${b.nombre}** (${fmt(b.valor)}): ${b.descripcion}`)
+    .join("\n")}
+
+*La suscripción mensual de estos asistentes es de **${fmt(p.bots_cuota_mensual)}** e incluye el motor de IA y las actualizaciones.*`
+  : ""}
 
 **¿Por qué ahora?**
 
