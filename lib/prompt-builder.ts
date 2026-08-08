@@ -4,6 +4,12 @@
  * conversación (autenticación, pagos, panel, citas, SEO, PWA, etc.) más el
  * catálogo por categoría, por lo que la calidad es consistente en cada
  * propuesta (no depende de la creatividad del LLM).
+ *
+ * Cada fase se marca con su PRIORIDAD de entrega (criterio del CEO):
+ * ⭐ OBLIGATORIA = imprescindible para que la web quede profesional y lista
+ * para entregar al cliente (se ejecuta SIEMPRE) · ✨ OPCIONAL = eleva el
+ * resultado (analítica, pruebas, CI/CD, SRE, crecimiento) o es un add-on
+ * contratado (asistentes IA) y NO bloquea la entrega.
  */
 
 import type { ChatContext } from "@/lib/types";
@@ -527,6 +533,128 @@ interface PackBase {
   phases: PackPhases;
 }
 
+// ─── Prioridad de fases: ⭐ OBLIGATORIAS vs ✨ OPCIONALES (criterio del CEO) ───
+//
+// Decisión ejecutiva: cada fase del pack se marca con su prioridad para que
+// quien reciba el prompt sepa exactamente qué es imprescindible y qué no.
+//
+//   ⭐ OBLIGATORIA = no se negocia. Sin esta fase la web NO se considera
+//                    profesional ni lista para entregar al cliente.
+//   ✨ OPCIONAL   = eleva el resultado (medir, automatizar, operar, crecer) o
+//                    es un add-on contratado (asistentes IA). No bloquea la
+//                    entrega: se ejecuta si hay presupuesto/tiempo o si el
+//                    cliente la contrató.
+
+interface FaseInfo {
+  key: keyof PackPhases;
+  nombre: string;
+  entrega: string;
+  /** Justificación ejecutiva para el apartado ⭐/✨ del preámbulo. */
+  porQue: string;
+}
+
+/** Fases que forman el núcleo de entrega: sin ellas la web no se entrega. */
+const PHASE_OBLIGATORIA = new Set<keyof PackPhases>([
+  "uxResearch",
+  "iaWireframes",
+  "kickoff",
+  "fundacion",
+  "shell",
+  "contenido",
+  "microcopy",
+  "datos",
+  "logica",
+  "qa",
+  "security",
+  "perf",
+  "compliance",
+  "deploy",
+]);
+
+/** Catálogo ordenado de fases (mismo orden que el roadmap) con su justificación. */
+const FASES_INFO: FaseInfo[] = [
+  { key: "uxResearch", nombre: "Estrategia UX e investigación", entrega: "research brief, personas, journey, KPIs", porQue: "Sin plan no hay web profesional: define qué construir y para quién." },
+  { key: "iaWireframes", nombre: "Arquitectura de información + wireframes", entrega: "sitemap, flujos, wireframes 360px", porQue: "El plano de la web: evita rehacer, páginas huérfanas y flujos rotos." },
+  { key: "kickoff", nombre: "Brand y contenido real (kickoff)", entrega: "logo, fotos, textos y testimonios reales", porQue: "Lo que separa una web genérica de una profesional: marca y contenido reales." },
+  { key: "fundacion", nombre: "Fundación + design tokens", entrega: "base técnica, paleta real, mobile-first", porQue: "Los cimientos técnicos y de diseño sobre los que se construye todo." },
+  { key: "shell", nombre: "Shell + componentes UI", entrega: "header/footer, primitivas, interacción", porQue: "El esqueleto visual y la librería de componentes de toda la web." },
+  { key: "contenido", nombre: "Secciones de contenido", entrega: "la página visible completa", porQue: "La página visible: sin estas secciones no hay web que entregar." },
+  { key: "microcopy", nombre: "Conversation design y microcopy", entrega: "voz, botones, errores, diseño conversacional", porQue: "El acabado premium: toda palabra de la interfaz escrita con intención." },
+  { key: "datos", nombre: "Modelo de datos + Supabase", entrega: "esquema, RLS, seed", porQue: "Formularios y leads necesitan una base de datos segura (RLS)." },
+  { key: "logica", nombre: "Lógica + API routes", entrega: "formularios, integraciones, /api/health", porQue: "Los formularios y flujos deben funcionar de extremo a extremo." },
+  { key: "analyticsInstr", nombre: "Analítica · instrumentación", entrega: "pipeline de eventos sin PII", porQue: "Mide el uso y alimenta decisiones; no bloquea la entrega." },
+  { key: "analyticsReport", nombre: "Analítica · reporting", entrega: 'funnel, atribución, "so what"', porQue: "Convierte datos en decisiones de negocio; valor de crecimiento." },
+  { key: "llmInfra", nombre: "Infraestructura LLM (MLOps)", entrega: "gateway, presupuesto, caché, registry", porQue: "Add-on IA contratado: solo si el cliente pagó asistentes IA." },
+  { key: "bots", nombre: "Asistentes IA (LangChain + DeepSeek)", entrega: "bots de punta a punta", porQue: "Add-on IA contratado: solo si el cliente pagó asistentes IA." },
+  { key: "promptEval", nombre: "Prompt engineering & evaluación", entrega: "golden tests, LLM-as-judge", porQue: "Add-on IA contratado: solo si el cliente pagó asistentes IA." },
+  { key: "kb", nombre: "Knowledge base · curación", entrega: "fuentes curadas, chunking", porQue: "Add-on IA contratado: solo si el cliente pagó asistentes IA." },
+  { key: "rag", nombre: "Knowledge base · RAG", entrega: "pgvector, retrieval híbrido", porQue: "Add-on IA contratado: solo si el cliente pagó asistentes IA." },
+  { key: "botQa", nombre: "QA de asistentes IA", entrega: "matriz, red team, aislamiento", porQue: "Add-on IA contratado: solo si el cliente pagó asistentes IA." },
+  { key: "tests", nombre: "Calidad de código · pruebas", entrega: "unitarias + integración + componentes", porQue: "Rigor de ingeniería: muy recomendada, pero no bloquea la entrega." },
+  { key: "cicd", nombre: "CI/CD", entrega: "pipeline, previews, deploy automático", porQue: "Automatiza calidad y despliegue: ideal para equipos, no bloquea." },
+  { key: "qa", nombre: "QA web (gate de calidad)", entrega: "E2E, cross-browser, pulido", porQue: "El gate final: la web se ve y funciona en todos los dispositivos." },
+  { key: "security", nombre: "Seguridad (OWASP)", entrega: "auditoría y endurecimiento", porQue: "Entregar con secretos expuestos o datos ajenos accesibles no es profesional." },
+  { key: "perf", nombre: "Rendimiento", entrega: "CWV en verde, presupuesto", porQue: "Una web lenta en celular no es profesional ni convierte." },
+  { key: "compliance", nombre: "Accesibilidad, privacidad e IA responsable", entrega: "WCAG, LFPDPPP, ética", porQue: "Cumplimiento legal (privacidad) y calidad ética/accesible: no negociable." },
+  { key: "sre", nombre: "Confiabilidad y operaciones (SRE)", entrega: "health, alertas, backups, runbooks", porQue: "Operación de nivel producción: avanzado, no bloquea la entrega." },
+  { key: "deploy", nombre: "Despliegue y entrega", entrega: "Vercel, dominio, indexación", porQue: "La entrega física al cliente: sin esto no hay nada que mostrar." },
+  { key: "postLaunch", nombre: "Presentación, aprobación y crecimiento", entrega: "UAT, lanzamiento, SEO local, 30-60 días", porQue: "Ocurre después de la entrega: retención, resultados y upsell." },
+];
+
+function faseObligatoria(key: keyof PackPhases): boolean {
+  return PHASE_OBLIGATORIA.has(key);
+}
+
+/** Etiqueta corta de prioridad (para el mapa de fases y los encabezados de chat). */
+function faseBadge(key: keyof PackPhases): string {
+  return faseObligatoria(key) ? "⭐ OBLIGATORIA" : "✨ OPCIONAL";
+}
+
+/** Solo las fases que existen en este pack (los chats de bots solo si hasBots). */
+function fasesActivas(phases: PackPhases): FaseInfo[] {
+  return FASES_INFO.filter((f) => phases[f.key] !== undefined);
+}
+
+/** Tabla "Mapa de fases" con columna de prioridad ⭐/✨. */
+function buildMapaFases(phases: PackPhases): string {
+  const rows = fasesActivas(phases)
+    .map((f) => `| ${phases[f.key]} | ${f.nombre} | ${f.entrega} | ${faseBadge(f.key)} |`)
+    .join("\n");
+  return `### Mapa de fases (roadmap del proyecto)
+
+| CHAT | Fase | Entrega clave | Prioridad |
+|---|---|---|---|
+${rows}`;
+}
+
+/** Apartado ejecutivo del CEO: qué es OBLIGATORIO y qué es OPCIONAL, y por qué. */
+function buildCeoPrioridades(phases: PackPhases): string {
+  const obligatorias = fasesActivas(phases).filter((f) => faseObligatoria(f.key));
+  const opcionales = fasesActivas(phases).filter((f) => !faseObligatoria(f.key));
+  const rows = (list: FaseInfo[]) =>
+    list.map((f) => `| ${phases[f.key]} | ${f.nombre} | ${f.porQue} |`).join("\n");
+  return `### 🧭 Prioridad de fases: ⭐ OBLIGATORIAS vs ✨ OPCIONALES (decisión del CEO)
+
+> Como **CEO / Director General**, esta es la regla para saber qué se entrega y qué se negocia:
+
+- **⭐ OBLIGATORIA** — No se negocia. Sin esta fase la web NO se considera **profesional ni lista para entregar al cliente**. Ejecútalas SIEMPRE y en orden.
+- **✨ OPCIONAL** — Eleva el resultado (medir, automatizar, operar, crecer) o es un **add-on contratado** (asistentes IA). No bloquean la entrega: se ejecutan si hay presupuesto/tiempo o si el cliente las contrató.
+
+#### ⭐ OBLIGATORIAS (${obligatorias.length} · imprescindibles para entregar)
+
+| CHAT | Fase | Por qué es obligatoria |
+|---|---|---|
+${rows(obligatorias)}
+
+#### ✨ OPCIONALES (${opcionales.length} · elevan el resultado, no bloquean)
+
+| CHAT | Fase | Por qué es opcional |
+|---|---|---|
+${rows(opcionales)}
+
+> **Regla de entrega:** completa las **${obligatorias.length} ⭐ OBLIGATORIAS** y la web queda profesional y lista para entregar al cliente. Las **✨ OPCIONALES** la elevan (analítica, pruebas, CI/CD, SRE, crecimiento) o amplían el alcance contratado (asistentes IA): si el cliente pagó asistentes IA, sus 6 fases pasan a ser obligatorias dentro del alcance contratado.`;
+}
+
 export function buildTechnicalPrompt(opts: PromptBuildOptions): string {
   const { clientName, businessDescription, category, nivel, context, analysis } = opts;
   const spec = CATEGORY_SPECS[category.id] ?? CATEGORY_SPECS.landing;
@@ -673,38 +801,12 @@ function buildPreamble(base: PackBase, ctxCompact: string): string {
 2. Ejecuta el CHAT 1 y espera el marcador \`FIN_DE_FASE_1\`. Luego abre un **chat nuevo** y pega el CHAT 2; espera \`FIN_DE_FASE_2\`; y así hasta el CHAT ${phases.deploy}.
 3. Cada chat es **autosuficiente**: trae su propio contexto compacto + las instrucciones de su fase. El agente no necesita "recordar" el chat anterior.
 4. Al terminar el CHAT ${phases.deploy} tendrás la página construida, probada, asegurada y desplegada en Vercel.
+5. **Prioridad por fase**: cada chat está marcado **⭐ OBLIGATORIA** (imprescindible para entregar) o **✨ OPCIONAL** (eleva el resultado, no bloquea). Ver la sección siguiente.
 ${phases.hasBots ? `\n> 💡 Este pack incluye todo el ciclo LLM: infraestructura LLM (CHAT ${phases.llmInfra}), asistentes IA (CHAT ${phases.bots}), prompt engineering + evaluación (CHAT ${phases.promptEval}), knowledge base (CHAT ${phases.kb}), RAG (CHAT ${phases.rag}) y QA de IA (CHAT ${phases.botQa}). Si el cliente NO contrató asistentes IA, el pack trae ${phases.total - 6} chats (sin esos seis bloques de IA).` : ""}
 
-### Mapa de fases (roadmap del proyecto)
+${buildCeoPrioridades(phases)}
 
-| CHAT | Fase | Entrega clave |
-|---|---|---|
-| ${phases.uxResearch} | Estrategia UX e investigación | research brief, personas, journey, KPIs |
-| ${phases.iaWireframes} | Arquitectura de información + wireframes | sitemap, flujos, wireframes 360px |
-| ${phases.kickoff} | Brand y contenido real (kickoff) | logo, fotos, textos y testimonios reales |
-| ${phases.fundacion} | Fundación + design tokens | base técnica, paleta real, mobile-first |
-| ${phases.shell} | Shell + componentes UI | header/footer, primitivas, interacción |
-| ${phases.contenido} | Secciones de contenido | la página visible completa |
-| ${phases.microcopy} | Conversation design y microcopy | voz, botones, errores, diseño conversacional |
-| ${phases.datos} | Modelo de datos + Supabase | esquema, RLS, seed |
-| ${phases.logica} | Lógica + API routes | formularios, integraciones, /api/health |
-| ${phases.analyticsInstr} | Analítica · instrumentación | pipeline de eventos sin PII |
-| ${phases.analyticsReport} | Analítica · reporting | funnel, atribución, "so what" |
-${phases.hasBots ? `| ${phases.llmInfra} | Infraestructura LLM (MLOps) | gateway, presupuesto, caché, registry |
-| ${phases.bots} | Asistentes IA (LangChain + DeepSeek) | bots de punta a punta |
-| ${phases.promptEval} | Prompt engineering & evaluación | golden tests, LLM-as-judge |
-| ${phases.kb} | Knowledge base · curación | fuentes curadas, chunking |
-| ${phases.rag} | Knowledge base · RAG | pgvector, retrieval híbrido |
-| ${phases.botQa} | QA de asistentes IA | matriz, red team, aislamiento |` : ""}
-| ${phases.tests} | Calidad de código · pruebas | unitarias + integración + componentes |
-| ${phases.cicd} | CI/CD | pipeline, previews, deploy automático |
-| ${phases.qa} | QA web (gate de calidad) | E2E, cross-browser, pulido |
-| ${phases.security} | Seguridad (OWASP) | auditoría y endurecimiento |
-| ${phases.perf} | Rendimiento | CWV en verde, presupuesto |
-| ${phases.compliance} | Accesibilidad, privacidad e IA responsable | WCAG, LFPDPPP, ética |
-| ${phases.sre} | Confiabilidad y operaciones (SRE) | health, alertas, backups, runbooks |
-| ${phases.deploy} | Despliegue y entrega | Vercel, dominio, indexación |
-| ${phases.postLaunch} | Presentación, aprobación y crecimiento | UAT, lanzamiento, SEO local, 30-60 días |
+${buildMapaFases(phases)}
 
 ### Ficha del proyecto
 
@@ -733,7 +835,7 @@ Copia cada bloque \`CHAT N\` por separado y pégalo en su propio chat. Empieza p
 
 function buildChatUxResearch(base: PackBase, ctxCompact: string): string {
   const { analysis, context, phases, category } = base;
-  return `## 🧩 CHAT ${phases.uxResearch} · ESTRATEGIA UX E INVESTIGACIÓN (UX RESEARCHER)
+  return `## 🧩 CHAT ${phases.uxResearch} · ESTRATEGIA UX E INVESTIGACIÓN (UX RESEARCHER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Es la PRIMERA fase del pack: aquí se decide QUÉ construir y PARA QUIÉN, antes de tocar código. El sistema de diseño (CHAT ${phases.fundacion}), las secciones (CHAT ${phases.contenido}), el microcopy (CHAT ${phases.microcopy}) y la analítica (CHAT ${phases.analyticsInstr}) respetan lo que se decide aquí. No escribas código de la web todavía.
 
@@ -819,7 +921,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.uxR
 
 function buildChatIaWireframes(base: PackBase, ctxCompact: string): string {
   const { analysis, context, phases, spec, category } = base;
-  return `## 🧩 CHAT ${phases.iaWireframes} · ARQUITECTURA DE INFORMACIÓN + WIREFRAMES + FLUJOS (UX/UI DESIGNER)
+  return `## 🧩 CHAT ${phases.iaWireframes} · ARQUITECTURA DE INFORMACIÓN + WIREFRAMES + FLUJOS (UX/UI DESIGNER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación está lista (CHAT ${phases.uxResearch}). Aquí decides la estructura y el flujo ANTES de construir: sitemap, tareas clave y wireframes mobile-first de cada plantilla (baja fidelidad). El CHAT ${phases.fundacion} (tokens/estilo), el CHAT ${phases.shell} (componentes) y el CHAT ${phases.contenido} (secciones) implementan estos planos. No escribas la web todavía.
 
@@ -888,7 +990,7 @@ function buildChatMicrocopy(base: PackBase, ctxCompact: string): string {
   const botLine = phases.hasBots
     ? ` El diseño conversacional de los asistentes IA (CHAT ${phases.bots}) se especifica aquí; la infraestructura LLM (CHAT ${phases.llmInfra}) y la evaluación de prompts (CHAT ${phases.promptEval}) lo implementan técnicamente.`
     : " Si mañana se agregan asistentes IA, este diseño conversacional queda como base para ellos.";
-  return `## 🧩 CHAT ${phases.microcopy} · CONVERSATION DESIGN Y MICROCOPY (CONVERSATION DESIGNER + UX WRITER)
+  return `## 🧩 CHAT ${phases.microcopy} · CONVERSATION DESIGN Y MICROCOPY (CONVERSATION DESIGNER + UX WRITER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT ${phases.contenido}). Aquí afinas TODAS las palabras de la interfaz — botones, formularios, errores, estados vacíos, confirmaciones — y, si hay asistentes IA, dejas su diseño conversacional especificado.${botLine} El CHAT ${phases.shell} implementó los componentes; aquí les das voz.
 
@@ -946,7 +1048,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.mic
 
 function buildChatFundacion(base: PackBase, ctxCompact: string): string {
   const { category, analysis, phases } = base;
-  return `## 🧩 CHAT ${phases.fundacion} · FUNDACIÓN DEL PROYECTO + DESIGN TOKENS + BASE MOBILE-FIRST (UX/UI FOUNDATION)
+  return `## 🧩 CHAT ${phases.fundacion} · FUNDACIÓN DEL PROYECTO + DESIGN TOKENS + BASE MOBILE-FIRST (UX/UI FOUNDATION) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación (CHAT ${phases.uxResearch}) y los wireframes (CHAT ${phases.iaWireframes}) ya definieron qué construir y cómo; aquí dejas la base técnica y el sistema de diseño con el estilo del cliente. No pegues el CHAT ${phases.shell} aquí.
 
@@ -1013,7 +1115,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.fun
 
 function buildChatShell(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.shell} · SHELL (HEADER/FOOTER) + COMPONENTES UI + PATRONES DE INTERACCIÓN — MOBILE-FIRST
+  return `## 🧩 CHAT ${phases.shell} · SHELL (HEADER/FOOTER) + COMPONENTES UI + PATRONES DE INTERACCIÓN — MOBILE-FIRST · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto YA existe (lo dejó listo el CHAT ${phases.fundacion}) y los wireframes del CHAT ${phases.iaWireframes} definen qué pantallas construir. Aquí construyes el esqueleto visual (header/footer), la librería de componentes y sus patrones de interacción, todo **mobile-first**.
 
@@ -1065,7 +1167,7 @@ ${bullets(
   )}`
     : `### Sección de servicios
 El cliente no detalló servicios. Incluye una sección de servicios (o de lo que ofrece) con 3-4 ítems placeholder realistas para el giro **${analysis.giro ?? "del cliente"}**, cada uno con descripción, beneficios y CTA de contacto.`;
-  return `## 🧩 CHAT ${phases.contenido} · SECCIONES DE CONTENIDO (LA PÁGINA VISIBLE) — MOBILE-FIRST
+  return `## 🧩 CHAT ${phases.contenido} · SECCIONES DE CONTENIDO (LA PÁGINA VISIBLE) — MOBILE-FIRST · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El shell y los componentes ya existen (CHAT ${phases.shell}) y los wireframes del CHAT ${phases.iaWireframes} definen cada pantalla. Aquí construyes TODAS las secciones visibles siguiendo la estrategia de mensajes del CHAT ${phases.uxResearch}; el microcopy (CHAT ${phases.microcopy}) afinará las palabras.
 
@@ -1273,7 +1375,7 @@ export async function POST(req: Request) {
 
 function buildChatDatos(base: PackBase, ctxCompact: string): string {
   const { context, spec, category, phases } = base;
-  return `## 🧩 CHAT ${phases.datos} · MODELO DE DATOS + SETUP DE SUPABASE
+  return `## 🧩 CHAT ${phases.datos} · MODELO DE DATOS + SETUP DE SUPABASE · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT ${phases.contenido}).
 
@@ -1333,7 +1435,7 @@ function buildChatLogica(base: PackBase, ctxCompact: string): string {
   const botsLine = phases.hasBots
     ? `> Los asistentes IA elegidos se implementan en el **CHAT ${phases.bots}**; aquí NO los desarrolles, solo deja la estructura que los soporta (las tablas ya están listas del CHAT ${phases.datos}).`
     : "";
-  return `## 🧩 CHAT ${phases.logica} · LÓGICA, API ROUTES E INTEGRACIONES
+  return `## 🧩 CHAT ${phases.logica} · LÓGICA, API ROUTES E INTEGRACIONES · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT ${phases.contenido}) y el modelo de datos está aplicado (CHAT ${phases.datos}).
 
@@ -1411,7 +1513,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.log
  */
 function buildChatAnalyticsInstr(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.analyticsInstr} · DATOS Y ANALÍTICA · INSTRUMENTACIÓN (DATA ENGINEER)
+  return `## 🧩 CHAT ${phases.analyticsInstr} · DATOS Y ANALÍTICA · INSTRUMENTACIÓN (DATA ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El modelo de datos ya está aplicado (CHAT ${phases.datos}) y la lógica/API existe (CHAT ${phases.logica}). Aquí instrumentas el producto para EMITIR datos limpios: esquema de eventos, pipeline de captura y calidad de datos, sin PII y con privacidad por diseño. Leer esos datos (funnel, atribución y reporte) es el CHAT ${phases.analyticsReport}.
 
@@ -1490,7 +1592,7 @@ function buildChatAnalyticsReport(base: PackBase, ctxCompact: string): string {
   const nextPhase = phases.hasBots
     ? ` Después siguen los asistentes IA (CHAT ${phases.bots}).`
     : ` Después sigue el QA web (CHAT ${phases.qa}).`;
-  return `## 🧩 CHAT ${phases.analyticsReport} · DATOS Y ANALÍTICA · REPORTING, FUNNEL Y ATRIBUCIÓN (DATA ANALYST)
+  return `## 🧩 CHAT ${phases.analyticsReport} · DATOS Y ANALÍTICA · REPORTING, FUNNEL Y ATRIBUCIÓN (DATA ANALYST) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los eventos ya se capturan con calidad (CHAT ${phases.analyticsInstr}); aquí los CONVIERTES en decisiones: funnel de conversión, atribución de fuentes y un tablero/reporte con su "so what".${nextPhase}
 
@@ -1537,7 +1639,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.ana
 }
 function buildChatLlmInfra(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.llmInfra} · INFRAESTRUCTURA LLM (MLOPS / AI INFRASTRUCTURE)
+  return `## 🧩 CHAT ${phases.llmInfra} · INFRAESTRUCTURA LLM (MLOPS / AI INFRASTRUCTURE) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya tiene su lógica (CHAT ${phases.logica}) y su analítica (CHAT ${phases.analyticsInstr}/${phases.analyticsReport}). Aquí montas la **capa compartida de LLM** que usarán TODOS los asistentes IA (CHAT ${phases.bots}) y su evaluación de prompts (CHAT ${phases.promptEval}): un gateway único, configuración centralizada, presupuesto de tokens/costo, tracing, caché de respuestas y registry de prompts versionados. Nada de configurar DeepSeek "a mano" en cada bot.
 
@@ -1601,7 +1703,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.llm
 }
 function buildChatPromptEval(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.promptEval} · PROMPT ENGINEERING & EVALUACIÓN (PROMPT ENGINEER + LLM EVAL)
+  return `## 🧩 CHAT ${phases.promptEval} · PROMPT ENGINEERING & EVALUACIÓN (PROMPT ENGINEER + LLM EVAL) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los asistentes IA ya responden (CHAT ${phases.bots}) sobre la infraestructura LLM (CHAT ${phases.llmInfra}). Aquí los conviertes en producto de calidad: diseñas y versionas los system prompts con metodología, pruebas cada prompt con un set áureo (golden tests) y mides la calidad con un juez automático (LLM-as-judge). Después llegan la knowledge base (CHAT ${phases.kb}) y el RAG (CHAT ${phases.rag}); la verificación de seguridad/red team es el CHAT ${phases.botQa}.
 
@@ -1661,7 +1763,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.pro
 function buildChatBots(base: PackBase, ctxCompact: string): string {
   const { context, phases } = base;
   const count = context.bots?.length ?? 0;
-  return `## 🧩 CHAT ${phases.bots} · ASISTENTES IA CON LANGCHAIN + DEEPSEEK (${count} ${count === 1 ? "bot" : "bots"})
+  return `## 🧩 CHAT ${phases.bots} · ASISTENTES IA CON LANGCHAIN + DEEPSEEK (${count} ${count === 1 ? "bot" : "bots"}) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La infraestructura LLM ya está lista (CHAT ${phases.llmInfra}: gateway, presupuesto, tracing y registry de prompts), el esquema está aplicado (CHAT ${phases.datos}) y la lógica/API base existe (CHAT ${phases.logica}). Aquí implementas los asistentes IA de punta a punta; la evaluación de sus prompts es el CHAT ${phases.promptEval} y su base de conocimiento/RAG los CHAT ${phases.kb}/${phases.rag}.
 
@@ -1685,7 +1787,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.bot
 }
 function buildChatKbCuracion(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.kb} · KNOWLEDGE BASE · CURACIÓN Y CHUNKING (NLP / DATA ENGINEER)
+  return `## 🧩 CHAT ${phases.kb} · KNOWLEDGE BASE · CURACIÓN Y CHUNKING (NLP / DATA ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los asistentes IA ya responden (CHAT ${phases.bots}) con prompts evaluados (CHAT ${phases.promptEval}). Aquí construyes la PRIMERA mitad de la base de conocimiento: curaduría del contenido real del negocio, normalización del español y chunking de calidad (sin partir datos). El vector store, el retrieval y la evaluación RAG se hacen en el CHAT ${phases.rag}; el QA de IA (CHAT ${phases.botQa}) verifica el aterrizaje.
 
@@ -1749,7 +1851,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.kb}
 }
 function buildChatKbRag(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.rag} · KNOWLEDGE BASE · RAG (VECTOR DB / RAG SPECIALIST)
+  return `## 🧩 CHAT ${phases.rag} · KNOWLEDGE BASE · RAG (VECTOR DB / RAG SPECIALIST) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La knowledge base ya está curada, normalizada y chunkeada (CHAT ${phases.kb}). Aquí la conviertes en un sistema RAG de producción: embeddings, vector store (pgvector), **retrieval híbrido** (vector + texto completo con RRF), re-ranking, integración con los bots (CHAT ${phases.bots}) y **evaluación RAG** (hit@k + groundedness con LLM-as-judge). Después, el QA de IA (CHAT ${phases.botQa}) verifica seguridad y robustez.
 
@@ -1852,7 +1954,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.rag
 function buildChatBotQa(base: PackBase, ctxCompact: string): string {
   const { phases, context } = base;
   const count = context.bots?.length ?? 0;
-  return `## 🧩 CHAT ${phases.botQa} · QA DE ASISTENTES IA (AI QA / BOT TESTER) — ${count} ${count === 1 ? "bot" : "bots"}
+  return `## 🧩 CHAT ${phases.botQa} · QA DE ASISTENTES IA (AI QA / BOT TESTER) — ${count} ${count === 1 ? "bot" : "bots"} · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los asistentes IA ya están implementados (CHAT ${phases.bots}) con prompts evaluados (CHAT ${phases.promptEval}) y knowledge base + RAG (CHAT ${phases.kb} / CHAT ${phases.rag}). Aquí los pruebas como lo haría un **QA de IA / Bot Tester** (incluido un mini red team de LLMs) hasta dejarlos seguros, útiles, rápidos y sin fugas. Después sigue el QA web (CHAT ${phases.qa}) y la auditoría de seguridad (CHAT ${phases.security}).
 
@@ -1962,7 +2064,7 @@ function buildChatTests(base: PackBase, ctxCompact: string): string {
   const botsLine = phases.hasBots
     ? ` Los asistentes IA tienen su propio QA de IA (CHAT ${phases.botQa}); aquí pruebas el código general (frontend + backend), no el comportamiento del LLM.`
     : "";
-  return `## 🧩 CHAT ${phases.tests} · CALIDAD DE CÓDIGO · PRUEBAS UNITARIAS E INTEGRACIÓN (BACKEND + FRONTEND)
+  return `## 🧩 CHAT ${phases.tests} · CALIDAD DE CÓDIGO · PRUEBAS UNITARIAS E INTEGRACIÓN (BACKEND + FRONTEND) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya tiene su lógica (CHAT ${phases.logica}) y su analítica (CHAT ${phases.analyticsInstr}/${phases.analyticsReport}). Aquí construyes la **pirámide de pruebas** del proyecto (unitarias + integración + componentes) con mocks consistentes, para que el pipeline CI/CD (CHAT ${phases.cicd}) y el gate de QA web (CHAT ${phases.qa}) corran sobre una suite real y no sobre humo.${botsLine}
 
@@ -2038,7 +2140,7 @@ function buildChatCiCd(base: PackBase, ctxCompact: string): string {
     : `Sin bots no hay eval de prompts; si mañana se agregan, añade aquí el job \`eval\`.`;
   const kbJob = phases.hasBots ? `\n  - \`kb\` (programado): re-ingesta de la knowledge base (\`npm run kb:ingest\`, del CHAT ${phases.kb}) cuando cambia el contenido.` : "";
   const evalLine = phases.hasBots ? `, eval de prompts (CHAT ${phases.promptEval})` : "";
-  return `## 🧩 CHAT ${phases.cicd} · CI/CD · PIPELINE DE INTEGRACIÓN Y DESPLIEGUE CONTINUO (DEVOPS / PLATFORM ENGINEER)
+  return `## 🧩 CHAT ${phases.cicd} · CI/CD · PIPELINE DE INTEGRACIÓN Y DESPLIEGUE CONTINUO (DEVOPS / PLATFORM ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La suite de pruebas ya existe (CHAT ${phases.tests}). Aquí construyes el **pipeline que automatiza la calidad y el despliegue**: cada cambio pasa por lint, typecheck, tests, E2E y auditorías antes de llegar a producción, con previews por rama y releases con rollback. Así el QA web (CHAT ${phases.qa}), la seguridad (CHAT ${phases.security}) y el despliegue final (CHAT ${phases.deploy}) corren sobre un proceso repetible, no manual.
 
@@ -2112,7 +2214,7 @@ function buildChatQa(base: PackBase, ctxCompact: string): string {
   const botQaNote = phases.hasBots
     ? ` Los asistentes IA ya pasaron su QA de IA (CHAT ${phases.botQa}: matriz, prompt injection, aislamiento de sesiones).`
     : "";
-  return `## 🧩 CHAT ${phases.qa} · QA WEB Y PULIDO (GATE DE CALIDAD · QA ENGINEER)
+  return `## 🧩 CHAT ${phases.qa} · QA WEB Y PULIDO (GATE DE CALIDAD · QA ENGINEER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo (${prevChats}).${botQaNote} NO despliegues todavía: antes vienen la auditoría de seguridad (CHAT ${phases.security}), la optimización de rendimiento (CHAT ${phases.perf}), el cumplimiento (CHAT ${phases.compliance}), la fase SRE (CHAT ${phases.sre}) y el despliegue (CHAT ${phases.deploy}).
 
@@ -2192,7 +2294,7 @@ function buildChatSecurity(base: PackBase, ctxCompact: string): string {
   const botsLine = phases.hasBots
     ? ` Los asistentes IA ya pasaron su QA de red team (CHAT ${phases.botQa ?? phases.qa}); aquí auditas la web y sus endpoints (incluido el de los bots).`
     : "";
-  return `## 🧩 CHAT ${phases.security} · SEGURIDAD (SECURITY ENGINEERING / OWASP)
+  return `## 🧩 CHAT ${phases.security} · SEGURIDAD (SECURITY ENGINEERING / OWASP) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo y probado funcionalmente (CHAT ${phases.qa}). Aquí actúas como **Security Engineer**: auditas la app como un pentester, endureces los puntos débiles y dejas un checklist de seguridad documentado ANTES de optimizar rendimiento (CHAT ${phases.perf}), cumplir (CHAT ${phases.compliance}) y desplegar (CHAT ${phases.deploy}).${botsLine}
 
@@ -2276,7 +2378,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.sec
  */
 function buildChatRendimiento(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.perf} · RENDIMIENTO (PERFORMANCE ENGINEERING)
+  return `## 🧩 CHAT ${phases.perf} · RENDIMIENTO (PERFORMANCE ENGINEERING) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya pasó QA (CHAT ${phases.qa}): está completo, pulido y cumple los umbrales básicos. Aquí actúas como **ingeniero de performance** y llevas los Core Web Vitals y el peso de la página a nivel de producción en celulares de gama media con red 4G. Después vienen el cumplimiento (CHAT ${phases.compliance}), la fase SRE (CHAT ${phases.sre}) y el despliegue (CHAT ${phases.deploy}).
 
@@ -2357,7 +2459,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.per
 
 function buildChatCompliance(base: PackBase, ctxCompact: string): string {
   const { phases } = base;
-  return `## 🧩 CHAT ${phases.compliance} · ACCESIBILIDAD, PRIVACIDAD E IA RESPONSABLE
+  return `## 🧩 CHAT ${phases.compliance} · ACCESIBILIDAD, PRIVACIDAD E IA RESPONSABLE · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya pasó QA técnico (CHAT ${phases.qa}), la auditoría de seguridad (CHAT ${phases.security}) y la optimización de rendimiento (CHAT ${phases.perf}). Aquí lo dejas en cumplimiento (accesibilidad profunda, privacidad y ética de IA) ANTES de la fase SRE (CHAT ${phases.sre}) y el despliegue (CHAT ${phases.deploy}).
 
@@ -2411,7 +2513,7 @@ function buildChatSre(base: PackBase, ctxCompact: string): string {
     ? ` los asistentes IA del CHAT ${phases.bots} tienen su límite de mensajes por sesión;`
     : "";
 
-  return `## 🧩 CHAT ${phases.sre} · CONFIABILIDAD, OBSERVABILIDAD Y OPERACIONES (SRE)
+  return `## 🧩 CHAT ${phases.sre} · CONFIABILIDAD, OBSERVABILIDAD Y OPERACIONES (SRE) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo, pulido, probado (CHAT ${phases.qa}), auditado en seguridad (CHAT ${phases.security}), optimizado en rendimiento (CHAT ${phases.perf}) y en cumplimiento (CHAT ${phases.compliance}). Aquí lo dejas operado como un producto de producción: monitoreado, con alertas, respaldos y runbooks. El despliegue final es el CHAT ${phases.deploy}.
 
@@ -2502,7 +2604,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.sre
 
 function buildChatDeploy(base: PackBase, ctxCompact: string): string {
   const { analysis, entregables, phases } = base;
-  return `## 🧩 CHAT ${phases.deploy} · DESPLIEGUE EN VERCEL Y ENTREGA
+  return `## 🧩 CHAT ${phases.deploy} · DESPLIEGUE EN VERCEL Y ENTREGA · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está probado, pulido, auditado en seguridad (CHAT ${phases.security}), optimizado en rendimiento (CHAT ${phases.perf}), en cumplimiento (CHAT ${phases.compliance}) y operado (CHAT ${phases.sre}).
 
@@ -2563,7 +2665,7 @@ Cuando termines, responde ÚNICAMENTE con el marcador \`FIN_DE_FASE_${phases.dep
  */
 function buildChatKickoff(base: PackBase, ctxCompact: string): string {
   const { context, analysis, phases } = base;
-  return `## 🧩 CHAT ${phases.kickoff} · BRAND Y CONTENIDO REAL (KICKOFF CON EL CLIENTE)
+  return `## 🧩 CHAT ${phases.kickoff} · BRAND Y CONTENIDO REAL (KICKOFF CON EL CLIENTE) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación (CHAT ${phases.uxResearch}) y los wireframes (CHAT ${phases.iaWireframes}) ya definieron QUÉ construir y PARA QUIÉN. Antes de abrir el editor, esta fase consigue del cliente lo que hace que la web no se vea "genérica": su marca (logo, colores, tipografías) y su contenido real (fotos, textos, precios, testimonios). Con esto, el CHAT ${phases.fundacion} deriva los design tokens de la marca real y el CHAT ${phases.contenido} escribe con datos ciertos — ese es el "acabado premium" de verdad.
 
@@ -2656,7 +2758,7 @@ function buildChatPostLaunch(base: PackBase, ctxCompact: string): string {
   const objectiveLine = analysis.valor_negocio
     ? ` El objetivo comercial #1 que se definió en el CHAT ${phases.uxResearch} se revisa aquí contra datos reales.`
     : "";
-  return `## 🧩 CHAT ${phases.postLaunch} · PRESENTACIÓN, APROBACIÓN Y CRECIMIENTO (POST-LANZAMIENTO)
+  return `## 🧩 CHAT ${phases.postLaunch} · PRESENTACIÓN, APROBACIÓN Y CRECIMIENTO (POST-LANZAMIENTO) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La web ya está desplegada (CHAT ${phases.deploy}). Esta última fase convierte el lanzamiento en resultados: presenta la web al cliente y obtén su aprobación (UAT), lanzas formalmente y arrancas el bucle de crecimiento de 30-60 días — analítica, SEO local, reseñas y WhatsApp — para que la inversión del cliente produzca clientes, no solo "una página bonita".${objectiveLine}
 

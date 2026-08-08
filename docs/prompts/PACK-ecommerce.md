@@ -1,6 +1,6 @@
 # 📦 PACK DE PROMPTS · Tienda online con carrito y pagos — para Roo Code + DeepSeek (mobile-first, por fases)
 
-> Generado por tu consultor senior (07 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
+> Generado por tu consultor senior (08 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
 > Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
 > 🎭 **Cada chat asume un ROL** (UX Researcher, Dev, QA, SRE, etc.): pega el bloque tal cual y el agente actúa como ese rol durante toda la fase.
 
@@ -10,33 +10,72 @@
 2. Ejecuta el CHAT 1 y espera el marcador `FIN_DE_FASE_1`. Luego abre un **chat nuevo** y pega el CHAT 2; espera `FIN_DE_FASE_2`; y así hasta el CHAT 19.
 3. Cada chat es **autosuficiente**: trae su propio contexto compacto + las instrucciones de su fase. El agente no necesita "recordar" el chat anterior.
 4. Al terminar el CHAT 19 tendrás la página construida, probada, asegurada y desplegada en Vercel.
+5. **Prioridad por fase**: cada chat está marcado **⭐ OBLIGATORIA** (imprescindible para entregar) o **✨ OPCIONAL** (eleva el resultado, no bloquea). Ver la sección siguiente.
 
+
+### 🧭 Prioridad de fases: ⭐ OBLIGATORIAS vs ✨ OPCIONALES (decisión del CEO)
+
+> Como **CEO / Director General**, esta es la regla para saber qué se entrega y qué se negocia:
+
+- **⭐ OBLIGATORIA** — No se negocia. Sin esta fase la web NO se considera **profesional ni lista para entregar al cliente**. Ejecútalas SIEMPRE y en orden.
+- **✨ OPCIONAL** — Eleva el resultado (medir, automatizar, operar, crecer) o es un **add-on contratado** (asistentes IA). No bloquean la entrega: se ejecutan si hay presupuesto/tiempo o si el cliente las contrató.
+
+#### ⭐ OBLIGATORIAS (14 · imprescindibles para entregar)
+
+| CHAT | Fase | Por qué es obligatoria |
+|---|---|---|
+| 1 | Estrategia UX e investigación | Sin plan no hay web profesional: define qué construir y para quién. |
+| 2 | Arquitectura de información + wireframes | El plano de la web: evita rehacer, páginas huérfanas y flujos rotos. |
+| 3 | Brand y contenido real (kickoff) | Lo que separa una web genérica de una profesional: marca y contenido reales. |
+| 4 | Fundación + design tokens | Los cimientos técnicos y de diseño sobre los que se construye todo. |
+| 5 | Shell + componentes UI | El esqueleto visual y la librería de componentes de toda la web. |
+| 6 | Secciones de contenido | La página visible: sin estas secciones no hay web que entregar. |
+| 7 | Conversation design y microcopy | El acabado premium: toda palabra de la interfaz escrita con intención. |
+| 8 | Modelo de datos + Supabase | Formularios y leads necesitan una base de datos segura (RLS). |
+| 9 | Lógica + API routes | Los formularios y flujos deben funcionar de extremo a extremo. |
+| 14 | QA web (gate de calidad) | El gate final: la web se ve y funciona en todos los dispositivos. |
+| 15 | Seguridad (OWASP) | Entregar con secretos expuestos o datos ajenos accesibles no es profesional. |
+| 16 | Rendimiento | Una web lenta en celular no es profesional ni convierte. |
+| 17 | Accesibilidad, privacidad e IA responsable | Cumplimiento legal (privacidad) y calidad ética/accesible: no negociable. |
+| 19 | Despliegue y entrega | La entrega física al cliente: sin esto no hay nada que mostrar. |
+
+#### ✨ OPCIONALES (6 · elevan el resultado, no bloquean)
+
+| CHAT | Fase | Por qué es opcional |
+|---|---|---|
+| 10 | Analítica · instrumentación | Mide el uso y alimenta decisiones; no bloquea la entrega. |
+| 11 | Analítica · reporting | Convierte datos en decisiones de negocio; valor de crecimiento. |
+| 12 | Calidad de código · pruebas | Rigor de ingeniería: muy recomendada, pero no bloquea la entrega. |
+| 13 | CI/CD | Automatiza calidad y despliegue: ideal para equipos, no bloquea. |
+| 18 | Confiabilidad y operaciones (SRE) | Operación de nivel producción: avanzado, no bloquea la entrega. |
+| 20 | Presentación, aprobación y crecimiento | Ocurre después de la entrega: retención, resultados y upsell. |
+
+> **Regla de entrega:** completa las **14 ⭐ OBLIGATORIAS** y la web queda profesional y lista para entregar al cliente. Las **✨ OPCIONALES** la elevan (analítica, pruebas, CI/CD, SRE, crecimiento) o amplían el alcance contratado (asistentes IA): si el cliente pagó asistentes IA, sus 6 fases pasan a ser obligatorias dentro del alcance contratado.
 
 ### Mapa de fases (roadmap del proyecto)
 
-| CHAT | Fase | Entrega clave |
-|---|---|---|
-| 1 | Estrategia UX e investigación | research brief, personas, journey, KPIs |
-| 2 | Arquitectura de información + wireframes | sitemap, flujos, wireframes 360px |
-| 3 | Brand y contenido real (kickoff) | logo, fotos, textos y testimonios reales |
-| 4 | Fundación + design tokens | base técnica, paleta real, mobile-first |
-| 5 | Shell + componentes UI | header/footer, primitivas, interacción |
-| 6 | Secciones de contenido | la página visible completa |
-| 7 | Conversation design y microcopy | voz, botones, errores, diseño conversacional |
-| 8 | Modelo de datos + Supabase | esquema, RLS, seed |
-| 9 | Lógica + API routes | formularios, integraciones, /api/health |
-| 10 | Analítica · instrumentación | pipeline de eventos sin PII |
-| 11 | Analítica · reporting | funnel, atribución, "so what" |
-
-| 12 | Calidad de código · pruebas | unitarias + integración + componentes |
-| 13 | CI/CD | pipeline, previews, deploy automático |
-| 14 | QA web (gate de calidad) | E2E, cross-browser, pulido |
-| 15 | Seguridad (OWASP) | auditoría y endurecimiento |
-| 16 | Rendimiento | CWV en verde, presupuesto |
-| 17 | Accesibilidad, privacidad e IA responsable | WCAG, LFPDPPP, ética |
-| 18 | Confiabilidad y operaciones (SRE) | health, alertas, backups, runbooks |
-| 19 | Despliegue y entrega | Vercel, dominio, indexación |
-| 20 | Presentación, aprobación y crecimiento | UAT, lanzamiento, SEO local, 30-60 días |
+| CHAT | Fase | Entrega clave | Prioridad |
+|---|---|---|---|
+| 1 | Estrategia UX e investigación | research brief, personas, journey, KPIs | ⭐ OBLIGATORIA |
+| 2 | Arquitectura de información + wireframes | sitemap, flujos, wireframes 360px | ⭐ OBLIGATORIA |
+| 3 | Brand y contenido real (kickoff) | logo, fotos, textos y testimonios reales | ⭐ OBLIGATORIA |
+| 4 | Fundación + design tokens | base técnica, paleta real, mobile-first | ⭐ OBLIGATORIA |
+| 5 | Shell + componentes UI | header/footer, primitivas, interacción | ⭐ OBLIGATORIA |
+| 6 | Secciones de contenido | la página visible completa | ⭐ OBLIGATORIA |
+| 7 | Conversation design y microcopy | voz, botones, errores, diseño conversacional | ⭐ OBLIGATORIA |
+| 8 | Modelo de datos + Supabase | esquema, RLS, seed | ⭐ OBLIGATORIA |
+| 9 | Lógica + API routes | formularios, integraciones, /api/health | ⭐ OBLIGATORIA |
+| 10 | Analítica · instrumentación | pipeline de eventos sin PII | ✨ OPCIONAL |
+| 11 | Analítica · reporting | funnel, atribución, "so what" | ✨ OPCIONAL |
+| 12 | Calidad de código · pruebas | unitarias + integración + componentes | ✨ OPCIONAL |
+| 13 | CI/CD | pipeline, previews, deploy automático | ✨ OPCIONAL |
+| 14 | QA web (gate de calidad) | E2E, cross-browser, pulido | ⭐ OBLIGATORIA |
+| 15 | Seguridad (OWASP) | auditoría y endurecimiento | ⭐ OBLIGATORIA |
+| 16 | Rendimiento | CWV en verde, presupuesto | ⭐ OBLIGATORIA |
+| 17 | Accesibilidad, privacidad e IA responsable | WCAG, LFPDPPP, ética | ⭐ OBLIGATORIA |
+| 18 | Confiabilidad y operaciones (SRE) | health, alertas, backups, runbooks | ✨ OPCIONAL |
+| 19 | Despliegue y entrega | Vercel, dominio, indexación | ⭐ OBLIGATORIA |
+| 20 | Presentación, aprobación y crecimiento | UAT, lanzamiento, SEO local, 30-60 días | ✨ OPCIONAL |
 
 ### Ficha del proyecto
 
@@ -91,7 +130,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Copia cada bloque `CHAT N` por separado y pégalo en su propio chat. Empieza por el CHAT 1 👇
 
 
-## 🧩 CHAT 1 · ESTRATEGIA UX E INVESTIGACIÓN (UX RESEARCHER)
+## 🧩 CHAT 1 · ESTRATEGIA UX E INVESTIGACIÓN (UX RESEARCHER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Es la PRIMERA fase del pack: aquí se decide QUÉ construir y PARA QUIÉN, antes de tocar código. El sistema de diseño (CHAT 4), las secciones (CHAT 6), el microcopy (CHAT 7) y la analítica (CHAT 10) respetan lo que se decide aquí. No escribas código de la web todavía.
 
@@ -175,7 +214,7 @@ Como no hay usuarios reales aún, documenta los **supuestos** de las proto-perso
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_1` + resumen breve (documentos y decisiones clave). No sigas con la siguiente fase (los wireframes son el CHAT 2).
 
 
-## 🧩 CHAT 2 · ARQUITECTURA DE INFORMACIÓN + WIREFRAMES + FLUJOS (UX/UI DESIGNER)
+## 🧩 CHAT 2 · ARQUITECTURA DE INFORMACIÓN + WIREFRAMES + FLUJOS (UX/UI DESIGNER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación está lista (CHAT 1). Aquí decides la estructura y el flujo ANTES de construir: sitemap, tareas clave y wireframes mobile-first de cada plantilla (baja fidelidad). El CHAT 4 (tokens/estilo), el CHAT 5 (componentes) y el CHAT 6 (secciones) implementan estos planos. No escribas la web todavía.
 
@@ -261,7 +300,7 @@ Para cada formulario del proyecto (contacto, cita, checkout, registro):
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_2` + resumen breve (sitemap, flujos y wireframes creados). No sigas con la siguiente fase (la fundación es el CHAT 4).
 
 
-## 🧩 CHAT 3 · BRAND Y CONTENIDO REAL (KICKOFF CON EL CLIENTE)
+## 🧩 CHAT 3 · BRAND Y CONTENIDO REAL (KICKOFF CON EL CLIENTE) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación (CHAT 1) y los wireframes (CHAT 2) ya definieron QUÉ construir y PARA QUIÉN. Antes de abrir el editor, esta fase consigue del cliente lo que hace que la web no se vea "genérica": su marca (logo, colores, tipografías) y su contenido real (fotos, textos, precios, testimonios). Con esto, el CHAT 4 deriva los design tokens de la marca real y el CHAT 6 escribe con datos ciertos — ese es el "acabado premium" de verdad.
 
@@ -346,7 +385,7 @@ Deja en `docs/content/checklist.md` un checklist accionable:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_3` + resumen breve (qué entregó el cliente y qué quedó como placeholder). No sigas con la siguiente fase (la fundación es el CHAT 4).
 
 
-## 🧩 CHAT 4 · FUNDACIÓN DEL PROYECTO + DESIGN TOKENS + BASE MOBILE-FIRST (UX/UI FOUNDATION)
+## 🧩 CHAT 4 · FUNDACIÓN DEL PROYECTO + DESIGN TOKENS + BASE MOBILE-FIRST (UX/UI FOUNDATION) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación (CHAT 1) y los wireframes (CHAT 2) ya definieron qué construir y cómo; aquí dejas la base técnica y el sistema de diseño con el estilo del cliente. No pegues el CHAT 5 aquí.
 
@@ -432,7 +471,7 @@ Esta web se diseña y construye PRIMERO para celular (360px) y DESPUÉS se escal
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_4` seguido de un resumen de 3-5 líneas (archivos creados y comandos). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 5 · SHELL (HEADER/FOOTER) + COMPONENTES UI + PATRONES DE INTERACCIÓN — MOBILE-FIRST
+## 🧩 CHAT 5 · SHELL (HEADER/FOOTER) + COMPONENTES UI + PATRONES DE INTERACCIÓN — MOBILE-FIRST · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto YA existe (lo dejó listo el CHAT 4) y los wireframes del CHAT 2 definen qué pantallas construir. Aquí construyes el esqueleto visual (header/footer), la librería de componentes y sus patrones de interacción, todo **mobile-first**.
 
@@ -482,7 +521,7 @@ Cada componente nace con sus **estados y su respuesta al usuario** definidos (no
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_5` + resumen breve (componentes creados y patrones de interacción). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 6 · SECCIONES DE CONTENIDO (LA PÁGINA VISIBLE) — MOBILE-FIRST
+## 🧩 CHAT 6 · SECCIONES DE CONTENIDO (LA PÁGINA VISIBLE) — MOBILE-FIRST · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El shell y los componentes ya existen (CHAT 5) y los wireframes del CHAT 2 definen cada pantalla. Aquí construyes TODAS las secciones visibles siguiendo la estrategia de mensajes del CHAT 1; el microcopy (CHAT 7) afinará las palabras.
 
@@ -592,7 +631,7 @@ La página DEBE verse completa desde el primer deploy. Cuando el cliente no teng
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_6` + resumen breve. No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 7 · CONVERSATION DESIGN Y MICROCOPY (CONVERSATION DESIGNER + UX WRITER)
+## 🧩 CHAT 7 · CONVERSATION DESIGN Y MICROCOPY (CONVERSATION DESIGNER + UX WRITER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT 6). Aquí afinas TODAS las palabras de la interfaz — botones, formularios, errores, estados vacíos, confirmaciones — y, si hay asistentes IA, dejas su diseño conversacional especificado. Si mañana se agregan asistentes IA, este diseño conversacional queda como base para ellos. El CHAT 5 implementó los componentes; aquí les das voz.
 
@@ -660,7 +699,7 @@ Deja en `docs/ux/conversation-design.md` la especificación conversacional que s
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_7` + resumen breve (guías creadas y textos ajustados). No sigas con la siguiente fase (el modelo de datos es el CHAT 8).
 
 
-## 🧩 CHAT 8 · MODELO DE DATOS + SETUP DE SUPABASE
+## 🧩 CHAT 8 · MODELO DE DATOS + SETUP DE SUPABASE · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT 6).
 
@@ -821,7 +860,7 @@ create table if not exists public.contact_messages (
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_8` + resumen breve (tablas creadas y seed). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 9 · LÓGICA, API ROUTES E INTEGRACIONES
+## 🧩 CHAT 9 · LÓGICA, API ROUTES E INTEGRACIONES · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT 6) y el modelo de datos está aplicado (CHAT 8).
 
@@ -920,7 +959,7 @@ Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** co
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_9` + resumen breve (rutas API). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 10 · DATOS Y ANALÍTICA · INSTRUMENTACIÓN (DATA ENGINEER)
+## 🧩 CHAT 10 · DATOS Y ANALÍTICA · INSTRUMENTACIÓN (DATA ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El modelo de datos ya está aplicado (CHAT 8) y la lógica/API existe (CHAT 9). Aquí instrumentas el producto para EMITIR datos limpios: esquema de eventos, pipeline de captura y calidad de datos, sin PII y con privacidad por diseño. Leer esos datos (funnel, atribución y reporte) es el CHAT 11.
 
@@ -1003,7 +1042,7 @@ alter table public.analytics_events enable row level security;
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_10` + resumen breve (eventos instrumentados y pipeline). No sigas con la siguiente fase (el reporting es el CHAT 11).
 
 
-## 🧩 CHAT 11 · DATOS Y ANALÍTICA · REPORTING, FUNNEL Y ATRIBUCIÓN (DATA ANALYST)
+## 🧩 CHAT 11 · DATOS Y ANALÍTICA · REPORTING, FUNNEL Y ATRIBUCIÓN (DATA ANALYST) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los eventos ya se capturan con calidad (CHAT 10); aquí los CONVIERTES en decisiones: funnel de conversión, atribución de fuentes y un tablero/reporte con su "so what". Después sigue el QA web (CHAT 14).
 
@@ -1059,7 +1098,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_11` + resumen breve (funnel, atribución y reporte). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 12 · CALIDAD DE CÓDIGO · PRUEBAS UNITARIAS E INTEGRACIÓN (BACKEND + FRONTEND)
+## 🧩 CHAT 12 · CALIDAD DE CÓDIGO · PRUEBAS UNITARIAS E INTEGRACIÓN (BACKEND + FRONTEND) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya tiene su lógica (CHAT 9) y su analítica (CHAT 10/11). Aquí construyes la **pirámide de pruebas** del proyecto (unitarias + integración + componentes) con mocks consistentes, para que el pipeline CI/CD (CHAT 13) y el gate de QA web (CHAT 14) corran sobre una suite real y no sobre humo.
 
@@ -1130,7 +1169,7 @@ Cubre la lógica que NO debe fallar nunca:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_12` + resumen breve (número de tests y cobertura). No sigas con la siguiente fase (el pipeline CI/CD es el CHAT 13).
 
 
-## 🧩 CHAT 13 · CI/CD · PIPELINE DE INTEGRACIÓN Y DESPLIEGUE CONTINUO (DEVOPS / PLATFORM ENGINEER)
+## 🧩 CHAT 13 · CI/CD · PIPELINE DE INTEGRACIÓN Y DESPLIEGUE CONTINUO (DEVOPS / PLATFORM ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La suite de pruebas ya existe (CHAT 12). Aquí construyes el **pipeline que automatiza la calidad y el despliegue**: cada cambio pasa por lint, typecheck, tests, E2E y auditorías antes de llegar a producción, con previews por rama y releases con rollback. Así el QA web (CHAT 14), la seguridad (CHAT 15) y el despliegue final (CHAT 19) corren sobre un proceso repetible, no manual.
 
@@ -1206,7 +1245,7 @@ Crea `.github/workflows/ci.yml` que corra en cada PR y push (y documenta que el 
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_13` + resumen breve (jobs del pipeline y cómo se prueba un PR). No sigas con la siguiente fase (el QA web es el CHAT 14).
 
 
-## 🧩 CHAT 14 · QA WEB Y PULIDO (GATE DE CALIDAD · QA ENGINEER)
+## 🧩 CHAT 14 · QA WEB Y PULIDO (GATE DE CALIDAD · QA ENGINEER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo (CHAT 8-11 (datos, lógica y analítica), las pruebas automatizadas (CHAT 12) y el pipeline CI/CD (CHAT 13)). NO despliegues todavía: antes vienen la auditoría de seguridad (CHAT 15), la optimización de rendimiento (CHAT 16), el cumplimiento (CHAT 17), la fase SRE (CHAT 18) y el despliegue (CHAT 19).
 
@@ -1302,7 +1341,7 @@ Revisa la página como si la viera un cliente exigente y corrige cualquier "huec
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_14` + resumen breve (métricas y correcciones). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 15 · SEGURIDAD (SECURITY ENGINEERING / OWASP)
+## 🧩 CHAT 15 · SEGURIDAD (SECURITY ENGINEERING / OWASP) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo y probado funcionalmente (CHAT 14). Aquí actúas como **Security Engineer**: auditas la app como un pentester, endureces los puntos débiles y dejas un checklist de seguridad documentado ANTES de optimizar rendimiento (CHAT 16), cumplir (CHAT 17) y desplegar (CHAT 19).
 
@@ -1387,7 +1426,7 @@ Ajusta la CSP a las necesidades reales (analytics, mapas, imágenes remotas) y v
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_15` + resumen breve (hallazgos corregidos y controles activos). No sigas con la siguiente fase (el rendimiento es el CHAT 16).
 
 
-## 🧩 CHAT 16 · RENDIMIENTO (PERFORMANCE ENGINEERING)
+## 🧩 CHAT 16 · RENDIMIENTO (PERFORMANCE ENGINEERING) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya pasó QA (CHAT 14): está completo, pulido y cumple los umbrales básicos. Aquí actúas como **ingeniero de performance** y llevas los Core Web Vitals y el peso de la página a nivel de producción en celulares de gama media con red 4G. Después vienen el cumplimiento (CHAT 17), la fase SRE (CHAT 18) y el despliegue (CHAT 19).
 
@@ -1476,7 +1515,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_16` + resumen breve (métricas antes/después y qué optimizaste). No sigas con la siguiente fase (el cumplimiento es el CHAT 17).
 
 
-## 🧩 CHAT 17 · ACCESIBILIDAD, PRIVACIDAD E IA RESPONSABLE
+## 🧩 CHAT 17 · ACCESIBILIDAD, PRIVACIDAD E IA RESPONSABLE · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya pasó QA técnico (CHAT 14), la auditoría de seguridad (CHAT 15) y la optimización de rendimiento (CHAT 16). Aquí lo dejas en cumplimiento (accesibilidad profunda, privacidad y ética de IA) ANTES de la fase SRE (CHAT 18) y el despliegue (CHAT 19).
 
@@ -1527,7 +1566,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_17` + resumen breve (correcciones de accesibilidad/privacidad/ética). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 18 · CONFIABILIDAD, OBSERVABILIDAD Y OPERACIONES (SRE)
+## 🧩 CHAT 18 · CONFIABILIDAD, OBSERVABILIDAD Y OPERACIONES (SRE) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo, pulido, probado (CHAT 14), auditado en seguridad (CHAT 15), optimizado en rendimiento (CHAT 16) y en cumplimiento (CHAT 17). Aquí lo dejas operado como un producto de producción: monitoreado, con alertas, respaldos y runbooks. El despliegue final es el CHAT 19.
 
@@ -1626,7 +1665,7 @@ Crea en el README una sección **"Operaciones (SRE)"**:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_18` + resumen breve (endpoints de salud, alertas activas y runbooks creados). No sigas con la siguiente fase (la entrega es el CHAT 19).
 
 
-## 🧩 CHAT 19 · DESPLIEGUE EN VERCEL Y ENTREGA
+## 🧩 CHAT 19 · DESPLIEGUE EN VERCEL Y ENTREGA · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está probado, pulido, auditado en seguridad (CHAT 15), optimizado en rendimiento (CHAT 16), en cumplimiento (CHAT 17) y operado (CHAT 18).
 
@@ -1692,7 +1731,7 @@ DEEPSEEK_API_KEY=          # si hay asistentes IA
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_19` + un resumen final del proyecto (URL de producción, cómo se probó en cada tamaño y pendientes opcionales).
 
 
-## 🧩 CHAT 20 · PRESENTACIÓN, APROBACIÓN Y CRECIMIENTO (POST-LANZAMIENTO)
+## 🧩 CHAT 20 · PRESENTACIÓN, APROBACIÓN Y CRECIMIENTO (POST-LANZAMIENTO) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La web ya está desplegada (CHAT 19). Esta última fase convierte el lanzamiento en resultados: presenta la web al cliente y obtén su aprobación (UAT), lanzas formalmente y arrancas el bucle de crecimiento de 30-60 días — analítica, SEO local, reseñas y WhatsApp — para que la inversión del cliente produzca clientes, no solo "una página bonita".
 
