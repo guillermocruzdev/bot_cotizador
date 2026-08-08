@@ -59,11 +59,12 @@ const TURN_GOALS: Record<string, string> = {
     "Pregunta qué SERVICIOS ofrece el negocio y cómo quiere mostrarlos (lista con precios, descripciones, cuántos son). Si no ofrece servicios, pregunta qué es lo que más quiere destacar para que lo contacten.",
   scope_reference:
     "Pregunta si le gusta alguna página de referencia (de cualquier giro) para afinar el estilo.",
-  scope_deadline:
-    "Pregunta para cuándo necesita la web, sin presionar, para organizar la entrega.",
   budget:
-    "Pregunta qué inversión tiene en mente, con tacto y sin presionar, para ajustar el alcance a su presupuesto.",
-  contact_name: "Pide el nombre del cliente o de su negocio para dirigirle la propuesta.",
+    "Pregunta JUNTAS, en un solo turno y sin presionar, para cuándo necesita la web y qué inversión tiene en mente (fecha + presupuesto), para ajustar el alcance a su bolsillo y organizar la entrega.",
+  clarify_budget:
+    "Aclara con tacto SOLO lo que falte: si el cliente no dijo la fecha, pregúntala ('para marzo', 'lo antes posible'); si no dijo el monto, pregunta la inversión (puede ser un rango o 'lo básico'). No repitas lo que ya dio.",
+  contact_name:
+    "Pide en UN SOLO mensaje los tres datos de contacto: nombre (o del negocio), correo y teléfono/WhatsApp, para enviarle la propuesta.",
   contact_email: "Pide el correo electrónico para enviarle la propuesta cuando esté lista.",
   contact_phone: "Pide un teléfono o WhatsApp donde pueda localizarlo para la propuesta.",
   extra_comments:

@@ -182,7 +182,7 @@ const BUDGET_SIGNAL =
  * devuelven null). El nombre solo se toma con intro clara de presentación
  * ("soy/me llamo/mi nombre es...") para no guardar "Tengo una clínica..."
  * como nombre. El plazo NO usa extractSubject como respaldo: eso solo aplica
- * en el nodo scope_deadline donde el cliente responde la fecha a propósito.
+ * en el nodo budget donde el cliente responde la fecha a propósito.
  * El TELÉFONO NO se captura aquí: normalizePhone sobre una respuesta larga
  * mezclaría dígitos del presupuesto ("20 mil ... 81 2345 6789" → "+52 20 ..."),
  * así que se pide en su propio nodo contact_phone.
@@ -661,8 +661,14 @@ export const FLOW: Record<string, ConversationNode> = {
       `${randomTransition()} Ahora, algo que define mucho el proyecto: ¿tus clientes van a "registrarse" en tu página, o solo van a entrar, ver tu información y contactarte? Muchos negocios no necesitan cuentas; con que te contacten, basta.`,
     field: "autenticacion",
     next: "technical_db",
-    // Si el cliente ya dijo que no quiere cuentas/registro, no volver a preguntar.
-    condition: (ctx) => ctx.autenticacion !== false,
+    // Solo se pregunta en proyectos donde las cuentas aportan (webapp, ecommerce,
+    // citas). Para landing/portafolio/blog se asume que NO hay registro (una
+    // página de presentación no necesita cuentas): se salta y se ahorra un turno.
+    // Si el cliente ya dijo si quiere (o no) cuentas en su descripción, tampoco
+    // se vuelve a preguntar.
+    condition: (ctx) =>
+      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      ctx.autenticacion === null,
     clarifyId: "clarify_auth",
   }),
 
@@ -682,8 +688,13 @@ export const FLOW: Record<string, ConversationNode> = {
       `Y dime: ¿hay algo que te gustaría guardar de tus clientes? Como sus datos, sus pedidos o sus citas. Si sí, lo hacemos bien guardado y en orden; si solo es mostrar información, también está perfecto.`,
     field: "baseDeDatos",
     next: "technical_payments",
-    // Si el cliente ya dijo que no guarda datos, no volver a preguntar.
-    condition: (ctx) => ctx.baseDeDatos !== false,
+    // Solo se pregunta en proyectos donde guardar datos aporta (webapp, ecommerce,
+    // citas). Para landing/portafolio/blog se asume que la página solo muestra
+    // información: se salta y se ahorra un turno. Si el cliente ya dijo si guarda
+    // (o no) datos en su descripción, tampoco se vuelve a preguntar.
+    condition: (ctx) =>
+      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      ctx.baseDeDatos === null,
     clarifyId: "clarify_db",
   }),
 
@@ -946,11 +957,11 @@ export const FLOW: Record<string, ConversationNode> = {
       !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing"),
     nextNode: (response, ctx) => {
       // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
-      if (!response || !response.trim()) return "scope_deadline";
-      if (isNoSé(response, ctx)) return "scope_deadline";
+      if (!response || !response.trim()) return "budget";
+      if (isNoSé(response, ctx)) return "budget";
       const t = response.toLowerCase();
-      if (/(ninguna|no|nada|no tengo)/.test(t)) return "scope_deadline";
-      return "scope_deadline";
+      if (/(ninguna|no|nada|no tengo)/.test(t)) return "budget";
+      return "budget";
     },
     onReceive: (response, ctx) => {
       const t = response.toLowerCase();
@@ -963,30 +974,55 @@ export const FLOW: Record<string, ConversationNode> = {
     },
   },
 
-  scope_deadline: {
-    id: "scope_deadline",
-    type: "technical",
-    generateMessage: () =>
-      `¿Para cuándo lo necesitas de verdad? No es para presionarte: es para saber si hay que apurar o podemos ir con calma y hacerlo bien. ${pickEmoji("interes")}`,
+  // ══════════ FASE 5: Plazo + presupuesto (una sola pregunta) ══════════
+  // Antes eran scope_deadline y budget (dos turnos). Ahora se fusionan en un
+  // solo nodo: el bot pide fecha Y monto en la misma pregunta. Si el cliente
+  // solo responde una de las dos, clarify_budget afina la que falta (máx 2
+  // intentos) en vez de perder el dato o re-preguntar todo.
+  budget: {
+    id: "budget",
+    type: "budget",
+    generateMessage: (ctx) => {
+      const faltaFecha = ctx.fechaEntrega == null;
+      const faltaMonto = ctx.presupuesto == null;
+      const preguntas: string[] = [];
+      if (faltaFecha) {
+        preguntas.push(
+          `¿para cuándo lo necesitas de verdad? No es para presionarte: es para saber si hay que apurar o podemos ir con calma y hacerlo bien.`
+        );
+      }
+      if (faltaMonto) {
+        preguntas.push(
+          `¿y qué inversión tienes en mente? No te lo pregunto para cobrarte de más: al contrario, es para armarte algo que quepa en tu bolsillo y que de verdad te funcione. Con los años aprendí que lo peor es venderle a alguien algo que no pueda sostener.`
+        );
+      }
+      return `${randomTransition()} ${pickEmoji("precio")} Te hago las dos juntas para no robarte tiempo: ${preguntas.join(" ")}`;
+    },
     expectedResponseType: "text",
-    // Si el cliente ya dio la fecha en otra respuesta, no volver a preguntar.
-    condition: (ctx) => ctx.fechaEntrega == null,
+    // Si el cliente ya dio su monto y/o plazo en otra respuesta, no re-preguntar.
+    condition: (ctx) => ctx.fechaEntrega == null || ctx.presupuesto == null,
     nextNode: (response, ctx) => {
-      // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
-      if (!response || !response.trim()) return "budget";
-      if (isNoSé(response, ctx)) return "clarify_deadline";
-      return "budget";
+      // Respuesta vacía = salto por condición (skip): ir directo al siguiente.
+      if (!response || !response.trim()) return "contact_name";
+      // Si ya quedaron los DOS datos, avanzamos aunque la frase diga
+      // "no sé cuánto cobran" (la duda es retórica si ya dio el monto y la fecha).
+      if (ctx.fechaEntrega !== null && ctx.presupuesto !== null) return "contact_name";
+      // Si falta alguno de los dos (dio solo fecha o solo monto), afinar con la
+      // clarificación en vez de perder el dato.
+      if (ctx.fechaEntrega == null || ctx.presupuesto == null) return "clarify_budget";
+      if (isNoSé(response, ctx)) return "clarify_budget";
+      return "contact_name";
     },
     onReceive: (response, ctx) => {
-      // "no sé" no debe guardarse como fecha de entrega (queda null y el
-      // nodo de clarificación avanza; si no, la propuesta decía "para: no sé").
-      ctx.fechaEntrega =
-        extractDeadline(response) ??
-        (isNoSé(response, ctx) ? null : extractSubject(response));
-      // Si el cliente ya soltó su monto aquí (ej. "para el próximo mes... y de
-      // presupuesto unos 10 mil pesos" o "para marzo, tengo 10000"), capturarlo
-      // para no re-preguntar. Solo si hay señal de presupuesto (verbos de dinero
-      // incluidos): evita capturar "en 3 meses" como monto.
+      // "no sé" no debe guardarse como fecha de entrega (queda null y la
+      // clarificación avanza; si no, la propuesta decía "para: no sé").
+      if (ctx.fechaEntrega == null) {
+        ctx.fechaEntrega =
+          extractDeadline(response) ??
+          (isNoSé(response, ctx) ? null : extractSubject(response));
+      }
+      // Captura el monto solo si hay señal de dinero (verbos de dinero incluidos):
+      // evita capturar "en 3 meses" como monto.
       if (ctx.presupuesto == null && BUDGET_SIGNAL.test(response)) {
         const amount = extractBudgetAmount(response);
         if (amount) ctx.presupuesto = amount;
@@ -995,67 +1031,79 @@ export const FLOW: Record<string, ConversationNode> = {
     },
   },
 
-  clarify_deadline: makeClarifyNode({
-    id: "clarify_deadline",
-    originalId: "scope_deadline",
-    hints: [
-      "Es solo para organizar la agenda: ¿lo quieres para ya, para el próximo mes, o no hay prisa? Dime algo como 'para marzo' o 'lo antes posible'.",
-    ],
-    forwardNext: "budget",
-  }),
-
-  // ══════════ FASE 5: Presupuesto ══════════
-  budget: {
-    id: "budget",
-    type: "budget",
-    generateMessage: () =>
-      `Ahora sí, la pregunta que a todos les da un poco de pena, y con razón. ${pickEmoji("precio")} ¿Qué inversión tienes en mente para esto? No te lo pregunto para cobrarte de más: al contrario, es para armarte algo que quepa en tu bolsillo y que de verdad te funcione. Con los años aprendí que lo peor es venderle a alguien algo que no pueda sostener.`,
+  clarify_budget: {
+    id: "clarify_budget",
+    type: "clarification",
+    generateMessage: (ctx) => {
+      const faltaFecha = ctx.fechaEntrega == null;
+      const faltaMonto = ctx.presupuesto == null;
+      const first = randomEmpathy();
+      if (faltaFecha && faltaMonto) {
+        return `${first} No necesitas números exactos. Solo dime algo como "para el próximo mes, unos 15 mil" o "lo antes posible, un proyecto completo". Con eso ajusto el alcance y no te vendo de más.`;
+      }
+      if (faltaMonto) {
+        return `${first} ¿Y qué inversión tienes en mente? Puede ser un rango, tipo "$15,000 - $25,000", o "lo básico para empezar". Con eso ajusto el alcance y no te vendo de más.`;
+      }
+      return `${first} ¿Y para cuándo lo necesitas? No es para presionarte: dime algo como "para marzo" o "lo antes posible" y organizo la entrega.`;
+    },
     expectedResponseType: "text",
-    // Si el cliente ya dio su monto (p. ej. al responder el plazo), no re-preguntar.
-    condition: (ctx) => ctx.presupuesto == null,
     nextNode: (response, ctx) => {
-      // Respuesta vacía = salto por condición (skip): ir directo al siguiente,
-      // igual que los nodos booleanos, para no caer en la clarificación.
       if (!response || !response.trim()) return "contact_name";
-      // Si ya dio un monto/rango, avanzamos aunque la frase diga
-      // "no sé cuánto cobran" (la duda es retórica si ya dio un número).
-      if (extractBudgetAmount(response)) return "contact_name";
-      if (isNoSé(response, ctx)) return "clarify_budget";
+      // Si ya quedaron los dos, avanzamos. Si no, reintenta la clarificación
+      // (máx 2 veces) y luego avanza sin forzar.
+      if (ctx.fechaEntrega == null || ctx.presupuesto == null) {
+        if (ctx.noSeContador >= 2) {
+          ctx.noSeContador = 0;
+          return "contact_name";
+        }
+        ctx.noSeContador += 1;
+        return "clarify_budget";
+      }
+      ctx.noSeContador = 0;
       return "contact_name";
     },
     onReceive: (response, ctx) => {
-      const amount = extractBudgetAmount(response);
-      // No guardar frases de duda como presupuesto
-      ctx.presupuesto = amount ?? (isNoSé(response, ctx) ? null : extractSubject(response));
+      if (ctx.fechaEntrega == null) {
+        ctx.fechaEntrega =
+          extractDeadline(response) ??
+          (isNoSé(response, ctx) ? null : extractSubject(response));
+      }
+      if (ctx.presupuesto == null && BUDGET_SIGNAL.test(response)) {
+        const amount = extractBudgetAmount(response);
+        if (amount) ctx.presupuesto = amount;
+      }
     },
   },
-
-  clarify_budget: makeClarifyNode({
-    id: "clarify_budget",
-    originalId: "budget",
-    hints: [
-      "No necesitas un número exacto. Piensa en algo como: 'lo básico para empezar', 'un proyecto completo', o un rango tipo '$15,000 - $25,000'. Con eso ajusto el alcance y no te vendo de más.",
-    ],
-    forwardNext: "contact_name",
-  }),
 
   // ══════════ FASE 6: Contacto y cierre ══════════
   contact_name: {
     id: "contact_name",
     type: "closing",
     generateMessage: () =>
-      `Perfecto, con esto ya tengo muy claro tu proyecto. ${pickEmoji("contacto")} ¿Me dices cómo te llamas, o el nombre de tu negocio, para dirigirte la propuesta?`,
+      `Perfecto, con esto ya tengo muy claro tu proyecto. ${pickEmoji("contacto")} Para enviarte la propuesta, dame en un solo mensaje: cómo te llamas (o el nombre de tu negocio), un correo y un WhatsApp donde te localice. Así te hago una sola pregunta y no tres.`,
     expectedResponseType: "text",
-    // Si el cliente ya dio su nombre en la descripción, no volver a preguntar.
+    // Si el cliente ya dio su nombre en la descripción, no volver a preguntar
+    // (el salto en cascada deja que contact_email/contact_phone se ocupen de
+    // lo que falte).
     condition: (ctx) => ctx.clientName == null,
     nextNode: (response, ctx) => {
       // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
       if (!response || !response.trim()) return "contact_email";
-      if (isNoSé(response, ctx)) return "contact_email";
-      return "contact_email";
+      // Rechazo total del contacto → avanzar sin forzar (no preguntar nada más).
+      if (isDecliningContact(response) && !/@/.test(response) && !/\d/.test(response)) {
+        return "extra_comments";
+      }
+      // Si falta correo, se pide como seguimiento corto; luego el teléfono.
+      if (ctx.clientEmail === null) return "contact_email";
+      if (ctx.clientPhone === null) return "contact_phone";
+      return "extra_comments";
     },
     onReceive: (response, ctx) => {
       ctx.clientName = extractName(response);
+      const email = extractEmail(response);
+      if (email) ctx.clientEmail = email;
+      const phone = normalizePhone(response);
+      if (phone) ctx.clientPhone = phone;
       captureEarlyData(response, ctx);
     },
   },

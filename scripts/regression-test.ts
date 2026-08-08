@@ -410,8 +410,6 @@ checkLanding("Clínica dental", [
   "Tengo una clínica dental y quiero una página de presentación con información de mis servicios y datos de contacto",
   "sí",
   "Inicio, Servicios, Ubicación y Contacto",
-  "no", // cuentas
-  "no", // base de datos
   "no", // panel
   "sí", // mapa
   "sí", // WhatsApp
@@ -419,14 +417,11 @@ checkLanding("Clínica dental", [
   "moderno", // diseño
   "sí", // SEO
   "el de preguntas frecuentes, por favor", // bots (LangChain): FAQ
-  // PWA y página de referencia: se SALTAN para landing (Tarea C)
+  // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "sí", // contenido listo
   "limpieza dental, ortodoncia y blanqueamiento", // servicios
-  "para el próximo mes", // fecha
-  "unos 20 mil", // presupuesto
-  "Soy Laura", // nombre
-  "laura@clinica.com", // email
-  "81 2345 6789, ese es mi WhatsApp", // teléfono
+  "para el próximo mes, y de presupuesto unos 20 mil", // fecha + presupuesto (budget fusionado)
+  "Soy Laura, laura@clinica.com, 81 2345 6789", // nombre + correo + WhatsApp (contacto fusionado)
   "nada, gracias", // comentarios
 ]);
 
@@ -434,72 +429,57 @@ checkLanding("Yoga", [
   "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
   "sí",
   "Inicio, Clases, Horarios y Contacto",
-  "no",
-  "no",
-  "no",
-  "sí",
-  "sí",
-  "no",
-  "sobrio",
-  "sí",
+  "no", // panel
+  "sí", // mapa
+  "sí", // WhatsApp
+  "no", // citas
+  "sobrio", // diseño
+  "sí", // SEO
   "ninguno", // bots (LangChain): sin asistentes IA
-  // PWA y referencia: se SALTAN para landing (Tarea C)
-  "no",
-  "clases grupales, clases privadas y retiros",
-  "para ya",
-  "15k",
-  "Me llamo Andrea",
-  "andrea@yoga.com",
-  "81 9999 8888",
-  "todo bien",
+  // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
+  "no", // contenido
+  "clases grupales, clases privadas y retiros", // servicios
+  "para ya, y de presupuesto unos 15 mil", // fecha + presupuesto (budget fusionado)
+  "Me llamo Andrea, andrea@yoga.com, 81 9999 8888", // contacto fusionado
+  "todo bien", // comentarios
 ]);
 
 checkLanding("Barbería (Diego)", [
   "Tengo una barbería y quiero que la gente me encuentre en Google y me escriba por WhatsApp",
   "sí",
   "Inicio, Servicios, Galería, Ubicación y Contacto",
-  "no",
-  "no",
-  "no",
-  "sí",
-  "sí",
-  "no",
-  "moderno",
-  "sí",
+  "no", // panel
+  "sí", // mapa
+  "sí", // WhatsApp
+  "no", // citas
+  "moderno", // diseño
+  "sí", // SEO
   "ninguno", // bots (LangChain): sin asistentes IA
-  // PWA y referencia: se SALTAN para landing (Tarea C)
-  "sí",
-  "corte, barba, afeitado y cejas",
-  "lo antes posible",
-  "unos 12 mil",
-  "Soy Diego",
-  "diego@barberia.com",
-  "8123456789",
-  "no",
+  // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
+  "sí", // contenido
+  "corte, barba, afeitado y cejas", // servicios
+  "lo antes posible, y de presupuesto unos 12 mil", // fecha + presupuesto (budget fusionado)
+  "Soy Diego, diego@barberia.com, 8123456789", // contacto fusionado
+  "no", // comentarios
 ]);
 
 checkLanding("Restaurante (Carmen)", [
   "Tengo un restaurante en Puebla, quiero una página para mostrar mi menú, mi ubicación y que me contacten por WhatsApp",
   "sí",
   "Inicio, Menú, Nosotros, Ubicación y Contacto",
-  "no",
-  "no",
-  "no",
-  "sí",
-  "sí",
-  "no",
-  "moderno y cálido",
-  "sí",
+  "no", // panel
+  "sí", // mapa
+  "sí", // WhatsApp
+  "no", // citas
+  "moderno y cálido", // diseño
+  "sí", // SEO
   "el de promociones", // bots (LangChain): promos
-  // PWA y referencia: se SALTAN para landing (Tarea C)
-  "no",
-  "comida casera, desayunos y comida corrida",
-  "para el próximo mes",
-  "entre 10 y 15 mil",
-  "Carmen",
-  "carmen@restaurante.com.mx",
-  "222 333 4455",
-  "nada más",
+  // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
+  "no", // contenido
+  "comida casera, desayunos y comida corrida", // servicios
+  "para el próximo mes, y entre 10 y 15 mil", // fecha + presupuesto (budget fusionado)
+  "Carmen, carmen@restaurante.com.mx, 222 333 4455", // contacto fusionado
+  "nada más", // comentarios
 ]);
 
 // Tienda de ropa que pide una LANDING básica: antes se clasificaba como
@@ -510,8 +490,6 @@ checkLanding("Tienda de ropa (María)", [
   "Tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro",
   "sí",
   "Una sola página de corrido, con inicio, catálogo y contacto",
-  "no", // cuentas
-  "no", // base de datos
   "no", // panel
   "no", // mapa
   "sí", // WhatsApp
@@ -519,14 +497,11 @@ checkLanding("Tienda de ropa (María)", [
   "moderno pero sencillo", // diseño
   "sí", // SEO
   "ninguno", // bots (LangChain): sin asistentes IA
-  // PWA y referencia: se SALTAN para landing (Tarea C)
+  // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "tengo algunas fotos pero no muy profesionales", // contenido
   "unas 30 prendas con su precio y descripción", // servicios/catálogo
-  "en unas 3 semanas", // fecha
-  "unos 6 o 7 mil pesos", // presupuesto
-  "Me llamo María y mi tienda se llama Moda GDL", // nombre
-  "maria.moda@gmail.com", // email
-  "33 1234 5678", // teléfono
+  "en unas 3 semanas, y de presupuesto unos 6 o 7 mil pesos", // fecha + presupuesto (budget fusionado)
+  "Me llamo María y mi tienda se llama Moda GDL, maria.moda@gmail.com, 33 1234 5678", // contacto fusionado
   "no, con eso es suficiente", // comentarios
 ]);
 
@@ -538,8 +513,6 @@ const TALLER_RICARDO_ANSWERS = [
   "Pues mire, yo tengo un taller mecánico aquí en Toluca, el Taller El Toro. La gente me busca mucho por el teléfono y por el WhatsApp, pero cuando buscan en Google no salgo. Quiero una página bien sencilla, algo básico, para que me encuentren y me hablen. No quiero nada muy caro",
   "sí, sí, así está bien. Algo sencillo, como le digo",
   "Sí, así una sola página: inicio, mis servicios, la ubicación con el mapa y el contacto. Con eso me conformo",
-  "No, no, que ni se registren. Ellos nada más me marcan o me escriben por el WhatsApp", // cuentas
-  "No, no necesito guardar nada de mis clientes. Con que me encuentren y me contacten, ya la hizo", // base de datos
   "No, no necesito ningún panel. Con que me lleguen las llamadas y los mensajes del WhatsApp, con eso me basta", // panel
   "Sí, sí tengo mi local aquí en Toluca. Me gustaría el mapa para que la gente llegue sin pedir indicaciones", // mapa
   "Sí, ese botón del WhatsApp es justo lo que quiero. La gente me escribe mucho por ahí", // WhatsApp
@@ -547,14 +520,11 @@ const TALLER_RICARDO_ANSWERS = [
   "Pues algo sobrio, de confianza, que se vea serio. Nada de muchas cosas con movimiento ni nada muy elegante, ¿eh?", // diseño
   "Sí, claro, eso es justo lo que quiero: que cuando busquen taller mecánico en Toluca salga mi taller", // SEO
   "Ninguno, la verdad, con la página me basta", // bots (LangChain): sin asistentes IA
-  // PWA y referencia: se SALTAN para landing (Tarea C)
+  // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "Pues tengo unas fotos del taller que saqué con mi celular, pero no son muy profesionales. El logo del Toro lo tengo pero está medio sencillo. Si me ayuda con los textos, mejor", // contenido
   "Pues le ofrezco a la gente cambio de aceite, frenos, afinación y también el escaneo de la computadora del carro. Sin precios mejor, porque cada coche es distinto; con una breve descripción de cada uno está bien", // servicios
-  "Pues no hay mucha prisa, la verdad. Cuando se pueda, con calma, no le urge", // fecha
-  "Pues mire, la verdad yo pensaba en unos 5 o 6 mil pesos, no más. ¿Cree que con eso alcance para algo bien hecho?", // presupuesto
-  "Me llamo Ricardo Mendoza, y el negocio se llama Taller El Toro", // nombre
-  "ricardo.tallertoro@gmail.com", // email
-  "722 123 4567, ese es el que uso para el negocio", // teléfono
+  "Pues no hay mucha prisa, la verdad. Cuando se pueda, con calma, no le urge. Y mire, la verdad yo pensaba en unos 5 o 6 mil pesos, no más. ¿Cree que con eso alcance para algo bien hecho?", // fecha + presupuesto (budget fusionado)
+  "Me llamo Ricardo Mendoza, ricardo.tallertoro@gmail.com, 722 123 4567, y el negocio se llama Taller El Toro", // contacto fusionado
   "No, ya con eso es todo, muchas gracias", // comentarios
 ];
 checkLanding("Taller (Ricardo)", TALLER_RICARDO_ANSWERS);
@@ -595,8 +565,8 @@ section("G · Categoría y precio coherentes (tienda de ropa ≠ tienda online)"
     `presupuesto capturado pese al "no sé" (${ctx.presupuesto})`
   );
   assert(
-    FLOW.budget.nextNode(resp, ctx) === "contact_name",
-    "con monto avanza (no re-pregunta el presupuesto)"
+    FLOW.budget.nextNode(resp, ctx) === "clarify_budget",
+    "con monto pero sin fecha → clarify_budget pide la fecha (no repite el monto)"
   );
 }
 {
@@ -767,11 +737,8 @@ section("I · No repreguntar lo que ya rechazó en la descripción");
     "sí, ya tengo fotos de la clínica", // scope_content
     "limpieza dental, ortodoncia y blanqueamiento", // scope_services
     "ninguna referencia", // scope_reference
-    "para el próximo mes", // scope_deadline
-    "unos 20 mil pesos", // budget
-    "Soy la Dra. Laura", // contact_name
-    "laura@clinica.com", // contact_email
-    "81 2345 6789", // contact_phone
+    "para el próximo mes, y de presupuesto unos 20 mil", // budget (fecha + monto)
+    "Soy la Dra. Laura, laura@clinica.com, 81 2345 6789", // contacto fusionado
     "no, gracias", // extra_comments
   ]);
   assert(ctx.category === "citas", "[Clínica] categoría citas");
@@ -853,32 +820,28 @@ section("K · Confirmación con lista de rechazos (Carlos)");
     "Hola, tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro",
     "Sí, sí, así es. Algo sencillo que se vea bien y donde la gente pueda ver mis fotos y me pueda contactar. Nada de andar vendiendo por internet ni nada de eso",
     "Una sola página de corrido: inicio, mis productos, cómo llegar y el contacto",
-    "No, no quiero cuentas ni registros, la gente solo va a ver y me va a escribir",
-    "No, no quiero guardar nada de mis clientes, nada de base de datos, solo que me contacten",
-    "No, no quiero ningún panel, con que me escriban por WhatsApp me basta",
-    "Sí, quiero el mapa de mi tienda para que la gente llegue sin pedir indicaciones",
-    "Sí, quiero el botón de WhatsApp para que me escriban directo desde la página",
-    "No, no necesito citas en línea, mi tienda no es de citas",
-    "Algo moderno pero sobrio, con fotos grandes y que se vea limpio",
-    "Sí, lo más importante es que me encuentren en Google cuando busquen tienda de ropa en Guadalajara",
+    "No, no quiero ningún panel, con que me escriban por WhatsApp me basta", // technical_dashboard
+    "Sí, quiero el mapa de mi tienda para que la gente llegue sin pedir indicaciones", // technical_maps
+    "Sí, quiero el botón de WhatsApp para que me escriban directo desde la página", // technical_chat
+    "No, no necesito citas en línea, mi tienda no es de citas", // technical_bookings
+    "Algo moderno pero sobrio, con fotos grandes y que se vea limpio", // design
+    "Sí, lo más importante es que me encuentren en Google cuando busquen tienda de ropa en Guadalajara", // technical_seo
     "ninguno", // bots (LangChain): sin asistentes IA
-    // PWA y referencia: se SALTAN para landing (Tarea C)
-    "Tengo fotos de mi mercancía y el logo, pero los textos me ayudarías tú",
-    "Camisas de vestir, pantalones de mezclilla y trajes para caballero",
-    "Lo quiero para el próximo mes",
-    "Unos 10 mil pesos, no más de eso",
-    "Me llamo Carlos, y la tienda se llama La Tijera de Oro",
-    "Mi correo es carlos.tijeradeoro@gmail.com",
-    "33 1234 5678, ese es mi WhatsApp",
-    "No, con eso es todo",
+    // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
+    "Tengo fotos de mi mercancía y el logo, pero los textos me ayudarías tú", // scope_content
+    "Camisas de vestir, pantalones de mezclilla y trajes para caballero", // scope_services
+    "Lo quiero para el próximo mes, y de presupuesto unos 10 mil pesos, no más de eso", // budget (fecha + monto)
+    "Me llamo Carlos, mi correo es carlos.tijeradeoro@gmail.com y mi WhatsApp es 33 1234 5678; la tienda se llama La Tijera de Oro", // contacto fusionado
+    "No, con eso es todo", // extra_comments
   ]);
   assert(ctx.category === "landing", "[Carlos] categoría landing");
   assert(ctx.chat === true, "[Carlos] chat=true (sí quiere WhatsApp)");
   assert(ctx.citas === false, "[Carlos] citas=false (declinó citas en línea)");
   assert(ctx.seo === true, "[Carlos] seo=true (sí quiere Google)");
-  assert(ctx.baseDeDatos === false, "[Carlos] baseDeDatos=false (no guarda datos)");
+  // Para landing, cuentas y BD ya no se preguntan: quedan null (sin cuentas/BD).
+  assert(ctx.baseDeDatos === null, "[Carlos] baseDeDatos=null (no se preguntó para landing)");
   assert(ctx.dashboard === false, "[Carlos] dashboard=false (no quiere panel)");
-  assert(ctx.autenticacion === false, "[Carlos] autenticacion=false (no quiere cuentas)");
+  assert(ctx.autenticacion === null, "[Carlos] autenticacion=null (no se preguntó para landing)");
   assert(ctx.mapas === true, "[Carlos] mapas=true (sí quiere el mapa)");
   assert(ctx.pwa === null, "[Carlos] pwa se SALTÓ (ya no se pregunta para landing)");
   assert(ctx.paginas === 1, "[Carlos] paginas=1 (una sola página)");
@@ -896,44 +859,47 @@ section("K · Confirmación con lista de rechazos (Carlos)");
   assert(ctx.presupuesto === "10000", `[Carlos] presupuesto 10000 (${ctx.presupuesto})`);
 }
 
-// ─── FASE P2 · Presupuesto dicho junto con el plazo (no re-preguntar) ──
-// Bug: si el cliente mencionaba su monto al responder el plazo, la máquina
-// guardaba fechaEntrega pero perdía el monto, y el nodo budget volvía a
-// preguntar ("¿qué inversión tienes en mente?"). Ahora scope_deadline captura
-// el monto y budget se salta por condición.
+// ─── FASE P2 · Plazo + presupuesto en un solo turno (no re-preguntar) ──
+// Antes eran scope_deadline y budget (dos preguntas separadas). Ahora se
+// fusionan: si el cliente menciona fecha y monto juntos, budget captura ambos
+// y avanza; si solo da uno, clarify_budget afina el que falta (máx 2).
 
-section("P2 · Presupuesto capturado desde scope_deadline y budget saltado");
+section("P2 · Plazo + presupuesto en un solo turno (budget fusionado)");
 {
-  // Plazo + monto: se captura el presupuesto y budget se salta.
+  // Fecha + monto juntos: se capturan ambos y budget avanza directo a contacto.
   const ctx = createEmptyContext();
   const resp =
     "Para mediados del próximo mes está bien. Y de presupuesto, la verdad no sé cuánto cobran, pero yo pensaba en unos 10 mil pesos, no más.";
-  fireOnReceive("scope_deadline", resp, ctx);
+  fireOnReceive("budget", resp, ctx);
   assert(
     ctx.presupuesto === "10000",
-    `[P2] monto capturado desde scope_deadline → 10000 (obtuve: ${ctx.presupuesto})`
+    `[P2] monto capturado junto al plazo → 10000 (obtuve: ${ctx.presupuesto})`
   );
   assert(ctx.fechaEntrega !== null, `[P2] fechaEntrega también se captura (${ctx.fechaEntrega})`);
+  // Con fecha + monto, avanza a contacto aunque haya un "no sé" retórico.
   assert(
-    FLOW.scope_deadline.nextNode(resp, ctx) === "budget",
-    "[P2] scope_deadline sigue apuntando a budget"
+    FLOW.budget.nextNode(resp, ctx) === "contact_name",
+    "[P2] con fecha + monto → contact_name (no re-pregunta)"
   );
-  // budget se salta por condición; el skip (respuesta vacía) va a contact_name.
   assert(
     FLOW.budget.condition?.(ctx) === false,
-    "[P2] budget.condition = false con presupuesto capturado"
+    "[P2] budget.condition = false (nada pendiente)"
   );
   assert(
     FLOW.budget.nextNode("", ctx) === "contact_name",
-    "[P2] skip de budget → contact_name, no re-pregunta"
+    "[P2] skip de budget → contact_name"
   );
 }
 {
-  // Plazo SIN monto → budget SÍ se pregunta (sin regresión).
+  // Fecha SIN monto → clarify_budget pide el monto que falta.
   const ctx = createEmptyContext();
-  fireOnReceive("scope_deadline", "Lo quiero para el próximo mes", ctx);
+  fireOnReceive("budget", "Lo quiero para el próximo mes", ctx);
   assert(ctx.presupuesto === null, "[P2] plazo sin monto → presupuesto sigue null");
-  assert(FLOW.budget.condition?.(ctx) === true, "[P2] budget.condition = true (sí se pregunta)");
+  assert(ctx.fechaEntrega !== null, "[P2] la fecha sí se captura");
+  assert(
+    FLOW.budget.nextNode("Lo quiero para el próximo mes", ctx) === "clarify_budget",
+    "[P2] solo dio la fecha → clarify_budget pide el monto"
+  );
 }
 {
   // Flujo completo con monto en el plazo: budget se salta y el flujo llega a
@@ -942,30 +908,26 @@ section("P2 · Presupuesto capturado desde scope_deadline y budget saltado");
     "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
     "sí",
     "Inicio, Clases, Horarios y Contacto",
-    "no",
-    "no",
-    "no",
-    "sí",
-    "sí",
-    "no",
-    "sobrio",
-    "sí",
+    "no", // panel
+    "sí", // mapa
+    "sí", // WhatsApp
+    "no", // citas
+    "sobrio", // diseño
+    "sí", // SEO
     "ninguno", // bots (LangChain): sin asistentes IA
-    "no",
-    "clases grupales, clases privadas y retiros",
-    "para ya, y de presupuesto unos 15 mil pesos",
-    "Me llamo Andrea",
-    "andrea@yoga.com",
-    "81 9999 8888",
-    "todo bien",
+    "no", // contenido
+    "clases grupales, clases privadas y retiros", // servicios
+    "para ya, y de presupuesto unos 15 mil pesos", // budget (fecha + monto en uno)
+    "Me llamo Andrea, andrea@yoga.com, 81 9999 8888", // contacto fusionado
+    "todo bien", // comentarios
   ]);
   assert(
     ctx.presupuesto === "15000",
-    `[P2-flujo] presupuesto capturado en el plazo (${ctx.presupuesto})`
+    `[P2-flujo] presupuesto capturado junto al plazo (${ctx.presupuesto})`
   );
   assert(
-    !asked.includes("budget") && !asked.includes("clarify_budget"),
-    "[P2-flujo] budget NO se preguntó (saltado)"
+    asked.includes("budget") && !asked.includes("clarify_budget"),
+    "[P2-flujo] budget SÍ se pregunta (fusionado) y no re-pregunta (sin clarify)"
   );
   assert(asked.includes("contact_name"), "[P2-flujo] el flujo llegó a contact_name");
   assert(ctx.fechaEntrega !== null, "[P2-flujo] fechaEntrega también capturada");
@@ -976,29 +938,29 @@ section("P2 · Presupuesto capturado desde scope_deadline y budget saltado");
     "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
     "sí",
     "Inicio, Clases, Horarios y Contacto",
-    "no",
-    "no",
-    "no",
-    "sí",
-    "sí",
-    "no",
-    "sobrio",
-    "sí",
+    "no", // panel
+    "sí", // mapa
+    "sí", // WhatsApp
+    "no", // citas
+    "sobrio", // diseño
+    "sí", // SEO
     "ninguno", // bots (LangChain): sin asistentes IA
-    "no",
-    "clases grupales, clases privadas y retiros",
-    "para ya",
-    "unos 15 mil",
-    "Me llamo Andrea",
-    "andrea@yoga.com",
-    "81 9999 8888",
-    "todo bien",
+    "no", // contenido
+    "clases grupales, clases privadas y retiros", // servicios
+    "para ya", // budget: solo fecha
+    "unos 15 mil", // clarify_budget: el monto que faltaba
+    "Me llamo Andrea, andrea@yoga.com, 81 9999 8888", // contacto fusionado
+    "todo bien", // comentarios
   ]);
   assert(
     ctx.presupuesto === "15000",
-    `[P2-flujo] presupuesto capturado en budget (${ctx.presupuesto})`
+    `[P2-flujo] presupuesto capturado en la clarificación (${ctx.presupuesto})`
   );
-  assert(asked.includes("budget"), "[P2-flujo] budget SÍ se preguntó (sin monto previo)");
+  assert(asked.includes("budget"), "[P2-flujo] budget SÍ se preguntó");
+  assert(
+    asked.includes("clarify_budget"),
+    "[P2-flujo] clarify_budget pidió el monto que faltaba"
+  );
 }
 
 // ─── FASE E1c · extractSections: introductor libre y ":" que cierra la lista ──
@@ -1050,26 +1012,30 @@ section("E1c · extractSections: introductor libre y ':' que cierra la lista");
 section("P2b · verbos de dinero capturan el monto junto al plazo");
 {
   const ctx = createEmptyContext();
-  fireOnReceive("scope_deadline", "para marzo, tengo 10000", ctx);
+  fireOnReceive("budget", "para marzo, tengo 10000", ctx);
   assert(
     ctx.presupuesto === "10000",
     `[B1] "para marzo, tengo 10000" → presupuesto 10000 (obtuve: ${ctx.presupuesto})`
   );
   assert(ctx.fechaEntrega === "para marzo", `[B1] fecha capturada (${ctx.fechaEntrega})`);
   assert(FLOW.budget.condition?.(ctx) === false, "[B1] budget se salta (monto ya capturado)");
+  assert(
+    FLOW.budget.nextNode("para marzo, tengo 10000", ctx) === "contact_name",
+    "[B1] con ambos datos → contact_name"
+  );
 }
 {
   const ctx = createEmptyContext();
-  fireOnReceive("scope_deadline", "en 3 meses", ctx);
+  fireOnReceive("budget", "en 3 meses", ctx);
   assert(
     ctx.presupuesto === null,
     `[B2] "en 3 meses" → presupuesto null (obtuve: ${ctx.presupuesto})`
   );
-  assert(FLOW.budget.condition?.(ctx) === true, "[B2] budget sí se pregunta");
+  assert(FLOW.budget.condition?.(ctx) === true, "[B2] budget sí se pregunta (falta monto)");
 }
 {
   const ctx = createEmptyContext();
-  fireOnReceive("scope_deadline", "para el próximo mes, en unas 3 semanas", ctx);
+  fireOnReceive("budget", "para el próximo mes, en unas 3 semanas", ctx);
   assert(
     ctx.presupuesto === null,
     `[B2] "para el próximo mes, en unas 3 semanas" → presupuesto null (obtuve: ${ctx.presupuesto})`
@@ -1077,7 +1043,7 @@ section("P2b · verbos de dinero capturan el monto junto al plazo");
   assert(ctx.fechaEntrega !== null, "[B2] la fecha sí se captura");
   // Conversación F de María intacta: "en unas 3 semanas" no captura presupuesto.
   const ctxM = createEmptyContext();
-  fireOnReceive("scope_deadline", "en unas 3 semanas", ctxM);
+  fireOnReceive("budget", "en unas 3 semanas", ctxM);
   assert(ctxM.presupuesto === null, "[B2-María] 'en unas 3 semanas' no captura presupuesto");
 }
 
@@ -1104,28 +1070,26 @@ section("C · nodos poco relevantes se saltan para landing");
     "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
     "sí",
     "Inicio, Clases, Horarios y Contacto",
-    "no",
-    "no",
-    "no",
-    "sí",
-    "sí",
-    "no",
-    "sobrio",
-    "sí",
+    "no", // panel
+    "sí", // mapa
+    "sí", // WhatsApp
+    "no", // citas
+    "sobrio", // diseño
+    "sí", // SEO
     "ninguno", // bots (LangChain): sin asistentes IA
-    "no",
-    "clases grupales, clases privadas y retiros",
-    "para ya",
-    "unos 15 mil",
-    "Me llamo Andrea",
-    "andrea@yoga.com",
-    "81 9999 8888",
-    "todo bien",
+    "no", // contenido
+    "clases grupales, clases privadas y retiros", // servicios
+    "para ya, y de presupuesto unos 15 mil", // budget (fecha + monto)
+    "Me llamo Andrea, andrea@yoga.com, 81 9999 8888", // contacto fusionado
+    "todo bien", // comentarios
   ]);
   assert(ctx.category === "landing", "[C] yoga → landing");
   assert(!asked.includes("technical_pwa"), "[C] technical_pwa NO se pregunta para landing");
   assert(!asked.includes("scope_reference"), "[C] scope_reference NO se pregunta para landing");
   assert(!asked.includes("technical_pdfs"), "[C] technical_pdfs NO se pregunta para landing");
+  // Consolidación: cuentas y BD tampoco se preguntan para landing.
+  assert(!asked.includes("technical_auth"), "[C] technical_auth NO se pregunta para landing");
+  assert(!asked.includes("technical_db"), "[C] technical_db NO se pregunta para landing");
 }
 
 // ─── FASE D · No preguntar lo que ya sabe (captura temprana) ───────
@@ -1145,11 +1109,10 @@ section("D · captura temprana en discovery_business");
   assert(ctx.presupuesto === "20000", `[D] presupuesto capturado (${ctx.presupuesto})`);
   assert(ctx.fechaEntrega === "para marzo", `[D] fechaEntrega capturada (${ctx.fechaEntrega})`);
   assert(ctx.citas === true, "[D] señal de citas capturada");
-  assert(FLOW.scope_deadline.condition?.(ctx) === false, "[D] scope_deadline se salta");
-  assert(FLOW.budget.condition?.(ctx) === false, "[D] budget se salta");
+  assert(FLOW.budget.condition?.(ctx) === false, "[D] budget se salta (fecha + monto capturados)");
   assert(FLOW.contact_name.condition?.(ctx) === false, "[D] contact_name se salta");
   // El skip con respuesta vacía va al siguiente (no cae en clarificación).
-  assert(FLOW.scope_deadline.nextNode("", ctx) === "budget", "[D] skip de scope_deadline → budget");
+  assert(FLOW.budget.nextNode("", ctx) === "contact_name", "[D] skip de budget → contact_name");
   assert(FLOW.contact_name.nextNode("", ctx) === "contact_email", "[D] skip de contact_name → contact_email");
 }
 {
@@ -1179,8 +1142,6 @@ section("D/E · flujo completo autollenado (nada se re-pregunta)");
     "Soy Laura, tengo una clínica dental, quiero una página de presentación con mis servicios y contacto. Para marzo, y tengo unos 20 mil. Mi correo es laura@clinica.com y mi teléfono es 81 2345 6789",
     "sí, así es",
     "Inicio, Servicios, Contacto",
-    "no", // cuentas
-    "no", // base de datos
     "no", // panel
     "sí", // mapa
     "sí", // WhatsApp
@@ -1190,7 +1151,7 @@ section("D/E · flujo completo autollenado (nada se re-pregunta)");
     "ninguno", // bots (LangChain): sin asistentes IA
     "sí", // contenido
     "limpieza dental y consultas", // servicios
-    "81 2345 6789", // teléfono
+    "81 2345 6789", // contact_phone (nombre/email/budget/fecha ya capturados)
     "no, gracias", // comentarios
   ]);
   // Todos los campos quedan poblados sin que el cliente repita nada.
@@ -1204,7 +1165,7 @@ section("D/E · flujo completo autollenado (nada se re-pregunta)");
   assert(ctx.servicios === "limpieza dental, consultas", `[D/E] servicios (${ctx.servicios})`);
   assert(ctx.paginas === 3, `[D/E] paginas (${ctx.paginas})`);
   // Los nodos con dato ya capturado NO se vuelven a preguntar.
-  for (const id of ["scope_deadline", "budget", "contact_name", "contact_email"]) {
+  for (const id of ["budget", "contact_name", "contact_email"]) {
     assert(!asked.includes(id), `[D/E] ${id} NO se pregunta (dato ya capturado)`);
   }
   // El teléfono no se captura temprano (normalizePhone mezclaría dígitos del
@@ -1267,7 +1228,7 @@ section("QA1 · clarificación sin nodos colgados (no congela el chat)");
     ["technical_chat", "clarify_chat"],
     ["scope_content", "clarify_content"],
     ["scope_services", "clarify_services"],
-    ["scope_deadline", "clarify_deadline"],
+    ["budget", "clarify_budget"],
   ] as const;
   for (const [, clarifyId] of selfLoops) {
     assert(FLOW[clarifyId] !== undefined, `${clarifyId} registrado en FLOW`);
@@ -1354,18 +1315,17 @@ section("QA5 · no repreguntar citas que ya pidió (technical_bookings se salta)
     "Soy la Dra. Laura de la Clínica Dental La Sonrisa. Quiero una página para presentar mis servicios y que mis pacientes puedan pedir cita. No quiero pagos en línea, ni panel de administración, ni cuentas para pacientes",
     "sí, así es",
     "Inicio, Servicios, Cómo llegar y Contacto, una sola página",
-    "no, no guardo datos de pacientes",
     "sí, quiero el mapa de la clínica",
     "sí, que me escriban por WhatsApp",
     "moderno pero de confianza",
     "sí, que me encuentren en Google",
     "ninguno", // bots (LangChain): sin asistentes IA
+    // PWA, referencia, cuentas y BD: se SALTAN para landing
     "sí, ya tengo fotos",
     "limpieza dental, ortodoncia y blanqueamiento",
-    "para el próximo mes",
-    "unos 10 mil pesos",
-    "laura.sonrisa@gmail.com",
-    "81 2345 6789",
+    "para el próximo mes, y de presupuesto unos 10 mil pesos", // budget (fecha + monto)
+    "laura.sonrisa@gmail.com", // contact_email (el nombre ya se capturó temprano)
+    "81 2345 6789", // contact_phone
     "no, gracias",
   ]);
   assert(ctx.category === "landing", "[QA5] clínica con citas → landing");
@@ -1392,12 +1352,12 @@ section("QA6 · cliente que ya lo dijo todo: no repreguntar lo rechazado");
     "Soy la Dra. Laura, tengo una clínica dental. Quiero una landing page de una sola página con Inicio, Servicios y Contacto, con botón de WhatsApp y mapa. No quiero pagos en línea, ni panel, ni cuentas, ni citas en línea. Para marzo, y tengo unos 20 mil. Mi correo es laura@clinica.com y mi teléfono es 81 2345 6789",
     "sí, así es",
     "una sola página, Inicio, Servicios y Contacto",
-    "no, no necesito guardar datos",
     "sí, el mapa de la clínica",
     "sí, botón de WhatsApp",
     "moderno",
     "sí",
     "ninguno", // bots (LangChain): sin asistentes IA
+    // PWA, referencia, cuentas, BD y dashboard: se SALTAN para landing
     "sí, tengo fotos",
     "limpieza dental y ortodoncia",
     "81 2345 6789",
@@ -1411,7 +1371,6 @@ section("QA6 · cliente que ya lo dijo todo: no repreguntar lo rechazado");
     "technical_bookings",
     "technical_pwa",
     "scope_reference",
-    "scope_deadline",
     "budget",
     "contact_name",
     "contact_email",
@@ -1423,13 +1382,13 @@ section("QA6 · cliente que ya lo dijo todo: no repreguntar lo rechazado");
   assert(asked.includes("contact_phone"), "[QA6] teléfono se pide en su nodo (una vez)");
 }
 
-section("QA7 · scope_deadline no guarda 'no sé' como fecha");
+section("QA7 · budget no guarda 'no sé' como fecha");
 {
   const ctx = createEmptyContext();
-  fireOnReceive("scope_deadline", "no sé", ctx);
+  fireOnReceive("budget", "no sé", ctx);
   assert(ctx.fechaEntrega === null, `[QA7] "no sé" en plazo → fecha null (obtuve: ${ctx.fechaEntrega})`);
   const ctx2 = createEmptyContext();
-  fireOnReceive("scope_deadline", "para el próximo mes", ctx2);
+  fireOnReceive("budget", "para el próximo mes", ctx2);
   assert(ctx2.fechaEntrega === "para el próximo mes", "[QA7] fecha normal sigue capturándose");
 }
 
@@ -1538,11 +1497,8 @@ section("BOTS · detección y selección de asistentes IA");
     "sí", // contenido
     "limpieza dental, ortodoncia y blanqueamiento", // servicios
     "ninguna referencia", // referencia
-    "para el próximo mes", // fecha
-    "unos 20 mil", // presupuesto
-    "Soy Laura", // nombre
-    "laura@clinica.com", // email
-    "81 2345 6789", // teléfono
+    "para el próximo mes, y de presupuesto unos 20 mil", // budget (fecha + monto)
+    "Soy Laura, laura@clinica.com, 81 2345 6789", // contacto fusionado
     "nada, gracias", // comentarios
   ]);
   assert(ctx.bots.includes("bot_citas"), `[BOTS] citas elegido (${ctx.bots})`);
