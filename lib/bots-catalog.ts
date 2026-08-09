@@ -21,6 +21,7 @@
  */
 
 import type { ChatContext } from "@/lib/types";
+import { detectarGiro } from "@/lib/industry-pricing";
 
 // ─── Costos reales de DeepSeek (para el análisis de margen) ─────────
 // deepseek-chat (V3) · jul-2026 · precios por 1M tokens
@@ -327,6 +328,66 @@ export function getBotById(id: string): BotSpec | undefined {
 }
 
 /**
+ * FASE 6 · Cross-sell de bots por giro (fuente: docs/MERCADO_PAGINAS_VIBECODER.md §6.5).
+ * Matriz giro → bots recomendados (máx 3). El ORDEN de la matriz manda (prioridad):
+ * si el giro detectado tiene escalera, esos bots van primero y los de las reglas
+ * generales que no estén en ella se anexan al final (el tope de 3 los corta). Esto
+ * evita que bot_faq/bot_cotizacion genéricos desplacen a los bots de mayor valor.
+ */
+const GIRO_CROSS_SELL: Record<string, string[]> = {
+  // Giro id (lib/industry-pricing.ts GIROS) → bots de mayor valor para ese giro
+  restaurante: ["bot_faq", "bot_citas", "bot_recomendador"], // Menú QR → Reservas
+  estetica: ["bot_citas", "bot_leads", "bot_faq"], // Landing → Citas
+  medico: ["bot_citas", "bot_faq", "bot_ventas"], // Citas → Telemedicina
+  dentista: ["bot_citas", "bot_faq", "bot_ventas"], // Citas → Telemedicina
+  gym: ["bot_membresias", "bot_leads", "bot_faq"], // Landing → Membresías
+  tienda: ["bot_dudas", "bot_ventas", "bot_leads"], // Landing → Ecommerce
+  inmobiliaria: ["bot_ventas", "bot_leads", "bot_faq"], // Portal → leads por prop
+  consultor: ["bot_membresias", "bot_ventas", "bot_leads"], // Landing → Cursos
+  mecanico: ["bot_faq", "bot_leads", "bot_cotizacion"], // Tarjeta → Landing
+  servicios_hogar: ["bot_faq", "bot_leads", "bot_cotizacion"], // Tarjeta → Landing
+};
+
+/**
+ * FASE 6 · Línea de escalera de producto para el nodo technical_bots: tras ofrecer
+ * los bots, sugiere el siguiente producto de la escalera del giro (cross-sell de
+ * PRODUCTO, no un bot). null si el giro no tiene escalera definida.
+ */
+const GIRO_ESCALERA: Record<string, string> = {
+  restaurante:
+    "Y si te interesa, en vez de solo el menú podemos agregar que tus clientes aparten mesa o hagan reservas directo desde tu página.",
+  estetica:
+    "Y si luego quieres, además de la página podemos conectar las citas en línea para que agenden sin llamadas.",
+  medico:
+    "Y si luego quieres, podemos llevar tus citas un paso más allá con consultas por videollamada (telemedicina).",
+  dentista:
+    "Y si luego quieres, podemos llevar tus citas un paso más allá con consultas por videollamada (telemedicina).",
+  gym: "Y si luego quieres, en lugar de solo la página podemos vender tus membresías con cobro recurrente y un área para tus miembros.",
+  tienda:
+    "Y si luego quieres, en vez de solo la página podemos abrir tu tienda en línea para vender con carrito y pagos.",
+  inmobiliaria:
+    "Y si luego quieres, en lugar de solo mostrar las propiedades podemos captar leads por cada propiedad con un panel de publicación.",
+  consultor:
+    "Y si luego quieres, en lugar de solo tu página podemos vender tus cursos o sesiones en línea.",
+  mecanico:
+    "Y si luego quieres, en vez de solo tu tarjeta podemos hacerte una página completa para que te encuentren en Google.",
+  servicios_hogar:
+    "Y si luego quieres, en vez de solo tu tarjeta podemos hacerte una página completa para que te encuentren en Google.",
+};
+
+/**
+ * Línea de escalera de producto para el giro detectado (FASE 6). Usa la misma
+ * detección de giro que la matriz de bots. null si el giro no está en la escalera.
+ */
+export function sugerirEscaleraProducto(ctx: ChatContext): string | null {
+  const cat = ctx.category ?? "landing";
+  const giroId = detectarGiro(ctx.negocioDescripcion, cat).id;
+  // Object.hasOwn: los objetos planos heredan de Object.prototype; sin el guard,
+  // un giro id como "constructor" devolvería Object.prototype.constructor.
+  return Object.hasOwn(GIRO_ESCALERA, giroId) ? GIRO_ESCALERA[giroId] : null;
+}
+
+/**
  * Recomienda bots según lo que el cliente YA dijo (reglas, 0 LLM):
  *  - citas/agenda → bot_citas
  *  - ecommerce o pagos → bot_ventas + bot_recomendador
@@ -334,11 +395,16 @@ export function getBotById(id: string): BotSpec | undefined {
  *  - categoría citas → bot_citas
  *  - siempre que haya presencia de contacto/leads → bot_leads
  *  - por defecto (cualquier landing/negocio) → bot_leads + bot_faq
+ *  - FASE 6: si el giro tiene matriz (GIRO_CROSS_SELL), su orden manda y las
+ *    reglas generales se anexan al final (tope de 3).
  * Devuelve una lista acotada (máx 3) para no abrumar al cliente.
  */
 export function detectarBotsRecomendados(ctx: ChatContext): BotSpec[] {
   const ids = new Set<string>();
   const cat = ctx.category ?? "landing";
+  const giroId = detectarGiro(ctx.negocioDescripcion, cat).id;
+  // Object.hasOwn: ver comentario en sugerirEscaleraProducto (giro "constructor").
+  const escalera = Object.hasOwn(GIRO_CROSS_SELL, giroId) ? GIRO_CROSS_SELL[giroId] : [];
 
   if (ctx.citas === true || cat === "citas") ids.add("bot_citas");
   if (ctx.pagos === true || cat === "ecommerce") {
@@ -347,16 +413,72 @@ export function detectarBotsRecomendados(ctx: ChatContext): BotSpec[] {
   }
   if (ctx.chat === true) ids.add("bot_atencion");
   if (ctx.dashboard === true || cat === "webapp") ids.add("bot_cotizacion");
+  // Nivel 4 · Plataformas por vertical (señales pasivas en conversation-flow):
+  // cada vertical recomienda su bot de valor. Con el tope de 3, el bot_leads de
+  // la regla general y el bot_faq/cotizacion que correspondan se conservan; la
+  // vertical aporta el bot clave (ventas, membresías o citas). La FASE 6 afina
+  // por giro (GIRO_CROSS_SELL) con prioridad sobre estas reglas generales.
+  if (ctx.inmobiliaria === true) {
+    ids.add("bot_ventas");
+    ids.add("bot_leads");
+  }
+  if (ctx.membresias === true) {
+    ids.add("bot_membresias");
+    ids.add("bot_leads");
+  }
+  if (ctx.cursos === true) {
+    ids.add("bot_membresias");
+    ids.add("bot_ventas");
+  }
+  if (ctx.telemedicina === true) {
+    ids.add("bot_citas");
+    ids.add("bot_faq");
+  }
+  if (ctx.directorio === true) {
+    ids.add("bot_faq");
+    ids.add("bot_leads");
+  }
   // Todo negocio que quiera captar clientes se beneficia del capturador de leads
   ids.add("bot_leads");
-  // Negocios de servicio al público: FAQ siempre es buen gancho
-  if (["restaurante", "estetica", "dentista", "mecanico", "tienda", "servicios_hogar"].includes(cat) || cat === "landing") {
+  // Negocios de servicio al público: FAQ siempre es buen gancho.
+  // OJO: `cat` aquí es la CATEGORÍA (landing/ecommerce/citas/webapp/blog/portafolio
+  // + las de entrada: menu_digital/tarjeta_digital/link_in_bio/cotizador),
+  // no el giro. Se añade FAQ a citas (salón/dentista/estética: horarios y dudas
+  // constantes) y a los productos de entrada (FAQ es el bot natural de un menú/
+  // tarjeta/link-in-bio; para cotizador el FAQ acompaña — el bot_cotizacion NO se
+  // recomienda como add-on porque ES el producto que se está vendiendo). Para
+  // ecommerce NO: con el tope de 3 recomendaciones, el FAQ desplazaría a
+  // bot_recomendador/bot_ventas, que aportan más valor a una tienda en línea.
+  if (
+    cat === "landing" ||
+    cat === "citas" ||
+    cat === "menu_digital" ||
+    cat === "tarjeta_digital" ||
+    cat === "link_in_bio" ||
+    cat === "cotizador"
+  ) {
     ids.add("bot_faq");
   }
 
-  // Máx 3 recomendaciones para no abrumar
-  const ordered = BOTS_CATALOG.filter((b) => ids.has(b.id)).slice(0, 3);
-  return ordered.length ? ordered : [getBotById("bot_leads")!];
+  // FASE 6 · Orden final: si el giro tiene matriz, su orden manda (prioridad) y
+  // el resto de las reglas se anexa al final; si no, se respeta el orden del
+  // catálogo. Siempre con el tope de 3. Regla 1c: para la categoría "cotizador"
+  // nunca se recomienda bot_cotizacion como add-on (ES el producto que se vende).
+  let orden: string[];
+  if (escalera.length) {
+    orden = [...escalera];
+    // Array.from: el tsconfig usa target < es2015 (no iterar Sets con for...of).
+    for (const id of Array.from(ids)) if (!orden.includes(id)) orden.push(id);
+  } else {
+    orden = BOTS_CATALOG.filter((b) => ids.has(b.id)).map((b) => b.id);
+  }
+  if (cat === "cotizador") orden = orden.filter((id) => id !== "bot_cotizacion");
+
+  const finalIds = orden.slice(0, 3);
+  const recomendados = finalIds
+    .map((id) => getBotById(id))
+    .filter((b): b is BotSpec => Boolean(b));
+  return recomendados.length ? recomendados : [getBotById("bot_leads")!];
 }
 
 /** Total de setup (MXN) de los bots seleccionados — se suma a la cotización */

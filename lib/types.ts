@@ -58,6 +58,32 @@ export interface ChatContext {
   seo: boolean | null;
   /** ¿PWA instalable? */
   pwa: boolean | null;
+  /** ¿Versión en otro idioma (multilingüe)? */
+  multilingue: boolean | null;
+  /** Nivel 3 · Ecommerce pro: ¿control de inventario avanzado? (señal pasiva) */
+  inventario: boolean | null;
+  /** Nivel 3 · Ecommerce pro: ¿reportes de ventas? (señal pasiva) */
+  reportesVentas: boolean | null;
+  /** Nivel 3 · Ecommerce pro: ¿facturación CFDI (facturas fiscales)? (señal pasiva) */
+  facturacionCfdi: boolean | null;
+  /** Nivel 3 · Ecommerce pro: ¿varios vendedores internos? (señal pasiva) */
+  multiVendedor: boolean | null;
+  /** Nivel 4 · Plataformas: ¿portal inmobiliario (propiedades, filtros, leads por propiedad)? (señal pasiva) */
+  inmobiliaria: boolean | null;
+  /** Nivel 4 · Plataformas: ¿portal de membresías/suscripciones con cobro recurrente? (señal pasiva) */
+  membresias: boolean | null;
+  /** Nivel 4 · Plataformas: ¿plataforma de cursos en línea? (señal pasiva) */
+  cursos: boolean | null;
+  /** Nivel 4 · Plataformas: ¿portal de salud / telemedicina (expediente, videollamada)? (señal pasiva) */
+  telemedicina: boolean | null;
+  /** Nivel 4 · Plataformas: ¿directorio / listado de negocios? (señal pasiva) */
+  directorio: boolean | null;
+  /** Nivel 5 · Ecosistema: ¿marketplace multi-vendedor con comisiones? (señal pasiva) */
+  marketplace: boolean | null;
+  /** Nivel 5 · Ecosistema: ¿SaaS / software como servicio para tus clientes? (señal pasiva) */
+  saas: boolean | null;
+  /** Nivel 5 · Ecosistema: ¿ERP/CRM a medida (compras, ventas, almacén, nómina)? (señal pasiva) */
+  erp: boolean | null;
   /** ¿El cliente tiene el contenido listo? */
   contenidoListo: boolean | null;
   /** Servicios / oferta que el cliente quiere mostrar en la web (texto libre) */
@@ -127,6 +153,19 @@ export function createEmptyContext(): ChatContext {
     animaciones: null,
     seo: null,
     pwa: null,
+    multilingue: null,
+    inventario: null,
+    reportesVentas: null,
+    facturacionCfdi: null,
+    multiVendedor: null,
+    inmobiliaria: null,
+    membresias: null,
+    cursos: null,
+    telemedicina: null,
+    directorio: null,
+    marketplace: null,
+    saas: null,
+    erp: null,
     contenidoListo: null,
     servicios: null,
     estructuraWeb: null,

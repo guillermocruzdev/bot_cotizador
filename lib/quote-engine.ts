@@ -18,7 +18,14 @@
 
 import { totalBotsSetup } from "@/lib/bots-catalog";
 
-export type TipoWeb = "landing" | "corporativo" | "agenda";
+export type TipoWeb =
+  | "landing"
+  | "corporativo"
+  | "agenda"
+  | "menu_digital"
+  | "tarjeta_digital"
+  | "link_in_bio"
+  | "cotizador";
 
 export const TIPO_WEB_INFO: Record<
   TipoWeb,
@@ -36,6 +43,22 @@ export const TIPO_WEB_INFO: Record<
     label: "Web con agenda / citas",
     descripcion: "Sitio con sistema de calendario donde el cliente agenda día y hora en línea.",
   },
+  menu_digital: {
+    label: "Menú digital con QR",
+    descripcion: "El menú de tu negocio en línea, accesible con un código QR en cada mesa.",
+  },
+  tarjeta_digital: {
+    label: "Tarjeta digital",
+    descripcion: "Tu tarjeta de presentación en línea para compartir tu información por WhatsApp.",
+  },
+  link_in_bio: {
+    label: "Página de enlaces (link-in-bio)",
+    descripcion: "Una página con todos tus enlaces para poner en tu bio de Instagram o TikTok.",
+  },
+  cotizador: {
+    label: "Cotizador en línea",
+    descripcion: "Sistema para que tus clientes te pidan presupuesto y se genere solo.",
+  },
 };
 
 export type PresupuestoRango = "<10k" | "10-25k" | ">25k";
@@ -43,7 +66,14 @@ export type PresupuestoRango = "<10k" | "10-25k" | ">25k";
 // ─── Precios base (configurables) ─────────────────────────────────
 
 export const PRECIOS = {
-  base: { landing: 8500, corporativo: 15000 } as const,
+  base: {
+    landing: 8500,
+    corporativo: 15000,
+    menu_digital: 3500,
+    tarjeta_digital: 3500,
+    link_in_bio: 2500,
+    cotizador: 15000,
+  } as const,
   agendaExtra: 5600,
   dominioHosting: 2500,
   branding: 3500,
@@ -95,7 +125,14 @@ export function buildClientData(raw: Partial<ClientData>, opts?: { strict?: bool
   }
 
   const tipoWeb: TipoWeb =
-    raw.tipoWeb === "corporativo" || raw.tipoWeb === "agenda" ? raw.tipoWeb : "landing";
+    raw.tipoWeb === "corporativo" ||
+    raw.tipoWeb === "agenda" ||
+    raw.tipoWeb === "menu_digital" ||
+    raw.tipoWeb === "tarjeta_digital" ||
+    raw.tipoWeb === "link_in_bio" ||
+    raw.tipoWeb === "cotizador"
+      ? raw.tipoWeb
+      : "landing";
 
   return {
     nombre: nombre || "El negocio del cliente",
@@ -131,11 +168,11 @@ export interface Quote {
 export function calculateQuote(cd: ClientData): Quote {
   const lineItems: QuoteLine[] = [];
 
-  // Base según tipo de web
+  // Base según tipo de web (agenda usa la base corporativo + el extra de agenda)
   const base =
-    cd.tipoWeb === "corporativo" || cd.tipoWeb === "agenda"
+    cd.tipoWeb === "agenda"
       ? PRECIOS.base.corporativo
-      : PRECIOS.base.landing;
+      : PRECIOS.base[cd.tipoWeb as Exclude<TipoWeb, "agenda">];
   lineItems.push({
     nombre: TIPO_WEB_INFO[cd.tipoWeb].label,
     descripcion: TIPO_WEB_INFO[cd.tipoWeb].descripcion,
@@ -178,7 +215,17 @@ export function calculateQuote(cd: ClientData): Quote {
 
   // Días de entrega según tipo de web
   const diasEntrega =
-    cd.tipoWeb === "agenda" ? 23 : cd.tipoWeb === "corporativo" ? 14 : 7;
+    cd.tipoWeb === "agenda"
+      ? 23
+      : cd.tipoWeb === "corporativo"
+        ? 14
+        : cd.tipoWeb === "menu_digital" || cd.tipoWeb === "tarjeta_digital"
+          ? 3
+          : cd.tipoWeb === "link_in_bio"
+            ? 2
+            : cd.tipoWeb === "cotizador"
+              ? 12
+              : 7;
 
   return { lineItems, subtotal, iva, total, anticipo, saldo, diasEntrega };
 }
@@ -259,6 +306,17 @@ export function derivarTipoWeb(
   paginas: number | null
 ): TipoWeb {
   if (category === "citas") return "agenda";
+  // Productos de entrada: categoría propia (base menor que landing). No se
+  // "suben" a corporativo aunque el cliente pida varias secciones: el ticket
+  // lo suben las features/bots, no la base (regla del doc de mercado).
+  if (category === "menu_digital") return "menu_digital";
+  if (category === "tarjeta_digital") return "tarjeta_digital";
+  if (category === "link_in_bio") return "link_in_bio";
+  if (category === "cotizador") return "cotizador";
+  // Sitio corporativo: categoría propia (base $15,000) — el motor ya la cobra
+  // como tal. Se mapea directo aunque el cliente no haya dicho un nº de páginas
+  // (la inferencia exige señales claras de multi-página/empresa).
+  if (category === "corporativo") return "corporativo";
   if (category === "ecommerce" || category === "webapp") return "corporativo";
   if (paginas && paginas > 3) return "corporativo";
   return "landing";

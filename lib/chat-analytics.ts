@@ -181,9 +181,9 @@ function track(event: string, nodeId?: string, payload?: Record<string, unknown>
 }
 
 /** Envía la cola a /api/analytics (sendBeacon, no bloquea la navegación). */
-export function flushAnalytics(): Promise<void> {
+export async function flushAnalytics(): Promise<void> {
   const events = queue();
-  if (!events.length) return Promise.resolve();
+  if (!events.length) return;
   writeJson(QUEUE_KEY, []);
   const session = getSessionState();
   const body = JSON.stringify({ sessionId: getSessionId(), events, session });
@@ -193,15 +193,19 @@ export function flushAnalytics(): Promise<void> {
         "/api/analytics",
         new Blob([body], { type: "application/json" })
       );
-      return Promise.resolve();
+      return;
     }
   } catch {
     /* cae al fetch */
   }
-  return fetch("/api/analytics", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body,
-    keepalive: true,
-  }).catch(() => undefined);
+  try {
+    await fetch("/api/analytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+      keepalive: true,
+    });
+  } catch {
+    /* noop: fire-and-forget */
+  }
 }

@@ -344,16 +344,285 @@ const CATEGORY_BRIEFS: Record<string, CategoryBrief> = {
       "Contacto con fricción (falta WhatsApp/CTA directo).",
     ],
   },
+  menu_digital: {
+    leadRole: "Consultor gastronómico + diseñador de menú digital",
+    primaryGoal:
+      "Convertir el escaneo del QR en PEDIDO o contacto: que el comensal vea la carta en su celular, elija y pida por WhatsApp (o llame), sin esperar mesero ni buscar el menú en físico.",
+    successCriteria: [
+      "El QR de cada mesa abre el menú en <2s en cualquier celular (sin apps).",
+      "Cada platillo con foto clara, descripción corta y precio; promociones visibles.",
+      "El 100% de los pedidos/consultas por WhatsApp llegan al negocio.",
+    ],
+    risks: [
+      "Menú que no carga o se ve mal en celular (pedidos perdidos por frustración).",
+      "Fotos o precios desactualizados (el dueño debe poder avisarlos).",
+      "Promociones o tiempos ocultos: el comensal no sabe qué hay del día.",
+    ],
+  },
+  tarjeta_digital: {
+    leadRole: "Diseñador de marca personal / minisitio de presentación",
+    primaryGoal:
+      "Convertir cada tarjeta compartida por WhatsApp en CONOCIMIENTO y CONTACTO: quien la recibe entiende en segundos qué haces, te ubica y te contacta con un toque.",
+    successCriteria: [
+      "La tarjeta carga al instante al abrir el enlace (sin esperas).",
+      "Información completa: qué haces, fotos, ubicación y botón de WhatsApp/mapa.",
+      "Compartirla es un solo toque (WhatsApp, QR, link corto).",
+    ],
+    risks: [
+      "Tarjeta genérica que no diferencia al profesional.",
+      "Botón de WhatsApp o mapa roto / con datos incorrectos.",
+      "Fotos pesadas que tardan en cargar en el celular del cliente.",
+    ],
+  },
+  link_in_bio: {
+    leadRole: "Estratega de marca personal / creador de contenido",
+    primaryGoal:
+      "Convertir cada visita desde tu bio en una ACCIÓN concreta (seguir, WhatsApp, ver catálogo, agendar): un solo link que ordena tus enlaces y hace que la gente actúe.",
+    successCriteria: [
+      "Todos los enlaces funcionan y se ven ordenados en el celular.",
+      "El primer enlace es el CTA principal (el que más te conviene).",
+      "Carga instantánea y diseño a tu marca.",
+    ],
+    risks: [
+      "Link roto o enlaces sin orden (el visitante se va sin actuar).",
+      "Diseño genérico que no refleja tu marca.",
+      "Sin forma de saber cuál enlace funciona (si aplica analítica).",
+    ],
+  },
+  cotizador: {
+    leadRole: "Director de producto del cotizador + optimizador de conversión de servicios",
+    primaryGoal:
+      "Convertir visitas en COTIZACIONES calificadas: el cliente describe lo que necesita, el sistema calcula el precio solo y el negocio recibe el aviso — el bot que usa el cliente, pero para su negocio.",
+    successCriteria: [
+      "Formulario multi-paso completo y claro en el celular.",
+      "Cálculo automático coherente (misma lógica que muestra el resultado).",
+      "PDF de cotización generado y aviso por WhatsApp al negocio, sin pasos manuales.",
+    ],
+    risks: [
+      "Cotizaciones incompletas o que se pierden (falta de aviso).",
+      "Cálculo que no coincide con lo que el cliente ve (rompe la confianza).",
+      "Formulario largo o confuso que abandona al cliente antes de terminar.",
+    ],
+  },
+  corporativo: {
+    leadRole: "Consultor de presencia digital + arquitecto de contenido multi-página",
+    primaryGoal:
+      "Convertir visitas en CONFIANZA y CONTACTO: varias páginas (quienes somos, servicios, proyectos, contacto) que posicionen a la empresa como seria y den el siguiente paso fácil.",
+    successCriteria: [
+      "Estructura multi-página clara con navegación que funciona en móvil.",
+      "Contenido real de la empresa (equipo, proyectos, datos de contacto), sin genéricos.",
+      "Cada página con su CTA (WhatsApp, formulario, llamada).",
+    ],
+    risks: [
+      "Páginas huérfanas o contenido genérico (no diferencia a la empresa).",
+      "Navegación confusa en celular (secciones escondidas).",
+      "SEO mal configurado (no aparecen en Google para sus servicios).",
+    ],
+  },
 };
+
+/** Briefs por vertical / caso de uso que NO es una categoría propia (se resuelven por señal del contexto). */
+const VERTICAL_BRIEFS: Record<string, CategoryBrief> = {
+  reservas_restaurante: {
+    leadRole: "Consultor de operación restaurantera + diseñador de flujo de reservas",
+    primaryGoal:
+      "Convertir interés en MESA RESERVADA sin llamadas: el comensal elige fecha, hora y personas, confirma y el restaurante bloquea la mesa — con pago por adelantado para grupos, evita no-shows.",
+    successCriteria: [
+      "Reservar de punta a punta sin dobles reservas (bloqueo atómico de mesas).",
+      "Confirmación automática al cliente y notificación al restaurante.",
+      "Pago por adelantado (si aplica) y recordatorio antes de la visita.",
+    ],
+    risks: [
+      "Dobles reservas por carrera de disponibilidad.",
+      "Horarios mal configurados (mesas reservadas en horario cerrado).",
+      "Pago por adelantado mal integrado (pagan y no se confirma la mesa).",
+    ],
+  },
+  ecommerce_pro: {
+    leadRole: "Product manager de ecommerce + optimizador de operación de tienda",
+    primaryGoal:
+      "Convertir navegación en COMPRA rentable y operar sin fricción: catálogo + checkout que convierten, y panel que administra inventario avanzado, reportes de venta y facturación CFDI — el escalón pro del ecommerce.",
+    successCriteria: [
+      "Checkout completo y probado (incluido pago y confirmación).",
+      "Inventario avanzado (tallas, colores, alertas de stock bajo) visible en el panel.",
+      "Reportes de ventas y facturación CFDI funcionando desde el panel.",
+    ],
+    risks: [
+      "Pasarela mal integrada (pagos que no confirman).",
+      "Inventario desincronizado entre catálogo y panel.",
+      "Facturación CFDI con datos fiscales mal capturados (rechazos).",
+    ],
+  },
+  inmobiliaria: {
+    leadRole: "Consultor inmobiliario digital + arquitecto de portal de propiedades",
+    primaryGoal:
+      "Convertir visitas en LEADS por propiedad: el interesado filtra por zona y precio, ve cada propiedad y deja su dato — cada anuncio genera contactos de compradores reales.",
+    successCriteria: [
+      "Búsqueda por zona/precio rápida y filtros que funcionan en el celular.",
+      "Cada propiedad con formulario de interés que llega al asesor.",
+      "Panel para publicar propiedades sin programar.",
+    ],
+    risks: [
+      "Filtros lentos o que no cruzan bien zona/precio.",
+      "Leads que se pierden o no llegan al asesor a tiempo.",
+      "Fotos pesadas que matan el rendimiento en móvil.",
+    ],
+  },
+  membresias: {
+    leadRole: "Consultor de negocios de membresía + arquitecto de cobro recurrente",
+    primaryGoal:
+      "Convertir visitas en MIEMBROS con cobro recurrente: el interesado se registra, elige plan y el sistema cobra solo cada mes — con área privada y reportes de retención.",
+    successCriteria: [
+      "Cobro recurrente automático (Stripe) sin fallos ni cobros duplicados.",
+      "Área privada donde el miembro ve su plan, pagos y beneficios.",
+      "Reportes de retención (quién se queda, quién se va) para actuar.",
+    ],
+    risks: [
+      "Cobros duplicados o fallidos sin aviso (daña la confianza).",
+      "Acceso a área privada roto (miembros que no entran).",
+      "Cancelaciones que no se procesan bien (reclamos).",
+    ],
+  },
+  cursos: {
+    leadRole: "Consultor educativo digital + arquitecto de plataforma de cursos",
+    primaryGoal:
+      "Convertir visitas en ALUMNOS: el interesado ve el catálogo de cursos, se inscribe y avanza con lecciones en video, progreso y certificado — comunidad incluida si aplica.",
+    successCriteria: [
+      "Lecciones en video que se reproducen bien en el celular (sin cortes).",
+      "Progreso del alumno guardado y certificado al completar.",
+      "Comunidad/foros (si aplica) moderados y funcionales.",
+    ],
+    risks: [
+      "Video que no reproduce o es pesado en móvil (abandono).",
+      "Progreso que se pierde (alumno frustrado).",
+      "Certificado mal generado (pierde valor el curso).",
+    ],
+  },
+  telemedicina: {
+    leadRole: "Consultor de salud digital + arquitecto de portal clínico",
+    primaryGoal:
+      "Convertir visitas en CONSULTAS agendadas y atendidas: el paciente agenda, llena su expediente y hace videollamada — con recetas electrónicas y expediente digital para el médico.",
+    successCriteria: [
+      "Agendar cita y hacer videollamada sin fricción en el celular.",
+      "Expediente digital del paciente accesible y seguro (privacidad).",
+      "Recetas electrónicas generadas y legibles.",
+    ],
+    risks: [
+      "Privacidad del expediente (dato sensible: RLS y cifrado obligatorios).",
+      "Videollamada inestable o difícil de entrar.",
+      "Registro médico incompleto que complica la consulta.",
+    ],
+  },
+  directorio: {
+    leadRole: "Consultor de asociaciones/cámaras + arquitecto de directorio",
+    primaryGoal:
+      "Convertir visitas en NEGOCIOS registrados y en CONSULTAS útiles: cada negocio tiene su ficha autogestionable, el visitante busca por categoría/mapa y encuentra a quién contactar.",
+    successCriteria: [
+      "Búsqueda por categoría/ubicación rápida y con mapa.",
+      "Fichas autogestionables: cada negocio actualiza sus datos solo.",
+      "Pagos por ficha premium (si aplica) funcionando.",
+    ],
+    risks: [
+      "Fichas desactualizadas o duplicadas (dañan la confianza del directorio).",
+      "Búsqueda/mapa lentos en móvil.",
+      "Ficha premium que no se renueva o no da el beneficio prometido.",
+    ],
+  },
+  marketplace: {
+    leadRole: "Arquitecto de marketplace + product manager de plataformas multi-vendedor",
+    primaryGoal:
+      "Convertir visitas en VENTAS de muchos vendedores: cada vendedor publica y vende, el comprador compra y el marketplace cobra comisión por venta — split de pagos incluido.",
+    successCriteria: [
+      "Multi-vendedor: cada uno publica y administra sus productos con sus datos aislados.",
+      "Split de pagos: cada vendedor recibe su parte automáticamente al vender.",
+      "Panel de administración de comisiones, ventas y reportes ejecutivos.",
+    ],
+    risks: [
+      "Fuga de datos entre vendedores (aislamiento por tenant: crítico).",
+      "Split de pagos mal calculado (conflictos con vendedores).",
+      "Escala: catálogo grande que degrada el rendimiento.",
+    ],
+  },
+  saas: {
+    leadRole: "Arquitecto de software como servicio + product manager multi-tenant",
+    primaryGoal:
+      "Convertir visitas en SUSCRIPTORES de tu software: tus clientes se registran, usan la plataforma y pagan plan — multi-tenant con datos aislados y billing automático.",
+    successCriteria: [
+      "Multi-tenant: cada cliente con sus datos aislados (RLS por tenant: crítico).",
+      "Planes y billing automático (altas, cambios, cancelaciones).",
+      "API pública documentada (si aplica) e integraciones.",
+    ],
+    risks: [
+      "Fuga de datos entre clientes (aislamiento multi-tenant mal hecho).",
+      "Billing que cobra mal o no gestiona cambios de plan.",
+      "Onboarding de clientes confuso (churn temprano).",
+    ],
+  },
+  erp: {
+    leadRole: "Consultor de procesos + arquitecto de sistemas de operación",
+    primaryGoal:
+      "Automatizar la operación del negocio: compras, ventas, almacén y nómina en un solo sistema con reportes ejecutivos e integración contable — se cotiza con propuesta formal detallada, no a ciegas.",
+    successCriteria: [
+      "Módulos (compras/ventas/almacén/nómina) funcionando y conectados entre sí.",
+      "Integración contable con el sistema del cliente (si aplica).",
+      "Reportes ejecutivos de rentabilidad, costos y ventas.",
+    ],
+    risks: [
+      "Scope enorme sin fijar en el kickoff (el proyecto se sale de control).",
+      "Datos migrados mal (rompe la operación del negocio).",
+      "Integración contable frágil (errores que cuestan dinero).",
+    ],
+  },
+};
+
+/** Detecta si el giro es de comida/restaurante (para reservas y menú digital). */
+function esGiroComida(giro?: string | null): boolean {
+  return Boolean(
+    giro &&
+      /restaurante|comida|taquer|pizzer|marisquer|cafeter|hamburgues|panader|postres|cocina|\bbar(?:es)?\b|food/i.test(giro)
+  );
+}
 
 /** Brief de la categoría con fallback seguro para giros no catalogados. */
 function categoryBrief(categoryId: string): CategoryBrief {
   return CATEGORY_BRIEFS[categoryId] ?? CATEGORY_BRIEFS.landing;
 }
 
+/**
+ * Resuelve el brief MÁS ESPECÍFICO para el tipo detectado, priorizando la
+ * vertical (nivel 4/5 de webapp, ecommerce pro, reservas de restaurante)
+ * sobre el brief genérico de la categoría.
+ */
+function resolveBrief(base: PackBase): CategoryBrief {
+  const { context, analysis } = base;
+  const cat = base.category.id;
+  if (cat === "webapp") {
+    let vertical: string | null = null;
+    if (si(context.marketplace)) vertical = "marketplace";
+    else if (si(context.saas)) vertical = "saas";
+    else if (si(context.erp)) vertical = "erp";
+    else if (si(context.inmobiliaria)) vertical = "inmobiliaria";
+    else if (si(context.membresias)) vertical = "membresias";
+    else if (si(context.cursos)) vertical = "cursos";
+    else if (si(context.telemedicina)) vertical = "telemedicina";
+    else if (si(context.directorio)) vertical = "directorio";
+    if (vertical) return VERTICAL_BRIEFS[vertical] ?? categoryBrief("webapp");
+  }
+  if (
+    cat === "ecommerce" &&
+    (si(context.inventario) || si(context.facturacionCfdi) || si(context.multiVendedor) || si(context.reportesVentas))
+  ) {
+    return VERTICAL_BRIEFS.ecommerce_pro;
+  }
+  if (cat === "citas" && esGiroComida(analysis.giro)) {
+    return VERTICAL_BRIEFS.reservas_restaurante;
+  }
+  return categoryBrief(cat);
+}
+
 /** Bloque "Punto de partida por tipo de servicio" que se muestra en el preámbulo. */
 function buildCategoryBriefSection(base: PackBase): string {
-  const brief = categoryBrief(base.category.id);
+  const brief = resolveBrief(base);
   return `### 🎯 Punto de partida según el tipo de servicio
 
 > Este pack no es genérico: está afinado para un proyecto de **${base.analysis.categoria}**. Toda decisión de UX, contenido, datos y QA debe alinearse con esto.
@@ -736,6 +1005,53 @@ export function buildTechnicalPrompt(opts: PromptBuildOptions): string {
 
 // ─── Helpers del pack por fases ────────────────────────────────────
 
+/** Etiqueta corta del tipo de página por categoría (para el contexto compacto). */
+const TIPO_LABEL: Record<string, string> = {
+  landing: "landing / página de presentación",
+  corporativo: "sitio corporativo (varias páginas)",
+  ecommerce: "tienda online con carrito y pagos",
+  citas: "sistema de citas y reservaciones",
+  webapp: "plataforma o sistema web a medida",
+  blog: "blog / sitio de contenido",
+  portafolio: "portafolio profesional",
+  menu_digital: "menú digital con código QR",
+  tarjeta_digital: "tarjeta digital / minisitio",
+  link_in_bio: "página de enlaces (link-in-bio)",
+  cotizador: "cotizador / presupuesto en línea",
+};
+
+/**
+ * Nombre del tipo de página DETECTADO (con el matiz de vertical/giro) para que
+ * cada chat del pack asuma el contexto correcto. Ej.: "portal inmobiliario
+ * (propiedades, filtros por zona/precio y leads) para agencia inmobiliaria".
+ */
+function buildTipoPagina(base: PackBase): string {
+  const { context, analysis } = base;
+  const cat = base.category.id;
+  const giro = analysis.giro ? ` para ${analysis.giro.toLowerCase()}` : "";
+  if (cat === "webapp") {
+    if (si(context.marketplace)) return `marketplace multi-vendedor (split de pagos y comisión por venta)${giro}`;
+    if (si(context.saas)) return `software como servicio (SaaS) multi-tenant con planes y billing${giro}`;
+    if (si(context.erp)) return `ERP/CRM a medida (compras, ventas, almacén y nómina)${giro}`;
+    if (si(context.inmobiliaria)) return `portal inmobiliario (propiedades, filtros por zona/precio y leads)${giro}`;
+    if (si(context.membresias)) return `portal de membresías (cobro recurrente y área privada)${giro}`;
+    if (si(context.cursos)) return `plataforma de cursos en línea (lecciones, progreso y certificados)${giro}`;
+    if (si(context.telemedicina)) return `portal de salud / telemedicina (expediente, videollamada y recetas)${giro}`;
+    if (si(context.directorio)) return `directorio de negocios (fichas autogestionables, búsqueda y mapa)${giro}`;
+  }
+  if (
+    cat === "ecommerce" &&
+    (si(context.inventario) || si(context.facturacionCfdi) || si(context.multiVendedor) || si(context.reportesVentas))
+  ) {
+    return `tienda online "pro" (inventario avanzado, reportes de venta y facturación CFDI)${giro}`;
+  }
+  if (cat === "citas" && esGiroComida(analysis.giro)) {
+    return `sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional)`;
+  }
+  const label = TIPO_LABEL[cat] ?? (analysis.categoria || base.category.nombreCliente);
+  return `${label}${giro}`;
+}
+
 /** Contexto compacto y autosuficiente que acompaña a CADA fase. */
 function buildCompactContext(base: PackBase, phases: PackPhases): string {
   const { context, analysis } = base;
@@ -744,6 +1060,7 @@ function buildCompactContext(base: PackBase, phases: PackPhases): string {
     : "sobrio, limpio y directo";
   const lines = [
     `PROYECTO: ${analysis.categoria} para ${base.clientName || "el cliente"} · Nivel ${analysis.nivelLabel}.`,
+    `TIPO DE PÁGINA: ${buildTipoPagina(base)}.`,
     `GIRO: ${analysis.giro ?? "negocio local"}${analysis.presupuesto_giro ? ` · Presupuesto del giro: ${analysis.presupuesto_giro}` : ""}.`,
     `STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui${si(context.animaciones) ? " · Framer Motion" : ""}${si(context.baseDeDatos) || si(context.autenticacion) || base.category.id !== "landing" ? " · Supabase" : ""} · Vercel.`,
     `ESTILO: ${estilo}.`,
@@ -814,9 +1131,9 @@ ${buildMapaFases(phases)}
 |---|---|
 | Cliente | ${clientName || "Por confirmar"} |
 | Tipo de proyecto | ${analysis.categoria} |
-| 🎭 Rol que conduce el proyecto | ${categoryBrief(base.category.id).leadRole} |
+| 🎭 Rol que conduce el proyecto | ${resolveBrief(base).leadRole} |
 | Nivel | ${analysis.nivelLabel} |
-| Presupuesto estimado | ${precioMXN(analysis.precio_min)} – ${precioMXN(analysis.precio_max)} |
+| Presupuesto estimado | ${precioMXN(analysis.precio_min)}${analysis.precio_max > analysis.precio_min ? ` – ${precioMXN(analysis.precio_max)}` : ""} |
 | Tiempo estimado | ${analysis.tiempo_estimado} |
 | Despliegue | Vercel (producción) |
 | Fecha de entrega acordada | ${context.fechaEntrega || "Por definir"} |
@@ -2810,7 +3127,7 @@ Prepara una demo de 20-30 min y recórrela con el cliente en celular y escritori
 
 ### 6. Roadmap y upsell (retención)
 Documenta en el README (sección "Roadmap") las siguientes oportunidades ordenadas por impacto y costo, para retención/upsell:
-- **Asistentes IA** (FAQ/citas/ventas sobre la infraestructura del CHAT ${phases.llmInfra}) si hay preguntas repetidas.
+- **Asistentes IA** (FAQ/citas/ventas${phases.hasBots ? ` sobre la infraestructura del CHAT ${phases.llmInfra}` : ""}) si hay preguntas repetidas.
 - **Panel/mantenimiento** (editar contenidos, ver leads, reportes) — plan mensual.
 - **Pagos en línea / reservas / catálogo completo** si el negocio crece.
 - **Blog/SEO** para captar tráfico orgánico por palabras del giro.

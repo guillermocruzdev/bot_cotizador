@@ -58,7 +58,16 @@ export const PRICING_CATALOG: PricingCategory[] = [
   {
     id: "landing",
     nombreCliente: "Página de presentación para tu negocio",
-    keywords: ["presentar", "presentación", "información", "servicios", "landing", "vitrina", "mostrar", "folleto", "tarjeta", "curriculum", "cv", "profesional", "consultorio", "catálogo", "catalogo", "me encuentren", "que me encuentren", "página sencilla", "pagina sencilla", "página simple", "pagina simple", "mostrar mis", "mostrar mi", "presentar mis", "presentar mi", "solo información", "solo informacion"],
+    // OJO: "mostrar mi"/"presentar mi" (singular) NO van como keywords-frase:
+    // son subcadenas de "mostrar mis"/"presentar mis" y hacían doble conteo
+    // ("mostrar mis trabajos" casaba con AMBAS → inflaba landing en +2 y hacía
+    // perder a portafolio con descripciones típicas de fotógrafo). La palabra
+    // "mostrar"/"presentar" (sueltas) ya cubre el singular.
+    // OJO 2: "tarjeta" NO va como keyword: "tarjeta digital"/"tarjeta de
+    // presentación" son el producto de entrada tarjeta_digital (categoría
+    // propia), y "tarjeta" aquí hacía empatar y perder a tarjeta_digital
+    // (landing va primero en el catálogo y el empate favorece a landing).
+    keywords: ["presentar", "presentación", "información", "servicios", "landing", "vitrina", "mostrar", "folleto", "curriculum", "cv", "profesional", "consultorio", "catálogo", "catalogo", "me encuentren", "que me encuentren", "página sencilla", "pagina sencilla", "página simple", "pagina simple", "mostrar mis", "presentar mis", "solo información", "solo informacion"],
     // Base alineada al motor determinista ($8,500) y al catálogo de la agencia
     // (regla #7 de AGENTS.md: UI, PDF, copy y fallback deben citar el MISMO total).
     base: { basico: 8500, profesional: 15000, avanzado: 25000 },
@@ -82,6 +91,45 @@ export const PRICING_CATALOG: PricingCategory[] = [
       "Es una página enfocada en presentar tu negocio y captar contactos. El precio refleja el diseño a medida, la optimización para celular y el SEO para que te encuentren en Google.",
   },
   {
+    id: "corporativo",
+    nombreCliente: "Sitio corporativo (varias páginas)",
+    // Nivel 2 · Negocio. Solo se detecta con señales CLARAS de sitio
+    // multi-página/empresa ("constructora", "despacho", "quienes somos",
+    // "varias secciones", "más de una página"...). NO se incluyen las palabras
+    // genéricas sueltas ("empresa", "nosotros", "equipo") porque roban clientes
+    // a landing ("una página para mi empresa" es, en la mayoría de los casos,
+    // una landing). El conflicto con landing se resuelve en inferCategory:
+    // landing va PRIMERO en el catálogo y los empates favorecen a landing.
+    keywords: [
+      "corporativo", "corporativa", "sitio corporativo", "web corporativa",
+      "página corporativa", "pagina corporativa", "constructora", "despacho",
+      "quienes somos", "quiénes somos", "varias secciones", "varias páginas",
+      "varias paginas", "más de una página", "mas de una pagina",
+      "multi-página", "multipagina", "multipágina", "nuestra empresa",
+      "nuestro equipo", "equipo de trabajo", "sobre nosotros", "conócenos",
+    ],
+    base: { basico: 15000, profesional: 25000, avanzado: 40000 },
+    tiempo: { basico: "7-10 días", profesional: "10-18 días", avanzado: "18-28 días" },
+    features: [
+      { id: "galeria_proyectos", labelCliente: "Galería de tus proyectos o trabajos", precio: 2500 },
+      { id: "panel_contenido", labelCliente: "Panel para editar el contenido de tu web sin programar", precio: 4000 },
+      { id: "seo", labelCliente: "Que te encuentren en Google al buscar tu servicio", precio: 2500 },
+      { id: "multilingue", labelCliente: "Versión en inglés y español (u otros idiomas)", precio: 3000 },
+      { id: "mapas", labelCliente: "Mapa con tus sucursales o ubicación", precio: 1500 },
+      { id: "chat", labelCliente: "Burbuja para que te escriban por WhatsApp", precio: 1000 },
+    ],
+    stack: ["Next.js", "Tailwind CSS", "Supabase", "Vercel"],
+    entregables: [
+      "Diseño responsive (celular, tablet, escritorio)",
+      "Varias páginas (Inicio, Nosotros, Servicios, Contacto…)",
+      "Formulario de contacto con envío a tu correo",
+      "SEO básico en Google",
+      "Panel para editar el contenido (si lo contratas)",
+    ],
+    explicacionPrecio:
+      "Es un sitio de varias páginas pensado para empresas que quieren proyectar autoridad: quienes somos, servicios, proyectos y contacto, cada sección con su diseño. El precio refleja más páginas, más contenido y un acabado más formal que una landing de una sola página.",
+  },
+  {
     id: "ecommerce",
     nombreCliente: "Tienda online con carrito y pagos",
     // OJO: "tienda", "vender" o "productos" SUELTOS no son ecommerce: una
@@ -99,6 +147,17 @@ export const PRICING_CATALOG: PricingCategory[] = [
       "pagos en linea", "pagos en línea",
       "pedidos online", "pedidos en linea", "pedidos en línea", "hacer pedidos",
       "envio", "envíos", "envios", "shop", "mercancia", "mercancía",
+      // Nivel 3 · Ecommerce "pro": señales que DETECTAN el escalón premium
+      // (inventario, reportes de venta, facturación, mayoreo, multi-vendedor).
+      // El ticket alto se alcanza por FEATURES acumuladas + nivel avanzado,
+      // NUNCA inflando la base. OJO: "inventario"/"reportes" también son
+      // keywords de webapp — el ecommerce solo gana si además hay señales de
+      // venta en línea (carrito/pagos/"por internet"), y un "sistema" con
+      // inventario sigue siendo webapp.
+      "inventario", "existencias", "stock",
+      "reportes de venta", "reportes de ventas",
+      "facturar", "facturación", "facturacion", "factura", "facturas", "cfdi",
+      "mayoreo", "varios vendedores", "multi-vendedor", "multivendedor",
     ],
     base: { basico: 20000, profesional: 35000, avanzado: 60000 },
     tiempo: { basico: "10-15 días", profesional: "15-25 días", avanzado: "25-40 días" },
@@ -110,6 +169,14 @@ export const PRICING_CATALOG: PricingCategory[] = [
       { id: "facturacion", labelCliente: "Generación de facturas o recibos", precio: 4000 },
       { id: "seo", labelCliente: "Optimización para aparecer en Google", precio: 3000 },
       { id: "pwa", labelCliente: "Instalable en el celular como app", precio: 4000 },
+      // ── Nivel 3 · Ecommerce "pro" (escalón premium) ──
+      // Se alcanza por FEATURES acumuladas + nivel avanzado (inferNivel), nunca
+      // con categoría duplicada ni inflando la base. Se activan con señales
+      // pasivas del cliente (lib/conversation-flow.ts SIGNAL_PATTERNS).
+      { id: "inventario_avanzado", labelCliente: "Control de inventario avanzado (existencias, tallas, colores y alertas de stock bajo)", precio: 6000 },
+      { id: "reportes_ventas", labelCliente: "Reportes de ventas (qué vendes más, por día, mes o producto)", precio: 4000 },
+      { id: "facturacion_cfdi", labelCliente: "Facturación CFDI (facturas fiscales con RFC para tus clientes)", precio: 5000 },
+      { id: "multi_vendedor", labelCliente: "Varios vendedores internos con sus propias cuentas", precio: 8000 },
     ],
     stack: ["Next.js", "Supabase", "Stripe", "Tailwind CSS"],
     entregables: [
@@ -129,7 +196,11 @@ export const PRICING_CATALOG: PricingCategory[] = [
     base: { basico: 15000, profesional: 28000, avanzado: 45000 },
     tiempo: { basico: "7-10 días", profesional: "10-18 días", avanzado: "18-28 días" },
     features: [
+      // Nivel 3 · Citas con pago por adelantado: la feature "pagos" ya cobra
+      // al reservar (labelCliente comunica el "pagan al reservar"); aquí se
+      // añade la política de cancelación para reforzar el anti no-show.
       { id: "pagos", labelCliente: "Pago por adelantado al reservar", precio: 6000 },
+      { id: "politica_cancelacion", labelCliente: "Política de cancelación y reagendado en línea (para no perder citas)", precio: 1500 },
       { id: "autenticacion", labelCliente: "Clientes con cuenta y su historial de citas", precio: 4500 },
       { id: "dashboard", labelCliente: "Panel donde ves todas tus citas del día", precio: 6000 },
       { id: "recordatorios", labelCliente: "Recordatorios automáticos por correo o WhatsApp", precio: 3500 },
@@ -161,6 +232,47 @@ export const PRICING_CATALOG: PricingCategory[] = [
       { id: "mapas", labelCliente: "Mapas con ubicaciones o rutas", precio: 2500 },
       { id: "seo", labelCliente: "Optimización para buscadores", precio: 2500 },
       { id: "pwa", labelCliente: "Instalable en el celular como app", precio: 4500 },
+      // ── Nivel 4 · Plataformas por vertical (señales pasivas en conversation-flow) ──
+      // Cada vertical (inmobiliaria, membresías, cursos, telemedicina, directorio)
+      // tiene sus features específicas: se activan SOLO si el cliente menciona la
+      // señal y suben el ticket por FEATURES acumuladas + nivel avanzado
+      // (inferNivel), nunca inflando la base. Se mapean desde localFallback
+      // (openrouter.ts) cuando categoryId === "webapp".
+      { id: "filtros_inmobiliaria", labelCliente: "Filtros por zona y precio para buscar propiedades", precio: 4000 },
+      { id: "leads_propiedad", labelCliente: "Formulario de interés por cada propiedad (leads de compradores)", precio: 3500 },
+      { id: "panel_publicacion", labelCliente: "Panel para publicar propiedades sin programar", precio: 5000 },
+      { id: "cobro_recurrente", labelCliente: "Cobro recurrente automático de la membresía (Stripe)", precio: 6000 },
+      { id: "area_privada", labelCliente: "Área privada para tus miembros", precio: 4500 },
+      { id: "gestion_planes", labelCliente: "Gestión de planes y suscripciones", precio: 4000 },
+      { id: "reportes_retencion", labelCliente: "Reportes de retención de miembros", precio: 3000 },
+      { id: "lecciones_video", labelCliente: "Lecciones en video", precio: 5000 },
+      { id: "progreso_alumno", labelCliente: "Progreso del alumno en cada curso", precio: 3500 },
+      { id: "certificado", labelCliente: "Certificados al completar el curso", precio: 2500 },
+      { id: "comunidad_foros", labelCliente: "Comunidad y foros para tus alumnos", precio: 5000 },
+      { id: "expediente_paciente", labelCliente: "Expediente digital del paciente", precio: 6000 },
+      { id: "videollamada", labelCliente: "Videollamada para consultas en línea", precio: 8000 },
+      { id: "recetas", labelCliente: "Recetas electrónicas", precio: 3000 },
+      { id: "fichas_autogestionables", labelCliente: "Fichas autogestionables por cada negocio", precio: 5000 },
+      { id: "busqueda_mapa", labelCliente: "Búsqueda y mapa del directorio", precio: 3500 },
+      { id: "pagos_ficha_premium", labelCliente: "Pagos por ficha premium del directorio", precio: 6000 },
+      // ── Nivel 5 · Ecosistema (marketplace, SaaS, ERP/CRM) ──
+      // Proyectos de $40k-$90k+: se detectan con señales pasivas
+      // (marketplace/saas/erp en conversation-flow) y suben el ticket por
+      // FEATURES acumuladas + nivel avanzado (inferNivel), nunca inflando la
+      // base. El bot las CALIFICA (webapp + "desde" honesto) y NO promete un
+      // precio cerrado en el chat: se cotizan con propuesta formal detallada
+      // (ver buildRecap y compactContext de chat-llm). Se mapean desde
+      // localFallback (openrouter.ts) cuando categoryId === "webapp".
+      { id: "split_pagos", labelCliente: "Split de pagos / escrow (cada vendedor recibe su parte al vender)", precio: 12000 },
+      { id: "multi_tenant", labelCliente: "Multi-tenant: cada cliente con sus datos aislados", precio: 15000 },
+      { id: "planes_billing", labelCliente: "Planes y facturación automática (billing)", precio: 10000 },
+      { id: "api_publica", labelCliente: "API pública para integrar tu plataforma con otros sistemas", precio: 10000 },
+      { id: "modulo_compras", labelCliente: "Módulo de compras (órdenes y proveedores)", precio: 12000 },
+      { id: "modulo_ventas", labelCliente: "Módulo de ventas (clientes y facturación)", precio: 12000 },
+      { id: "modulo_almacen", labelCliente: "Módulo de almacén (existencias y movimientos)", precio: 12000 },
+      { id: "modulo_nomina", labelCliente: "Módulo de nómina (empleados y pagos)", precio: 12000 },
+      { id: "integracion_contable", labelCliente: "Integraciones contables (CONTPAQi, Aspel, etc.)", precio: 15000 },
+      { id: "reportes_ejecutivos", labelCliente: "Reportes ejecutivos (ventas, costos, rentabilidad)", precio: 10000 },
     ],
     stack: ["Next.js", "Supabase / PostgreSQL", "Tailwind CSS", "shadcn/ui"],
     entregables: [
@@ -197,7 +309,7 @@ export const PRICING_CATALOG: PricingCategory[] = [
   {
     id: "portafolio",
     nombreCliente: "Portafolio profesional",
-    keywords: ["portafolio", "portfolio", "trabajos", "proyectos", "fotógrafo", "fotografo", "diseñador", "arquitecto", "artista", "freelance", "muestras", "galeria", "galería"],
+    keywords: ["portafolio", "portfolio", "trabajos", "proyectos", "fotógrafo", "fotografo", "fotógrafa", "fotografa", "diseñador", "diseñadora", "disenador", "disenadora", "arquitecto", "arquitecta", "artista", "freelance", "muestras", "galeria", "galería"],
     base: { basico: 7000, profesional: 13000, avanzado: 22000 },
     tiempo: { basico: "4-6 días", profesional: "6-10 días", avanzado: "10-15 días" },
     features: [
@@ -215,6 +327,109 @@ export const PRICING_CATALOG: PricingCategory[] = [
     ],
     explicacionPrecio:
       "Un portafolio es tu carta de presentación: el precio refleja el diseño cuidado, las animaciones y que se vea impecable en cualquier dispositivo.",
+  },
+  {
+    id: "menu_digital",
+    nombreCliente: "Menú digital con código QR",
+    // OJO: NO incluir "menú"/"carta" sueltos como keywords regulares: se
+    // cuentan SOLO vía el bonus de inferCategory cuando hay señal de comida
+    // (restaurante/cafetería...) para no robarle clientes a landing ni activar
+    // ecommerce. Aquí solo van las frases explícitas de menú digital/QR.
+    keywords: [
+      "menú digital", "menu digital", "carta digital", "menú con qr", "menu con qr",
+      "código qr", "codigo qr", "que escaneen", "escanear", "vean mi carta",
+    ],
+    base: { basico: 3500, profesional: 6000, avanzado: 9000 },
+    tiempo: { basico: "2-4 días", profesional: "3-6 días", avanzado: "5-8 días" },
+    features: [
+      { id: "promociones", labelCliente: "Sección de promociones del día", precio: 800 },
+      { id: "pedido_whatsapp", labelCliente: "Pedido directo por WhatsApp desde el menú", precio: 1000 },
+      { id: "multilingue", labelCliente: "Menú en varios idiomas", precio: 1500 },
+    ],
+    stack: ["Next.js", "Tailwind CSS", "Vercel"],
+    entregables: [
+      "Menú digital con código QR para cada mesa",
+      "QR imprimible para mesas y vidriera",
+      "Fotos y precios de tu carta que se actualizan solos",
+      "Se ve perfecto en el celular del comensal",
+    ],
+    explicacionPrecio:
+      "Es el menú de tu negocio en línea: el comensal escanea el QR de la mesa y ve tu carta al instante, sin apps ni descargas. El precio refleja el diseño, el QR y que puedas actualizar precios y promociones cuando quieras.",
+  },
+  {
+    id: "tarjeta_digital",
+    nombreCliente: "Tarjeta digital / minisitio",
+    keywords: [
+      "tarjeta digital", "tarjeta de presentación", "tarjeta de presentacion",
+      "minisitio", "mini sitio", "compartir mi información", "compartir mi informacion",
+      "mi información en un link", "mi informacion en un link",
+    ],
+    base: { basico: 3500, profesional: 6000, avanzado: 9000 },
+    tiempo: { basico: "2-4 días", profesional: "3-6 días", avanzado: "5-8 días" },
+    features: [
+      { id: "chat", labelCliente: "Botón de WhatsApp para que te escriban directo", precio: 500 },
+      { id: "mapas", labelCliente: "Mapa con tu ubicación para llegar", precio: 800 },
+      { id: "galeria", labelCliente: "Galería de tus trabajos", precio: 1000 },
+    ],
+    stack: ["Next.js", "Tailwind CSS", "Vercel"],
+    entregables: [
+      "Tu tarjeta digital con tu información de contacto",
+      "Botón de WhatsApp y tus redes sociales",
+      "Link corto para compartir por WhatsApp",
+      "Se ve profesional en cualquier celular",
+    ],
+    explicacionPrecio:
+      "Es como tu tarjeta de presentación, pero en línea: compartes un link y la persona ve tu información, tus servicios y tu WhatsApp al instante. Perfecto para profesionistas y oficios que hoy comparten su info de palabra.",
+  },
+  {
+    id: "link_in_bio",
+    nombreCliente: "Página de enlaces (link-in-bio)",
+    keywords: [
+      "link en mi bio", "link de instagram", "links de mis redes", "link in bio",
+      "mis enlaces", "enlaces de mis redes", "una página con mis enlaces",
+      "una pagina con mis enlaces",
+    ],
+    base: { basico: 2500, profesional: 4500, avanzado: 7000 },
+    tiempo: { basico: "1-2 días", profesional: "2-3 días", avanzado: "3-5 días" },
+    features: [
+      { id: "qr", labelCliente: "QR físico para compartir tu página", precio: 500 },
+      { id: "mini_catalogo", labelCliente: "Mini-catálogo con fotos de tus productos o servicios", precio: 1000 },
+    ],
+    stack: ["Next.js", "Tailwind CSS", "Vercel"],
+    entregables: [
+      "Una página con todos tus enlaces (WhatsApp, Instagram, TikTok…)",
+      "Diseño a tu marca",
+      "Link corto para poner en tu bio",
+    ],
+    explicacionPrecio:
+      "Es la página donde viven todos tus enlaces: pones el link en tu bio de Instagram o TikTok y la gente encuentra tu WhatsApp, tus redes y tus servicios en un solo lugar. Rápido de entregar y con tu estilo.",
+  },
+  {
+    id: "cotizador",
+    nombreCliente: "Cotizador / presupuesto en línea",
+    keywords: [
+      "cotizador", "cotización en línea", "cotizacion en linea", "presupuesto en línea",
+      "presupuesto en linea", "que me pidan cotización", "que me pidan cotizacion",
+      "que cotice", "pedir cotización", "pedir cotizacion", "pedir presupuesto",
+      "calculadora", "cuánto cuesta mi servicio", "cuanto cuesta mi servicio",
+    ],
+    base: { basico: 15000, profesional: 25000, avanzado: 40000 },
+    tiempo: { basico: "8-12 días", profesional: "12-20 días", avanzado: "20-30 días" },
+    features: [
+      { id: "formulario_multipaso", labelCliente: "Formulario multi-paso para que tus clientes pidan su cotización", precio: 3000 },
+      { id: "calculo_automatico", labelCliente: "Cálculo automático del precio según lo que eligen", precio: 3500 },
+      { id: "pdf_cotizacion", labelCliente: "PDF de cotización que se genera solo", precio: 2000 },
+      { id: "notificacion_whatsapp", labelCliente: "Te llega la cotización por WhatsApp al instante", precio: 1500 },
+    ],
+    stack: ["Next.js", "Supabase", "Tailwind CSS", "Vercel"],
+    entregables: [
+      "Formulario donde tu cliente describe lo que necesita",
+      "Cálculo automático del precio en línea",
+      "PDF de cotización listo para enviar",
+      "Aviso por WhatsApp cuando alguien pide una cotización",
+    ],
+    explicacionPrecio:
+      "Es un sistema para que tus clientes te pidan presupuesto en línea: llenan un formulario, el sistema calcula el precio solo y te llega el aviso. Es como el bot que estás usando, pero para tu negocio.",
   },
 ];
 
@@ -257,6 +472,28 @@ export function inferCategory(text: string): string {
     return new RegExp(`(^|[^a-z0-9])${nkw}([^a-z0-9]|$)`).test(t);
   };
 
+  // Nivel 4 · Plataformas por vertical: una señal de PORTAL clara es casi
+  // decisiva → webapp. Solo una petición explícita de "página sencilla/simple/
+  // presentación" la supera (el cliente quiere algo simple, no una plataforma).
+  // Esto evita el empate frágil con keywords genéricas de categorías tempranas
+  // ("clínica"/"consultas"/"doctor" de citas, "información" de landing) que el
+  // bonus de +1.0 del loop NO supera con `score > bestScore` (trampa conocida:
+  // 1.0 no es > 1 en JS y el empate favorece a la categoría que va primero).
+  const VERTICAL_PLATFORM_RE =
+    /(portal de (propiedades|bienes ra[ií]ces|membres[ií]as|miembros|socios|cursos|clases|salud|m[eé]dico)|plataforma de (cursos|clases|educaci[oó]n|estudio)|cursos? en l[ií]nea|clases en l[ií]nea|lecciones? (en v[ií]deo|en video)|telemedicina|expediente (del|de mi|de tus|de los) paciente|videollamada|recetas (electr[oó]nicas|en l[ií]nea)|consultas (m[eé]dicas )?en l[ií]nea|directorio de (negocios|empresas|comercios|asociados)|listado de (negocios|empresas|comercios)|c[áa]mara de comercio)/;
+  // Nivel 5 · Ecosistema: señales EXPLÍCITAS de marketplace, SaaS y ERP/CRM
+  // a medida. Igual que las verticales del nivel 4, son casi decisivas → webapp.
+  // OJO: "varios vendedores" suelto NO es decisivo aquí (también es ecommerce
+  // pro); solo cuenta con contexto de marketplace (que publiquen/vendan, cada
+  // vendedor, comisión). "facturación"/"inventario" sueltos tampoco (son de
+  // ecommerce pro/webapp); el ERP se detecta con su contexto (módulos, almacén,
+  // nómina, logística).
+  const NIVEL5_ECOSYSTEM_RE =
+    /(marketplace|mercado en l[ií]nea|comisi[oó]n por (venta|ventas)|cobrar(le)? (una )?comisi[oó]n|plataforma de (ventas?|vendedores|mercado)|varios vendedores (que )?(publiquen|vendan|venden)|cada vendedor (vende|publica|tiene su)|software como servicio|\bsaas\b|plataforma para (mis|tus|sus|los) clientes|plataforma b2b|multi-?tenant|\berp\b|\bcrm\b|control de almac[eé]n|m[oó]dulos? de (compras|ventas|almac[eé]n|n[oó]mina)|sistema de n[oó]mina|log[ií]stica de (env[ií]os|mercanc[ií]a|pedidos))/;
+  const SIMPLE_PAGE_RE =
+    /(p[aá]gina sencilla|p[aá]gina simple|algo sencillo|solo informaci[oó]n|solo lo b[aá]sico|lo b[aá]sico|p[aá]gina de presentaci[oó]n|de presentaci[oó]n)/;
+  if ((VERTICAL_PLATFORM_RE.test(t) || NIVEL5_ECOSYSTEM_RE.test(t)) && !SIMPLE_PAGE_RE.test(t)) return "webapp";
+
   let best: PricingCategory | null = null;
   let bestScore = 0;
 
@@ -268,14 +505,49 @@ export function inferCategory(text: string): string {
       if (hasKw(kw)) matched.add(normalize(kw));
     }
     let score = matched.size;
-    // +0.5 si menciona citas/agenda en la frase
-    if (cat.id === "citas" && /\b(agendar|agenda|citas?|reservar|horario)\b/.test(t)) score += 0.5;
+    // Señal EXPLÍCITA de citas/agenda: pesa más que el bonus genérico de landing
+    // ("me encuentren", "presentación"...). Antes era +0.5 y un negocio que pedía
+    // "agenden sus citas en línea Y que me encuentren en Google" empataba con
+    // landing (2.5 vs 2.5) y perdía por ser el primero de la lista.
+    if (cat.id === "citas" && /\b(agendar|agenda|citas?|reservar|horario)\b/.test(t)) score += 1.0;
     // +0.5 si hay señales claras de VENTA EN LÍNEA (carrito, pagos, envíos, "por internet")
     if (
       cat.id === "ecommerce" &&
       /(vender\s+(en linea|en línea|por internet|mi|mis|tus)|vendo\s+(en linea|en línea|por internet|mi|mis|tus)|comprar\s+(en linea|en línea|online)|compras\s+(en linea|en línea|online)|tienda\s+(online|en linea|en línea)|carrito|checkout|pasarela|pagar\s+(en linea|en línea|online)|pago\s+(en linea|en línea|online)|pagos?\s+(en linea|en línea|online)|pedidos?\s+(online|en linea|en línea)|hacer\s+pedidos|env[ií]os|shop\s+online)/.test(t)
     )
       score += 0.5;
+    // Señal EXPLÍCITA de portafolio/galería: supera los genéricos de landing
+    // ("mostrar", "profesional") que casi todo negocio usa en su descripción.
+    if (cat.id === "portafolio" && /\b(portafolio|portfolio|galer[ií]a|muestras?)\b/.test(t)) score += 1.0;
+    // Menú digital: solo gana con frases explícitas de menú QR, o con
+    // "menú"/"carta" sueltos ACOMPAÑADOS de señal de restaurante/comida
+    // (regla del mercado: un menú no debe activar ecommerce ni landing).
+    if (
+      cat.id === "menu_digital" &&
+      (/(men[uú] digital|menu digital|carta digital|men[uú] con (el )?qr|c[oó]digo qr|codigo qr|que escaneen|escanear|vean mi carta)/.test(t) ||
+        (/\b(men[uú]|carta)\b/.test(t) &&
+          /(restaurante|cafeter[ií]a|caf[eé]|comida|taquer[ií]a|pizzer[ií]a|hamburgues|bar\b|food\s*truck|bistro|cocina|marisquer|tacos|antojitos|loncher)/.test(t)))
+    )
+      score += 1.0;
+    // Tarjeta digital: señal explícita de tarjeta/minisitio supera los
+    // genéricos de landing ("tarjeta", "información", "profesional").
+    if (
+      cat.id === "tarjeta_digital" &&
+      /(tarjeta digital|tarjeta de presentaci[oó]n|minisitio|mini sitio|compartir mi informaci[oó]n|mi informaci[oó]n en un link)/.test(t)
+    )
+      score += 1.0;
+    // Link-in-bio: señal explícita de enlaces/bio.
+    if (
+      cat.id === "link_in_bio" &&
+      /(link en mi bio|link de instagram|links? de mis redes|link in bio|mis enlaces|enlaces de mis redes|una p[aá]gina con mis enlaces)/.test(t)
+    )
+      score += 1.0;
+    // Cotizador en línea (flagship): señal explícita de que pidan presupuesto.
+    if (
+      cat.id === "cotizador" &&
+      /(cotizador|cotizaci[oó]n en l[ií]nea|presupuesto en l[ií]nea|que me pidan cotizaci[oó]n|que cotice|pedir cotizaci[oó]n|pedir presupuesto|calculadora|cu[aá]nto cuesta mi servicio)/.test(t)
+    )
+      score += 1.0;
     // +0.5 si pide algo sencillo de presentación/catálogo (empates favorecen a landing)
     if (
       cat.id === "landing" &&
@@ -283,6 +555,70 @@ export function inferCategory(text: string): string {
         /no muy caro|no tan caro|algo sencillo|algo básico|algo basico/.test(t))
     )
       score += 0.5;
+    // Corporativo (nivel 2): señales explícitas de sitio multi-página/empresa
+    // pesan más que los genéricos de landing ("presentación", "mostrar"): un
+    // despacho o una constructora que pide "quienes somos" + "varias secciones"
+    // es un sitio corporativo, no una landing de una página. El empate con
+    // landing sigue favoreciendo a landing (va primero en el catálogo).
+    if (
+      cat.id === "corporativo" &&
+      /(corporativ|constructora|despacho|varias secciones|v[aá]s de una p[aá]gina|varias p[aá]ginas|quienes somos|qui[eé]nes somos|nuestra empresa|nuestro equipo|sobre nosotros|con[oó]cenos|multi-?p[aá]gina|sitio corporativ|web corporativ)/.test(t)
+    )
+      score += 1.0;
+    // Nivel 4 · Plataformas por vertical → webapp. Señales EXPLÍCITAS de portal/
+    // sistema por vertical (inmobiliaria, membresías, cursos, telemedicina,
+    // directorio). NO se usan palabras sueltas genéricas ("gimnasio", "curso",
+    // "clases", "pacientes") para no robarle landings/citas a negocios que solo
+    // quieren una página de presentación (regla "sin romper los casos actuales":
+    // un gimnasio que pide "que la gente vea los horarios y me llame" es LANDING).
+    if (
+      cat.id === "webapp" &&
+      /(portal de (propiedades|bienes ra[ií]ces)|propiedades|inmobiliaria|bienes ra[ií]ces|casas? (en venta|en renta)|departamentos? (en venta|en renta)|terrenos? (en venta|en renta)|vender propiedades|filtros? por (zona|precio) (para|de) (las |mis )?propiedades)/.test(t)
+    )
+      score += 1.0;
+    if (
+      cat.id === "webapp" &&
+      /(membres[ií]a|membres[ií]as|suscripci[oó]n|suscripciones|pago recurrente|cobro recurrente|cuota mensual|plan(es)? de membres[ií]a|portal de (miembros|socios|membres[ií]as)|[aá]rea de (miembros|socios)|ingreso recurrente)/.test(t)
+    )
+      score += 1.0;
+    if (
+      cat.id === "webapp" &&
+      /(plataforma de (cursos|clases|educaci[oó]n|estudio)|cursos en l[ií]nea|curso en l[ií]nea|clases en l[ií]nea|lecciones? (en v[ií]deo|en video)|vender mis (cursos|clases)|portal de cursos|plataforma educativa|educaci[oó]n en l[ií]nea|alumnos)/.test(t)
+    )
+      score += 1.0;
+    if (
+      cat.id === "webapp" &&
+      /(telemedicina|expediente (del|de mi|de tus|de los) paciente|expedientes cl[ií]nicos|historia cl[ií]nica|videollamada|video-?llamada|recetas (electr[oó]nicas|en l[ií]nea)|consultas (m[eé]dicas )?en l[ií]nea|portal de salud|portal m[eé]dico)/.test(t)
+    )
+      score += 1.0;
+    if (
+      cat.id === "webapp" &&
+      /(directorio|directorios|listado de (negocios|empresas|comercios)|directorio de (negocios|empresas|comercios|asociados)|fichas? de (negocios|empresas|comercios)|asociaci[oó]n de (negocios|comercios)|c[áa]mara de comercio)/.test(t)
+    )
+      score += 1.0;
+    // Nivel 5 · Ecosistema → webapp (marketplace, SaaS, ERP/CRM). Señales
+    // EXPLÍCITAS de plataforma grande, mismo patrón que las verticales del
+    // nivel 4: son webapp con features de nivel 5, no categorías nuevas.
+    // OJO: "varios vendedores" suelto no basta aquí (es ecommerce pro); solo
+    // con contexto de marketplace (que publiquen/vendan, cada vendedor,
+    // comisión). Y "facturación"/"inventario" sueltos NO van (son ecommerce
+    // pro/webapp); el ERP se detecta con su contexto (módulos, almacén,
+    // nómina, logística).
+    if (
+      cat.id === "webapp" &&
+      /(marketplace|mercado en l[ií]nea|varios vendedores (que )?(publiquen|vendan|venden)|cada vendedor (vende|publica|tiene su)|comisi[oó]n por (venta|ventas)|cobrar(le)? (una )?comisi[oó]n|plataforma de (ventas?|vendedores|mercado)|que (otros|varios) (vendedores )?vendan)/.test(t)
+    )
+      score += 1.0;
+    if (
+      cat.id === "webapp" &&
+      /(software como servicio|\bsaas\b|plataforma para (mis|tus|sus|los) clientes|plataforma b2b|multi-?tenant|ofrecer(les)? (un )?(servicio|software|sistema) a (mis|tus|sus) clientes|plataforma de suscripci[oó]n)/.test(t)
+    )
+      score += 1.0;
+    if (
+      cat.id === "webapp" &&
+      /(\berp\b|\bcrm\b|control de almac[eé]n|m[oó]dulos? de (compras|ventas|almac[eé]n|n[oó]mina)|sistema de n[oó]mina|control de n[oó]mina|log[ií]stica de (env[ií]os|mercanc[ií]a|pedidos)|gestionar (toda|toda la|mi|la) operaci[oó]n|control de inventario y (compras|ventas))/.test(t)
+    )
+      score += 1.0;
     if (score > bestScore) {
       bestScore = score;
       best = cat;
@@ -389,13 +725,16 @@ export function buildFallbackProposal(
     paginas: context.paginas,
     bots: botsIds,
   });
-  // Con bots, el precio EXACTO (base + bots) manda sobre el clamp del giro.
+  // Regla #7 (precio único): el total EXACTO del motor (base + bots) manda
+  // SIEMPRE sobre el clamp del giro. La UI, el PDF de cotización, el copy, la
+  // propuesta formal y el pack técnico citan el MISMO número que ve el cliente
+  // (calcularTotalDeterminista). El clamp del giro solo queda como estimación
+  // de mercado para el extremo superior del rango (precio_max) y el copy.
+  // Si el motor falla (no debería), se cae al clamp por giro.
   const precio_min =
-    botsSeleccionados.length && totalExacto != null
-      ? totalExacto
-      : ajustado.precio_min;
+    totalExacto != null ? totalExacto : ajustado.precio_min;
   const precio_max =
-    botsSeleccionados.length && totalExacto != null
+    totalExacto != null
       ? Math.max(totalExacto, ajustado.precio_max)
       : ajustado.precio_max;
 

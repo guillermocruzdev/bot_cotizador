@@ -1,4 +1,4 @@
-# 📦 PACK DE PROMPTS · Tienda online con carrito y pagos — para Roo Code + DeepSeek (mobile-first, por fases)
+# 📦 PACK DE PROMPTS · ERP a medida (compras, ventas, almacén, nómina) — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
 > Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
@@ -81,12 +81,12 @@
 
 | Campo | Valor |
 |---|---|
-| Cliente | Moda GDL |
-| Tipo de proyecto | Tienda online con carrito y pagos |
-| 🎭 Rol que conduce el proyecto | Product Manager de ecommerce + optimizador de conversión |
+| Cliente | Logística del Norte |
+| Tipo de proyecto | ERP a medida (compras, ventas, almacén, nómina) |
+| 🎭 Rol que conduce el proyecto | Consultor de procesos + arquitecto de sistemas de operación |
 | Nivel | Avanzado |
-| Presupuesto estimado | $32,640 MXN – $36,640 MXN |
-| Tiempo estimado | 21-30 días de desarrollo |
+| Presupuesto estimado | $90,000 MXN – $200,000 MXN |
+| Tiempo estimado | 60-90 días de desarrollo |
 | Despliegue | Vercel (producción) |
 | Fecha de entrega acordada | para el próximo mes |
 | Mantenimiento | No incluido (opcional) |
@@ -94,33 +94,33 @@
 
 ### 🎯 Punto de partida según el tipo de servicio
 
-> Este pack no es genérico: está afinado para un proyecto de **Tienda online con carrito y pagos**. Toda decisión de UX, contenido, datos y QA debe alinearse con esto.
+> Este pack no es genérico: está afinado para un proyecto de **ERP a medida (compras, ventas, almacén, nómina)**. Toda decisión de UX, contenido, datos y QA debe alinearse con esto.
 
-**🎭 Rol que conduce el proyecto:** Product Manager de ecommerce + optimizador de conversión
+**🎭 Rol que conduce el proyecto:** Consultor de procesos + arquitecto de sistemas de operación
 
-**🥇 Conversión #1 (el objetivo comercial):** Convertir navegación en COMPRA: catálogo claro, checkout sin fricción y confianza (envíos, pagos, garantías). El carrito debe ser recuperable.
+**🥇 Conversión #1 (el objetivo comercial):** Automatizar la operación del negocio: compras, ventas, almacén y nómina en un solo sistema con reportes ejecutivos e integración contable — se cotiza con propuesta formal detallada, no a ciegas.
 
 **✅ Qué define que el sitio "funciona" para este giro:**
-- Flujo catálogo → carrito → pago → confirmación completo y probado (incluido Stripe webhook).
-- Checkout en pocos pasos, con estados de carga/error/éxito claros.
-- Inventario y pedidos visibles en el panel; el dueño recibe notificación de cada venta.
+- Módulos (compras/ventas/almacén/nómina) funcionando y conectados entre sí.
+- Integración contable con el sistema del cliente (si aplica).
+- Reportes ejecutivos de rentabilidad, costos y ventas.
 
 **⚠️ Riesgos típicos de este tipo de servicio (vigilar en QA):**
-- Pasarela mal integrada (pagos que 'desaparecen' o no confirman).
-- Carrito que se pierde al recargar o al volver del pago.
-- Precios/inventario desincronizados entre catálogo y checkout.
+- Scope enorme sin fijar en el kickoff (el proyecto se sale de control).
+- Datos migrados mal (rompe la operación del negocio).
+- Integración contable frágil (errores que cuestan dinero).
 
 ### Contexto global del proyecto
 
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -139,15 +139,15 @@ Copia cada bloque `CHAT N` por separado y pégalo en su propio chat. Empieza por
 Actúa como **UX Researcher + estratega de producto senior**. Tu trabajo: convertir lo que el cliente contó en la entrevista en un plan de producto centrado en el usuario — research brief, proto-personas, customer journey, métricas de éxito y jerarquía de mensajes — para que todas las fases siguientes diseñen y construyan con intención y no "a ojo".
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -165,26 +165,26 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 ### 1. Research brief (qué sabemos)
 Resume en `docs/ux/research-brief.md` los datos reales de la entrevista y del análisis:
 - Objetivo comercial #1 (la pregunta del CEO): qué conversión es la MÁS importante para este negocio — contactar, agendar, comprar o pedir por WhatsApp — y a qué segmento de cliente ataca primero; se mide en el CHAT 10/11 y se revisa en el CHAT 20.
-- Negocio: Tienda online con carrito y pagos · Giro: Tienda de ropa.
-- Servicios/oferta: ropa de hombre y mujer, tallas 26-42.
-- Descripción del cliente: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+- Negocio: ERP a medida (compras, ventas, almacén, nómina) · Giro: Empresa / operación (plataforma a medida).
+- Servicios/oferta: logística y distribución.
+- Descripción del cliente: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 - Sin referencia de estilo definida.
-- Presupuesto: 25000 a 30000 · Entrega: para el próximo mes.
-- Contexto técnico: usuarios con cuenta, pagos en línea, panel interno, sin asistentes IA.
+- Presupuesto: 150000 · Entrega: para el próximo mes.
+- Contexto técnico: usuarios con cuenta, sin pagos en línea, panel interno, sin asistentes IA.
 Marca explícitamente qué es un **hecho** (lo que dijo el cliente) vs un **supuesto** (lo que inferimos) — eso evita inventar para el cliente.
 
 ### 2. Proto-personas (2-3, basadas en evidencia, no inventadas)
-Crea proto-personas realistas para el giro **Tienda de ropa** (mobile-first: la mayoría entrará por celular). Para cada una: nombre, contexto, objetivos, dolores, cómo llega a la web (fuente: Google, WhatsApp, redes, QR) y qué necesita encontrar en < 30s. Al menos una persona debe ser el **dueño del negocio** (el que decide y el que lee el panel) y otra el **cliente final** (el que compra/agenda/contacta). No inventes estadísticas reales; si citas cifras, márcalas `[EJEMPLO — validar]`.
+Crea proto-personas realistas para el giro **Empresa / operación (plataforma a medida)** (mobile-first: la mayoría entrará por celular). Para cada una: nombre, contexto, objetivos, dolores, cómo llega a la web (fuente: Google, WhatsApp, redes, QR) y qué necesita encontrar en < 30s. Al menos una persona debe ser el **dueño del negocio** (el que decide y el que lee el panel) y otra el **cliente final** (el que compra/agenda/contacta). No inventes estadísticas reales; si citas cifras, márcalas `[EJEMPLO — validar]`.
 
 ### 3. Customer journey (de la necesidad a la conversión)
 Documenta el journey del giro en `docs/ux/journey.md` con las etapas reales y, en cada una, qué ve el usuario, qué siente y qué puede fallar (fricción):
-- 1. Descubrimiento (llega por Google/redes) → Exploración del catálogo → Evaluación del producto → Checkout → Post-compra/confirmación.
-- 2. Fricción típica: catálogo lento en móvil, dudas de envío/pago, checkout largo.
+- 1. Login → Panel → Tarea principal (CRUD/reporte) → Cierre de sesión.
+- 2. Fricción típica: login confuso, navegación del módulo, errores sin mensaje claro.
 Para cada fricción, anota la **oportunidad** (qué debe resolver la web o el asistente IA) — esto alimenta las fases de diseño, contenido y microcopy.
 
 ### 4. Métricas de éxito (KPIs del giro)
 Define 3-5 métricas que respondan "¿la web funciona?" (no decorativas). Ejemplos por giro:
-- Conversión de compra (visitas → pedidos pagados) y valor medio de pedido.
+- Contactos/leads generados y tasa de conversión del formulario.
 - Rendimiento en celular (LCP < 2.5s) — un segundo más lento cuesta conversión.
 - Fuente de tráfico que más convierte (Google, WhatsApp, redes, QR) — decisión de inversión.
 - Adopción del panel por el dueño (tareas completadas por semana).
@@ -224,15 +224,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_1` + resumen 
 Actúa como **UX/UI Designer senior**. Tu trabajo: producir el "plano" de la web — qué páginas existen, cómo se navegan, qué hay en cada pantalla y en qué orden — en wireframes de baja fidelidad a 360px, validando que cada tarea del cliente se complete sin fricción.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -248,27 +248,22 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 
 ### 1. Arquitectura de la información (sitemap)
 Con base en las páginas del proyecto y lo acordado con el cliente, documenta el **sitemap** en `docs/ux/sitemap.md`:
-- / — Home: categorías destacadas, productos top, promociones.
-- /productos — Catálogo con filtros (categoría, precio) y búsqueda.
-- /productos/[slug] — Detalle de producto: fotos, precio, descripción, botón agregar al carrito.
-- /carrito — Resumen del carrito con cantidades y total.
-- /checkout — Datos de envío + pago (Stripe) + confirmación.
-- /gracias — Página de confirmación de compra.
-- /mi-cuenta — (si autenticación) historial de pedidos y datos.
-- /panel — (si dashboard) administración de productos, pedidos y ventas.
+- /login y /registro — Autenticación (si aplica).
+- / — Dashboard principal con métricas.
+- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
+- /[recurso]/[id] — Detalle/edición de registros.
+- /configuracion — Ajustes y usuarios (roles).
 - /aviso-de-privacidad — página legal.
-Incorpora la estructura acordada con el cliente: "Inicio, Catálogo, Producto, Carrito, Checkout, Contacto".
+Incorpora la estructura acordada con el cliente: "Panel, Compras, Ventas, Almacén, Nómina".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
 - Evita páginas huérfanas: cada página aparece en la navegación o tiene una ruta de entrada clara (CTA, footer, enlaces internos).
 
 ### 2. Flujos de tareas (task flows)
-Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Tienda online con carrito y pagos**:
-- **Tarea 1**: Cliente explora el catálogo y filtra por categoría.
-- **Tarea 2**: Agrega productos al carrito (estado persistente, recuperable).
-- **Tarea 3**: Pasa a checkout, captura datos de envío.
-- **Tarea 4**: Paga con tarjeta (Stripe) o elige pago por transferencia.
-- **Tarea 5**: Recibe confirmación por correo y el dueño ve el pedido en su panel.
-- **Tarea 6**: El inventario se descuenta y se notifica una nueva venta.
+Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Plataforma o sistema web a medida**:
+- **Tarea 1**: Usuario autenticado entra al panel y ve su rol y permisos.
+- **Tarea 2**: Realiza operaciones CRUD sobre los módulos correspondientes.
+- **Tarea 3**: Cada acción crítica queda registrada en auditoría.
+- **Tarea 4**: Los reportes se generan y pueden exportarse a PDF/CSV.
 Para cada flujo, verifica que: hay 1 CTA claro por pantalla, el usuario sabe dónde está (breadcrumb/estado), puede volver atrás sin perder lo escrito y el éxito se confirma (mensaje de éxito visible).
 
 ### 3. Wireframes mobile-first (360px)
@@ -311,15 +306,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_2` + resumen 
 Actúa como **Brand Manager + Project Manager / Content Strategist senior**. Tu trabajo: convertir la conversación con el cliente en un "kit de marca y contenido" concreto — qué entrega el cliente, en qué formato y para cuándo — y dejar un **contrato de contenido** que evite bloqueos a mitad del proyecto. Si algo no existe (logo, fotos), NO lo inventes: defínelo como placeholder provisional y márcalo.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -336,7 +331,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 ### 1. Kit de marca (entregable del cliente)
 Crea `docs/ux/brand-content.md` y la carpeta `docs/content/marca/` y pide al cliente (o extrae de la conversación) lo siguiente:
 - **Logo**: archivo vectorial (SVG/PDF) o PNG con fondo transparente; si NO hay logo, crea un wordmark provisional con el nombre del negocio (tipografía de marca + color) y márcalo como provisional en el README.
-- **Colores de marca**: 2-4 colores (hex) que usa el negocio (logo, redes, local); si no los hay, propón una paleta coherente con el giro **Tienda de ropa** y márcala como propuesta a validar.
+- **Colores de marca**: 2-4 colores (hex) que usa el negocio (logo, redes, local); si no los hay, propón una paleta coherente con el giro **Empresa / operación (plataforma a medida)** y márcala como propuesta a validar.
 - **Tipografías**: las del logo/carteles (si existen); si no, elige 1 display + 1 de texto legible (regla del CHAT 4).
 - **Favicon e íconos**: derívalos del logo (si no hay, usa la inicial del negocio).
 - **Redes sociales y perfiles**: URLs de Facebook/Instagram/TikTok/Google para enlazarlas y extraer tono.
@@ -397,15 +392,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_3` + resumen 
 Actúa como **desarrollador senior de Next.js**. Estás INICIANDO un proyecto desde cero y vas a dejarlo listo para recibir las siguientes fases (interfaz, contenido, datos, lógica, asistentes IA y despliegue). Tu criterio es el de alguien que ya entregó decenas de webs en producción.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -417,7 +412,7 @@ Dejar la base funcionando con `npm run dev`: sistema de diseño definido (tokens
 
 ### Pasos
 1. **Scaffold**: crea el proyecto Next.js 14+ (App Router) con TypeScript estricto, Tailwind CSS y shadcn/ui configurado. Si el proyecto ya existe, verifica que compile y que ESLint + Prettier estén listos.
-2. **Design tokens** (sistema de diseño con PRESENCIA): define en `globals.css` (CSS variables) y conecta a `tailwind.config` (colores, fuentes, breakpoints y `container`) según el estilo del cliente (**moderno, con micro-interacciones y animaciones sutiles (Framer Motion), respetando la referencia del cliente**):
+2. **Design tokens** (sistema de diseño con PRESENCIA): define en `globals.css` (CSS variables) y conecta a `tailwind.config` (colores, fuentes, breakpoints y `container`) según el estilo del cliente (**sobrio, limpio y directo, con foco en la claridad**):
    - **Paleta**: color de marca + escala completa (50→950), color de acento y de superficie; soporte de **modo oscuro** (variante `dark` de Tailwind) aunque se use claro por defecto.
    - **Tipografía**: jerarquía clara (display / h1-h4 / body / caption) con escalas `clamp()`; fuente display para titulares (si el giro lo amerita) + Inter (o similar) para texto.
    - **Espaciado y ritmo de sección**: escala de espaciado, contenedor con `max-w` y padding correcto en móvil; ritmo vertical consistente entre secciones (`py-16/24` en desktop, `py-12/16` en móvil).
@@ -449,7 +444,7 @@ supabase/
 7. **README**: documenta arranque (instalación, comandos, variables de entorno) y pega la metodología mobile-first de abajo para que quede como referencia del proyecto.
 
 ### Reglas de diseño
-- Estilo: moderno, con micro-interacciones y animaciones sutiles (Framer Motion), respetando la referencia del cliente.
+- Estilo: sobrio, limpio y directo, con foco en la claridad.
 - Sistema de diseño: paleta en CSS variables, tipografía legible, componentes shadcn/ui consistentes.
 - Favicon, íconos PWA y Open Graph image para compartir en redes.
 
@@ -484,15 +479,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_4` seguido de
 Actúa como **desarrollador senior de UI**. Tu trabajo: construir el esqueleto visual (header, footer, contenedores) y la librería de componentes, todo **mobile-first**.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -535,15 +530,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_5` + resumen 
 Actúa como **desarrollador senior de UI/UX y copywriter técnico**. Tu trabajo: construir TODAS las secciones visibles de la página con copy que vende y con imágenes, **mobile-first**. Al terminar, la página debe verse **COMPLETA y profesional en el celular**.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -551,7 +546,7 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### Estrategia comercial que la página DEBE comunicar
-- **Mensaje de venta:** Vende 24/7 con checkout sin fricción y panel de pedidos.
+- **Mensaje de venta:** Controla toda tu operación en un solo sistema con reportes ejecutivos.
 - **El problema que resuelve:** El cliente pierde oportunidades por no tener presencia digital clara.
 - **Beneficios de negocio:** - Presencia profesional
 - Captación de clientes
@@ -590,24 +585,20 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (Tienda online con carrito y pagos — 9 bloques)
-- / — Home: categorías destacadas, productos top, promociones.
-- /productos — Catálogo con filtros (categoría, precio) y búsqueda.
-- /productos/[slug] — Detalle de producto: fotos, precio, descripción, botón agregar al carrito.
-- /carrito — Resumen del carrito con cantidades y total.
-- /checkout — Datos de envío + pago (Stripe) + confirmación.
-- /gracias — Página de confirmación de compra.
-- /mi-cuenta — (si autenticación) historial de pedidos y datos.
-- /panel — (si dashboard) administración de productos, pedidos y ventas.
+### Secciones a construir (ERP a medida (compras, ventas, almacén, nómina) — 6 bloques)
+- /login y /registro — Autenticación (si aplica).
+- / — Dashboard principal con métricas.
+- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
+- /[recurso]/[id] — Detalle/edición de registros.
+- /configuracion — Ajustes y usuarios (roles).
 - /aviso-de-privacidad — página legal.
 
 ### Servicios / oferta a mostrar
 El cliente quiere destacar los siguientes servicios u oferta. Crea una sección de servicios (o catálogo) bien armada, con cada ítem:
-- ropa de hombre y mujer — con descripción breve, beneficios y CTA de contacto.
-- tallas 26-42 — con descripción breve, beneficios y CTA de contacto.
+- logística y distribución — con descripción breve, beneficios y CTA de contacto.
 
 ### Sitemap / estructura acordada con el cliente
-El cliente describió la estructura así: "Inicio, Catálogo, Producto, Carrito, Checkout, Contacto". Asegúrate de que la navegación y las secciones reflejen esta estructura de forma completa y coherente.
+El cliente describió la estructura así: "Panel, Compras, Ventas, Almacén, Nómina". Asegúrate de que la navegación y las secciones reflejen esta estructura de forma completa y coherente.
 
 ### Imágenes (OBLIGATORIO: nunca cajas vacías)
 La página DEBE verse completa desde el primer deploy. Cuando el cliente no tenga fotos reales, usa imágenes placeholder de alta calidad; **nunca dejes cajas grises, espacios vacíos ni imágenes rotas**.
@@ -646,15 +637,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_6` + resumen 
 Actúa como **Conversation Designer (CxD) + UX Writer + Interaction Designer senior**. Tu trabajo: que cada palabra de la web suene a una sola marca, ayude a completar la tarea y reduzca fricción; y que cada conversación (formulario o asistente IA) tenga estructura: apertura, turnos, recuperación de errores y cierre claro.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -662,7 +653,7 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### 1. Voz y tono (guía, no reglas rígidas)
-Crea `docs/ux/voice-tone.md`: cómo suena la marca según el giro **Tienda de ropa** y el análisis (Vende 24/7 con checkout sin fricción y panel de pedidos.):
+Crea `docs/ux/voice-tone.md`: cómo suena la marca según el giro **Empresa / operación (plataforma a medida)** y el análisis (Controla toda tu operación en un solo sistema con reportes ejecutivos.):
 - **Personalidad**: consultor cercano y directo (p. ej. "te ayudo a...", no "nuestros servicios incluyen...").
 - **Tratamiento consistente**: usa **tú** en toda la web y en los asistentes (según lo que el cliente pidió en la entrevista).
 - **Lenguaje claro**: español sin jerga técnica; frases cortas; sin anglicismos salvo los del giro (checkout, FAQ, etc.).
@@ -715,15 +706,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_7` + resumen 
 Actúa como **desarrollador senior backend / base de datos**. Tu trabajo: dejar la base de datos de producción lista (esquema versionado, RLS y datos de demostración) para que las fases de lógica y asistentes IA trabajen sobre una base real.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -742,75 +733,25 @@ Crear/verificar el proyecto de Supabase, aplicar el esquema en una migración SQ
 
 ### Esquema base (convención de tipos — ajusta en kickoff)
 ```sql
--- ECOMMERCE — esquema base (convención de tipos; ajustar en kickoff)
+-- WEBAPP — esquema base (convención de tipos; ajustar en kickoff)
 
--- solo si hay autenticación.
+-- roles admin/empleado/cliente.
 create table if not exists public.profiles (
   id uuid primary key default gen_random_uuid()  -- FK a la tabla correspondiente (ajustar en kickoff),
   nombre text,
   email text,
-  telefono text,
+  rol text,
   created_at timestamptz not null default now()
 );
 
+-- modules según el proceso: customers, inventory, orders, reports, etc. (definir con el cliente en el kickoff).
 
-create table if not exists public.products (
-  id uuid primary key default gen_random_uuid(),
-  slug text unique,
-  nombre text,
-  descripcion text,
-  precio numeric(10,2),
-  precio_promo numeric(10,2),
-  stock integer,
-  activo boolean,
-  imagen_url text,
-  categoria_id uuid,
-  created_at timestamptz not null default now()
-);
-
-
-create table if not exists public.product_categories (
-  id uuid primary key default gen_random_uuid(),
-  nombre text,
-  slug text unique,
-  posicion integer
-);
-
-
-create table if not exists public.orders (
+-- trazabilidad.
+create table if not exists public.audit_log (
   id uuid primary key default gen_random_uuid(),
   usuario_id uuid,
-  nombre text,
-  email text,
-  telefono text,
-  direccion text,
-  ciudad text,
-  cp text,
-  subtotal numeric(10,2),
-  envio numeric(10,2),
-  total numeric(10,2),
-  estado text,
-  stripe_payment_id uuid,
-  created_at timestamptz not null default now()
-);
-
-
-create table if not exists public.order_items (
-  id uuid primary key default gen_random_uuid(),
-  order_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
-  product_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
-  cantidad integer,
-  precio_unitario numeric(10,2)
-);
-
--- si hay pasarela.
-create table if not exists public.payments (
-  id uuid primary key default gen_random_uuid(),
-  order_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
-  proveedor text,
-  referencia text,
-  monto numeric(10,2),
-  estatus text,
+  accion text,
+  detalle jsonb,
   created_at timestamptz not null default now()
 );
 
@@ -820,17 +761,6 @@ create table if not exists public.documents (
   ref_type text,
   ref_id uuid,
   url text,
-  created_at timestamptz not null default now()
-);
-
--- mensajes de contacto/chat.
-create table if not exists public.contact_messages (
-  id uuid primary key default gen_random_uuid(),
-  nombre text,
-  email text,
-  telefono text,
-  mensaje text,
-  leido boolean,
   created_at timestamptz not null default now()
 );
 
@@ -877,15 +807,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_8` + resumen 
 Actúa como **desarrollador senior full-stack**. Tu trabajo: dar vida a los formularios, crear las API routes y las integraciones externas, todo con TypeScript estricto y validación Zod, usando el esquema que dejó listo el CHAT 8.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -898,27 +828,22 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-03** · [Alta] Formulario de contacto funcional con validación, protección contra spam y confirmación visual.
 - **RF-04** · [Alta] Sistema de cuentas de usuario: registro, login (correo y/o OAuth), recuperación de contraseña y sesión segura.
 - **RF-05** · [Alta] Base de datos PostgreSQL (Supabase) con persistencia segura de la información del negocio.
-- **RF-06** · [Alta] Pasarela de pagos integrada (Stripe recomendado) con manejo de webhooks, confirmación y reembolsos.
 - **RF-07** · [Alta] Panel de administración protegido para gestionar la información y ver estadísticas.
 - **RF-09** · [Media] Generación de documentos (PDF) como cotizaciones, recibos o reportes.
-- **RF-10** · [Media] Canal de contacto directo: botón flotante de WhatsApp y/o chat.
-- **RF-12** · [Media] Micro-interacciones y animaciones (Framer Motion) para una experiencia moderna.
 - **RF-13** · [Alta] Optimización SEO: metadata dinámica, Open Graph, sitemap, robots.txt y datos estructurados JSON-LD.
-- **RF-14** · [Media] PWA instalable: manifest, service worker, íconos y carga offline básica.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
-- **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 6 pasos documentados en la sección 9.
+- **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
 ### API routes e integraciones
-- POST /api/checkout — crea la orden y genera el PaymentIntent de Stripe.
-- Webhook POST /api/webhooks/stripe — confirma pagos y actualiza estado de la orden.
-- GET/POST /api/products — CRUD de productos (protegido, solo admin).
-- POST /api/contact — soporte/consultas.
-- Cálculo de envío por código postal (paquetería) si aplica.
+- API routes por módulo con validación Zod y autorización por rol (middleware).
+- Autenticación con Supabase Auth (email + OAuth).
+- Generación de PDFs (react-pdf/jsPDF) si aplica.
+- Supabase RLS para seguridad a nivel de fila.
 
 **Integraciones externas según lo capturado:**
-- Stripe: PaymentIntent + webhooks para confirmar pagos.
+- Sin pasarela de pagos (contacto directo).
 - WhatsApp: deep links (wa.me) para contacto directo.
 - Correos transaccionales: Resend (confirmaciones de cita, pedido o contacto).
 - Sin mapa.
@@ -941,12 +866,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Las API routes idempotentes (GET de catálogo) responden con `Cache-Control` (stale-while-revalidate); nunca cachear datos personales.
 
 ### Flujo de usuario a validar de extremo a extremo
-- 1. Cliente explora el catálogo y filtra por categoría.
-- 2. Agrega productos al carrito (estado persistente, recuperable).
-- 3. Pasa a checkout, captura datos de envío.
-- 4. Paga con tarjeta (Stripe) o elige pago por transferencia.
-- 5. Recibe confirmación por correo y el dueño ve el pedido en su panel.
-- 6. El inventario se descuenta y se notifica una nueva venta.
+- 1. Usuario autenticado entra al panel y ve su rol y permisos.
+- 2. Realiza operaciones CRUD sobre los módulos correspondientes.
+- 3. Cada acción crítica queda registrada en auditoría.
+- 4. Los reportes se generan y pueden exportarse a PDF/CSV.
 
 ### Estados de UI
 Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 5/6 y el microcopy del CHAT 7 define los textos).
@@ -977,15 +900,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_9` + resumen 
 Actúa como **Data Engineer senior** con criterio de **privacidad por diseño**. Tu trabajo: montar el pipeline de datos del sitio (eventos → API → tabla) como si fuera un data pipeline de producción: esquema versionado, validación, batching, idempotencia y sin datos personales. Nada de recopilar "por si acaso": cada evento responde una pregunta de negocio.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1061,15 +984,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_10` + resumen
 Actúa como **Data Analyst / Data Scientist senior**. Tu trabajo: definir las métricas que importan para el giro, medir el funnel y la atribución con los datos ya capturados, y dejar un reporte que responda "¿qué mejoro y dónde?" — no un montón de gráficas bonitas sin uso.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1118,15 +1041,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_11` + resumen
 Actúa como **Software Engineer en pruebas (SDET) senior** con visión de **backend y frontend**. Tu trabajo: dejar una suite de pruebas que corra sola, rápida y sin depender de servicios externos (DeepSeek, Supabase, Stripe, Resend mockeados), con umbrales de cobertura y que atrape regresiones antes de producción.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1190,15 +1113,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_12` + resumen
 Actúa como **DevOps / Platform Engineer senior**. Tu trabajo: que "prueba y despliega" sea un botón y no una rutina manual — integración continua con gates de calidad, previews por rama, despliegue continuo a Vercel, migraciones aplicadas en orden y rollback inmediato. Si un cambio no pasa las gates, NO llega a producción.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1267,15 +1190,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_13` + resumen
 Actúa como **QA Engineer (Web) senior** + **desarrollador senior de calidad**. Tu trabajo: auditar, pulir, automatizar y probar en TODOS los tamaños (celular primero) y en los navegadores principales hasta que la web se vea y comporte como un producto de producción, y dejar una suite de pruebas que corra en CI para que ningún cambio futuro la rompa.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1342,15 +1265,12 @@ Revisa la página como si la viera un cliente exigente y corrige cualquier "huec
 - "Diseño responsive profesional" funciona de punta a punta.
 - "Cuentas de usuario (registro/login)" funciona de punta a punta.
 - "Base de datos segura" funciona de punta a punta.
-- "Pagos en línea" funciona de punta a punta.
 - "Panel de administración" funciona de punta a punta.
 - "Generación de documentos/PDF" funciona de punta a punta.
-- "Contacto por WhatsApp/chat" funciona de punta a punta.
-- "Animaciones modernas" funciona de punta a punta.
 - "SEO optimizado" funciona de punta a punta.
+- "Formulario de contacto" funciona de punta a punta.
 - Los formularios y confirmaciones llegan correctamente (correo/WhatsApp).
 - El panel permite gestionar la información principal sin fricción.
-- Se puede completar un pago de prueba de extremo a extremo.
 - La web está lista para desplegarse (solo faltan las fases de confiabilidad y despliegue).
 
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_14` + resumen breve (métricas y correcciones). No sigas con la siguiente fase.
@@ -1364,15 +1284,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_14` + resumen
 Actúa como **Security Engineer senior (ofensivo + defensivo)**. No confías en que "las librerías ya protegen": pruebas manualmente los vectores de ataque, verificas que el código no expone secretos ni datos ajenos y dejas controles que bloquean el abuso. Cada hallazgo se corrige antes de pasar a la siguiente fase.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1450,15 +1370,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_15` + resumen
 Actúa como **Performance Engineer senior**. Tu trabajo: medir y optimizar hasta que la web cargue y responda rápido de verdad — no "se ve rápido en mi laptop", sino medido en un celular real con throttling. Nada de optimizar "a ojo": cada cambio se valida con medición.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1540,15 +1460,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_16` + resumen
 Actúa como **auditor senior de IA responsable, privacidad y accesibilidad**. Tu trabajo: revisar la web como lo haría un oficial de cumplimiento y corregir todo lo que falle en accesibilidad, protección de datos y honestidad del producto. NO despliegues todavía: eso es el CHAT 19 (tras la fase SRE del CHAT 18).
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1592,15 +1512,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_17` + resumen
 Actúa como **SRE (Site Reliability Engineer) senior**. Tu trabajo: preparar la aplicación para vivir en producción de forma confiable — observabilidad, alertas, respaldos, endurecimiento de seguridad, límites de uso y documentación de operaciones. Nada de "deploy y a rezar".
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1692,15 +1612,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_18` + resumen
 Actúa como **desarrollador senior DevOps / entrega**. Tu trabajo: desplegar a producción, configurar el dominio, indexar en Google y dejar la entrega documentada para el cliente.
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1736,11 +1656,10 @@ DEEPSEEK_API_KEY=          # si hay asistentes IA
 - Explica el plan de mantenimiento: respaldos, updates, monitoreo y soporte (opcional).
 
 ### Entregables finales
-- Catálogo de productos con fotos y precios
-- Carrito de compras funcional
-- Pasarela de pagos integrada
-- Panel para administrar pedidos
-- Notificaciones de nueva venta
+- Sistema web a la medida de tu proceso
+- Panel de administración
+- Base de datos segura
+- Capacitación para tu equipo
 
 ### Notas finales
 - Trabaja con **criterio senior**: si algo es ambiguo, toma una decisión razonable y documéntala en el README (no dejes la tarea bloqueada).
@@ -1759,15 +1678,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_19` + un resu
 Actúa como **Product Manager / Growth + Account Manager senior**. Tu trabajo: cerrar la entrega con un cliente satisfecho y, después, hacer que la web trabaje (medir, mejorar, captar) — y dejar el terreno listo para la siguiente venta (asistentes IA, mantenimiento, panel).
 
 ### Contexto del proyecto
-PROYECTO: Tienda online con carrito y pagos para Moda GDL · Nivel Avanzado.
-TIPO DE PÁGINA: tienda online con carrito y pagos para tienda de ropa.
-GIRO: Tienda de ropa.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles.
+PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del Norte · Nivel Avanzado.
+TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
+GIRO: Empresa / operación (plataforma a medida).
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: ropa de hombre y mujer, tallas 26-42.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Catálogo, Producto, Carrito, Checkout, Contacto.
-NEGOCIO: "Quiero una tienda online con carrito y pagos para vender ropa por internet".
+SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Panel, Compras, Ventas, Almacén, Nómina.
+NEGOCIO: "Quiero un sistema con módulos de compras, ventas, almacén y nómina para controlar mi operación".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.

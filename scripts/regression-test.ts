@@ -33,12 +33,15 @@ import {
   detectarBotsRecomendados,
   extraerBotsDeRespuesta,
   getBotById,
+  sugerirEscaleraProducto,
   totalBotsMensual,
   totalBotsSetup,
 } from "../lib/bots-catalog";
 import {
   buildFallbackProposal,
+  estimatePrice,
   inferCategory,
+  inferNivel,
   resolverCategoria,
 } from "../lib/pricing-catalog";
 import { filtrarPorDeclinados, adaptarCopyGiro, detectarGiro } from "../lib/industry-pricing";
@@ -1498,6 +1501,97 @@ section("BOTS · detección y selección de asistentes IA");
   );
 }
 
+// ─── FASE 6 · Cross-sell de bots por giro ─────────────────────────
+// Matriz giro → bots recomendados (docs/MERCADO_PAGINAS_VIBECODER.md §6.5):
+// el bot detecta el giro por la descripción (detectarGiro) y recomienda los bots
+// de mayor valor para ese giro (máx 3), sin que bot_faq/bot_cotizacion genéricos
+// desplacen a los bots clave (regla aprendida en memoria).
+
+section("FASE 6 · Cross-sell de bots por giro");
+{
+  const casos: Array<{ nombre: string; desc: string; category: string; esperados: string[] }> = [
+    { nombre: "restaurante", desc: "Tengo un restaurante y quiero un menú con código QR para que escaneen y vean mi carta", category: "menu_digital", esperados: ["bot_faq", "bot_citas", "bot_recomendador"] },
+    { nombre: "estética/barbería", desc: "Tengo una estética y quiero que mis clientes agenden citas en línea", category: "citas", esperados: ["bot_citas", "bot_leads", "bot_faq"] },
+    { nombre: "clínica/consultorio", desc: "Soy médico, quiero una página para que mis pacientes agenden citas", category: "citas", esperados: ["bot_citas", "bot_faq", "bot_ventas"] },
+    { nombre: "consultorio dental", desc: "Tengo un consultorio dental y quiero agenda en línea", category: "citas", esperados: ["bot_citas", "bot_faq", "bot_ventas"] },
+    { nombre: "gimnasio", desc: "Quiero una página para mi gimnasio con membresías y cobro recurrente", category: "webapp", esperados: ["bot_membresias", "bot_leads", "bot_faq"] },
+    { nombre: "tienda/retail", desc: "Tengo una tienda de ropa y quiero vender por internet con carrito y pagos", category: "ecommerce", esperados: ["bot_dudas", "bot_ventas", "bot_leads"] },
+    { nombre: "inmobiliaria", desc: "Tengo una inmobiliaria y quiero un portal con propiedades, filtros y leads por propiedad", category: "webapp", esperados: ["bot_ventas", "bot_leads", "bot_faq"] },
+    { nombre: "coach/instructor", desc: "Soy coach y quiero vender mis cursos en línea", category: "webapp", esperados: ["bot_membresias", "bot_ventas", "bot_leads"] },
+    { nombre: "mecánico", desc: "Tengo un taller mecánico y quiero que me encuentren en Google", category: "landing", esperados: ["bot_faq", "bot_leads", "bot_cotizacion"] },
+    { nombre: "servicios hogar", desc: "Soy plomero y quiero una tarjeta para compartir mi información", category: "tarjeta_digital", esperados: ["bot_faq", "bot_leads", "bot_cotizacion"] },
+  ];
+
+  for (const c of casos) {
+    const ctx = createEmptyContext();
+    ctx.category = c.category;
+    ctx.negocioDescripcion = c.desc;
+    const rec = detectarBotsRecomendados(ctx);
+    const real = rec.slice(0, 3).map((b) => b.id).sort().join(",");
+    const esperado = [...c.esperados].sort().join(",");
+    assert(real === esperado, `[FASE6] ${c.nombre} → ${real} (esperado ${esperado})`);
+    assert(rec.length <= 3, `[FASE6] ${c.nombre} → máx 3 bots (${rec.length})`);
+  }
+}
+{
+  // El giro manda sobre la regla genérica: una tienda que solo quiere presencia
+  // (landing) NO recibe el FAQ genérico sino la matriz del giro (dudas+ventas+
+  // leads), y el FAQ genérico no desplaza a los bots de mayor valor.
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  ctx.negocioDescripcion = "Tengo una tienda de abarrotes y quiero que me encuentren";
+  const rec = detectarBotsRecomendados(ctx);
+  assert(rec.some((b) => b.id === "bot_dudas"), "[FASE6] tienda+landing → bot_dudas (no FAQ genérico)");
+  assert(!rec.some((b) => b.id === "bot_faq"), "[FASE6] tienda+landing → NO bot_faq (desplazaría valor)");
+  assert(rec.length <= 3, "[FASE6] tienda+landing → máx 3");
+}
+{
+  // Giro SIN escalera definida (abogado) conserva la regla genérica (leads+FAQ).
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  ctx.negocioDescripcion = "Soy abogado y quiero una página para mi despacho";
+  const rec = detectarBotsRecomendados(ctx);
+  assert(rec.some((b) => b.id === "bot_leads"), "[FASE6] abogado → bot_leads (regla genérica)");
+  assert(rec.some((b) => b.id === "bot_faq"), "[FASE6] abogado → bot_faq (regla genérica)");
+  assert(rec.length <= 3, "[FASE6] abogado → máx 3");
+}
+{
+  // Guarda de colisión con Object.prototype: el giro id "constructor" (constructora)
+  // NO debe devolver Object.prototype.constructor ni crashear (regla genérica).
+  const ctx = createEmptyContext();
+  ctx.category = "corporativo";
+  ctx.negocioDescripcion = "Quiero una página para mi constructora, varias secciones";
+  const rec = detectarBotsRecomendados(ctx);
+  assert(Array.isArray(rec), "[FASE6] constructora → devuelve array (sin crashear)");
+  assert(rec.some((b) => b.id === "bot_leads"), "[FASE6] constructora → bot_leads");
+  assert(rec.length <= 3, "[FASE6] constructora → máx 3");
+  assert(sugerirEscaleraProducto(ctx) === null, "[FASE6] constructora → escalera null");
+}
+{
+  // La escalera de producto se sugiere por giro (línea de cross-sell en el copy).
+  const ctxRest = createEmptyContext();
+  ctxRest.category = "menu_digital";
+  ctxRest.negocioDescripcion = "Tengo un restaurante y quiero un menú con QR";
+  assert(
+    sugerirEscaleraProducto(ctxRest)?.includes("reservas") === true,
+    "[FASE6] restaurante → escalera sugiere reservas"
+  );
+  const ctxAbog = createEmptyContext();
+  ctxAbog.category = "landing";
+  ctxAbog.negocioDescripcion = "Soy abogado y quiero una página";
+  assert(sugerirEscaleraProducto(ctxAbog) === null, "[FASE6] abogado (sin escalera) → null");
+}
+{
+  // Regla 1c: la categoría cotizador NUNCA recomienda bot_cotizacion como add-on
+  // (ES el producto que se está vendiendo); sí acompaña con bot_faq.
+  const ctx = createEmptyContext();
+  ctx.category = "cotizador";
+  ctx.negocioDescripcion = "Soy ingeniero y quiero un cotizador en línea para mi negocio";
+  const rec = detectarBotsRecomendados(ctx);
+  assert(!rec.some((b) => b.id === "bot_cotizacion"), "[FASE6] cotizador → NO bot_cotizacion (es el producto)");
+  assert(rec.some((b) => b.id === "bot_faq"), "[FASE6] cotizador → sí bot_faq");
+}
+
 // ─── FASE BUNDLE · consolidación + inferencia (menos preguntas) ──
 // El nodo technical_bundle agrupa las funciones técnicas en UNA pregunta y la
 // inferencia de señales ampliada (mapas/chat/SEO/PWA/documentos/animaciones)
@@ -1607,6 +1701,208 @@ section("BUNDLE · consolidación e inferencia (menos preguntas)");
     "[BUNDLE] no se preguntan las funciones de una por una"
   );
   assert(asked.length <= 12, `[BUNDLE] landing ≤ 12 preguntas (obtuve ${asked.length})`);
+}
+
+section("QA9 · Nivel 3 · ecommerce pro: ticket alto por features (no inflando base)");
+{
+  // Señales pro desde la descripción: venta en línea + inventario + facturación.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Tengo una tienda de electrónica y quiero vender por internet con carrito y pagos con tarjeta, administrar mi inventario y facturar a mis clientes",
+    ctx
+  );
+  assert(ctx.category === "ecommerce", `[QA9] venta en línea + inventario + facturar → ecommerce (obtuve: ${ctx.category})`);
+  assert(ctx.pagos === true, "[QA9] 'pagos con tarjeta/vender' → pagos=true");
+  assert(ctx.dashboard === true, "[QA9] 'administrar mi inventario' → dashboard=true");
+  assert(ctx.inventario === true, "[QA9] 'administrar mi inventario' → inventario=true (feature pro)");
+  assert(ctx.facturacionCfdi === true, "[QA9] 'facturar a mis clientes' → facturacionCfdi=true (feature pro)");
+
+  // El ticket "pro" se alcanza por features acumuladas + nivel avanzado,
+  // nunca inflando la base (ecommerce base avanzado = 60000).
+  const pro = ["pagos", "dashboard", "facturacion_cfdi", "inventario_avanzado", "reportes_ventas", "multi_vendedor", "pwa"];
+  assert(inferNivel(pro) === "avanzado", "[QA9] muchas features pro → nivel avanzado");
+  const estimado = estimatePrice("ecommerce", pro);
+  assert(estimado.precio_min > 60000, `[QA9] base avanzado + features pro supera los $60k (obtuve: $${estimado.precio_min})`);
+  const baseSolo = estimatePrice("ecommerce", []);
+  assert(baseSolo.precio_min < estimado.precio_min, "[QA9] las features pro suben el ticket (sin inflar la base)");
+
+  // Citas con pago por adelantado: frases con "no" interno (no-show / "que no
+  // me fallen") marcan pagos=true (el "no" es parte de la frase, no rechazo).
+  const c1 = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Tengo un salón y quiero que paguen al reservar para que no me fallen las citas",
+    c1
+  );
+  assert(c1.pagos === true, "[QA9] 'que no me fallen las citas' (con pago al reservar) → pagos=true");
+  const c2 = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Tengo un consultorio y quiero cobrar un anticipo al agendar para evitar no-shows",
+    c2
+  );
+  assert(c2.pagos === true, "[QA9] 'anticipo al agendar para evitar no-shows' → pagos=true");
+  // Rechazo real de anticipos NO marca pagos=true.
+  const c3 = createEmptyContext();
+  fireOnReceive("discovery_business", "No quiero cobrar anticipos, que agenden y ya", c3);
+  assert(c3.pagos === null, "[QA9] 'no quiero cobrar anticipos' → pagos se mantiene null (rechazo)");
+}
+
+// ─── FASE QA10 · Nivel 4 · Plataformas por vertical (webapp + features) ──
+// El motor detecta los portales de nivel 4 (inmobiliaria, membresías, cursos,
+// telemedicina, directorio) como webapp por SEÑALES EXPLÍCITAS (bonus en
+// inferCategory + señales pasivas en conversation-flow), sin robarle landings
+// a negocios que solo quieren una página de presentación, y sin inflar el
+// fallback si el cliente no pidió la vertical.
+
+section("QA10 · Nivel 4 · verticales → webapp, sin robar landings ni inflar");
+{
+  // inferCategory: las plataformas por vertical → webapp.
+  const casos: Array<[string, string]> = [
+    ["Tengo una inmobiliaria y quiero un portal de propiedades con filtros por zona y precio, y que cada propiedad genere leads de compradores", "webapp"],
+    ["Tengo un gimnasio y quiero un portal de membresías con cobro recurrente y un área de miembros donde vean su plan", "webapp"],
+    ["Quiero una plataforma de cursos en línea con lecciones en video y progreso del alumno", "webapp"],
+    ["Somos una clínica y queremos un portal de telemedicina con expediente del paciente y videollamada", "webapp"],
+    ["Quiero un directorio de negocios de mi zona, con fichas para cada comercio de la asociación", "webapp"],
+  ];
+  for (const [texto, esperada] of casos) {
+    const got = inferCategory(texto);
+    assert(got === esperada, `[QA10] inferCategory("${texto.slice(0, 55)}…") → ${esperada} (obtuve: ${got})`);
+  }
+  // Sin romper los casos actuales: un gimnasio que solo quiere una página de
+  // presentación sigue siendo LANDING (las palabras sueltas "gimnasio"/"curso"/
+  // "pacientes" NO mapean a webapp por sí solas).
+  assert(
+    inferCategory("Tengo un gimnasio aquí en el centro y quiero una página para que la gente vea los horarios y me llame") === "landing",
+    "[QA10] gimnasio que solo quiere presentación → landing (no robar con 'gimnasio')"
+  );
+  assert(
+    inferCategory("Tengo una inmobiliaria y quiero una página sencilla para que la gente vea mis propiedades y me llame") === "landing",
+    "[QA10] inmobiliaria que solo quiere una página sencilla → landing (empates favorecen a landing)"
+  );
+  assert(
+    inferCategory("Quiero un blog de nutrición donde escribo artículos y que la gente encuentre mis artículos en Google") === "blog",
+    "[QA10] blog intacto (no lo roban las verticales)"
+  );
+  assert(
+    inferCategory("Tengo una estética y quiero que mis clientas agenden sus citas en línea y que me encuentren en Google") === "citas",
+    "[QA10] citas intacto (no lo roban las verticales)"
+  );
+
+  // Señales pasivas: la vertical se detecta desde discovery (extractSignals).
+  {
+    const ctx = createEmptyContext();
+    fireOnReceive("discovery_business", "Tengo una inmobiliaria y quiero un portal de propiedades con filtros por zona y precio, y leads por propiedad", ctx);
+    assert(ctx.inmobiliaria === true, "[QA10] señal inmobiliaria activada desde discovery");
+  }
+  {
+    const ctx = createEmptyContext();
+    fireOnReceive("discovery_business", "Tengo un gimnasio y quiero un portal de membresías con cobro recurrente y un área de miembros", ctx);
+    assert(ctx.membresias === true, "[QA10] señal membresias activada desde discovery");
+  }
+  {
+    const ctx = createEmptyContext();
+    fireOnReceive("discovery_business", "Quiero una plataforma de cursos en línea con lecciones en video para mis alumnos", ctx);
+    assert(ctx.cursos === true, "[QA10] señal cursos activada desde discovery");
+  }
+  {
+    const ctx = createEmptyContext();
+    fireOnReceive("discovery_business", "Queremos un portal de telemedicina con expediente del paciente y videollamada", ctx);
+    assert(ctx.telemedicina === true, "[QA10] señal telemedicina activada desde discovery");
+  }
+  {
+    const ctx = createEmptyContext();
+    fireOnReceive("discovery_business", "Quiero un directorio de negocios con fichas para cada comercio de la asociación", ctx);
+    assert(ctx.directorio === true, "[QA10] señal directorio activada desde discovery");
+  }
+  // Negación-aware: "no quiero un portal de propiedades" NO activa la vertical.
+  {
+    const ctx = createEmptyContext();
+    fireOnReceive("discovery_business", "No quiero un portal de propiedades, solo una página sencilla", ctx);
+    assert(ctx.inmobiliaria !== true, "[QA10] inmobiliaria NO se activa con negación");
+  }
+
+  // Fallback: las features verticales entran SOLO si el cliente las pidió
+  // (se pasan en activeFeatureIds) y NO inflan un webapp genérico.
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.negocioDescripcion = "portal de propiedades";
+    ctx.clientName = "Marisol";
+    ctx.dashboard = true;
+    ctx.baseDeDatos = true;
+    ctx.autenticacion = true;
+    const prop = buildFallbackProposal("webapp", ["filtros_inmobiliaria", "leads_propiedad", "panel_publicacion"], ctx.clientName, ctx);
+    const feats = prop.funcionalidades ?? [];
+    assert(
+      feats.some((f) => /Filtros por zona y precio/.test(f)) &&
+        feats.some((f) => /leads de compradores/.test(f)) &&
+        feats.some((f) => /publicar propiedades/.test(f)),
+      "[QA10] fallback webapp inmobiliaria incluye las features de la vertical"
+    );
+  }
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.negocioDescripcion = "sistema de inventario";
+    ctx.clientName = "Rodrigo";
+    ctx.dashboard = true;
+    ctx.baseDeDatos = true;
+    ctx.autenticacion = true;
+    const prop = buildFallbackProposal("webapp", [], ctx.clientName, ctx);
+    const feats = prop.funcionalidades ?? [];
+    assert(
+      !feats.some((f) => /Filtros por zona y precio/.test(f) || /leads de compradores/.test(f) || /Cobro recurrente/.test(f)),
+      "[QA10] webapp genérico NO incluye features de vertical (no inflar sin pedirlas)"
+    );
+  }
+
+  // Bots por vertical: inmobiliaria → ventas+leads · membresías → membresías+leads
+  // · telemedicina → citas+faq · directorio → leads (tope de 3 intacto).
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.inmobiliaria = true;
+    const rec = detectarBotsRecomendados(ctx);
+    assert(rec.some((b) => b.id === "bot_ventas"), "[QA10] inmobiliaria → recomienda bot_ventas");
+    assert(rec.some((b) => b.id === "bot_leads"), "[QA10] inmobiliaria → recomienda bot_leads");
+    assert(rec.length <= 3, "[QA10] inmobiliaria → máx 3 bots");
+  }
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.membresias = true;
+    const rec = detectarBotsRecomendados(ctx);
+    assert(rec.some((b) => b.id === "bot_membresias"), "[QA10] membresías → recomienda bot_membresias");
+    assert(rec.some((b) => b.id === "bot_leads"), "[QA10] membresías → recomienda bot_leads");
+  }
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.telemedicina = true;
+    const rec = detectarBotsRecomendados(ctx);
+    assert(rec.some((b) => b.id === "bot_citas"), "[QA10] telemedicina → recomienda bot_citas");
+    assert(rec.some((b) => b.id === "bot_faq"), "[QA10] telemedicina → recomienda bot_faq");
+  }
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.directorio = true;
+    const rec = detectarBotsRecomendados(ctx);
+    assert(rec.some((b) => b.id === "bot_leads"), "[QA10] directorio → recomienda bot_leads");
+  }
+
+  // resolverCategoria intacto: una webapp vertical sin panel/BD/login se degrada.
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.inmobiliaria = true;
+    ctx.dashboard = false;
+    ctx.baseDeDatos = false;
+    ctx.autenticacion = false;
+    assert(resolverCategoria(ctx) === "landing", "[QA10] webapp vertical sin panel/db/login → landing (resolverCategoria intacto)");
+  }
 }
 
 // ─── Resumen ───────────────────────────────────────────────────────

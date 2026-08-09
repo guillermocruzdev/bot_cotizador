@@ -65,7 +65,10 @@ const USTED_PHRASES: Array<[RegExp, string]> = [
   [/te la\b/gi, "se la"],
   [/te los\b/gi, "se los"],
   [/te las\b/gi, "se las"],
-  // Verbo + pronombre enclítico ("armarte" → "armarle")
+  // Verbo + pronombre enclítico ("armarte" → "armarle"). Los enclíticos NO los
+  // toca la regla genérica `\bte\b` (son parte de la palabra): hay que listarlos
+  // o quedarían como "decirte" en un mensaje de "usted" (causa raíz de la mezcla
+  // de trato que detecta el eval en technical_bots).
   [/tenerte\b/gi, "tenerle"],
   [/contactarte\b/gi, "contactarle"],
   [/venderte\b/gi, "venderle"],
@@ -80,6 +83,22 @@ const USTED_PHRASES: Array<[RegExp, string]> = [
   [/orientarte\b/gi, "orientarle"],
   [/encontrarte\b/gi, "encontrarle"],
   [/invitarte\b/gi, "invitarle"],
+  [/decirte\b/gi, "decirle"],
+  [/escribirte\b/gi, "escribirle"],
+  [/llamarte\b/gi, "llamarle"],
+  [/darte\b/gi, "darle"],
+  [/pedirte\b/gi, "pedirle"],
+  [/contarte\b/gi, "contarle"],
+  [/recomendarte\b/gi, "recomendarle"],
+  [/aconsejarte\b/gi, "aconsejarle"],
+  [/platicarte\b/gi, "platicarle"],
+  [/comentarte\b/gi, "comentarle"],
+  [/preguntarte\b/gi, "preguntarle"],
+  [/explicarte\b/gi, "explicarle"],
+  [/recordarte\b/gi, "recordarle"],
+  [/ofrecerte\b/gi, "ofrecerle"],
+  [/proponerte\b/gi, "proponerle"],
+  [/pasarte\b/gi, "pasarle"],
   // Imperativos
   [/cu[ée]ntame\b/gi, "cuénteme"],
   [/dime\b/gi, "dígame"],
@@ -95,6 +114,8 @@ const USTED_PHRASES: Array<[RegExp, string]> = [
   [/\btus\b/gi, "sus"],
   [/\bcontigo\b/gi, "con usted"],
   [/\bde ti\b/gi, "de usted"],
+  [/por ti\b/gi, "por usted"],
+  [/para ti\b/gi, "para usted"],
   [/\btuyo\b/gi, "suyo"],
   [/\btuya\b/gi, "suya"],
   [/\btuyos\b/gi, "suyos"],
@@ -126,6 +147,18 @@ const USTED_PHRASES: Array<[RegExp, string]> = [
   [/\bpreocupes\b/gi, "preocupe"],
   [/\bdeseas\b/gi, "desea"],
   [/\bdejes\b/gi, "deje"],
+  // Verbos de 2ª persona que el LLM suele colar en mensajes de "usted"
+  // (la deriva de trato más común detectada por el eval). Se agregan para que
+  // la red de seguridad toUsted() los convierta antes de enviar.
+  [/\bprefieres\b/gi, "prefiere"],
+  [/\bpiensas\b/gi, "piensa"],
+  [/\bgastas\b/gi, "gasta"],
+  [/\bempiezas\b/gi, "empieza"],
+  [/\bconoces\b/gi, "conoce"],
+  [/\brecibes\b/gi, "recibe"],
+  [/\bnecesitar[áa]s\b/gi, "necesitará"],
+  [/\btendr[áa]s\b/gi, "tendrá"],
+  [/\bpodr[áa]s\b/gi, "podrá"],
   // "te" → "le" (objeto indirecto) al final, para no chocar con lo anterior
   [/\bte\b/gi, "le"],
 ];

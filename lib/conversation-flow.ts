@@ -32,7 +32,11 @@ import {
   randomTransition,
 } from "@/lib/personality";
 import { PRICING_CATALOG, getCategoryById, inferCategory } from "@/lib/pricing-catalog";
-import { detectarBotsRecomendados, extraerBotsDeRespuesta } from "@/lib/bots-catalog";
+import {
+  detectarBotsRecomendados,
+  extraerBotsDeRespuesta,
+  sugerirEscaleraProducto,
+} from "@/lib/bots-catalog";
 
 export const START_NODE_ID = "greeting";
 
@@ -65,7 +69,27 @@ type SignalField =
   | "chat"
   | "seo"
   | "pwa"
-  | "animaciones";
+  | "multilingue"
+  | "animaciones"
+  // Nivel 3 · Ecommerce pro: señales PASIVAS (no se preguntan en el bundle;
+  // se detectan si el cliente las menciona y suben el ticket por features).
+  | "inventario"
+  | "reportesVentas"
+  | "facturacionCfdi"
+  | "multiVendedor"
+  // Nivel 4 · Plataformas por vertical: señales PASIVAS (no se preguntan en el
+  // bundle; activan las features verticales de webapp y los bots por vertical).
+  | "inmobiliaria"
+  | "membresias"
+  | "cursos"
+  | "telemedicina"
+  | "directorio"
+  // Nivel 5 · Ecosistema: señales PASIVAS de plataforma grande (marketplace,
+  // SaaS, ERP/CRM). Activan las features de nivel 5 de webapp y el flujo de
+  // "propuesta formal" (el bot califica, no cierra a ciegas).
+  | "marketplace"
+  | "saas"
+  | "erp";
 
 /**
  * Patrones de señales técnicas y el campo de contexto que activan.
@@ -74,8 +98,12 @@ type SignalField =
  * bot ya lo sepa y NO vuelva a preguntar.
  */
 const SIGNAL_PATTERNS: Array<{ re: RegExp; field: SignalField }> = [
-  { re: /(pagar|pago|pagos|comprar|vender|paypal|stripe|tarjeta|transferencia)/, field: "pagos" },
-  { re: /(cita|citas|agendar|reservar|reserva|turno)/, field: "citas" },
+  // "tarjeta digital"/"tarjeta de presentación" (producto de entrada) NO es
+  // una señal de pagos: se excluye con el lookahead (regla de menú/tarjeta).
+  // Nivel 3 · Citas con pago: "anticipo"/"reservar y pagar"/"pago por
+  // adelantado" marcan pagos=true (negación-aware vía isNegated).
+  { re: /(pagar|pago|pagos|comprar|vender|paypal|stripe|tarjeta(?!\s+(?:digital|de presentaci[oó]n))|transferencia|anticipo|anticipos|apartar\s+(con\s+)?(un\s+)?pago|reservar\s+y\s+(pagar|paguen|pago)|pagan?\s+al\s+reservar|pago\s+por\s+adelantado)/, field: "pagos" },
+  { re: /(cita|citas|agendar|reservar|reserva|apartar|turno)/, field: "citas" },
   { re: /(panel|dashboard|administrar|admin|reportes|estad[íi]sticas)/, field: "dashboard" },
   { re: /(cuenta|cuentas|registrarse|registro|login|usuarios)/, field: "autenticacion" },
   { re: /(base de datos|guardar datos|guardamos)/, field: "baseDeDatos" },
@@ -83,8 +111,37 @@ const SIGNAL_PATTERNS: Array<{ re: RegExp; field: SignalField }> = [
   { re: /(cotizaciones?|recibos?|reportes|documentos|pdfs?)/, field: "documentos" },
   { re: /(whatsapp|whastapp|chat|mensaje|mensajes|escriban|escr[ií]beme|me escr[ií]ba|escr[ií]bale)/, field: "chat" },
   { re: /(google|buscadores?|posicionar(?:me)?|posicionamiento|seo|aparecer\s+en\s+google|me\s+encuentren)/, field: "seo" },
-  { re: /(aplicaci[oó]n|\bapp\b|instalable|pwa)/, field: "pwa" },
+  { re: /(aplicaci[oó]n|\bapp\b|instalable|instalar|instale|instalen|como app|app sin (la )?tienda|pwa)/, field: "pwa" },
+  // Nivel 2 · multilingüe: señales de versión en otro idioma (se detecta como
+  // feature: versión en inglés/español, no categoría propia).
+  { re: /(ingl[eé]s y espa[nñ]ol|espa[nñ]ol e ingl[eé]s|biling[uü]e|bilingue|turistas?|en ingl[eé]s|otro idioma|varios idiomas|multi-?idioma|multiling[uü]e)/, field: "multilingue" },
   { re: /(moderno|moderna|animaciones|movimiento|din[aá]mico|impresionar|efectos|oscuro)/, field: "animaciones" },
+  // Nivel 3 · Ecommerce pro: señales PASIVAS de escalón premium. NO van en el
+  // bundle (no se preguntan): si el cliente menciona inventario/reportes/
+  // facturación/multi-vendedor, se activan y suben el ticket por FEATURES
+  // acumuladas + nivel avanzado (inferNivel), nunca inflando la base.
+  { re: /(inventario|existencias|stock|kardex|tallas (y|o) (colores|modelos)|controlar (mi|el|su|tus) (mercanc[ií]a|productos))/, field: "inventario" },
+  { re: /(reportes? de ventas?|qu[eé] (es lo que )?vendo m[aá]s|ventas? por (d[ií]a|mes|semana|per[ií]odo)|an[aá]lisis de ventas?|estad[ií]sticas de ventas?)/, field: "reportesVentas" },
+  { re: /(factur|cfdi|factura electr[oó]nica|comprobante fiscal)/, field: "facturacionCfdi" },
+  { re: /(varios vendedores|multi-?vendedor(es)?|vendedores internos|cuentas (para|de) (mis|tus|los) vendedores|mayoreo)/, field: "multiVendedor" },
+  // Nivel 4 · Plataformas por vertical: señales PASIVAS (mismo patrón que el
+  // ecommerce pro). NO incluyen palabras sueltas genéricas ("gimnasio", "curso",
+  // "clases", "pacientes"): se activan SOLO con señales de PORTAL/plataforma por
+  // vertical para no disparar features en negocios que solo piden una landing.
+  { re: /(inmobiliaria|bienes ra[ií]ces|propiedades?|casas? (en venta|en renta|en arriendo)|departamentos? (en venta|en renta|en arriendo)|terrenos? (en venta|en renta)|portal de (propiedades|bienes ra[ií]ces)|filtros? por (zona|precio) (para|de) (las |mis )?propiedades)/, field: "inmobiliaria" },
+  { re: /(membres[ií]a|membres[ií]as|suscripci[oó]n|suscripciones|pago recurrente|cobro recurrente|cuota mensual|plan(es)? (de|para) (membres[ií]a|suscripci[oó]n)|[aá]rea de (miembros|socios)|portal de (miembros|socios|membres[ií]as)|ingreso recurrente|renovar (su|la|mi|sus) membres[ií]a)/, field: "membresias" },
+  { re: /((curso|clase)s? en l[ií]nea|cursos? online|plataforma de (cursos|clases|educaci[oó]n|estudio)|lecciones? (en v[ií]deo|en video)|vender mis (cursos|clases)|portal de cursos|plataforma educativa|educaci[oó]n en l[ií]nea|alumnos)/, field: "cursos" },
+  { re: /(telemedicina|expediente (del|de mi|de tus|de los) paciente|expedientes cl[ií]nicos|historia cl[ií]nica|videollamada|video-?llamada|recetas (electr[oó]nicas|en l[ií]nea)|consultas (m[eé]dicas )?en l[ií]nea|portal de salud|portal m[eé]dico)/, field: "telemedicina" },
+  { re: /(directorio|directorios|listado de (negocios|empresas|comercios)|directorio de (negocios|empresas|comercios|asociados)|fichas? de (negocios|empresas|comercios)|asociaci[oó]n de (negocios|comercios)|c[áa]mara de comercio)/, field: "directorio" },
+  // Nivel 5 · Ecosistema: señales PASIVAS de plataforma grande (marketplace,
+  // SaaS, ERP/CRM) — mismo patrón que las verticales del nivel 4. No van en el
+  // bundle; activan las features de nivel 5 de webapp y el flujo de "propuesta
+  // formal". OJO: "varios vendedores" también es señal de ecommerce pro
+  // (multiVendedor) — ambas se activan y cada una solo mapea features en su
+  // categoría (webapp vs ecommerce), sin conflicto de precio.
+  { re: /(marketplace|mercado en l[ií]nea|varios vendedores (que )?(publiquen|vendan|venden)|cada vendedor (vende|publica|tiene su)|comisi[oó]n por (venta|ventas)|cobrar(le)? (una )?comisi[oó]n|plataforma de (ventas?|vendedores|mercado)|que (otros|varios) (vendedores )?vendan)/, field: "marketplace" },
+  { re: /(software como servicio|\bsaas\b|plataforma para (mis|tus|sus|los) clientes|plataforma b2b|multi-?tenant|ofrecer(les)? (un )?(servicio|software|sistema) a (mis|tus|sus) clientes)/, field: "saas" },
+  { re: /(\berp\b|\bcrm\b|control de almac[eé]n|m[oó]dulos? de (compras|ventas|almac[eé]n|n[oó]mina)|sistema de n[oó]mina|log[ií]stica de (env[ií]os|mercanc[ií]a|pedidos)|gestionar (toda|toda la|mi|la) operaci[oó]n)/, field: "erp" },
 ];
 
 /** Cláusula en la que aparece una coincidencia (hasta el último separador). */
@@ -131,10 +188,10 @@ function isDoubt(t: string, matchIndex: number): boolean {
  */
 const NEGATIVE_SIGNAL_PATTERNS: Array<{ re: RegExp; field: SignalField }> = [
   {
-    re: /(pagos? en l[ií]nea|pagos? online|pago en l[ií]nea|cobrar? en l[ií]nea|cobros? en l[ií]nea|tarjeta|pasarela|checkout|stripe|paypal|venta en l[ií]nea|pagos? con tarjeta)/,
+    re: /(pagos? en l[ií]nea|pagos? online|pago en l[ií]nea|cobrar? en l[ií]nea|cobros? en l[ií]nea|tarjeta(?!\s+(?:digital|de presentaci[oó]n))|pasarela|checkout|stripe|paypal|venta en l[ií]nea|pagos? con tarjeta)/,
     field: "pagos",
   },
-  { re: /(cita|citas|agendar|reserva|reservar|turno|agenda|agendan)/, field: "citas" },
+  { re: /(cita|citas|agendar|reserva|reservar|apartar|turno|agenda|agendan)/, field: "citas" },
   { re: /(panel|dashboard|reportes|estad[íi]sticas)/, field: "dashboard" },
   { re: /(cuenta|cuentas|registrarse|registro|login|usuarios)/, field: "autenticacion" },
   { re: /(base de datos|guardar datos|guardamos)/, field: "baseDeDatos" },
@@ -142,7 +199,8 @@ const NEGATIVE_SIGNAL_PATTERNS: Array<{ re: RegExp; field: SignalField }> = [
   { re: /(cotizaciones?|recibos?|reportes)/, field: "documentos" },
   { re: /(whatsapp|chat|mensajer[ií]a|escriban)/, field: "chat" },
   { re: /(google|posicionamiento|seo)/, field: "seo" },
-  { re: /(aplicaci[oó]n|\bapp\b|instalable|pwa)/, field: "pwa" },
+  { re: /(aplicaci[oó]n|\bapp\b|instalable|instalar|instale|pwa)/, field: "pwa" },
+  { re: /(ingl[eé]s|biling[uü]e|bilingue|multi-?idioma|multiling[uü]e|otro idioma|varios idiomas)/, field: "multilingue" },
   { re: /(animaciones|movimiento|efectos)/, field: "animaciones" },
 ];
 
@@ -157,6 +215,32 @@ const NEGATIVE_SIGNAL_PATTERNS: Array<{ re: RegExp; field: SignalField }> = [
  */
 function extractSignals(response: string, ctx: ChatContext): void {
   const t = response.toLowerCase();
+  // ── Nivel 3 · Citas con pago por adelantado ──────────────────────────
+  // El cliente quiere COBRAR al reservar para evitar inasistencias. Varias de
+  // estas frases llevan "no" DENTRO del término ("no-show", "que no me
+  // fallen las citas"), que el detector de negación interpretaría como rechazo
+  // de pagos; por eso se detectan ANTES, con guarda de rechazo real ("no
+  // quiero anticipos"). "anticipo"/"reservar y pagar" también viven en
+  // SIGNAL_PATTERNS (negación-aware) — este pre-check cubre las que no pueden
+  // pasar por isNegated.
+  const PAGO_ANTICIPO_CITAS: Array<RegExp> = [
+    /\bno[- ]?shows?\b/i, // "no-show" = inasistencia (el "no" es parte del término)
+    /\bque no me (fallen|falle) (las )?citas?\b/i, // quiere cobro para no perder citas
+  ];
+  if (ctx.pagos === null) {
+    for (const re of PAGO_ANTICIPO_CITAS) {
+      const m = re.exec(t);
+      if (!m) continue;
+      // Rechazo real de pagos antes de la frase gana ("no quiero cobrar por
+      // no-shows") — el "no" interno de la frase NO es un rechazo.
+      const before = t.slice(0, m.index);
+      if (/(no quiero|no necesito|no me interesa|no me hace falta|nada de|sin)\s+(\w+\s+){0,3}$/i.test(before.slice(-56))) {
+        break;
+      }
+      (ctx as unknown as Record<string, unknown>).pagos = true;
+      break;
+    }
+  }
   // 1) Activación (lo que el cliente SÍ menciona que quiere).
   for (const { re, field } of SIGNAL_PATTERNS) {
     if (ctx[field] !== null) continue;
@@ -212,6 +296,42 @@ const BUDGET_SIGNAL =
  * mezclaría dígitos del presupuesto ("20 mil ... 81 2345 6789" → "+52 20 ..."),
  * así que se pide en su propio nodo contact_phone.
  */
+/** Roles/profesiones que, como encabezado de "soy X", NO son un nombre real
+ * ("Soy fotógrafa profesional" ≠ nombre; "Soy Laura" sí). Solo aplica a la
+ * captura temprana oportunista (NUNCA en contact_name: ahí "Soy Ana" debe
+ * capturar). No incluye palabras que SÍ pueden ser nombre de negocio
+ * ("Taller El Toro", "Clínica Sonrisa", "Estudio X"). */
+const EARLY_ROLE_WORDS = new Set([
+  "fotografo", "fotografa", "abogado", "abogada", "medico", "medica",
+  "doctor", "doctora", "dentista", "disenador", "disenadora", "arquitecto",
+  "arquitecta", "contador", "contadora", "mecanico", "mecanica", "chef",
+  "cocinero", "cocinera", "carpintero", "carpintera", "electricista",
+  "plomero", "plomera", "maestro", "maestra", "profesor", "profesora",
+  "dueno", "duena", "encargado", "encargada", "director", "directora",
+  "gerente", "administrador", "administradora", "vendedor", "vendedora",
+  "consultor", "consultora", "asesor", "asesora", "nutriologo", "nutriologa",
+  "terapeuta", "masajista", "barbero", "barbera", "peluquero", "peluquera",
+  "estilista", "tatuador", "tatuadora", "manicurista", "entrenador",
+  "entrenadora", "instructor", "instructora", "desarrollador", "desarrolladora",
+  "ingeniero", "ingeniera", "emprendedor", "emprendedora", "repostero",
+  "repostera", "cerrajero", "cerrajera", "pintor", "pintora", "albanil",
+  "panadero", "panadera", "tortillero", "tortillera", "repartidor", "repartidora",
+]);
+
+/** ¿El nombre candidato es en realidad una profesión/rol ("fotógrafa")?
+ * Normaliza diacríticos: "fotógrafa" → "fotografa" para comparar con el set
+ * (que va sin tildes). */
+function isRoleDescription(name: string): boolean {
+  const head =
+    name
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/^(la|el|los|las|un|una|mi|su)\s+/i, "")
+      .split(/\s+/)[0] ?? "";
+  return EARLY_ROLE_WORDS.has(head);
+}
+
 function captureEarlyData(response: string, ctx: ChatContext): void {
   if (!ctx.clientName) {
     const intro = response
@@ -225,7 +345,12 @@ function captureEarlyData(response: string, ctx: ChatContext): void {
         intro
       )
     ) {
-      ctx.clientName = extractName(response);
+      const candidate = extractName(response);
+      // "Soy fotógrafa profesional y quiero..." describe la PROFESIÓN, no el
+      // nombre: no se captura temprano (el nodo contact_name lo preguntará bien
+      // en su turno). Sin este guard, clientName quedaba "fotógrafa" y el nodo
+      // contact_name se saltaba, pidiendo correo/teléfono por separado.
+      if (candidate && !isRoleDescription(candidate)) ctx.clientName = candidate;
     }
   }
   if (!ctx.clientEmail) {
@@ -567,6 +692,22 @@ const FEATURE_LABELS: Array<{ field: keyof ChatContext; label: string }> = [
   { field: "citas", label: "que tus clientes agenden citas con día y hora" },
   { field: "seo", label: "que te encuentren en Google" },
   { field: "pwa", label: "que tu página se instale como app en el celular" },
+  { field: "multilingue", label: "versión en inglés y español (u otros idiomas)" },
+];
+
+/**
+ * Categorías "simples" de entrada: la entrevista no debe hacerles preguntas
+ * pesadas (cuentas, base de datos, pagos, PWA, página de referencia). Son las
+ * de presentación/entrada del mercado (landing/portafolio/blog + las nuevas
+ * de nivel 0: menú digital, tarjeta digital y link-in-bio).
+ */
+const CATEGORIAS_SIMPLES = [
+  "landing",
+  "portafolio",
+  "blog",
+  "menu_digital",
+  "tarjeta_digital",
+  "link_in_bio",
 ];
 
 /** ¿La función es relevante para la categoría del cliente? */
@@ -577,11 +718,22 @@ function featureRelevant(ctx: ChatContext, field: keyof ChatContext): boolean {
     case "baseDeDatos":
     case "pagos":
     case "pwa":
-      return !["landing", "portafolio", "blog"].includes(cat);
+      return !CATEGORIAS_SIMPLES.includes(cat);
     case "documentos":
-      return cat === "webapp" || cat === "ecommerce" || ctx.dashboard === true;
+      // El cotizador en línea genera PDFs de cotización: los documentos son
+      // parte del producto (como en webapp/ecommerce).
+      return cat === "webapp" || cat === "ecommerce" || cat === "cotizador" || ctx.dashboard === true;
     case "citas":
       return cat !== "citas";
+    case "multilingue":
+      // Solo se ofrece en categorías que tienen la feature multilingüe en su
+      // catálogo (evita prometer versiones en otro idioma donde no existe).
+      return (
+        cat === "landing" ||
+        cat === "portafolio" ||
+        cat === "menu_digital" ||
+        cat === "corporativo"
+      );
     default:
       // dashboard, mapas, chat, seo: relevantes en casi todo negocio
       return true;
@@ -614,7 +766,15 @@ function recommendedFeatures(ctx: ChatContext): Record<string, boolean> {
     rec.baseDeDatos = true;
     rec.dashboard = true;
   }
-  if (ctx.dashboard === true) rec.documentos = true;
+  // Cotizador en línea: los PDFs de cotización son parte del producto.
+  if (cat === "cotizador") {
+    rec.documentos = true;
+  }
+  // Si recomendamos el panel, los PDFs (cotizaciones/reportes) son el siguiente
+  // paso natural: se recomiendan SIEMPRE que el panel esté recomendado (no solo
+  // si el cliente ya lo mencionó en el texto — antes, `ctx.dashboard` seguía
+  // null en este punto y `rec.documentos` nunca se activaba para ecommerce/webapp).
+  if (rec.dashboard === true) rec.documentos = true;
   const mencionaUbicacion =
     /(ubicaci[oó]n|mapa|local|sucursal|c[oó]mo llegar|d[oó]nde est[áa])/i.test(
       ctx.negocioDescripcion ?? ""
@@ -726,6 +886,19 @@ export const FLOW: Record<string, ConversationNode> = {
       // landing para que el flujo no pregunte PWA/referencia de más ni cobre
       // como sistema de citas.
       if (ctx.category === "citas" && ctx.citas === false) {
+        ctx.category = "landing";
+      }
+      // Productos de entrada: si el cliente los RECHAZA explícitamente ("no
+      // quiero menú digital", "nada de tarjeta digital"), la categoría no
+      // puede ser esa → baja a landing (mismo patrón que el rechazo de citas).
+      if (
+        ["menu_digital", "tarjeta_digital", "link_in_bio", "cotizador"].includes(
+          ctx.category ?? ""
+        ) &&
+        /(no\s+(quiero|necesito|ocupo|me interesa|me gusta|uso)\s+(un\s+|el\s+|la\s+|lo\s+)?(men[uú] digital|tarjeta digital|link\s+in\s+bio|link\s+en\s+mi\s+bio|cotizador)|nada de (men[uú] digital|tarjeta digital|link|bio|cotizador))/i.test(
+          response
+        )
+      ) {
         ctx.category = "landing";
       }
       captureEarlyData(response, ctx);
@@ -927,7 +1100,7 @@ export const FLOW: Record<string, ConversationNode> = {
     // Si el cliente ya dijo si quiere (o no) cuentas en su descripción, tampoco
     // se vuelve a preguntar.
     condition: (ctx) =>
-      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      !CATEGORIAS_SIMPLES.includes(ctx.category ?? "landing") &&
       ctx.autenticacion === null,
     clarifyId: "clarify_auth",
   }),
@@ -953,7 +1126,7 @@ export const FLOW: Record<string, ConversationNode> = {
     // información: se salta y se ahorra un turno. Si el cliente ya dijo si guarda
     // (o no) datos en su descripción, tampoco se vuelve a preguntar.
     condition: (ctx) =>
-      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      !CATEGORIAS_SIMPLES.includes(ctx.category ?? "landing") &&
       ctx.baseDeDatos === null,
     clarifyId: "clarify_db",
   }),
@@ -975,7 +1148,7 @@ export const FLOW: Record<string, ConversationNode> = {
     field: "pagos",
     next: "technical_dashboard",
     condition: (ctx) =>
-      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      !CATEGORIAS_SIMPLES.includes(ctx.category ?? "landing") &&
       ctx.pagos === null,
     clarifyId: "clarify_payments",
   }),
@@ -1030,6 +1203,7 @@ export const FLOW: Record<string, ConversationNode> = {
     condition: (ctx) =>
       (ctx.category === "webapp" ||
         ctx.category === "ecommerce" ||
+        ctx.category === "cotizador" ||
         ctx.dashboard === true) &&
       ctx.documentos === null,
   }),
@@ -1113,7 +1287,7 @@ export const FLOW: Record<string, ConversationNode> = {
     // relevante: se salta y ahorra un turno del discovery. Si el cliente ya
     // dijo si la quiere (o no), tampoco se vuelve a preguntar.
     condition: (ctx) =>
-      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      !CATEGORIAS_SIMPLES.includes(ctx.category ?? "landing") &&
       ctx.pwa === null,
   }),
 
@@ -1130,10 +1304,15 @@ export const FLOW: Record<string, ConversationNode> = {
       const lista = rec
         .map((b) => `• **${b.nombre}**: ${b.descripcion}`)
         .join("\n");
+      // FASE 6 · Línea de escalera por giro: tras ofrecer los bots, sugiere el
+      // siguiente producto de la escalera (cross-sell de producto, no de bot).
+      const escalera = sugerirEscaleraProducto(ctx);
+      const escaleraTxt = escalera ? `\n\n${escalera}` : "";
       return (
         `${randomExperience()} Una cosa más que suma muchísimo hoy: un **asistente inteligente (bot)** que atiende a tus clientes por ti — responde dudas de día y de noche, agenda citas o hasta arma cotizaciones. ${pickEmoji("idea")} Por lo que me contaste, te recomendaría:\n\n` +
         `${lista}\n\n` +
-        `¿Quieres que te incluya alguno en tu propuesta? Dime cuál (por ejemplo "el de citas"), o si prefieres "ninguno".`
+        `¿Quieres que te incluya alguno en tu propuesta? Dime cuál (por ejemplo "el de citas"), o si prefieres "ninguno".` +
+        escaleraTxt
       );
     },
     expectedResponseType: "text",
@@ -1217,10 +1396,10 @@ export const FLOW: Record<string, ConversationNode> = {
     generateMessage: () =>
       `¿Hay alguna página que te guste, de la que digas "quiero algo así"? No importa si es de otro giro; dime qué te gusta de ella y con eso afino el estilo a tu gusto.`,
     expectedResponseType: "url",
-    // Para landing/portafolio/blog la página de referencia es poco relevante
-    // (el estilo lo cubre el nodo design): se salta y ahorra un turno.
-    condition: (ctx) =>
-      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing"),
+    // Para las categorías simples (landing/portafolio/blog y las de entrada
+    // menú digital/tarjeta/link-in-bio) la página de referencia es poco
+    // relevante (el estilo lo cubre el nodo design): se salta y ahorra un turno.
+    condition: (ctx) => !CATEGORIAS_SIMPLES.includes(ctx.category ?? "landing"),
     nextNode: (response, ctx) => {
       // Respuesta vacía = salto por condición (skip): ir al siguiente, no a la clarificación.
       if (!response || !response.trim()) return "budget";
@@ -1524,12 +1703,28 @@ export const FLOW: Record<string, ConversationNode> = {
     expectedResponseType: "text",
     nextNode: () => DONE_NODE_ID,
     onReceive: (response, ctx) => {
-      const t = response.toLowerCase();
-      if (/(no|nada|eso es todo|eso seria todo|ya|no gracias|listo)/.test(t) && t.length < 30) {
-        ctx.comentarios = null;
-      } else {
-        ctx.comentarios = response.trim();
-      }
+      // Un comentario real NUNCA debe perderse, aunque empiece con "no"
+      // ("No quisiera que se vea muy caro"). Solo se descarta si TODO el
+      // mensaje es un cierre cortés ("no", "no, gracias", "eso es todo"...).
+      const t = response.trim().toLowerCase().replace(/[.,;!¡¿?]+$/g, "").trim();
+      const CLOSING = new Set([
+        "no", "nada", "listo", "ya", "gracias", "muchas gracias",
+        "no gracias", "no, gracias",
+        "nada mas", "nada más", "no, nada mas", "no, nada más",
+        "eso es todo", "eso seria todo", "eso sería todo",
+        "no, eso es todo", "no, eso seria todo", "no, eso sería todo",
+        "con eso es todo", "con eso basta", "con eso es suficiente",
+        "no, con eso es todo", "no, con eso basta", "no, con eso es suficiente",
+        "no hay nada mas", "no hay nada más", "sin mas", "sin más",
+        "no, sin mas", "no, sin más", "ya con eso", "ya con eso es todo",
+        "no, ya con eso", "no, ya con eso es todo", "ya estoy", "no, ya estoy",
+        "todo bien", "todo bien, gracias", "no, todo bien",
+        "no, con eso es todo, muchas gracias", "no, eso es todo, muchas gracias",
+        "no, eso es todo, gracias", "no, gracias, eso es todo",
+        "muchas gracias, eso es todo", "no, muchas gracias, eso es todo",
+        "ok", "okay", "no, ok", "no, okay",
+      ]);
+      ctx.comentarios = CLOSING.has(t) ? null : response.trim();
     },
   },
 
@@ -1584,7 +1779,7 @@ const BOT_CHIP_VALUES: Record<string, string> = {
   bot_dudas: "el que responda sobre la garantía",
   bot_recomendador: "el que me ayude a recomendar",
   bot_cotizacion: "el que diga cuánto cuesta",
-  bot_encuestas: "el de encuestas",
+  bot_feedback: "el de encuestas",
   bot_membresias: "el de membresías",
   bot_multilingue: "el que hable inglés",
 };
@@ -1756,6 +1951,33 @@ export function inputHintFor(nodeId: string): string | null {
  */
 export function buildRecap(ctx: ChatContext): string {
   const bits: string[] = [];
+  // Nivel 2 · Negocio: si detectamos un producto de negocio, el recap nombra
+  // el TIPO concreto para que el cliente lo confirme antes del cierre
+  // ("sitio corporativo", "reservas de restaurante", "versión en otro idioma").
+  const cat = ctx.category ?? "landing";
+  if (cat === "corporativo") {
+    bits.push("tipo: sitio corporativo (varias páginas)");
+  } else if (
+    cat === "citas" &&
+    /(restaurante|cafeter[ií]a|caf[eé]|comida|taquer[ií]a|pizzer[ií]a|cocina|bar\b|terraza|food|marisquer|tacos|antojitos)/i.test(
+      ctx.negocioDescripcion ?? ""
+    )
+  ) {
+    bits.push("tipo: sistema de reservas para tu restaurante");
+  } else if (
+    // Nivel 5 · Ecosistema: las plataformas grandes (marketplace, SaaS, ERP/CRM)
+    // NO se cotizan a ciegas en el chat. El recap lo comunica al cierre para que
+    // el cliente confirme que se armará una PROPUESTA FORMAL con alcance detallado
+    // (y el precio "desde" según módulos, nunca cerrado).
+    cat === "webapp" &&
+    (ctx.marketplace === true || ctx.saas === true || ctx.erp === true)
+  ) {
+    bits.push(
+      "tipo: plataforma a medida (marketplace, SaaS o ERP) — te preparo una propuesta formal con alcance detallado"
+    );
+  }
+  if (ctx.multilingue === true) bits.push("versión en inglés y español");
+  if (ctx.pwa === true) bits.push("instalable como app en el celular");
   if (ctx.estructuraWeb) bits.push(`secciones: ${ctx.estructuraWeb}`);
   if (ctx.servicios) bits.push(`servicios: ${ctx.servicios}`);
   if (ctx.presupuesto) bits.push(`presupuesto: ${ctx.presupuesto}`);

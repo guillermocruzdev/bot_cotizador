@@ -14,6 +14,7 @@
 
 import type { ChatContext, ChatMessage } from "@/lib/types";
 import { chatCompletion, getLlmProvider } from "@/lib/llm-client";
+import { toUsted } from "@/lib/personality";
 
 /**
  * Objetivo de cada turno: qué debe preguntar Alex en ese nodo.
@@ -24,13 +25,13 @@ const TURN_GOALS: Record<string, string> = {
   discovery_business:
     "Pregunta de forma natural qué hace el negocio, a quién le vende y qué ofrece. Si todavía no lo ha dicho claro, indaga si TIENE SERVICIOS o productos que quiera mostrar.",
   discovery_confirm:
-    "Confirma qué tipo de web le conviene con ejemplos sencillos (página de presentación, tienda online, citas, etc.) y deja que corrija si no coincide.",
+    "Confirma qué tipo de web le conviene con ejemplos sencillos (página de presentación, sitio corporativo de varias páginas, menú digital con QR, tarjeta digital, tienda online, citas, etc.) y deja que corrija si no coincide.",
   discovery_examples:
     "Da 1-2 ejemplos concretos de webs de negocios parecidos al suyo para que decida qué le gusta.",
   pages:
     "Define la ESTRUCTURA COMPLETA de la web con el cliente: ¿una sola página con secciones (Inicio, Servicios, Nosotros, Contacto) o varias páginas? Confirma qué secciones debe tener y cómo se va a armar bien la web completa.",
   technical_bundle:
-    "Pregunta en UNA SOLA pregunta cuáles de las funciones listadas le interesan (panel, mapa, WhatsApp, citas, SEO, app instalable, etc. — solo las relevantes y aún no sabidas). Que pueda responder con varias, 'todas' o 'ninguna'. Explica que lo que no elija se deja fuera y siempre se puede agregar después. NO las preguntes de una por una.",
+    "Pregunta en UNA SOLA pregunta cuáles de las funciones listadas le interesan (panel, mapa, WhatsApp, citas, SEO, app instalable, versión en otro idioma, etc. — solo las relevantes y aún no sabidas). Que pueda responder con varias, 'todas' o 'ninguna'. Explica que lo que no elija se deja fuera y siempre se puede agregar después. NO las preguntes de una por una.",
   clarify_bundle:
     "Re-explica con 1-2 ejemplos concretos del giro del cliente qué significa cada opción y vuelve a preguntar cuáles le interesan (pueden ser varias, 'todas' o 'ninguna'). No las preguntes de una por una.",
   technical_auth:
@@ -48,15 +49,15 @@ const TURN_GOALS: Record<string, string> = {
   technical_chat:
     "Pregunta si quiere que los clientes le escriban directo desde la web (por ejemplo un botón de WhatsApp).",
   technical_bookings:
-    "Pregunta si sus clientes agendan citas eligiendo día y hora, y si quiere permitir agendar en línea.",
+    "Pregunta si sus clientes agendan citas eligiendo día y hora, y si quiere permitir agendar en línea. Para un restaurante, enmárcalo como reservar mesa, hora y número de personas en línea.",
   design:
     "Pregunta el estilo visual que quiere transmitir: algo moderno con movimiento o algo sobrio y de confianza, y qué sensación debe dar la web.",
   technical_seo:
     "Pregunta si quiere aparecer en Google cuando alguien busque su servicio o negocio.",
   technical_pwa:
-    "Pregunta si quiere que la web se sienta como una app instalable en el celular.",
+    "Pregunta si quiere que la web se sienta como una app instalable en el celular (PWA).",
   technical_bots:
-    "Ofrece un asistente inteligente (bot) que atiende a los clientes del negocio: responde dudas 24/7, agenda citas o cotiza. Recomienda 1-3 opciones útiles para su tipo de negocio (preguntas frecuentes, citas, ventas, captura de leads, promociones, etc.) y pregunta cuál le gustaría incluir en la propuesta. Si no le interesa, que lo diga sin problema.",
+    "Ofrece un asistente inteligente (bot) que atiende a los clientes del negocio: responde dudas 24/7, agenda citas o cotiza. Recomienda 1-3 opciones útiles para su tipo de negocio (preguntas frecuentes, citas, ventas, captura de leads, promociones, etc.) y pregunta cuál le gustaría incluir en la propuesta. Si no le interesa, que lo diga sin problema. OJO: NO preguntes por funciones ya sabidas ni ya ofrecidas en turnos anteriores (botón de WhatsApp, mapa, SEO, panel): eso ya está resuelto. Tu ÚNICA tarea en este turno es ofrecer el asistente inteligente y que elija uno (o 'ninguno'). Si el cliente pidió un menú digital o es un restaurante, menciona (sin prometer montos) que más adelante puede sumar reservas de mesa o pedidos como siguiente paso natural.",
   scope_content:
     "Pregunta si ya tiene fotos, textos y logo, o si necesita ayuda para crearlos.",
   scope_services:
@@ -128,9 +129,24 @@ function compactContext(context: ChatContext): string {
     if (v === null || v === undefined || v === "") continue;
     known[k] = v;
   }
-  return Object.keys(known).length
+  const base = Object.keys(known).length
     ? JSON.stringify(known, null, 2)
     : "(aún no hay datos)";
+  // Nivel 5 · Ecosistema: las plataformas grandes (marketplace, SaaS, ERP/CRM)
+  // NO se cotizan a ciegas: el bot las califica y el precio cerrado solo sale en
+  // una propuesta formal con alcance detallado. Se lo recordamos al LLM en cada
+  // turno para que NUNCA prometa un monto exacto en el chat (solo "desde", según
+  // los módulos que se contraten). Regla del AGENTS.md/IMPLEMENTACION_CARTERA FASE 5.
+  const nivel5 =
+    context.category === "webapp" &&
+    (context.marketplace === true || context.saas === true || context.erp === true);
+  if (nivel5) {
+    return (
+      base +
+      `\n\n⚠ NIVEL 5 (plataforma a medida): este proyecto es una plataforma grande (marketplace, SaaS o ERP). NUNCA prometas un precio cerrado ni un monto exacto en el chat: di que se cotiza con una propuesta formal detallada y que el precio va "desde" según los módulos que se contraten.`
+    );
+  }
+  return base;
 }
 
 interface GenerateOpts {
@@ -151,7 +167,7 @@ REGLAS DE ORO:
 - Si el contexto ya contiene la respuesta, NO vuelvas a preguntar eso.
 - Sigue ESTRICTAMENTE el OBJETIVO DE ESTE TURNO. No cambies de tema ni adelantes preguntas de turnos futuros (fotos/textos, presupuesto, datos de contacto, etc.) salvo que ese sea el objetivo del turno.
 - Tono: consultor con experiencia, empático, natural, en español de México. Cero tecnicismos.
-- Usa un SOLO tratamiento (tú o usted) en todo el mensaje: si el cliente te habla de 'usted', respóndele con 'usted'; si te tutea, tutea. NUNCA mezcles 'tú' y 'usted' dentro del mismo mensaje.
+- Usa un SOLO tratamiento (tú o usted) en todo el mensaje: si el cliente te habla de 'usted', respóndele con 'usted'; si te tutea, tutea. NUNCA mezcles 'tú' y 'usted' dentro del mismo mensaje, y conjuga TODOS los verbos y posesivos según el tratamiento elegido: de "usted" usa "quiere, tiene, puede, su/sus, le"; de "tú" usa "quieres, tienes, puedes, tu/tus, te". No mezcles "tu proyecto" con "quiere que su...".
 - NO uses la muletilla "una última cosa / una última pregunta / una última duda" más de una vez en TODA la conversación: varía las transiciones (por ejemplo, "Ya casi terminamos con esto", "Otra cosa que me ayuda a afinar", "Una pregunta más sobre tu proyecto"). No repitas la misma frase de transición turno tras turno.
 - Si el objetivo es sobre SERVICIOS: pregunta si tiene servicios que mostrar y cuáles (con ejemplos de su giro si los conoces).
 - Si el objetivo es sobre la ESTRUCTURA de la web: propón la estructura completa (p. ej. Inicio, Servicios, Nosotros, Contacto) y confirma con el cliente.
@@ -224,8 +240,13 @@ export async function generateNextMessage(opts: GenerateOpts): Promise<string> {
       reportLlmFailure();
       return opts.fallbackReply;
     }
+    // Red de seguridad de TRATO: el system prompt ya pide un solo tratamiento,
+    // pero el LLM a veces cuela formas informales ("prefieres", "por ti") en un
+    // mensaje que debía ser de "usted". Si el cliente habla de "usted", se fuerza
+    // toUsted() sobre lo que pintó el modelo (determinista, no rompe lo ya formal).
+    const replyFinal = opts.context.trato === "usted" ? toUsted(reply) : reply;
     reportLlmSuccess();
-    return reply;
+    return replyFinal;
   } catch {
     reportLlmFailure();
     return opts.fallbackReply;

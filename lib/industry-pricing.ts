@@ -60,7 +60,10 @@ export const GIROS: Giro[] = [
   {
     id: "medico",
     nombre: "Clínica / consultorio médico",
-    keywords: ["medico", "médico", "doctor", "clinica", "clínica", "hospital", "especialista", "salud", "laboratorio", "fisioterapia", "pediatra", "ginecolog"],
+    // OJO: "consultorio" se añadió para que no lo robe el giro "consultor"
+    // (la keyword "consultor" es subcadena de "consultorio" y detectarGiro
+    // usa includes()). Un consultorio es médico/dental, no un coach.
+    keywords: ["medico", "médico", "doctor", "clinica", "clínica", "consultorio", "hospital", "especialista", "salud", "laboratorio", "fisioterapia", "pediatra", "ginecolog"],
     tier: "alto",
     presupuesto: [20000, 60000],
     pitch:
@@ -132,7 +135,9 @@ export const GIROS: Giro[] = [
   {
     id: "dentista",
     nombre: "Consultorio dental",
-    keywords: ["dentista", "dental", "ortodoncia", "odontolog", "clinica dental", "clínica dental", "implantes", "blanqueamiento", "endodoncia"],
+    // "consultorio" aquí compite con "dental" (score 2) para ganarle al giro
+    // "consultor" en frases como "consultorio dental" (FASE 6 cross-sell).
+    keywords: ["dentista", "dental", "consultorio", "ortodoncia", "odontolog", "clinica dental", "clínica dental", "implantes", "blanqueamiento", "endodoncia"],
     tier: "medio",
     presupuesto: [12000, 32000],
     pitch:
@@ -291,6 +296,39 @@ export const GIROS: Giro[] = [
     costo_omision:
       "Cada trabajo urgente que te buscó y no te encontró es ingreso que se fue a otro.",
   },
+  {
+    id: "empresa_operacion",
+    nombre: "Empresa / operación (plataforma a medida)",
+    // Nivel 5 · Ecosistema: marketplace, SaaS y ERP/CRM son proyectos de
+    // $40k-$90k+. Este giro (tier alto) evita que el clamp de ajustarPrecio
+    // recorte el ticket de estas plataformas grandes. Se detecta por señales
+    // de plataforma grande; un negocio normal que pide una web NO lo activa.
+    // OJO: keywords con includes() (no límites de palabra) → NO usar "erp"/
+    // "crm"/"nomina"/"logistica" sueltos (podrían colisionar con subcadenas de
+    // otras palabras); solo frases específicas de plataforma.
+    keywords: [
+      "marketplace", "mercado en linea", "mercado en línea",
+      "comision por venta", "comisión por venta", "cobrar comision", "cobrar comisión",
+      "varios vendedores", "multi-vendedor", "multivendedor",
+      "software como servicio", "saas", "plataforma para mis clientes",
+      "multi-tenant", "control de almacen", "control de almacén",
+      "sistema de nomina", "sistema de nómina", "modulos de compras", "módulos de compras",
+      "logistica de envios", "logística de envíos",
+    ],
+    tier: "alto",
+    presupuesto: [40000, 150000],
+    pitch:
+      "Para tu empresa, una plataforma a medida organiza toda tu operación o tu modelo de negocio: los procesos que ya no caben en Excel pasan a un solo sistema que trabaja para ti.",
+    dolor:
+      "Entre más vendedores, clientes o procesos sumas, más se te escapan el control y las comisiones; una plataforma los ordena y los hace escalables.",
+    beneficios: [
+      "Escalar sin perder el control de ventas, comisiones y operación",
+      "Cobros y repartición automáticos (split de pagos, suscripciones)",
+      "Reportes ejecutivos que hoy no tienes y te ahorran decisiones a ciegas",
+    ],
+    costo_omision:
+      "Cada venta o comisión que se pierde por procesos manuales es dinero que deja de llegar mientras tu competencia se automatiza.",
+  },
 ];
 
 /** Categorías → giro por defecto (si no se detecta uno específico) */
@@ -402,6 +440,96 @@ const DEFAULT_BY_CATEGORY: Record<string, Giro> = {
     ],
     costo_omision:
       "Cada cliente que no te tomó en serio por tu imagen es un proyecto que no conseguiste.",
+  },
+  corporativo: {
+    id: "corporativo_default",
+    nombre: "Empresa / sitio corporativo",
+    keywords: [],
+    tier: "alto",
+    presupuesto: [15000, 50000],
+    pitch:
+      "Para tu empresa, un sitio corporativo proyecta la seriedad que tus clientes buscan antes de confiarte un proyecto.",
+    dolor:
+      "Si tu empresa no se ve sólida en internet, los clientes serios dudan y eligen a quien sí proyecta confianza.",
+    beneficios: [
+      "Autoridad y confianza frente a clientes y socios",
+      "Mostrar quiénes son, sus proyectos y su equipo",
+      "Contactos calificados directo desde la web",
+    ],
+    costo_omision:
+      "Cada contrato que se va con un competidor por 'verse más formal' es ingreso que no recuperas.",
+  },
+  menu_digital: {
+    id: "menu_digital_default",
+    nombre: "Negocio de comida",
+    keywords: [],
+    tier: "medio",
+    presupuesto: [5000, 18000],
+    pitch:
+      "Para tu negocio de comida, el menú digital con QR convierte cada mesa en una venta: el comensal ve tu carta al instante, sin esperar ni descargar nada.",
+    dolor:
+      "Hoy la gente decide qué comer mirando el celular; si tu carta es de papel o no se ve bien, eligen al de al lado.",
+    beneficios: [
+      "Menú y promociones que se actualizan al instante",
+      "Pedido o reserva con un clic desde la mesa",
+      "Menos llamadas para preguntar la carta",
+    ],
+    costo_omision:
+      "Cada comensal que no vio tu carta completa es una venta que se fue a otro lado.",
+  },
+  tarjeta_digital: {
+    id: "tarjeta_digital_default",
+    nombre: "Profesional independiente",
+    keywords: [],
+    tier: "ajustado",
+    presupuesto: [3500, 12000],
+    pitch:
+      "Tu tarjeta digital es tu presentación que trabaja 24/7: compartes un link y la persona ve tu trabajo y te escribe al instante.",
+    dolor:
+      "Compartir tu información de palabra o por captura se pierde; un link siempre está a la mano.",
+    beneficios: [
+      "Botón de WhatsApp y redes en un solo lugar",
+      "Se ve profesional en cualquier celular",
+      "Compartes tu info en un clic",
+    ],
+    costo_omision:
+      "Cada contacto que no guardó tu información es un cliente que no volvió.",
+  },
+  link_in_bio: {
+    id: "link_in_bio_default",
+    nombre: "Creador de contenido",
+    keywords: [],
+    tier: "ajustado",
+    presupuesto: [2500, 8000],
+    pitch:
+      "Tu link-in-bio es tu vitrina: pones el link en tu bio y la gente encuentra tu WhatsApp, tus redes y tus servicios sin perderse.",
+    dolor:
+      "Si solo tienes un enlace genérico, la gente se distrae y no llega a lo que vendes.",
+    beneficios: [
+      "Todos tus enlaces en una página con tu estilo",
+      "QR físico para compartir en eventos",
+      "Se arma en 1-2 días",
+    ],
+    costo_omision:
+      "Cada seguidor que no llegó a lo que vendes es una oportunidad perdida.",
+  },
+  cotizador: {
+    id: "cotizador_default",
+    nombre: "Negocio de servicios que cotiza",
+    keywords: [],
+    tier: "alto",
+    presupuesto: [15000, 45000],
+    pitch:
+      "Tu cotizador en línea recibe pedidos de presupuesto 24/7: tus clientes llenan el formulario, el sistema calcula y te llega el aviso.",
+    dolor:
+      "Atender cada cotización por llamada o WhatsApp te quita horas que no cobras.",
+    beneficios: [
+      "Cotizaciones automáticas sin atender cada llamada",
+      "PDF de cotización que se genera solo",
+      "Aviso por WhatsApp al instante",
+    ],
+    costo_omision:
+      "Cada cotización que no pudiste atender a tiempo es un cliente que contrató a otro.",
   },
 };
 

@@ -70,7 +70,7 @@ GIROS / INDUSTRIAS Y SU PRESUPUESTO TÍPICO (MXN):
 ${girosText}
 
 INSTRUCCIONES:
-1. Determina la categoría (landing, ecommerce, citas, webapp, blog, portafolio) y el nivel (basico/profesional/avanzado) basándote en la conversación.
+1. Determina la categoría (landing, corporativo, ecommerce, citas, webapp, blog, portafolio, menú digital, tarjeta digital, link-in-bio, cotizador) y el nivel (basico/profesional/avanzado) basándote en la conversación.
 2. Calcula un precio realista en MXN usando el catálogo como referencia (base + características que pidió el cliente).
 3. Genera 'funcionalidades' en LENGUAJE HUMANO, describiendo cada cosa como se la explicarías a un cliente (ej: "Calendario donde el paciente elige día y hora").
 4. Explica POR QUÉ ese precio en 2-3 líneas claras, referenciando el presupuesto típico del giro.
@@ -245,11 +245,13 @@ function enrichCommercial(result: AnalysisResult, context: ChatContext): Analysi
     paginas: context.paginas,
     bots: botsIds,
   });
-  // Con bots, el precio EXACTO (base + bots) manda sobre el clamp del giro.
+  // Regla #7 (precio único): el total EXACTO del motor (base + bots) manda
+  // SIEMPRE sobre el clamp del giro. La UI, el PDF, el copy, la propuesta
+  // formal y el pack técnico citan el MISMO número que ve el cliente
+  // (calcularTotalDeterminista). El clamp del giro solo queda como estimación
+  // de mercado para el extremo superior del rango (precio_max) y el copy.
   const precioFinal =
-    botsSeleccionados.length && totalExacto != null
-      ? totalExacto
-      : aj.precio_min;
+    totalExacto != null ? totalExacto : aj.precio_min;
 
   // Si el cliente declinó alguna función clave (citas, pagos, panel, etc.),
   // el copy comercial SIEMPRE es el adaptado local: garantiza que la
@@ -400,6 +402,39 @@ function localFallback(opts: {
   if (ctx.animaciones) activeFeatures.push("animaciones");
   if (ctx.seo) activeFeatures.push("seo");
   if (ctx.pwa) activeFeatures.push("pwa");
+  if (ctx.multilingue) activeFeatures.push("multilingue");
+  // Nivel 3 · Ecommerce "pro": las features del escalón premium se activan
+  // SOLO si el cliente las mencionó (señales pasivas en conversation-flow).
+  // El ticket "pro" se alcanza por features acumuladas + nivel avanzado
+  // (inferNivel), nunca inflando la base. Para otras categorías los ids no
+  // existen en su catálogo y se ignoran sin inflar el precio.
+  if (categoryId === "ecommerce") {
+    if (ctx.inventario) activeFeatures.push("inventario_avanzado");
+    if (ctx.reportesVentas) activeFeatures.push("reportes_ventas");
+    if (ctx.facturacionCfdi) activeFeatures.push("facturacion_cfdi");
+    if (ctx.multiVendedor) activeFeatures.push("multi_vendedor");
+  }
+  // Nivel 4 · Plataformas por vertical: las features de la vertical detectada
+  // (inmobiliaria, membresías, cursos, telemedicina, directorio) se activan SOLO
+  // para webapp y SOLO si el cliente mencionó la señal pasiva. Siguen el patrón
+  // del ecommerce pro: el ticket alto se alcanza por features + nivel avanzado
+  // (inferNivel), nunca inflando la base. Para otras categorías los ids no
+  // existen en su catálogo y se ignoran sin inflar el precio.
+  if (categoryId === "webapp") {
+    if (ctx.inmobiliaria) activeFeatures.push("filtros_inmobiliaria", "leads_propiedad", "panel_publicacion");
+    if (ctx.membresias) activeFeatures.push("cobro_recurrente", "area_privada", "gestion_planes", "reportes_retencion");
+    if (ctx.cursos) activeFeatures.push("lecciones_video", "progreso_alumno", "certificado", "comunidad_foros");
+    if (ctx.telemedicina) activeFeatures.push("expediente_paciente", "videollamada", "recetas");
+    if (ctx.directorio) activeFeatures.push("fichas_autogestionables", "busqueda_mapa", "pagos_ficha_premium");
+    // Nivel 5 · Ecosistema: las features de la plataforma detectada (marketplace,
+    // SaaS, ERP/CRM) se activan SOLO para webapp y SOLO si el cliente mencionó la
+    // señal pasiva. Mismo patrón que el nivel 4: el ticket alto se alcanza por
+    // features + nivel avanzado (inferNivel), nunca inflando la base. Para otras
+    // categorías los ids no existen en su catálogo y se ignoran sin inflar el precio.
+    if (ctx.marketplace) activeFeatures.push("split_pagos", "api_publica", "reportes_ejecutivos", "planes_billing");
+    if (ctx.saas) activeFeatures.push("multi_tenant", "planes_billing", "api_publica", "reportes_ejecutivos");
+    if (ctx.erp) activeFeatures.push("modulo_compras", "modulo_ventas", "modulo_almacen", "modulo_nomina", "integracion_contable", "reportes_ejecutivos");
+  }
 
   const result = buildFallbackProposal(
     categoryId,

@@ -1,6 +1,6 @@
 # 📦 PACK DE PROMPTS · Página de presentación para barbería (landing) — para Roo Code + DeepSeek (mobile-first, por fases)
 
-> Generado por tu consultor senior (08 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
+> Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
 > Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
 > 🎭 **Cada chat asume un ROL** (UX Researcher, Dev, QA, SRE, etc.): pega el bloque tal cual y el agente actúa como ese rol durante toda la fase.
 
@@ -113,6 +113,7 @@
 ### Contexto global del proyecto
 
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -139,6 +140,7 @@ Actúa como **UX Researcher + estratega de producto senior**. Tu trabajo: conver
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -223,6 +225,7 @@ Actúa como **UX/UI Designer senior**. Tu trabajo: producir el "plano" de la web
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -302,6 +305,7 @@ Actúa como **Brand Manager + Project Manager / Content Strategist senior**. Tu 
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -387,6 +391,7 @@ Actúa como **desarrollador senior de Next.js**. Estás INICIANDO un proyecto de
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -473,6 +478,7 @@ Actúa como **desarrollador senior de UI**. Tu trabajo: construir el esqueleto v
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -523,6 +529,7 @@ Actúa como **desarrollador senior de UI/UX y copywriter técnico**. Tu trabajo:
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -628,6 +635,7 @@ Actúa como **Conversation Designer (CxD) + UX Writer + Interaction Designer sen
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -696,6 +704,7 @@ Actúa como **desarrollador senior backend / base de datos**. Tu trabajo: dejar 
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -801,6 +810,7 @@ Actúa como **desarrollador senior full-stack**. Tu trabajo: dar vida a los form
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -891,6 +901,7 @@ Actúa como **Data Engineer senior** con criterio de **privacidad por diseño**.
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -974,6 +985,7 @@ Actúa como **Data Analyst / Data Scientist senior**. Tu trabajo: definir las m�
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1030,6 +1042,7 @@ Actúa como **Software Engineer en pruebas (SDET) senior** con visión de **back
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1101,6 +1114,7 @@ Actúa como **DevOps / Platform Engineer senior**. Tu trabajo: que "prueba y des
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1177,6 +1191,7 @@ Actúa como **QA Engineer (Web) senior** + **desarrollador senior de calidad**. 
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1268,6 +1283,7 @@ Actúa como **Security Engineer senior (ofensivo + defensivo)**. No confías en 
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1353,6 +1369,7 @@ Actúa como **Performance Engineer senior**. Tu trabajo: medir y optimizar hasta
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1442,6 +1459,7 @@ Actúa como **auditor senior de IA responsable, privacidad y accesibilidad**. Tu
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1493,6 +1511,7 @@ Actúa como **SRE (Site Reliability Engineer) senior**. Tu trabajo: preparar la 
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1592,6 +1611,7 @@ Actúa como **desarrollador senior DevOps / entrega**. Tu trabajo: desplegar a p
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1657,6 +1677,7 @@ Actúa como **Product Manager / Growth + Account Manager senior**. Tu trabajo: c
 
 ### Contexto del proyecto
 PROYECTO: Página de presentación para barbería (landing) para Barbería El Corte · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para barbería.
 GIRO: Barbería.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Vercel.
 ESTILO: moderno, con micro-interacciones y animaciones sutiles.
@@ -1710,7 +1731,7 @@ Prepara una demo de 20-30 min y recórrela con el cliente en celular y escritori
 
 ### 6. Roadmap y upsell (retención)
 Documenta en el README (sección "Roadmap") las siguientes oportunidades ordenadas por impacto y costo, para retención/upsell:
-- **Asistentes IA** (FAQ/citas/ventas sobre la infraestructura del CHAT undefined) si hay preguntas repetidas.
+- **Asistentes IA** (FAQ/citas/ventas) si hay preguntas repetidas.
 - **Panel/mantenimiento** (editar contenidos, ver leads, reportes) — plan mensual.
 - **Pagos en línea / reservas / catálogo completo** si el negocio crece.
 - **Blog/SEO** para captar tráfico orgánico por palabras del giro.

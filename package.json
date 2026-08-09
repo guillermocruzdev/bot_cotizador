@@ -13,7 +13,9 @@
     "test:regression": "tsx scripts/regression-test.ts",
     "test:prospecting": "tsx scripts/prospecting-test.ts",
     "test:message": "tsx scripts/message-test.ts",
-    "test:bot": "tsx scripts/bot-test.ts"
+    "test:bot": "tsx scripts/bot-test.ts",
+    "test:eval": "tsx scripts/eval.ts",
+    "test:eval:llm": "tsx scripts/eval.ts --llm"
   },
   "dependencies": {
     "@langchain/core": "^0.3.80",

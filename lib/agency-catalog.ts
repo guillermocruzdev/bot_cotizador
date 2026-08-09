@@ -88,11 +88,47 @@ export const AGENCY_WEB_TYPES: WebTypeSpec[] = [
     descripcion:
       "El menú/carta de tu negocio en línea, accesible con un código QR en cada mesa. Cero apps ni descargas.",
     paraQuien: "Restaurantes, cafeterías, bares y food trucks que quieren modernizar su carta.",
-    categoriaBase: "landing",
+    categoriaBase: "menu_digital",
     precioDesde: 3500,
     tiempoEntrega: "2-4 días",
     complejidad: "basica",
     diferencial: "Se actualiza solo (precios y promos) y se imprime el QR; ideal venta rápida de entrada.",
+  },
+  {
+    id: "tarjeta_digital",
+    nombre: "Tarjeta digital / minisitio",
+    descripcion:
+      "Tu tarjeta de presentación en línea: compartes un link y la persona ve tu información, servicios y WhatsApp al instante.",
+    paraQuien: "Profesionistas y oficios (plomero, electricista, DJ, maquillista) que comparten su info por WhatsApp.",
+    categoriaBase: "tarjeta_digital",
+    precioDesde: 4500,
+    tiempoEntrega: "2-4 días",
+    complejidad: "basica",
+    diferencial: "Botón de WhatsApp, mapa y galería en un link corto; la entrada perfecta para oficios.",
+  },
+  {
+    id: "link_in_bio",
+    nombre: "Link-in-bio premium",
+    descripcion:
+      "Una página con todos tus enlaces (WhatsApp, Instagram, TikTok) para poner en tu bio, con tu estilo.",
+    paraQuien: "Creadores de contenido y pequeños negocios que viven en redes y solo tienen su bio.",
+    categoriaBase: "link_in_bio",
+    precioDesde: 2500,
+    tiempoEntrega: "1-2 días",
+    complejidad: "basica",
+    diferencial: "QR físico y mini-catálogo opcionales; la cuña de entrada más barata de la agencia.",
+  },
+  {
+    id: "cotizador",
+    nombre: "Cotizador / presupuesto en línea",
+    descripcion:
+      "Sistema para que tus clientes te pidan presupuesto en línea: formulario, cálculo automático y PDF que se genera solo.",
+    paraQuien: "Servicios que cotizan (construcción, mudanzas, imprenta, eventos, plomería) y quieren pedir presupuesto en línea.",
+    categoriaBase: "cotizador",
+    precioDesde: 15000,
+    tiempoEntrega: "8-15 días",
+    complejidad: "media",
+    diferencial: "Es el flagship de la agencia (el propio bot Alex): el negocio recibe cotizaciones sin atender cada llamada.",
   },
   {
     id: "reservas_restaurante",
@@ -143,6 +179,42 @@ export const AGENCY_WEB_TYPES: WebTypeSpec[] = [
     diferencial: "Cuentas de vendedor, comisiones y panel de administración por rol.",
   },
   {
+    id: "marketplace_split",
+    nombre: "Marketplace con split de pagos",
+    descripcion:
+      "Marketplace multi-vendedor donde cada vendedor recibe su parte de la venta automáticamente (escrow/split de pagos).",
+    paraQuien: "Marketplaces que cobran comisión por venta y reparten el pago entre vendedores.",
+    categoriaBase: "webapp",
+    precioDesde: 70000,
+    tiempoEntrega: "40-80 días",
+    complejidad: "avanzada",
+    diferencial: "Split de pagos/escrow, multi-tenant y API pública para integrar todo el ecosistema.",
+  },
+  {
+    id: "saas",
+    nombre: "SaaS / software como servicio",
+    descripcion:
+      "Plataforma multi-tenant que vendes por suscripción a varios clientes, con sus datos aislados y billing automático.",
+    paraQuien: "Emprendedores que quieren vender un software por mensualidad (B2B o B2C).",
+    categoriaBase: "webapp",
+    precioDesde: 60000,
+    tiempoEntrega: "35-70 días",
+    complejidad: "avanzada",
+    diferencial: "Aislamiento por cliente (multi-tenant), planes y facturación automática (billing) y API pública.",
+  },
+  {
+    id: "erp",
+    nombre: "ERP / CRM a medida",
+    descripcion:
+      "Sistema de operación interna: compras, ventas, almacén, nómina y reportes ejecutivos integrados.",
+    paraQuien: "Empresas que operan con Excel y hojas sueltas y quieren un solo sistema de control.",
+    categoriaBase: "webapp",
+    precioDesde: 90000,
+    tiempoEntrega: "60-120 días",
+    complejidad: "avanzada",
+    diferencial: "Módulos de compras/ventas/almacén/nómina + integraciones contables y reportes ejecutivos.",
+  },
+  {
     id: "webapp",
     nombre: "Plataforma / sistema web a medida",
     descripcion:
@@ -184,7 +256,7 @@ export const AGENCY_WEB_TYPES: WebTypeSpec[] = [
     descripcion:
       "Agenda médica en línea con recordatorios, expediente del paciente y videollamada opcional.",
     paraQuien: "Consultorios, clínicas y especialistas que quieren ordenar sus citas y expedientes.",
-    categoriaBase: "citas",
+    categoriaBase: "webapp",
     precioDesde: 26000,
     tiempoEntrega: "15-30 días",
     complejidad: "avanzada",
