@@ -10,10 +10,14 @@ import {
   useMessages,
   useTyping,
 } from "@/lib/chat-store";
+import { inputHintFor } from "@/lib/conversation-flow";
+import { endSession } from "@/lib/chat-analytics";
 import { BotAvatar } from "./BotAvatar";
 import { ChatInput } from "./ChatInput";
 import { ChatMessage } from "./ChatMessage";
 import { ConversationEngine } from "./ConversationEngine";
+import { PhaseStepper } from "./PhaseStepper";
+import { QuickReplies } from "./QuickReplies";
 import { TypingIndicator } from "./TypingIndicator";
 
 export function ChatContainer() {
@@ -21,6 +25,7 @@ export function ChatContainer() {
   const isTyping = useTyping();
   const isAnalyzing = useChatStore((s) => s.isAnalyzing);
   const error = useChatStore((s) => s.error);
+  const currentNodeId = useChatStore((s) => s.currentNodeId);
   const sendUserMessage = useChatStore((s) => s.sendUserMessage);
   const reset = useChatStore((s) => s.reset);
   const retryAnalyze = useChatStore((s) => s.retryAnalyze);
@@ -31,6 +36,13 @@ export function ChatContainer() {
     const el = scrollRef.current;
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages, isTyping, isAnalyzing]);
+
+  // Analítica: envía lo pendiente al cerrar/abandonar la pestaña (abandono real).
+  useEffect(() => {
+    const onLeave = () => endSession();
+    window.addEventListener("pagehide", onLeave);
+    return () => window.removeEventListener("pagehide", onLeave);
+  }, []);
 
   return (
     <ConversationEngine>
@@ -55,6 +67,9 @@ export function ChatContainer() {
             <RefreshCw className="h-4 w-4" />
           </Button>
         </header>
+
+        {/* Stepper de fases (UX/CxD): orienta sin prometer un conteo */}
+        <PhaseStepper />
 
         {/* ── Mensajes ── */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto py-4">
@@ -120,9 +135,16 @@ export function ChatContainer() {
           </div>
         </div>
 
+        {/* ── Quick replies (CxD): opciones tap-ables del nodo actual ── */}
+        <QuickReplies />
+
         {/* ── Input ── */}
         <div className="mx-auto w-full max-w-3xl">
-          <ChatInput onSend={sendUserMessage} disabled={isAnalyzing} />
+          <ChatInput
+            onSend={sendUserMessage}
+            disabled={isAnalyzing}
+            placeholder={inputHintFor(currentNodeId) ?? "Escribe tu mensaje..."}
+          />
         </div>
       </div>
     </ConversationEngine>

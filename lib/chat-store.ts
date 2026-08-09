@@ -19,6 +19,15 @@ import {
   isDoneNode,
 } from "@/lib/conversation-flow";
 import { randomClosing, detectTrato, toUsted } from "@/lib/personality";
+import {
+  endSession,
+  getSessionState,
+  resetAnalytics,
+  startAnalyticsSession,
+  trackNode,
+  trackSkip,
+  trackUserMessage,
+} from "@/lib/chat-analytics";
 import { delay, uid } from "@/lib/utils";
 
 export const BOT_NAME = process.env.NEXT_PUBLIC_BOT_NAME || "Alex";
@@ -171,6 +180,9 @@ export const useChatStore = create<ChatState>((set, get) => {
     set({ started: true, currentNodeId: START_NODE_ID });
     const node = getNode(START_NODE_ID);
     if (node) {
+      // Analítica: inicio de sesión + saludo (no es pregunta).
+      const as = startAnalyticsSession();
+      trackNode(as, START_NODE_ID, false);
       await botSay(node.generateMessage(get().context), { force: true });
     }
     booting = false;
@@ -263,6 +275,7 @@ export const useChatStore = create<ChatState>((set, get) => {
         const forward = getNode(forwardId);
         set({ currentNodeId: forwardId });
         if (forward) {
+          trackNode(getSessionState() ?? startAnalyticsSession(), forward.id, true);
           const fallback = fallbackFor(forward.id, nextCtx);
           set({ isTyping: true });
           const reply = await enhancedReply({
@@ -282,6 +295,9 @@ export const useChatStore = create<ChatState>((set, get) => {
     // 3. Side effects del nodo + avanzar
     node.onReceive?.(text, nextCtx);
 
+    // Analítica: respuesta del cliente (longitud y "no sé").
+    trackUserMessage(currentId, text);
+
     let nextId = node.nextNode(text, nextCtx);
 
     // 3b. Saltar nodos cuya condición no se cumple
@@ -290,11 +306,17 @@ export const useChatStore = create<ChatState>((set, get) => {
     while (guard < 40) {
       const target = getNode(nextId);
       if (!target || !target.condition || target.condition(nextCtx)) break;
+      trackSkip(target.id, "condition");
       nextId = target.nextNode("", nextCtx);
       guard++;
     }
 
     set({ context: nextCtx, currentNodeId: nextId });
+
+    // Analítica: el siguiente nodo que el bot va a preguntar.
+    if (!isDoneNode(nextId) && nextId !== "closing") {
+      trackNode(getSessionState() ?? startAnalyticsSession(), nextId, true);
+    }
 
     // 3c. ¿Terminó? Mostrar cierre y analizar
     if (isDoneNode(nextId)) {
@@ -341,6 +363,7 @@ export const useChatStore = create<ChatState>((set, get) => {
 
   const reset = () => {
     clearPersistedState();
+    resetAnalytics();
     set({
       messages: [],
       context: createEmptyContext(),

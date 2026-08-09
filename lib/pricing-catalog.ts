@@ -59,7 +59,9 @@ export const PRICING_CATALOG: PricingCategory[] = [
     id: "landing",
     nombreCliente: "Página de presentación para tu negocio",
     keywords: ["presentar", "presentación", "información", "servicios", "landing", "vitrina", "mostrar", "folleto", "tarjeta", "curriculum", "cv", "profesional", "consultorio", "catálogo", "catalogo", "me encuentren", "que me encuentren", "página sencilla", "pagina sencilla", "página simple", "pagina simple", "mostrar mis", "mostrar mi", "presentar mis", "presentar mi", "solo información", "solo informacion"],
-    base: { basico: 8000, profesional: 15000, avanzado: 25000 },
+    // Base alineada al motor determinista ($8,500) y al catálogo de la agencia
+    // (regla #7 de AGENTS.md: UI, PDF, copy y fallback deben citar el MISMO total).
+    base: { basico: 8500, profesional: 15000, avanzado: 25000 },
     tiempo: { basico: "3-5 días", profesional: "5-8 días", avanzado: "8-12 días" },
     features: [
       { id: "seo", labelCliente: "Que te encuentren en Google al buscar tu servicio", precio: 2500 },

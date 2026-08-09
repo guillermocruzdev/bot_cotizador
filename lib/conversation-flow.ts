@@ -53,16 +53,38 @@ function isNoSé(response: string, ctx: ChatContext): boolean {
   return classifyIntent(response).dontKnow;
 }
 
-/** Patrones de señales técnicas y el campo de contexto que activan */
-const SIGNAL_PATTERNS: Array<{
-  re: RegExp;
-  field: "pagos" | "citas" | "dashboard" | "autenticacion" | "baseDeDatos";
-}> = [
+/** Campos técnicos inferibles desde el texto del cliente (0 LLM). */
+type SignalField =
+  | "pagos"
+  | "citas"
+  | "dashboard"
+  | "autenticacion"
+  | "baseDeDatos"
+  | "mapas"
+  | "documentos"
+  | "chat"
+  | "seo"
+  | "pwa"
+  | "animaciones";
+
+/**
+ * Patrones de señales técnicas y el campo de contexto que activan.
+ * Cubren TODO lo que el bundle (nodo consolidado) y los nodos individuales
+ * preguntan, para que si el cliente lo menciona en CUALQUIER respuesta, el
+ * bot ya lo sepa y NO vuelva a preguntar.
+ */
+const SIGNAL_PATTERNS: Array<{ re: RegExp; field: SignalField }> = [
   { re: /(pagar|pago|pagos|comprar|vender|paypal|stripe|tarjeta|transferencia)/, field: "pagos" },
   { re: /(cita|citas|agendar|reservar|reserva|turno)/, field: "citas" },
   { re: /(panel|dashboard|administrar|admin|reportes|estad[íi]sticas)/, field: "dashboard" },
   { re: /(cuenta|cuentas|registrarse|registro|login|usuarios)/, field: "autenticacion" },
   { re: /(base de datos|guardar datos|guardamos)/, field: "baseDeDatos" },
+  { re: /(mapa|mapas|ubicaci[oó]n|localizaci[oó]n|sucursales?|c[oó]mo llegar|d[oó]nde est[áa] tu local)/, field: "mapas" },
+  { re: /(cotizaciones?|recibos?|reportes|documentos|pdfs?)/, field: "documentos" },
+  { re: /(whatsapp|whastapp|chat|mensaje|mensajes|escriban|escr[ií]beme|me escr[ií]ba|escr[ií]bale)/, field: "chat" },
+  { re: /(google|buscadores?|posicionar(?:me)?|posicionamiento|seo|aparecer\s+en\s+google|me\s+encuentren)/, field: "seo" },
+  { re: /(aplicaci[oó]n|\bapp\b|instalable|pwa)/, field: "pwa" },
+  { re: /(moderno|moderna|animaciones|movimiento|din[aá]mico|impresionar|efectos|oscuro)/, field: "animaciones" },
 ];
 
 /** Cláusula en la que aparece una coincidencia (hasta el último separador). */
@@ -107,10 +129,7 @@ function isDoubt(t: string, matchIndex: number): boolean {
  * específicas que las de activación. Ej: "no quiero pagar publicidad" NO pone
  * pagos=false (ahí "pagar" no es cobro en línea); "no quiero pagos en línea" SÍ.
  */
-const NEGATIVE_SIGNAL_PATTERNS: Array<{
-  re: RegExp;
-  field: "pagos" | "citas" | "dashboard" | "autenticacion" | "baseDeDatos";
-}> = [
+const NEGATIVE_SIGNAL_PATTERNS: Array<{ re: RegExp; field: SignalField }> = [
   {
     re: /(pagos? en l[ií]nea|pagos? online|pago en l[ií]nea|cobrar? en l[ií]nea|cobros? en l[ií]nea|tarjeta|pasarela|checkout|stripe|paypal|venta en l[ií]nea|pagos? con tarjeta)/,
     field: "pagos",
@@ -119,6 +138,12 @@ const NEGATIVE_SIGNAL_PATTERNS: Array<{
   { re: /(panel|dashboard|reportes|estad[íi]sticas)/, field: "dashboard" },
   { re: /(cuenta|cuentas|registrarse|registro|login|usuarios)/, field: "autenticacion" },
   { re: /(base de datos|guardar datos|guardamos)/, field: "baseDeDatos" },
+  { re: /(mapa|mapas|ubicaci[oó]n|localizaci[oó]n)/, field: "mapas" },
+  { re: /(cotizaciones?|recibos?|reportes)/, field: "documentos" },
+  { re: /(whatsapp|chat|mensajer[ií]a|escriban)/, field: "chat" },
+  { re: /(google|posicionamiento|seo)/, field: "seo" },
+  { re: /(aplicaci[oó]n|\bapp\b|instalable|pwa)/, field: "pwa" },
+  { re: /(animaciones|movimiento|efectos)/, field: "animaciones" },
 ];
 
 /**
@@ -365,6 +390,9 @@ function extractSections(raw: string): string | null {
     }
     // "algo así como X" / "así como X" → tomar X
     let p = part.replace(/^(algo\s+)?as[ií]\s+como\s+/i, "").trim();
+    // Verbos introductorios del cliente no-técnico ("que diga mi nombre",
+    // "que muestre mis fotos") → quedan como el sustantivo ("mi nombre").
+    p = p.replace(/^(que\s+)?(diga|ponga|muestre|salga|tenga|aparezca|incluya)\s+/i, "").trim();
     p = p.replace(/^(la|el|los|las|una|un|unos|unas|lo|secci[oó]n)\s+/i, "").trim();
     p = p.replace(/[.,;:!?¿¡]+$/g, "").trim();
     if (!p || p.length < 2) continue;
@@ -382,10 +410,32 @@ function extractSections(raw: string): string | null {
 function normalizeServices(raw: string): string | null {
   const t = raw.replace(/[.,;:]+$/g, "").trim();
   if (!t || /^(no s[ée]|ni idea|no|nada)$/i.test(t)) return null;
-  const items = t
+  // Prefijo introductorio del dueño ("pues vendo…", "le ofrezco a la gente…",
+  // "tengo…", "doy…") → se quita para dejar solo la lista de servicios.
+  const cleaned = t
+    .replace(/^(pues|bueno|la verdad|mire|mira|ver[aá]s|yo)\s*[:,]?\s*/i, "")
+    .replace(
+      /^((le|les|te)\s+)?(vendo|ofrezco|ofrecemos|tengo|tenemos|doy|damos|manejamos|manejo|atiendo|atendemos|presto|prestamos)\s+(a (la|las|los|mis|nuestros|toda) gente\s+)?/i,
+      ""
+    )
+    .trim();
+  const items = cleaned
     .split(/,|;|\n|\.| y | e /i)
-    .map((s) => s.replace(/^(la|el|los|las|una|un|unos|unas|lo)\s+/i, "").trim())
-    .filter((s) => s.length > 0);
+    .map((s) =>
+      s
+        .replace(/^(y|e)\s+/i, "")
+        .replace(/^(la|el|los|las|una|un|unos|unas|lo)\s+/i, "")
+        .replace(/^tamb[ií][eé]n\s+/i, "")
+        .trim()
+    )
+    .filter((s) => s.length > 0)
+    // Relleno final de la persona ("Eso es todo", "nada más", "con eso me basta"…)
+    .filter(
+      (s) =>
+        !/^(eso es todo|eso es|nada m[áa]s|con eso me (conformo|basta)|ya con eso|eso y nada m[áa]s)$/i.test(
+          s
+        )
+    );
   return items.length ? items.join(", ") : null;
 }
 
@@ -498,6 +548,147 @@ function makeClarifyNode(opts: {
       return original.nextNode(response, ctx);
     },
   };
+}
+
+// ─── Bundle técnico (CxD): consolida las preguntas sí/no ──────────
+// En vez de preguntar de una por una (panel, mapa, WhatsApp, citas, SEO,
+// app...), el bot agrupa en UNA pregunta las funciones relevantes que aún no
+// se saben. Cada función individual queda como fallback: solo se pregunta si
+// su flag sigue null tras el bundle o tras la inferencia de señales.
+
+const FEATURE_LABELS: Array<{ field: keyof ChatContext; label: string }> = [
+  { field: "autenticacion", label: "que tus clientes se registren o creen cuenta" },
+  { field: "baseDeDatos", label: "guardar datos de tus clientes (pedidos, citas)" },
+  { field: "pagos", label: "cobrar en línea con tarjeta" },
+  { field: "dashboard", label: "un panel privado para ver pedidos, citas o clientes" },
+  { field: "mapas", label: "un mapa para que encuentren tu local" },
+  { field: "documentos", label: "generar cotizaciones, recibos o reportes automáticos" },
+  { field: "chat", label: "un botón de WhatsApp para que te escriban directo" },
+  { field: "citas", label: "que tus clientes agenden citas con día y hora" },
+  { field: "seo", label: "que te encuentren en Google" },
+  { field: "pwa", label: "que tu página se instale como app en el celular" },
+];
+
+/** ¿La función es relevante para la categoría del cliente? */
+function featureRelevant(ctx: ChatContext, field: keyof ChatContext): boolean {
+  const cat = ctx.category ?? "landing";
+  switch (field) {
+    case "autenticacion":
+    case "baseDeDatos":
+    case "pagos":
+    case "pwa":
+      return !["landing", "portafolio", "blog"].includes(cat);
+    case "documentos":
+      return cat === "webapp" || cat === "ecommerce" || ctx.dashboard === true;
+    case "citas":
+      return cat !== "citas";
+    default:
+      // dashboard, mapas, chat, seo: relevantes en casi todo negocio
+      return true;
+  }
+}
+
+/** Funciones relevantes Y aún desconocidas (las que pregunta el bundle). */
+function bundleFields(
+  ctx: ChatContext
+): Array<{ field: keyof ChatContext; label: string }> {
+  return FEATURE_LABELS.filter(
+    (f) => featureRelevant(ctx, f.field) && ctx[f.field] === null
+  );
+}
+
+/** Recomendaciones por categoría para el "sí" genérico del bundle. */
+function recommendedFeatures(ctx: ChatContext): Record<string, boolean> {
+  const cat = ctx.category ?? "landing";
+  const rec: Record<string, boolean> = { chat: true, seo: true };
+  if (cat === "ecommerce") {
+    rec.pagos = true;
+    rec.dashboard = true;
+  }
+  if (cat === "citas") {
+    rec.citas = true;
+    rec.dashboard = true;
+  }
+  if (cat === "webapp") {
+    rec.autenticacion = true;
+    rec.baseDeDatos = true;
+    rec.dashboard = true;
+  }
+  if (ctx.dashboard === true) rec.documentos = true;
+  const mencionaUbicacion =
+    /(ubicaci[oó]n|mapa|local|sucursal|c[oó]mo llegar|d[oó]nde est[áa])/i.test(
+      ctx.negocioDescripcion ?? ""
+    ) || /(ubicaci[oó]n|mapa|c[oó]mo llegar)/i.test(ctx.estructuraWeb ?? "");
+  if (mencionaUbicacion) rec.mapas = true;
+  return rec;
+}
+
+/**
+ * Aplica la decisión del bundle al contexto (0 LLM, negación-aware).
+ * - "no sé" → NO decide (va a clarificar).
+ * - "todas/todos" → activa todo lo listado.
+ * - "ninguna"/"no" → desactiva todo lo listado.
+ * - "sí" genérico → aplica las recomendaciones de la categoría.
+ * - Respuesta con funciones concretas → lo mencionado/negado se respeta y lo
+ *   no mencionado se deja fuera (política explícita del mensaje).
+ */
+function applyBundleDecision(response: string, ctx: ChatContext): void {
+  if (classifyIntent(response).dontKnow) return; // dudas → clarificar, no decidir
+  const fields = bundleFields(ctx);
+  const t = response.toLowerCase();
+  const intent = classifyIntent(response);
+
+  // 1) Menciones/negaciones explícitas (aware de negación y de duda).
+  extractSignals(response, ctx);
+
+  const all =
+    /(todas|todos|todo lo|las quiero todas|d[aá]le a todas|s[ií], todas)/i.test(t) &&
+    !/(no todas|ninguna)/i.test(t);
+  // Rechazo explícito: "ninguna" / "no quiero nada de eso" (gana SIEMPRE).
+  const explicitNone = /(ninguna|ninguno|nada de eso|no quiero nada)/i.test(t);
+  // Cliente NO-técnico que DELEGA en el consultor: "no entiendo de eso",
+  // "usted vea/diga", "lo dejo en sus manos", "usted es el que sabe" NO es un
+  // rechazo (aunque "no entiendo" contenga "no") → se trata como
+  // "lo que me recomiendes". Un rechazo real no casa aquí.
+  const deferral =
+    !explicitNone &&
+    /(no entiendo|no s[ée] nada|no s[ée] de (eso|esas cosas)|usted (vea|diga|decida|manda|haga|es el que sabe|sabe m[áa]s)|lo dejo en (sus )?manos|lo que usted (diga|vea|decida|recomiende)|h[aá]gale como|como (usted )?vea|como mejor (crea|convenga|le parezca))/i.test(
+      t
+    );
+  const none =
+    explicitNone ||
+    (!deferral && intent.no && fields.every((f) => ctx[f.field] === null));
+  // "sí" genérico, delegación o "lo que me recomiendes" → recomendaciones.
+  const genericYes =
+    (intent.yes ||
+      deferral ||
+      /(las que me convengan|lo que me convenga|lo que me recomiendes|lo que me recomiende|lo que sea mejor|t[uú] recomienda)/i.test(
+        t
+      )) &&
+    fields.every((f) => ctx[f.field] === null);
+
+  if (all) {
+    for (const f of fields) {
+      if (ctx[f.field] === null)
+        (ctx as unknown as Record<string, unknown>)[f.field] = true;
+    }
+  } else if (none) {
+    for (const f of fields) {
+      if (ctx[f.field] === null)
+        (ctx as unknown as Record<string, unknown>)[f.field] = false;
+    }
+  } else if (genericYes) {
+    const rec = recommendedFeatures(ctx);
+    for (const f of fields) {
+      if (ctx[f.field] === null)
+        (ctx as unknown as Record<string, unknown>)[f.field] = rec[f.field] ?? false;
+    }
+  } else {
+    for (const f of fields) {
+      if (ctx[f.field] === null)
+        (ctx as unknown as Record<string, unknown>)[f.field] = false;
+    }
+  }
 }
 
 // ─── El grafo de nodos ──────────────────────────────────────────────
@@ -620,7 +811,8 @@ export const FLOW: Record<string, ConversationNode> = {
     expectedResponseType: "number",
     nextNode: (response, ctx) => {
       if (isNoSé(response, ctx)) return "clarify_pages";
-      return "technical_auth";
+      // La fase técnica la consolida el bundle (una sola pregunta multi-opción).
+      return "technical_bundle";
     },
     onReceive: (response, ctx) => {
       const num = response.match(/\d+/);
@@ -640,6 +832,9 @@ export const FLOW: Record<string, ConversationNode> = {
       if (sections) {
         ctx.estructuraWeb = sections;
       }
+      // Inferencia: si al describir la estructura menciona "Ubicación"/"mapa",
+      // "WhatsApp", etc., ya sabemos que las quiere → se salta esa pregunta.
+      extractSignals(response, ctx);
       captureEarlyData(response, ctx);
     },
   },
@@ -650,10 +845,75 @@ export const FLOW: Record<string, ConversationNode> = {
     hints: [
       "Te ayudo con lo que he visto: una página sencilla suele ser Inicio, Servicios y Contacto (todo en una sola página). Una más completa tiene varias secciones: Inicio, Nosotros, Servicios, Galería, Contacto. ¿Con cuál te sientes más cómodo?",
     ],
-    forwardNext: "technical_auth",
+    forwardNext: "technical_bundle",
   }),
 
   // ══════════ FASE 3: Detalles técnicos (disfrazados) ══════════
+  // PRIMERO se pregunta el bundle consolidado (una sola pregunta multi-opción
+  // con las funciones relevantes aún desconocidas). Las preguntas individuales
+  // (technical_auth, technical_db, payments, dashboard, maps, pdfs, chat,
+  // bookings, seo, pwa) quedan como FALLBACK: solo se preguntan si su flag
+  // sigue null tras el bundle o tras la inferencia de señales.
+  technical_bundle: {
+    id: "technical_bundle",
+    type: "technical",
+    generateMessage: (ctx) => {
+      const fields = bundleFields(ctx);
+      if (!fields.length) {
+        // No debería pasar (la condition lo evita); mensaje defensivo.
+        return "Perfecto, sigamos con la siguiente parte.";
+      }
+      const lista = fields.map((f, i) => `${i + 1}) ${f.label}`).join("\n");
+      return (
+        `${randomTransition()} Para no hacerte muchas preguntas de una por una, dime cuáles de estas cosas te interesan para tu página. Puedes decir varias, "todas" o "ninguna". Lo que no elijas lo dejamos fuera, y siempre se puede agregar después. ${pickEmoji("idea")}\n\n` +
+        `${lista}\n\n` +
+        `¿Cuáles te interesan?`
+      );
+    },
+    expectedResponseType: "text",
+    condition: (ctx) => bundleFields(ctx).length > 0,
+    nextNode: (response, ctx) => {
+      // Respuesta vacía = salto por condición (skip): ir al siguiente.
+      if (!response || !response.trim()) return "design";
+      if (classifyIntent(response).dontKnow) return "clarify_bundle";
+      return "design";
+    },
+    onReceive: (response, ctx) => {
+      applyBundleDecision(response, ctx);
+      captureEarlyData(response, ctx);
+    },
+  },
+
+  clarify_bundle: {
+    id: "clarify_bundle",
+    type: "clarification",
+    generateMessage: (ctx) => {
+      const first = randomEmpathy();
+      return `${first} Te lo pongo fácil: dime cuáles de esas te suenan útiles para tu negocio (por ejemplo, "el mapa y el botón de WhatsApp"). Lo que no elijas lo dejamos fuera, y siempre se puede agregar después. ¿Cuáles te interesan?`;
+    },
+    expectedResponseType: "text",
+    nextNode: (response, ctx) => {
+      if (!response || !response.trim()) return "design";
+      if (classifyIntent(response).dontKnow) {
+        ctx.noSeContador += 1;
+        if (ctx.noSeContador >= 2) {
+          ctx.noSeContador = 0;
+          // Sin decisión clara tras 2 intentos: se aplica lo recomendado y se
+          // avanza sin forzar (nunca se queda en bucle ni arrastra nulls).
+          applyBundleDecision("sí", ctx);
+          return "design";
+        }
+        return "clarify_bundle";
+      }
+      ctx.noSeContador = 0;
+      applyBundleDecision(response, ctx);
+      return "design";
+    },
+    onReceive: (response, ctx) => {
+      applyBundleDecision(response, ctx);
+    },
+  },
+
   technical_auth: makeBooleanNode({
     id: "technical_auth",
     type: "technical",
@@ -714,12 +974,9 @@ export const FLOW: Record<string, ConversationNode> = {
       `Otra cosa que me interesa saber: ¿cómo te pagan hoy tus clientes? ¿Te transfieren, te depositan, o mejor te buscan por WhatsApp? Con eso te digo si te conviene cobrar directo en la página o no.`,
     field: "pagos",
     next: "technical_dashboard",
-    condition: (ctx) => {
-      const cat = ctx.category ?? "landing";
-      // No se pregunta en landings y tampoco si el cliente ya dijo que NO quiere
-      // pagos en línea ("no quiero pagos en línea" en su descripción).
-      return !["landing", "portafolio", "blog"].includes(cat) && ctx.pagos !== false;
-    },
+    condition: (ctx) =>
+      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      ctx.pagos === null,
     clarifyId: "clarify_payments",
   }),
 
@@ -740,7 +997,7 @@ export const FLOW: Record<string, ConversationNode> = {
     field: "dashboard",
     next: "technical_maps",
     // Si el cliente ya dijo que no quiere panel, no volver a preguntar.
-    condition: (ctx) => ctx.dashboard !== false,
+    condition: (ctx) => ctx.dashboard === null,
     clarifyId: "clarify_dashboard",
   }),
 
@@ -760,6 +1017,7 @@ export const FLOW: Record<string, ConversationNode> = {
       `¿La gente necesita encontrarte físicamente? Si tienes un local o varias sucursales, te pongo un mapa para que lleguen sin perderse ni andar preguntando.`,
     field: "mapas",
     next: "technical_pdfs",
+    condition: (ctx) => ctx.mapas === null,
   }),
 
   technical_pdfs: makeBooleanNode({
@@ -770,9 +1028,10 @@ export const FLOW: Record<string, ConversationNode> = {
     field: "documentos",
     next: "technical_chat",
     condition: (ctx) =>
-      ctx.category === "webapp" ||
-      ctx.category === "ecommerce" ||
-      ctx.dashboard === true,
+      (ctx.category === "webapp" ||
+        ctx.category === "ecommerce" ||
+        ctx.dashboard === true) &&
+      ctx.documentos === null,
   }),
 
   technical_chat: makeBooleanNode({
@@ -782,6 +1041,7 @@ export const FLOW: Record<string, ConversationNode> = {
       `¿Quieres que tus clientes te escriban directo desde tu página? Un botón de WhatsApp bien puesto hace maravillas: la gente hoy prefiere escribir que llamar.`,
     field: "chat",
     next: "technical_bookings",
+    condition: (ctx) => ctx.chat === null,
     clarifyId: "clarify_chat",
   }),
 
@@ -810,6 +1070,9 @@ export const FLOW: Record<string, ConversationNode> = {
   design: {
     id: "design",
     type: "technical",
+    // Se salta si ya inferimos el estilo (ej. "quiero algo moderno con
+    // movimiento" en la descripción → animaciones=true).
+    condition: (ctx) => ctx.animaciones === null,
     generateMessage: (ctx) =>
       `${randomTransition()} Por último, en el estilo: ¿cómo quieres que tu negocio "se sienta" cuando te visiten? ¿Algo moderno y con movimiento, o algo sobrio y de confianza? Los dos venden; solo quiero que sea tu cara.`,
     expectedResponseType: "text",
@@ -836,6 +1099,7 @@ export const FLOW: Record<string, ConversationNode> = {
       `¿Te gustaría que te encuentren en Google cuando alguien busque tu servicio, sin depender de pagar publicidad? Eso se logra bien si lo hacemos desde el inicio, y te lo dejo incluido.`,
     field: "seo",
     next: "technical_pwa",
+    condition: (ctx) => ctx.seo === null,
   }),
 
   technical_pwa: makeBooleanNode({
@@ -846,9 +1110,11 @@ export const FLOW: Record<string, ConversationNode> = {
     field: "pwa",
     next: "technical_bots",
     // Para landing/portafolio/blog la PWA (instalable como app) es poco
-    // relevante: se salta y ahorra un turno del discovery.
+    // relevante: se salta y ahorra un turno del discovery. Si el cliente ya
+    // dijo si la quiere (o no), tampoco se vuelve a preguntar.
     condition: (ctx) =>
-      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing"),
+      !["landing", "portafolio", "blog"].includes(ctx.category ?? "landing") &&
+      ctx.pwa === null,
   }),
 
   // ══════════ FASE 3.5: Bots de LangChain (asistentes inteligentes) ══════════
@@ -1247,8 +1513,14 @@ export const FLOW: Record<string, ConversationNode> = {
   extra_comments: {
     id: "extra_comments",
     type: "closing",
-    generateMessage: () =>
-      `Muy bien. ${pickEmoji("confirmacion")} ¿Hay algo más que quieras contarme? Algún detalle que se me haya escapado o algo que te traiga preocupado. Si no, con lo que tengo ya te armo tu propuesta.`,
+    generateMessage: (ctx) => {
+      // CxD: recapitulación (grounding) antes de cerrar — el cliente ve lo que
+      // entendimos y puede corregir antes de que armemos la propuesta.
+      // buildRecap() devuelve "" si aún no hay datos suficientes.
+      const recapLine = buildRecap(ctx);
+      const recap = recapLine ? `${recapLine} ` : "";
+      return `Muy bien. ${pickEmoji("confirmacion")} ${recap}¿Hay algo más que quieras ajustar o contarme? Algún detalle que se me haya escapado o algo que te traiga preocupado. Si no, con lo que tengo ya te armo tu propuesta.`;
+    },
     expectedResponseType: "text",
     nextNode: () => DONE_NODE_ID,
     onReceive: (response, ctx) => {
@@ -1269,6 +1541,229 @@ export const FLOW: Record<string, ConversationNode> = {
     nextNode: () => DONE_NODE_ID,
   },
 };
+
+// ══════════ MEJORAS CxD (Conversation Design) ══════════════════════
+// Quick replies, orientación por fases, placeholder contextual y
+// recapitulación de cierre. Son ADITIVAS: NO cambian la máquina de
+// estados, los ids ni el parseo determinista (los tests siguen igual).
+
+export interface QuickReply {
+  /** Texto visible en el botón (chip) */
+  label: string;
+  /** Texto que se envía como si el cliente lo hubiera escrito */
+  value: string;
+}
+
+/** Nodos "sí / no / no sé" donde un chip reduce fricción sin perder calidad. */
+const BOOLEAN_CHIP_NODES = new Set([
+  "technical_auth",
+  "technical_db",
+  "technical_payments",
+  "technical_dashboard",
+  "technical_maps",
+  "technical_pdfs",
+  "technical_chat",
+  "technical_bookings",
+  "technical_seo",
+  "technical_pwa",
+  "scope_content",
+]);
+
+/**
+ * Valores de chip por bot (0 LLM): cada valor contiene UNA keyword ÚNICA del
+ * bot para que `extraerBotsDeRespuesta` lo detecte sin colisiones entre bots
+ * (p. ej. "cotización" pertenece a bot_ventas Y a bot_cotizacion).
+ */
+const BOT_CHIP_VALUES: Record<string, string> = {
+  bot_faq: "el de preguntas frecuentes",
+  bot_atencion: "el de atención al cliente",
+  bot_citas: "el de citas y agenda",
+  bot_ventas: "el de ventas y cierre",
+  bot_promos: "el de promociones",
+  bot_leads: "el capturador de clientes",
+  bot_dudas: "el que responda sobre la garantía",
+  bot_recomendador: "el que me ayude a recomendar",
+  bot_cotizacion: "el que diga cuánto cuesta",
+  bot_encuestas: "el de encuestas",
+  bot_membresias: "el de membresías",
+  bot_multilingue: "el que hable inglés",
+};
+
+/**
+ * Sugerencias accionables ("quick replies") del nodo actual. Reducen la
+ * fricción de teclear y guían al cliente SIN convertirlo en formulario:
+ * en nodos de decisión (sí/no, estilo, estructura, bots) se ofrecen opciones
+ * tap-ables; en los sensibles (presupuesto, contacto) se deja texto libre.
+ */
+export function quickRepliesFor(nodeId: string, ctx: ChatContext): QuickReply[] {
+  switch (nodeId) {
+    case "greeting":
+      return [{ label: "¡Empecemos!", value: "Empecemos" }];
+    case "discovery_confirm":
+      return [
+        { label: "Sí, así es", value: "Sí, así es" },
+        { label: "No, no es eso", value: "No, no es eso" },
+        { label: "No estoy seguro", value: "No estoy seguro" },
+      ];
+    case "pages":
+      return [
+        { label: "Una página corta", value: "Una sola página" },
+        { label: "Varias secciones", value: "Varias secciones" },
+      ];
+    case "design":
+      return [
+        { label: "Moderno y con movimiento", value: "Algo moderno con movimiento" },
+        { label: "Sobrio y de confianza", value: "Algo sobrio y de confianza" },
+      ];
+    case "technical_bundle":
+    case "clarify_bundle":
+      return [
+        { label: "Las que me convengan", value: "Sí, las que me convengan" },
+        { label: "Todas", value: "Todas" },
+        { label: "Ninguna", value: "Ninguna" },
+      ];
+    case "technical_bots": {
+      const rec = detectarBotsRecomendados(ctx).slice(0, 3);
+      const chips: QuickReply[] = rec.map((b) => ({
+        label: b.nombre,
+        value: BOT_CHIP_VALUES[b.id] ?? b.nombre,
+      }));
+      chips.push({ label: "Ninguno", value: "Ninguno" });
+      return chips;
+    }
+    case "extra_comments":
+      return [{ label: "No, eso es todo", value: "No, eso es todo" }];
+    default:
+      if (BOOLEAN_CHIP_NODES.has(nodeId)) {
+        return [
+          { label: "Sí", value: "Sí" },
+          { label: "No", value: "No" },
+          { label: "No estoy seguro", value: "No estoy seguro" },
+        ];
+      }
+      return [];
+  }
+}
+
+/**
+ * Fases visibles de la entrevista (orientación honesta). Un stepper de 5
+ * etapas le dice al cliente en qué punto va, SIN prometer un número de
+ * preguntas (el flujo es un grafo con saltos, así que un conteo sería falso).
+ */
+export const PHASES = [
+  { id: "negocio", label: "Negocio" },
+  { id: "alcance", label: "Alcance" },
+  { id: "presupuesto", label: "Presupuesto" },
+  { id: "contacto", label: "Contacto" },
+  { id: "propuesta", label: "Propuesta" },
+] as const;
+
+const PHASE_OF_NODE: Record<string, number> = {
+  greeting: 0,
+  discovery_business: 0,
+  discovery_confirm: 0,
+  discovery_examples: 0,
+  clarify_discovery_business: 0,
+  pages: 1,
+  clarify_pages: 1,
+  technical_bundle: 1,
+  clarify_bundle: 1,
+  technical_auth: 1,
+  clarify_auth: 1,
+  technical_db: 1,
+  clarify_db: 1,
+  technical_payments: 1,
+  clarify_payments: 1,
+  technical_dashboard: 1,
+  clarify_dashboard: 1,
+  technical_maps: 1,
+  technical_pdfs: 1,
+  technical_chat: 1,
+  clarify_chat: 1,
+  technical_bookings: 1,
+  design: 1,
+  technical_seo: 1,
+  technical_pwa: 1,
+  technical_bots: 1,
+  clarify_bots: 1,
+  scope_content: 1,
+  clarify_content: 1,
+  scope_services: 1,
+  clarify_services: 1,
+  scope_reference: 1,
+  budget: 2,
+  clarify_budget: 2,
+  contact_name: 3,
+  contact_email: 3,
+  clarify_email: 3,
+  contact_phone: 3,
+  clarify_phone: 3,
+  extra_comments: 4,
+  closing: 4,
+  [DONE_NODE_ID]: 4,
+};
+
+/** Índice de fase (0-4) del nodo actual. Por defecto asume "Alcance". */
+export function getPhase(nodeId: string): number {
+  return PHASE_OF_NODE[nodeId] ?? 1;
+}
+
+/**
+ * Placeholder contextual del input (CxD): le dice al cliente QUÉ formato
+ * se espera en ese turno (correo, teléfono, fecha+monto...), reduciendo
+ * errores y respuestas fuera de formato. null = placeholder genérico.
+ */
+export function inputHintFor(nodeId: string): string | null {
+  switch (nodeId) {
+    case "greeting":
+      return "Cuéntame qué hace tu negocio...";
+    case "discovery_business":
+      return 'Ej. "tengo una barbería y quiero más clientes"';
+    case "discovery_confirm":
+    case "pages":
+    case "design":
+    case "technical_bots":
+    case "scope_content":
+    case "extra_comments":
+      return "Elige una opción o escríbeme con tus palabras";
+    case "scope_reference":
+      return "Pega la URL o dime el estilo que te gusta";
+    case "technical_bundle":
+    case "clarify_bundle":
+      return "Dime cuáles te interesan (varias, todas o ninguna)";
+    case "scope_services":
+      return 'Ej. "corte, barba y afeitado"';
+    case "budget":
+    case "clarify_budget":
+      return 'Ej. "para marzo, unos 15 mil"';
+    case "contact_name":
+      return "Nombre, correo y WhatsApp";
+    case "contact_email":
+    case "clarify_email":
+      return "tu@correo.com";
+    case "contact_phone":
+    case "clarify_phone":
+      return "Ej. 81 2345 6789";
+    default:
+      return null;
+  }
+}
+
+/**
+ * Recapitulación compacta (grounding) de lo que ya entendimos, para que el
+ * cliente corrija antes del cierre. Solo incluye datos CONCRETOS capturados.
+ * Devuelve "" si aún no hay nada que resumir.
+ */
+export function buildRecap(ctx: ChatContext): string {
+  const bits: string[] = [];
+  if (ctx.estructuraWeb) bits.push(`secciones: ${ctx.estructuraWeb}`);
+  if (ctx.servicios) bits.push(`servicios: ${ctx.servicios}`);
+  if (ctx.presupuesto) bits.push(`presupuesto: ${ctx.presupuesto}`);
+  if (ctx.fechaEntrega) bits.push(`entrega: ${ctx.fechaEntrega}`);
+  if (ctx.clientName) bits.push(`contacto: ${ctx.clientName}`);
+  if (!bits.length) return "";
+  return `Me quedó claro: ${bits.join(" · ")}.`;
+}
 
 // Registro auxiliar de tipos para asegurar completitud
 export type NodeId = keyof typeof FLOW;

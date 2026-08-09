@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AnalyticsTracker } from "@/components/results/AnalyticsTracker";
 import { ProposalView } from "@/components/results/ProposalView";
 
 export const metadata: Metadata = {
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function ResultsPage() {
-  return <ProposalView />;
+  return (
+    <>
+      <AnalyticsTracker />
+      <ProposalView />
+    </>
+  );
 }

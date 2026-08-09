@@ -410,12 +410,8 @@ checkLanding("Clínica dental", [
   "Tengo una clínica dental y quiero una página de presentación con información de mis servicios y datos de contacto",
   "sí",
   "Inicio, Servicios, Ubicación y Contacto",
-  "no", // panel
-  "sí", // mapa
-  "sí", // WhatsApp
-  "no", // citas (no agenda en línea)
+  "Quiero el botón de WhatsApp y que me encuentren en Google. No necesito panel ni citas en línea", // bundle (mapa ya inferido por "Ubicación")
   "moderno", // diseño
-  "sí", // SEO
   "el de preguntas frecuentes, por favor", // bots (LangChain): FAQ
   // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "sí", // contenido listo
@@ -429,12 +425,8 @@ checkLanding("Yoga", [
   "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
   "sí",
   "Inicio, Clases, Horarios y Contacto",
-  "no", // panel
-  "sí", // mapa
-  "sí", // WhatsApp
-  "no", // citas
+  "Sí quiero el mapa, el botón de WhatsApp y que me encuentren en Google, pero no el panel ni las citas", // bundle
   "sobrio", // diseño
-  "sí", // SEO
   "ninguno", // bots (LangChain): sin asistentes IA
   // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "no", // contenido
@@ -448,12 +440,8 @@ checkLanding("Barbería (Diego)", [
   "Tengo una barbería y quiero que la gente me encuentre en Google y me escriba por WhatsApp",
   "sí",
   "Inicio, Servicios, Galería, Ubicación y Contacto",
-  "no", // panel
-  "sí", // mapa
-  "sí", // WhatsApp
-  "no", // citas
+  "No necesito panel ni citas en línea", // bundle (chat/seo/mapa ya inferidos en la descripción y secciones)
   "moderno", // diseño
-  "sí", // SEO
   "ninguno", // bots (LangChain): sin asistentes IA
   // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "sí", // contenido
@@ -467,12 +455,8 @@ checkLanding("Restaurante (Carmen)", [
   "Tengo un restaurante en Puebla, quiero una página para mostrar mi menú, mi ubicación y que me contacten por WhatsApp",
   "sí",
   "Inicio, Menú, Nosotros, Ubicación y Contacto",
-  "no", // panel
-  "sí", // mapa
-  "sí", // WhatsApp
-  "no", // citas
+  "Quiero que me encuentren en Google. No necesito panel ni agendo citas", // bundle (mapa/WhatsApp ya inferidos)
   "moderno y cálido", // diseño
-  "sí", // SEO
   "el de promociones", // bots (LangChain): promos
   // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "no", // contenido
@@ -490,12 +474,8 @@ checkLanding("Tienda de ropa (María)", [
   "Tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro",
   "sí",
   "Una sola página de corrido, con inicio, catálogo y contacto",
-  "no", // panel
-  "no", // mapa
-  "sí", // WhatsApp
-  "no", // citas
+  "Sí quiero el botón de WhatsApp y que me encuentren en Google, pero no el panel, ni el mapa, ni las citas", // bundle
   "moderno pero sencillo", // diseño
-  "sí", // SEO
   "ninguno", // bots (LangChain): sin asistentes IA
   // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "tengo algunas fotos pero no muy profesionales", // contenido
@@ -513,12 +493,8 @@ const TALLER_RICARDO_ANSWERS = [
   "Pues mire, yo tengo un taller mecánico aquí en Toluca, el Taller El Toro. La gente me busca mucho por el teléfono y por el WhatsApp, pero cuando buscan en Google no salgo. Quiero una página bien sencilla, algo básico, para que me encuentren y me hablen. No quiero nada muy caro",
   "sí, sí, así está bien. Algo sencillo, como le digo",
   "Sí, así una sola página: inicio, mis servicios, la ubicación con el mapa y el contacto. Con eso me conformo",
-  "No, no necesito ningún panel. Con que me lleguen las llamadas y los mensajes del WhatsApp, con eso me basta", // panel
-  "Sí, sí tengo mi local aquí en Toluca. Me gustaría el mapa para que la gente llegue sin pedir indicaciones", // mapa
-  "Sí, ese botón del WhatsApp es justo lo que quiero. La gente me escribe mucho por ahí", // WhatsApp
-  "No, no, eso no lo quiero. La gente me llama o me escribe y yo les aparto su lugar por teléfono, sin necesidad de andar con agenda en línea", // citas
+  "No, no necesito ningún panel. Con que me lleguen las llamadas y los mensajes del WhatsApp, con eso me basta. Y no, no quiero citas en línea, la gente me llama o me escribe y yo les aparto su lugar por teléfono", // bundle (mapa/chat/SEO ya inferidos de la descripción y secciones)
   "Pues algo sobrio, de confianza, que se vea serio. Nada de muchas cosas con movimiento ni nada muy elegante, ¿eh?", // diseño
-  "Sí, claro, eso es justo lo que quiero: que cuando busquen taller mecánico en Toluca salga mi taller", // SEO
   "Ninguno, la verdad, con la página me basta", // bots (LangChain): sin asistentes IA
   // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
   "Pues tengo unas fotos del taller que saqué con mi celular, pero no son muy profesionales. El logo del Toro lo tengo pero está medio sencillo. Si me ayuda con los textos, mejor", // contenido
@@ -727,12 +703,8 @@ section("I · No repreguntar lo que ya rechazó en la descripción");
     "Tengo una clínica dental y quiero que mis pacientes agenden citas en línea, pero NO quiero pagos en línea, ni panel de administración, ni cuentas para pacientes",
     "sí, así es", // discovery_confirm
     "Inicio, Servicios, Ubicación y Contacto, una sola página", // pages
-    "no, no necesito guardar datos de mis pacientes", // technical_db
-    "sí, quiero el mapa de la clínica", // technical_maps
-    "sí, que me escriban por WhatsApp", // technical_chat
+    "No, no necesito guardar datos de mis pacientes. Sí quiero que me escriban por WhatsApp y que me encuentren en Google, pero no la app instalable", // bundle (mapa ya inferido por "Ubicación")
     "moderno pero de confianza", // design
-    "sí, que me encuentren en Google", // technical_seo
-    "no, sin instalarse como app", // technical_pwa
     "ninguno", // bots (LangChain): sin asistentes IA
     "sí, ya tengo fotos de la clínica", // scope_content
     "limpieza dental, ortodoncia y blanqueamiento", // scope_services
@@ -746,20 +718,25 @@ section("I · No repreguntar lo que ya rechazó en la descripción");
   assert(ctx.pagos === false, "[Clínica] pagos=false (lo rechazó en la descripción)");
   assert(ctx.dashboard === false, "[Clínica] dashboard=false");
   assert(ctx.autenticacion === false, "[Clínica] autenticacion=false");
-  // No se preguntaron los temas que el cliente ya rechazó:
-  const noPreguntadas = ["technical_auth", "technical_payments", "technical_dashboard", "technical_pdfs", "technical_bookings"];
+  // El bundle consolida: ninguna función técnica se pregunta de una por una.
+  const noPreguntadas = [
+    "technical_auth", "technical_payments", "technical_dashboard", "technical_pdfs",
+    "technical_bookings", "technical_db", "technical_maps", "technical_chat",
+    "technical_seo", "technical_pwa",
+  ];
   const preguntadas = noPreguntadas.filter((id) => asked.includes(id));
   assert(
     preguntadas.length === 0,
-    `[Clínica] no repregunta lo rechazado (solo preguntó: ${preguntadas.join(", ") || "ninguno"})`
+    `[Clínica] el bundle consolida las funciones (preguntó de una por una: ${preguntadas.join(", ") || "ninguna"})`
   );
-  // Sí se preguntan los que faltaban por confirmar (mapa, WhatsApp, SEO, etc.):
+  // Sí se pregunta el bundle y deja resueltos db/mapa/chat/SEO/PWA.
+  assert(asked.includes("technical_bundle"), "[Clínica] el bundle consolidado SÍ se pregunta");
+  assert(ctx.baseDeDatos === false, "[Clínica] baseDeDatos=false (del bundle)");
   assert(
-    ["technical_db", "technical_maps", "technical_chat", "technical_seo", "technical_pwa"].every((id) =>
-      asked.includes(id)
-    ),
-    "[Clínica] sí pregunta lo que aún no se sabía (db, mapa, chat, seo, pwa)"
+    ctx.chat === true && ctx.seo === true && ctx.pwa === false,
+    "[Clínica] chat/SEO/PWA resueltos por el bundle"
   );
+  assert(ctx.mapas === true, "[Clínica] mapas=true (inferido por 'Ubicación')");
 }
 
 // ─── FASE J · La propuesta siempre trae arrays (el LLM puede omitirlos) ──
@@ -820,12 +797,8 @@ section("K · Confirmación con lista de rechazos (Carlos)");
     "Hola, tengo una tienda de ropa en Guadalajara y quiero una página sencilla para que la gente me encuentre por internet. Algo básico, no muy caro",
     "Sí, sí, así es. Algo sencillo que se vea bien y donde la gente pueda ver mis fotos y me pueda contactar. Nada de andar vendiendo por internet ni nada de eso",
     "Una sola página de corrido: inicio, mis productos, cómo llegar y el contacto",
-    "No, no quiero ningún panel, con que me escriban por WhatsApp me basta", // technical_dashboard
-    "Sí, quiero el mapa de mi tienda para que la gente llegue sin pedir indicaciones", // technical_maps
-    "Sí, quiero el botón de WhatsApp para que me escriban directo desde la página", // technical_chat
-    "No, no necesito citas en línea, mi tienda no es de citas", // technical_bookings
+    "No, no quiero ningún panel, con que me escriban por WhatsApp me basta. No necesito citas en línea, pero sí que me encuentren en Google cuando busquen tienda de ropa", // bundle (mapa ya inferido por "cómo llegar")
     "Algo moderno pero sobrio, con fotos grandes y que se vea limpio", // design
-    "Sí, lo más importante es que me encuentren en Google cuando busquen tienda de ropa en Guadalajara", // technical_seo
     "ninguno", // bots (LangChain): sin asistentes IA
     // PWA, referencia, cuentas y BD: se SALTAN para landing (Tarea C)
     "Tengo fotos de mi mercancía y el logo, pero los textos me ayudarías tú", // scope_content
@@ -908,12 +881,8 @@ section("P2 · Plazo + presupuesto en un solo turno (budget fusionado)");
     "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
     "sí",
     "Inicio, Clases, Horarios y Contacto",
-    "no", // panel
-    "sí", // mapa
-    "sí", // WhatsApp
-    "no", // citas
+    "Sí quiero el mapa, el botón de WhatsApp y que me encuentren en Google, pero no el panel ni las citas", // bundle
     "sobrio", // diseño
-    "sí", // SEO
     "ninguno", // bots (LangChain): sin asistentes IA
     "no", // contenido
     "clases grupales, clases privadas y retiros", // servicios
@@ -938,12 +907,8 @@ section("P2 · Plazo + presupuesto en un solo turno (budget fusionado)");
     "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
     "sí",
     "Inicio, Clases, Horarios y Contacto",
-    "no", // panel
-    "sí", // mapa
-    "sí", // WhatsApp
-    "no", // citas
+    "Sí quiero el mapa, el botón de WhatsApp y que me encuentren en Google, pero no el panel ni las citas", // bundle
     "sobrio", // diseño
-    "sí", // SEO
     "ninguno", // bots (LangChain): sin asistentes IA
     "no", // contenido
     "clases grupales, clases privadas y retiros", // servicios
@@ -1070,12 +1035,8 @@ section("C · nodos poco relevantes se saltan para landing");
     "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
     "sí",
     "Inicio, Clases, Horarios y Contacto",
-    "no", // panel
-    "sí", // mapa
-    "sí", // WhatsApp
-    "no", // citas
+    "Sí quiero el mapa, el botón de WhatsApp y que me encuentren en Google, pero no el panel ni las citas", // bundle
     "sobrio", // diseño
-    "sí", // SEO
     "ninguno", // bots (LangChain): sin asistentes IA
     "no", // contenido
     "clases grupales, clases privadas y retiros", // servicios
@@ -1142,12 +1103,8 @@ section("D/E · flujo completo autollenado (nada se re-pregunta)");
     "Soy Laura, tengo una clínica dental, quiero una página de presentación con mis servicios y contacto. Para marzo, y tengo unos 20 mil. Mi correo es laura@clinica.com y mi teléfono es 81 2345 6789",
     "sí, así es",
     "Inicio, Servicios, Contacto",
-    "no", // panel
-    "sí", // mapa
-    "sí", // WhatsApp
-    "no", // citas
+    "Sí quiero el mapa, el botón de WhatsApp y que me encuentren en Google, pero no el panel ni las citas", // bundle
     "moderno", // diseño
-    "sí", // SEO
     "ninguno", // bots (LangChain): sin asistentes IA
     "sí", // contenido
     "limpieza dental y consultas", // servicios
@@ -1315,10 +1272,8 @@ section("QA5 · no repreguntar citas que ya pidió (technical_bookings se salta)
     "Soy la Dra. Laura de la Clínica Dental La Sonrisa. Quiero una página para presentar mis servicios y que mis pacientes puedan pedir cita. No quiero pagos en línea, ni panel de administración, ni cuentas para pacientes",
     "sí, así es",
     "Inicio, Servicios, Cómo llegar y Contacto, una sola página",
-    "sí, quiero el mapa de la clínica",
-    "sí, que me escriban por WhatsApp",
+    "Sí quiero el mapa, que me escriban por WhatsApp y que me encuentren en Google", // bundle (citas/pagos/panel/cuentas ya conocidos)
     "moderno pero de confianza",
-    "sí, que me encuentren en Google",
     "ninguno", // bots (LangChain): sin asistentes IA
     // PWA, referencia, cuentas y BD: se SALTAN para landing
     "sí, ya tengo fotos",
@@ -1352,10 +1307,8 @@ section("QA6 · cliente que ya lo dijo todo: no repreguntar lo rechazado");
     "Soy la Dra. Laura, tengo una clínica dental. Quiero una landing page de una sola página con Inicio, Servicios y Contacto, con botón de WhatsApp y mapa. No quiero pagos en línea, ni panel, ni cuentas, ni citas en línea. Para marzo, y tengo unos 20 mil. Mi correo es laura@clinica.com y mi teléfono es 81 2345 6789",
     "sí, así es",
     "una sola página, Inicio, Servicios y Contacto",
-    "sí, el mapa de la clínica",
-    "sí, botón de WhatsApp",
+    "sí, que me encuentren en Google", // bundle (solo faltaba SEO)
     "moderno",
-    "sí",
     "ninguno", // bots (LangChain): sin asistentes IA
     // PWA, referencia, cuentas, BD y dashboard: se SALTAN para landing
     "sí, tengo fotos",
@@ -1370,6 +1323,9 @@ section("QA6 · cliente que ya lo dijo todo: no repreguntar lo rechazado");
     "technical_dashboard",
     "technical_bookings",
     "technical_pwa",
+    "technical_maps",
+    "technical_chat",
+    "technical_seo",
     "scope_reference",
     "budget",
     "contact_name",
@@ -1377,6 +1333,7 @@ section("QA6 · cliente que ya lo dijo todo: no repreguntar lo rechazado");
   ]) {
     assert(!asked.includes(id), `[QA6] ${id} NO se pregunta (ya respondido/rechazado o saltado)`);
   }
+  assert(asked.includes("technical_bundle"), "[QA6] el bundle consolidado SÍ se pregunta");
   assert(ctx.clientName === "La Dra. Laura", `[QA6] nombre capturado temprano (${ctx.clientName})`);
   assert(ctx.presupuesto === "20000", `[QA6] presupuesto capturado (${ctx.presupuesto})`);
   assert(asked.includes("contact_phone"), "[QA6] teléfono se pide en su nodo (una vez)");
@@ -1484,15 +1441,8 @@ section("BOTS · detección y selección de asistentes IA");
     "Tengo una clínica dental y quiero una página de presentación. Quiero que mis pacientes agenden citas en línea, y me gustaría un bot que responda dudas frecuentes",
     "sí, así es",
     "Inicio, Servicios y Contacto",
-    "no", // cuentas
-    "no", // base de datos
-    "no", // pagos en línea
-    "no", // panel
-    "sí", // mapa
-    "sí", // WhatsApp
+    "No necesito cuentas, ni base de datos, ni pagos en línea, ni panel. Sí quiero el mapa, el botón de WhatsApp y que me encuentren en Google, pero no la app instalable", // bundle (citas ya conocidas por la categoría)
     "moderno", // diseño
-    "sí", // SEO
-    "no, sin instalarse como app", // PWA
     "el de citas y el de preguntas frecuentes", // bots (LangChain)
     "sí", // contenido
     "limpieza dental, ortodoncia y blanqueamiento", // servicios
@@ -1546,6 +1496,117 @@ section("BOTS · detección y selección de asistentes IA");
     conBots === base + 3500,
     `[BOTS] total determinista + bot_faq = base + 3500 (${base} → ${conBots})`
   );
+}
+
+// ─── FASE BUNDLE · consolidación + inferencia (menos preguntas) ──
+// El nodo technical_bundle agrupa las funciones técnicas en UNA pregunta y la
+// inferencia de señales ampliada (mapas/chat/SEO/PWA/documentos/animaciones)
+// hace que el bot sepa lo que el cliente quiere sin preguntar de una por una.
+
+section("BUNDLE · consolidación e inferencia (menos preguntas)");
+{
+  // Inferencia ampliada: mencionar WhatsApp/Google/mapa en la descripción.
+  const ctx = createEmptyContext();
+  fireOnReceive(
+    "discovery_business",
+    "Tengo una barbería, quiero que me escriban por WhatsApp y que me encuentren en Google, con un mapa de mi local",
+    ctx
+  );
+  assert(ctx.chat === true, "[BUNDLE] 'WhatsApp' mencionado → chat=true");
+  assert(ctx.seo === true, "[BUNDLE] 'Google' mencionado → seo=true");
+  assert(ctx.mapas === true, "[BUNDLE] 'mapa de mi local' → mapas=true");
+  assert(
+    FLOW.technical_chat.condition?.(ctx) === false,
+    "[BUNDLE] technical_chat se salta (chat ya conocido)"
+  );
+  assert(FLOW.design.condition?.(ctx) === true, "[BUNDLE] design se mantiene (estilo aún desconocido)");
+}
+{
+  // pages "cómo llegar" → mapas=true (inferencia en la estructura).
+  const ctx = createEmptyContext();
+  fireOnReceive("pages", "Una sola página: inicio, mis servicios, cómo llegar y el contacto", ctx);
+  assert(ctx.mapas === true, "[BUNDLE] 'cómo llegar' en la estructura → mapas=true");
+}
+{
+  // design se salta si el estilo ya se infirió.
+  const ctx = createEmptyContext();
+  ctx.animaciones = true;
+  assert(FLOW.design.condition?.(ctx) === false, "[BUNDLE] design se salta con animaciones=true");
+}
+{
+  // Bundle: "sí" genérico → recomendaciones (chat+SEO para landing).
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  fireOnReceive("technical_bundle", "sí, las que me convengan", ctx);
+  assert(ctx.chat === true && ctx.seo === true, "[BUNDLE] 'sí' genérico → chat+SEO recomendados");
+  assert(ctx.mapas === false, "[BUNDLE] 'sí' genérico → mapa fuera (no mencionó ubicación)");
+}
+{
+  // Bundle: "todas" → activa todo lo listado (relevante).
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  fireOnReceive("technical_bundle", "todas", ctx);
+  assert(
+    ctx.chat === true && ctx.seo === true && ctx.dashboard === true && ctx.mapas === true && ctx.citas === true,
+    "[BUNDLE] 'todas' activa todo lo relevante"
+  );
+}
+{
+  // Bundle: "ninguna" → nada de lo listado.
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  fireOnReceive("technical_bundle", "ninguna, gracias", ctx);
+  assert(
+    ctx.chat === false && ctx.seo === false && ctx.mapas === false,
+    "[BUNDLE] 'ninguna' deja todo fuera"
+  );
+}
+{
+  // Bundle: mención específica → lo mencionado true, lo no mencionado fuera.
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  fireOnReceive("technical_bundle", "Quiero el mapa y el botón de WhatsApp, pero no el panel", ctx);
+  assert(ctx.mapas === true && ctx.chat === true, "[BUNDLE] mención específica activa mapa+WhatsApp");
+  assert(ctx.dashboard === false, "[BUNDLE] 'no el panel' → dashboard=false");
+  assert(ctx.seo === false, "[BUNDLE] SEO no mencionado → fuera (política del bundle)");
+}
+{
+  // "no sé" → clarify_bundle; con "no sé" crónico aplica recomendaciones.
+  const ctx = createEmptyContext();
+  ctx.category = "landing";
+  let node = "technical_bundle";
+  node = FLOW.technical_bundle.nextNode("no sé", ctx);
+  assert(node === "clarify_bundle", "[BUNDLE] bundle 'no sé' → clarify_bundle");
+  node = FLOW[node].nextNode("no sé", ctx);
+  node = FLOW[node].nextNode("no sé", ctx);
+  assert(node === "design", "[BUNDLE] 'no sé' crónico en bundle avanza a design sin congelarse");
+  assert(ctx.chat === true, "[BUNDLE] tras 'no sé' crónico se aplican las recomendaciones (chat=true)");
+}
+{
+  // Reducción real: landing con bundle consume MENOS respuestas que el flujo
+  // anterior de una por una (antes ~15 preguntas, ahora ~11).
+  const { asked } = simulate([
+    "Doy clases de yoga, quiero una página sencilla con información de mis clases y cómo contactarme",
+    "sí",
+    "Inicio, Clases, Horarios y Contacto",
+    "Sí quiero el mapa, el botón de WhatsApp y que me encuentren en Google, pero no el panel ni las citas",
+    "sobrio",
+    "ninguno",
+    "no",
+    "clases grupales, clases privadas y retiros",
+    "para ya, y de presupuesto unos 15 mil",
+    "Me llamo Andrea, andrea@yoga.com, 81 9999 8888",
+    "todo bien",
+  ]);
+  assert(asked.includes("technical_bundle"), "[BUNDLE] el flujo usa el bundle");
+  assert(
+    !asked.includes("technical_dashboard") &&
+      !asked.includes("technical_chat") &&
+      !asked.includes("technical_maps") &&
+      !asked.includes("technical_seo"),
+    "[BUNDLE] no se preguntan las funciones de una por una"
+  );
+  assert(asked.length <= 12, `[BUNDLE] landing ≤ 12 preguntas (obtuve ${asked.length})`);
 }
 
 // ─── Resumen ───────────────────────────────────────────────────────

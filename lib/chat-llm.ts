@@ -29,6 +29,10 @@ const TURN_GOALS: Record<string, string> = {
     "Da 1-2 ejemplos concretos de webs de negocios parecidos al suyo para que decida qué le gusta.",
   pages:
     "Define la ESTRUCTURA COMPLETA de la web con el cliente: ¿una sola página con secciones (Inicio, Servicios, Nosotros, Contacto) o varias páginas? Confirma qué secciones debe tener y cómo se va a armar bien la web completa.",
+  technical_bundle:
+    "Pregunta en UNA SOLA pregunta cuáles de las funciones listadas le interesan (panel, mapa, WhatsApp, citas, SEO, app instalable, etc. — solo las relevantes y aún no sabidas). Que pueda responder con varias, 'todas' o 'ninguna'. Explica que lo que no elija se deja fuera y siempre se puede agregar después. NO las preguntes de una por una.",
+  clarify_bundle:
+    "Re-explica con 1-2 ejemplos concretos del giro del cliente qué significa cada opción y vuelve a preguntar cuáles le interesan (pueden ser varias, 'todas' o 'ninguna'). No las preguntes de una por una.",
   technical_auth:
     "Pregunta si sus clientes necesitarán crearse una cuenta o registrarse, o si solo entrarán, verán la información y contactarán. Explícalo simple.",
   technical_db:

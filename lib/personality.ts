@@ -517,8 +517,12 @@ export function extractBudgetAmount(raw: string): string | null {
 export function extractDeadline(raw: string): string | null {
   const lower = raw.toLowerCase();
   const patterns = [
-    /para\s+(antes\s+de\s+)?(la próxima semana|la siguiente semana|este mes|el próximo mes|el mes que viene|ya|urgente|cuanto antes)/i,
-    /para\s+(?:el\s+|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+    /para\s+(antes\s+de\s+)?(la próxima semana|la siguiente semana|este mes|el próximo mes|el mes que viene|el otro mes|ya|urgente|cuanto antes)/i,
+    // "para el 15 de agosto", "para marzo", "para el día 12"… El "el" NUNCA
+    // queda suelto (antes "para el otro mes" → "para el"): se exige una fecha
+    // o un mes después del "el" para capturar la frase completa.
+    /para\s+(?:el\s+)?(?:d[ií]a\s+)?(\d{1,2}(?:º|°)?\s+de\s+)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+    /para\s+(?:el\s+)?(lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo|d[ií]a\s+\d{1,2}|\d{1,2})/i,
     /en\s+unas?\s+\d+\s*(d[ií]as|semanas|meses)/i,
     /en\s+\d+\s*(d[ií]as|semanas|meses)/i,
     /(antes\s+del?\s+\d+)/i,
