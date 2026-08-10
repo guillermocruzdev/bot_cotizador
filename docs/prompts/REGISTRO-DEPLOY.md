@@ -11,9 +11,9 @@
 
 ## 🖥 Vitrina (la app principal: sitios + cotizador Alex)
 
-| App            | URL real (Vercel Hobby, gratis)       | Repo (GitHub)                    | Fecha      | Estado                                                                                                                          |
-| -------------- | ------------------------------------- | -------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Vitrina Nexora | `https://botcotizador.vercel.app`     | `guillermocruzdev/bot_cotizador` | 2026-08-10 | ✅ **FASE 9 deploy #1 (Vercel Hobby)**: / /chat /results /servicios /portafolio /precios /contacto → 200; E2E cotización completa OK. `nexora.vercel.app` está ocupada por otra empresa → se usa `botcotizador.vercel.app` (URL gratis del proyecto). Envs de contacto reales en Vercel Production. |
+| App            | URL real (Vercel Hobby, gratis)   | Repo (GitHub)                    | Fecha      | Estado                                                                                                                                                                                                                                                                                              |
+| -------------- | --------------------------------- | -------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vitrina Nexora | `https://botcotizador.vercel.app` | `guillermocruzdev/bot_cotizador` | 2026-08-10 | ✅ **FASE 9 deploy #1 (Vercel Hobby)**: / /chat /results /servicios /portafolio /precios /contacto → 200; E2E cotización completa OK. `nexora.vercel.app` está ocupada por otra empresa → se usa `botcotizador.vercel.app` (URL gratis del proyecto). Envs de contacto reales en Vercel Production. |
 
 > **✅ FASE 9 hecha (2026-08-10):** envs `NEXT_PUBLIC_WHATSAPP=528145575257` y `NEXT_PUBLIC_EMAIL=hola@nexora.mx` configuradas en Vercel Production (ya no hay placeholders). El canonical/metadataBase/sitemap del código apuntan a `https://botcotizador.vercel.app` (la URL real del plan Hobby).
 
