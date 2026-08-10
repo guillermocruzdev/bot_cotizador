@@ -305,7 +305,7 @@ const EARLY_ROLE_WORDS = new Set([
   "fotografo", "fotografa", "abogado", "abogada", "medico", "medica",
   "doctor", "doctora", "dentista", "disenador", "disenadora", "arquitecto",
   "arquitecta", "contador", "contadora", "mecanico", "mecanica", "chef",
-  "cocinero", "cocinera", "carpintero", "carpintera", "electricista",
+  "cocinero", "cocinera", "creador", "creadora", "carpintero", "carpintera", "electricista",
   "plomero", "plomera", "maestro", "maestra", "profesor", "profesora",
   "dueno", "duena", "encargado", "encargada", "director", "directora",
   "gerente", "administrador", "administradora", "vendedor", "vendedora",
@@ -699,7 +699,11 @@ const FEATURE_LABELS: Array<{ field: keyof ChatContext; label: string }> = [
  * Categorías "simples" de entrada: la entrevista no debe hacerles preguntas
  * pesadas (cuentas, base de datos, pagos, PWA, página de referencia). Son las
  * de presentación/entrada del mercado (landing/portafolio/blog + las nuevas
- * de nivel 0: menú digital, tarjeta digital y link-in-bio).
+ * de nivel 0: menú digital, tarjeta digital, link-in-bio y cotizador).
+ * OJO cotizador (FASE 4/QA11): es un producto de entrada enfocado (formulario
+ * → cálculo → PDF → WhatsApp). Preguntarle cuentas/BD/pagos/PWA lo sobrecarga
+ * sin aportar; los PDFs (documentos) SÍ siguen siendo parte del producto porque
+ * featureRelevant/technical_pdfs lo tratan aparte (cat === "cotizador").
  */
 const CATEGORIAS_SIMPLES = [
   "landing",
@@ -708,6 +712,7 @@ const CATEGORIAS_SIMPLES = [
   "menu_digital",
   "tarjeta_digital",
   "link_in_bio",
+  "cotizador",
 ];
 
 /** ¿La función es relevante para la categoría del cliente? */

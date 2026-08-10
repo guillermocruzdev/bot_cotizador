@@ -248,11 +248,11 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 
 ### 1. Arquitectura de la información (sitemap)
 Con base en las páginas del proyecto y lo acordado con el cliente, documenta el **sitemap** en `docs/ux/sitemap.md`:
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+- / — Home con planes, beneficios y prueba social.
+- /planes — Planes de membresía con precios y comparativa.
+- /registro y /login — Alta de miembro (correo y/o OAuth).
+- /mi-cuenta — Área privada: plan, pagos, datos y beneficios.
+- /panel — (admin) gestión de planes, miembros, cobros y reportes de retención.
 - /aviso-de-privacidad — página legal.
 Incorpora la estructura acordada con el cliente: "Inicio, Planes, Área de miembros".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
@@ -260,10 +260,10 @@ Incorpora la estructura acordada con el cliente: "Inicio, Planes, Área de miemb
 
 ### 2. Flujos de tareas (task flows)
 Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Plataforma o sistema web a medida**:
-- **Tarea 1**: Usuario autenticado entra al panel y ve su rol y permisos.
-- **Tarea 2**: Realiza operaciones CRUD sobre los módulos correspondientes.
-- **Tarea 3**: Cada acción crítica queda registrada en auditoría.
-- **Tarea 4**: Los reportes se generan y pueden exportarse a PDF/CSV.
+- **Tarea 1**: El visitante ve los planes y elige uno.
+- **Tarea 2**: Se registra y paga la primera cuota (Stripe, cobro recurrente).
+- **Tarea 3**: Entra al área privada y ve su plan, pagos y beneficios.
+- **Tarea 4**: El admin ve la retención (quiénes se quedan, quiénes se van) y actúa.
 Para cada flujo, verifica que: hay 1 CTA claro por pantalla, el usuario sabe dónde está (breadcrumb/estado), puede volver atrás sin perder lo escrito y el éxito se confirma (mensaje de éxito visible).
 
 ### 3. Wireframes mobile-first (360px)
@@ -586,11 +586,11 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
 ### Secciones a construir (Portal de membresías (cobro recurrente y área privada) — 6 bloques)
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+- / — Home con planes, beneficios y prueba social.
+- /planes — Planes de membresía con precios y comparativa.
+- /registro y /login — Alta de miembro (correo y/o OAuth).
+- /mi-cuenta — Área privada: plan, pagos, datos y beneficios.
+- /panel — (admin) gestión de planes, miembros, cobros y reportes de retención.
 - /aviso-de-privacidad — página legal.
 
 ### Servicios / oferta a mostrar
@@ -735,16 +735,59 @@ Crear/verificar el proyecto de Supabase, aplicar el esquema en una migración SQ
 ```sql
 -- WEBAPP — esquema base (convención de tipos; ajustar en kickoff)
 
--- roles admin/empleado/cliente.
+-- roles admin/miembro.
 create table if not exists public.profiles (
-  id uuid primary key default gen_random_uuid()  -- FK a la tabla correspondiente (ajustar en kickoff),
+  id uuid primary key default gen_random_uuid(),
   nombre text,
   email text,
   rol text,
   created_at timestamptz not null default now()
 );
 
--- modules según el proceso: customers, inventory, orders, reports, etc. (definir con el cliente en el kickoff).
+
+create table if not exists public.planes (
+  id uuid primary key default gen_random_uuid(),
+  nombre text,
+  slug text unique,
+  precio numeric(10,2),
+  periodo text,
+  beneficios jsonb,
+  activo boolean,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.suscripciones (
+  id uuid primary key default gen_random_uuid(),
+  miembro_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  plan_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  estado text,
+  stripe_subscription_id uuid,
+  renovacion date,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.pagos_membresia (
+  id uuid primary key default gen_random_uuid(),
+  suscripcion_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  proveedor text,
+  referencia text,
+  monto numeric(10,2),
+  estatus text,
+  created_at timestamptz not null default now()
+);
+
+-- reportes de retención.
+create table if not exists public.retencion_report (
+  id uuid primary key default gen_random_uuid(),
+  mes text,
+  suscriptores_iniciales text,
+  altas text,
+  bajas text,
+  churn numeric,
+  created_at timestamptz not null default now()
+);
 
 -- trazabilidad.
 create table if not exists public.audit_log (
@@ -833,14 +876,15 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-13** · [Alta] Optimización SEO: metadata dinámica, Open Graph, sitemap, robots.txt y datos estructurados JSON-LD.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
+- **RF-18** · [Alta] Membresías: cobro recurrente (Stripe), área privada de miembro, gestión de planes y reportes de retención.
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
 ### API routes e integraciones
-- API routes por módulo con validación Zod y autorización por rol (middleware).
-- Autenticación con Supabase Auth (email + OAuth).
-- Generación de PDFs (react-pdf/jsPDF) si aplica.
-- Supabase RLS para seguridad a nivel de fila.
+- POST /api/registro — alta de miembro con suscripción Stripe.
+- Webhook POST /api/webhooks/stripe — confirma cobros recurrentes y actualiza estado.
+- GET /api/mi-cuenta — datos del miembro y su plan (protegido).
+- Panel protegido para gestión de planes, miembros y retención.
 
 **Integraciones externas según lo capturado:**
 - Stripe: PaymentIntent + webhooks para confirmar pagos.
@@ -866,10 +910,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Las API routes idempotentes (GET de catálogo) responden con `Cache-Control` (stale-while-revalidate); nunca cachear datos personales.
 
 ### Flujo de usuario a validar de extremo a extremo
-- 1. Usuario autenticado entra al panel y ve su rol y permisos.
-- 2. Realiza operaciones CRUD sobre los módulos correspondientes.
-- 3. Cada acción crítica queda registrada en auditoría.
-- 4. Los reportes se generan y pueden exportarse a PDF/CSV.
+- 1. El visitante ve los planes y elige uno.
+- 2. Se registra y paga la primera cuota (Stripe, cobro recurrente).
+- 3. Entra al área privada y ve su plan, pagos y beneficios.
+- 4. El admin ve la retención (quiénes se quedan, quiénes se van) y actúa.
 
 ### Estados de UI
 Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 5/6 y el microcopy del CHAT 7 define los textos).

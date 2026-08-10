@@ -905,6 +905,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-14** · [Media] PWA instalable: manifest, service worker, íconos y carga offline básica.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 6 pasos documentados en la sección 9.
+- **RF-18** · [Alta] Inventario avanzado: existencias, tallas/colores, alertas de stock bajo y ajustes desde el panel.
+- **RF-19** · [Alta] Reportes de ventas: ingresos por día/mes, productos más vendidos y comparativas desde el panel.
+- **RF-20** · [Alta] Facturación CFDI: facturas fiscales con RFC, validación de datos fiscales y timbrado.
+- **RF-21** · [Alta] Multi-vendedor interno: cuentas por vendedor, comisiones y pedidos asociados.
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 

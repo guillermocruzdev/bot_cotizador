@@ -116,6 +116,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -143,6 +144,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -228,6 +230,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -248,11 +251,15 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 
 ### 1. Arquitectura de la información (sitemap)
 Con base en las páginas del proyecto y lo acordado con el cliente, documenta el **sitemap** en `docs/ux/sitemap.md`:
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+- /login — Acceso al sistema (roles).
+- / — Dashboard ejecutivo: métricas, alertas y accesos a módulos.
+- /compras — Órdenes de compra, proveedores y recepciones.
+- /ventas — Cotizaciones, pedidos de venta y facturación.
+- /almacen — Inventario, movimientos y transferencias.
+- /nomina — Empleados, nóminas y timbrado.
+- /contabilidad — Asientos, integración contable y reportes.
+- /reportes — Reportes ejecutivos de rentabilidad, costos y ventas.
+- /configuracion — Catálogos, usuarios y roles.
 - /aviso-de-privacidad — página legal.
 Incorpora la estructura acordada con el cliente: "Panel, Compras, Ventas, Almacén, Nómina".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
@@ -260,10 +267,10 @@ Incorpora la estructura acordada con el cliente: "Panel, Compras, Ventas, Almac�
 
 ### 2. Flujos de tareas (task flows)
 Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Plataforma o sistema web a medida**:
-- **Tarea 1**: Usuario autenticado entra al panel y ve su rol y permisos.
-- **Tarea 2**: Realiza operaciones CRUD sobre los módulos correspondientes.
-- **Tarea 3**: Cada acción crítica queda registrada en auditoría.
-- **Tarea 4**: Los reportes se generan y pueden exportarse a PDF/CSV.
+- **Tarea 1**: El usuario entra con su rol y opera su módulo (compras/ventas/almacén/nómina).
+- **Tarea 2**: Cada operación descuenta/actualiza el inventario y genera su movimiento.
+- **Tarea 3**: Las operaciones se integran a la contabilidad (asientos automáticos).
+- **Tarea 4**: Los reportes ejecutivos se generan y exportan a PDF/CSV.
 Para cada flujo, verifica que: hay 1 CTA claro por pantalla, el usuario sabe dónde está (breadcrumb/estado), puede volver atrás sin perder lo escrito y el éxito se confirma (mensaje de éxito visible).
 
 ### 3. Wireframes mobile-first (360px)
@@ -310,6 +317,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -396,6 +404,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -483,6 +492,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -534,6 +544,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -585,12 +596,16 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (ERP a medida (compras, ventas, almacén, nómina) — 6 bloques)
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+### Secciones a construir (ERP a medida (compras, ventas, almacén, nómina) — 10 bloques)
+- /login — Acceso al sistema (roles).
+- / — Dashboard ejecutivo: métricas, alertas y accesos a módulos.
+- /compras — Órdenes de compra, proveedores y recepciones.
+- /ventas — Cotizaciones, pedidos de venta y facturación.
+- /almacen — Inventario, movimientos y transferencias.
+- /nomina — Empleados, nóminas y timbrado.
+- /contabilidad — Asientos, integración contable y reportes.
+- /reportes — Reportes ejecutivos de rentabilidad, costos y ventas.
+- /configuracion — Catálogos, usuarios y roles.
 - /aviso-de-privacidad — página legal.
 
 ### Servicios / oferta a mostrar
@@ -641,6 +656,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -710,6 +726,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -735,16 +752,111 @@ Crear/verificar el proyecto de Supabase, aplicar el esquema en una migración SQ
 ```sql
 -- WEBAPP — esquema base (convención de tipos; ajustar en kickoff)
 
--- roles admin/empleado/cliente.
+-- roles admin/compra/venta/almacen/nomina.
 create table if not exists public.profiles (
-  id uuid primary key default gen_random_uuid()  -- FK a la tabla correspondiente (ajustar en kickoff),
+  id uuid primary key default gen_random_uuid(),
   nombre text,
   email text,
   rol text,
   created_at timestamptz not null default now()
 );
 
--- modules según el proceso: customers, inventory, orders, reports, etc. (definir con el cliente en el kickoff).
+
+create table if not exists public.proveedores (
+  id uuid primary key default gen_random_uuid(),
+  rfc text,
+  nombre text,
+  contacto text,
+  telefono text,
+  email text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.ordenes_compra (
+  id uuid primary key default gen_random_uuid(),
+  proveedor_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  folio text unique,
+  fecha date,
+  subtotal numeric(10,2),
+  impuestos text,
+  total numeric(10,2),
+  estado text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.productos (
+  id uuid primary key default gen_random_uuid(),
+  sku text unique,
+  nombre text,
+  descripcion text,
+  precio_compra numeric(10,2),
+  precio_venta numeric(10,2),
+  stock integer,
+  stock_minimo text,
+  ubicacion text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.movimientos_almacen (
+  id uuid primary key default gen_random_uuid(),
+  producto_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  tipo text,
+  cantidad integer,
+  referencia text,
+  fecha date,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.pedidos_venta (
+  id uuid primary key default gen_random_uuid(),
+  cliente text,
+  folio text unique,
+  fecha date,
+  subtotal numeric(10,2),
+  impuestos text,
+  total numeric(10,2),
+  estado text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.empleados (
+  id uuid primary key default gen_random_uuid(),
+  nombre text,
+  rfc text,
+  puesto text,
+  salario numeric,
+  fecha_ingreso date,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.nominas (
+  id uuid primary key default gen_random_uuid(),
+  empleado_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  periodo text,
+  salario_bruto text,
+  deducciones text,
+  salario_neto text,
+  estatus text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.asientos_contables (
+  id uuid primary key default gen_random_uuid(),
+  fecha date,
+  cuenta text,
+  tipo text,
+  monto numeric(10,2),
+  referencia text,
+  integrado boolean,
+  created_at timestamptz not null default now()
+);
 
 -- trazabilidad.
 create table if not exists public.audit_log (
@@ -811,6 +923,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -833,14 +946,19 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-13** · [Alta] Optimización SEO: metadata dinámica, Open Graph, sitemap, robots.txt y datos estructurados JSON-LD.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
+- **RF-18** · [Alta] Módulos de operación conectados: compras, ventas, almacén y nómina en un solo sistema.
+- **RF-19** · [Alta] Integración contable: asientos automáticos desde las operaciones (compras/ventas/nómina).
+- **RF-20** · [Alta] Reportes ejecutivos: rentabilidad, costos, ventas y estados por módulo.
+- **RF-21** · [Alta] El proyecto se cotiza con propuesta formal detallada (alcance por módulos): el pack NO debe fijar un precio cerrado — solo un estimado "desde".
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
 ### API routes e integraciones
 - API routes por módulo con validación Zod y autorización por rol (middleware).
-- Autenticación con Supabase Auth (email + OAuth).
-- Generación de PDFs (react-pdf/jsPDF) si aplica.
-- Supabase RLS para seguridad a nivel de fila.
+- Supabase RLS + audit_log para trazabilidad de cada operación.
+- Integración contable (asientos automáticos desde compras/ventas/nómina).
+- Exportación de reportes ejecutivos a PDF/CSV.
+- Timbrado de nómina/facturas (proveedor CFDI si aplica).
 
 **Integraciones externas según lo capturado:**
 - Sin pasarela de pagos (contacto directo).
@@ -866,10 +984,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Las API routes idempotentes (GET de catálogo) responden con `Cache-Control` (stale-while-revalidate); nunca cachear datos personales.
 
 ### Flujo de usuario a validar de extremo a extremo
-- 1. Usuario autenticado entra al panel y ve su rol y permisos.
-- 2. Realiza operaciones CRUD sobre los módulos correspondientes.
-- 3. Cada acción crítica queda registrada en auditoría.
-- 4. Los reportes se generan y pueden exportarse a PDF/CSV.
+- 1. El usuario entra con su rol y opera su módulo (compras/ventas/almacén/nómina).
+- 2. Cada operación descuenta/actualiza el inventario y genera su movimiento.
+- 3. Las operaciones se integran a la contabilidad (asientos automáticos).
+- 4. Los reportes ejecutivos se generan y exportan a PDF/CSV.
 
 ### Estados de UI
 Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 5/6 y el microcopy del CHAT 7 define los textos).
@@ -904,6 +1022,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -988,6 +1107,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1045,6 +1165,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1117,6 +1238,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1194,6 +1316,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1288,6 +1411,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1374,6 +1498,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1464,6 +1589,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1516,6 +1642,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1616,6 +1743,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.
@@ -1682,6 +1810,7 @@ PROYECTO: ERP a medida (compras, ventas, almacén, nómina) para Logística del 
 TIPO DE PÁGINA: ERP/CRM a medida (compras, ventas, almacén y nómina) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: logística y distribución.

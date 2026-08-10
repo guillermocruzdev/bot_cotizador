@@ -248,22 +248,23 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 
 ### 1. Arquitectura de la información (sitemap)
 Con base en las páginas del proyecto y lo acordado con el cliente, documenta el **sitemap** en `docs/ux/sitemap.md`:
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
-- /aviso-de-privacidad — página legal.
+- / — Home con servicios médicos, especialistas y CTA de agendar.
+- /agendar — Selección de especialista, día y hora de la consulta.
+- /mi-expediente — Expediente digital del paciente (acceso protegido).
+- /consulta/[id] — Sala de videollamada con el médico.
+- /mis-recetas — Recetas electrónicas generadas y descargables.
+- /panel — (admin/médico) agenda, pacientes, expedientes y recetas.
+- /aviso-de-privacidad — página legal (datos de salud: énfasis).
 Incorpora la estructura acordada con el cliente: "Inicio, Servicios médicos, Agendar consulta, Expediente".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
 - Evita páginas huérfanas: cada página aparece en la navegación o tiene una ruta de entrada clara (CTA, footer, enlaces internos).
 
 ### 2. Flujos de tareas (task flows)
 Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Plataforma o sistema web a medida**:
-- **Tarea 1**: Usuario autenticado entra al panel y ve su rol y permisos.
-- **Tarea 2**: Realiza operaciones CRUD sobre los módulos correspondientes.
-- **Tarea 3**: Cada acción crítica queda registrada en auditoría.
-- **Tarea 4**: Los reportes se generan y pueden exportarse a PDF/CSV.
+- **Tarea 1**: El paciente agenda una consulta (especialista, día y hora).
+- **Tarea 2**: Llena/actualiza su expediente digital antes de la cita.
+- **Tarea 3**: Entra a la videollamada con el médico.
+- **Tarea 4**: El médico genera la receta electrónica, que el paciente descarga.
 Para cada flujo, verifica que: hay 1 CTA claro por pantalla, el usuario sabe dónde está (breadcrumb/estado), puede volver atrás sin perder lo escrito y el éxito se confirma (mensaje de éxito visible).
 
 ### 3. Wireframes mobile-first (360px)
@@ -585,13 +586,14 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (Portal de salud / telemedicina — 6 bloques)
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
-- /aviso-de-privacidad — página legal.
+### Secciones a construir (Portal de salud / telemedicina — 7 bloques)
+- / — Home con servicios médicos, especialistas y CTA de agendar.
+- /agendar — Selección de especialista, día y hora de la consulta.
+- /mi-expediente — Expediente digital del paciente (acceso protegido).
+- /consulta/[id] — Sala de videollamada con el médico.
+- /mis-recetas — Recetas electrónicas generadas y descargables.
+- /panel — (admin/médico) agenda, pacientes, expedientes y recetas.
+- /aviso-de-privacidad — página legal (datos de salud: énfasis).
 
 ### Servicios / oferta a mostrar
 El cliente quiere destacar los siguientes servicios u oferta. Crea una sección de servicios (o catálogo) bien armada, con cada ítem:
@@ -735,18 +737,64 @@ Crear/verificar el proyecto de Supabase, aplicar el esquema en una migración SQ
 ```sql
 -- WEBAPP — esquema base (convención de tipos; ajustar en kickoff)
 
--- roles admin/empleado/cliente.
+-- roles admin/médico/paciente.
 create table if not exists public.profiles (
-  id uuid primary key default gen_random_uuid()  -- FK a la tabla correspondiente (ajustar en kickoff),
+  id uuid primary key default gen_random_uuid(),
   nombre text,
   email text,
   rol text,
   created_at timestamptz not null default now()
 );
 
--- modules según el proceso: customers, inventory, orders, reports, etc. (definir con el cliente en el kickoff).
 
--- trazabilidad.
+create table if not exists public.pacientes (
+  id uuid primary key default gen_random_uuid(),
+  usuario_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  nombre text,
+  fecha_nacimiento date,
+  sexo text,
+  telefono text,
+  alergias text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.citas (
+  id uuid primary key default gen_random_uuid(),
+  paciente_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  medico_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  especialidad text,
+  fecha date,
+  hora_inicio time,
+  hora_fin time,
+  estado text,
+  videollamada_url text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.expedientes (
+  id uuid primary key default gen_random_uuid(),
+  paciente_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  diagnostico text,
+  notas text,
+  sintomas jsonb,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.recetas (
+  id uuid primary key default gen_random_uuid(),
+  paciente_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  medico_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  medicamento text,
+  dosis text,
+  indicaciones text,
+  url_pdf text,
+  created_at timestamptz not null default now()
+);
+
+-- trazabilidad (dato sensible).
 create table if not exists public.audit_log (
   id uuid primary key default gen_random_uuid(),
   usuario_id uuid,
@@ -834,14 +882,16 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-13** · [Alta] Optimización SEO: metadata dinámica, Open Graph, sitemap, robots.txt y datos estructurados JSON-LD.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
+- **RF-18** · [Alta] Telemedicina: expediente digital del paciente, videollamada y recetas electrónicas (privacidad estricta).
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
 ### API routes e integraciones
-- API routes por módulo con validación Zod y autorización por rol (middleware).
-- Autenticación con Supabase Auth (email + OAuth).
-- Generación de PDFs (react-pdf/jsPDF) si aplica.
-- Supabase RLS para seguridad a nivel de fila.
+- POST /api/citas — agenda y bloquea horarios (validación atómica).
+- GET /api/expediente — expediente del paciente (protegido, RLS estricta).
+- Videollamada (WebRTC/Twilio) con sala segura por cita.
+- Generación de recetas PDF firmadas.
+- Privacidad reforzada: datos de salud cifrados, RLS cerrada, sin PII en logs.
 
 **Integraciones externas según lo capturado:**
 - Stripe: PaymentIntent + webhooks para confirmar pagos.
@@ -867,10 +917,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Las API routes idempotentes (GET de catálogo) responden con `Cache-Control` (stale-while-revalidate); nunca cachear datos personales.
 
 ### Flujo de usuario a validar de extremo a extremo
-- 1. Usuario autenticado entra al panel y ve su rol y permisos.
-- 2. Realiza operaciones CRUD sobre los módulos correspondientes.
-- 3. Cada acción crítica queda registrada en auditoría.
-- 4. Los reportes se generan y pueden exportarse a PDF/CSV.
+- 1. El paciente agenda una consulta (especialista, día y hora).
+- 2. Llena/actualiza su expediente digital antes de la cita.
+- 3. Entra a la videollamada con el médico.
+- 4. El médico genera la receta electrónica, que el paciente descarga.
 
 ### Estados de UI
 Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 5/6 y el microcopy del CHAT 7 define los textos).

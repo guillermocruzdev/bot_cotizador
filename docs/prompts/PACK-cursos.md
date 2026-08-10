@@ -248,11 +248,13 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 
 ### 1. Arquitectura de la información (sitemap)
 Con base en las páginas del proyecto y lo acordado con el cliente, documenta el **sitemap** en `docs/ux/sitemap.md`:
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+- / — Home con catálogo de cursos destacados.
+- /cursos — Catálogo con categorías, niveles y búsqueda.
+- /cursos/[slug] — Detalle del curso: plan de estudios, duración, precio.
+- /aprendizaje — Mi espacio: cursos inscritos, lecciones y progreso.
+- /aprendizaje/[curso]/[leccion] — Reproductor de lección en video con progreso.
+- /certificado/[inscripcion_id] — Certificado de finalización (generado).
+- /panel — (admin) crear cursos/lecciones, ver alumnos y progreso.
 - /aviso-de-privacidad — página legal.
 Incorpora la estructura acordada con el cliente: "Inicio, Catálogo de cursos, Mi curso".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
@@ -260,10 +262,10 @@ Incorpora la estructura acordada con el cliente: "Inicio, Catálogo de cursos, M
 
 ### 2. Flujos de tareas (task flows)
 Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Plataforma o sistema web a medida**:
-- **Tarea 1**: Usuario autenticado entra al panel y ve su rol y permisos.
-- **Tarea 2**: Realiza operaciones CRUD sobre los módulos correspondientes.
-- **Tarea 3**: Cada acción crítica queda registrada en auditoría.
-- **Tarea 4**: Los reportes se generan y pueden exportarse a PDF/CSV.
+- **Tarea 1**: El alumno ve el catálogo, elige un curso y se inscribe.
+- **Tarea 2**: Avanza por las lecciones en video; su progreso se guarda por lección.
+- **Tarea 3**: Al completar el curso, genera su certificado.
+- **Tarea 4**: El admin ve el avance de los alumnos y modera la comunidad (si aplica).
 Para cada flujo, verifica que: hay 1 CTA claro por pantalla, el usuario sabe dónde está (breadcrumb/estado), puede volver atrás sin perder lo escrito y el éxito se confirma (mensaje de éxito visible).
 
 ### 3. Wireframes mobile-first (360px)
@@ -585,12 +587,14 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (Plataforma de cursos en línea — 6 bloques)
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+### Secciones a construir (Plataforma de cursos en línea — 8 bloques)
+- / — Home con catálogo de cursos destacados.
+- /cursos — Catálogo con categorías, niveles y búsqueda.
+- /cursos/[slug] — Detalle del curso: plan de estudios, duración, precio.
+- /aprendizaje — Mi espacio: cursos inscritos, lecciones y progreso.
+- /aprendizaje/[curso]/[leccion] — Reproductor de lección en video con progreso.
+- /certificado/[inscripcion_id] — Certificado de finalización (generado).
+- /panel — (admin) crear cursos/lecciones, ver alumnos y progreso.
 - /aviso-de-privacidad — página legal.
 
 ### Servicios / oferta a mostrar
@@ -735,16 +739,80 @@ Crear/verificar el proyecto de Supabase, aplicar el esquema en una migración SQ
 ```sql
 -- WEBAPP — esquema base (convención de tipos; ajustar en kickoff)
 
--- roles admin/empleado/cliente.
+-- roles admin/alumno.
 create table if not exists public.profiles (
-  id uuid primary key default gen_random_uuid()  -- FK a la tabla correspondiente (ajustar en kickoff),
+  id uuid primary key default gen_random_uuid(),
   nombre text,
   email text,
   rol text,
   created_at timestamptz not null default now()
 );
 
--- modules según el proceso: customers, inventory, orders, reports, etc. (definir con el cliente en el kickoff).
+
+create table if not exists public.cursos (
+  id uuid primary key default gen_random_uuid(),
+  slug text unique,
+  titulo text,
+  descripcion text,
+  nivel text,
+  precio numeric(10,2),
+  portada_url text,
+  instructor_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  activo boolean,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.lecciones (
+  id uuid primary key default gen_random_uuid(),
+  curso_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  titulo text,
+  video_url text,
+  duracion_min integer,
+  orden text,
+  contenido text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.inscripciones (
+  id uuid primary key default gen_random_uuid(),
+  alumno_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  curso_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  estado text,
+  monto numeric(10,2),
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.progreso_alumno (
+  id uuid primary key default gen_random_uuid(),
+  inscripcion_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  leccion_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  completada boolean,
+  progreso numeric,
+  updated_at timestamptz not null default now()
+);
+
+
+create table if not exists public.certificados (
+  id uuid primary key default gen_random_uuid(),
+  inscripcion_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  codigo text unique,
+  url_pdf text,
+  emitido_en text,
+  created_at timestamptz not null default now()
+);
+
+-- si aplica.
+create table if not exists public.comunidad_foros (
+  id uuid primary key default gen_random_uuid(),
+  curso_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  autor_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  titulo text,
+  mensaje text,
+  created_at timestamptz not null default now()
+);
 
 -- trazabilidad.
 create table if not exists public.audit_log (
@@ -834,14 +902,16 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-14** · [Media] PWA instalable: manifest, service worker, íconos y carga offline básica.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
+- **RF-18** · [Alta] Cursos en línea: lecciones en video, progreso del alumno, certificados y comunidad/foros.
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
 ### API routes e integraciones
-- API routes por módulo con validación Zod y autorización por rol (middleware).
-- Autenticación con Supabase Auth (email + OAuth).
-- Generación de PDFs (react-pdf/jsPDF) si aplica.
-- Supabase RLS para seguridad a nivel de fila.
+- GET /api/cursos — catálogo público con detalle de lecciones.
+- POST /api/inscripciones — alta de inscripción (pago Stripe si aplica).
+- GET /api/progreso — progreso del alumno por curso (protegido).
+- Generación de certificado PDF al completar (jsPDF/react-pdf).
+- Reproductor de video (Vimeo/YouTube/self-hosted HLS) con guardado de progreso.
 
 **Integraciones externas según lo capturado:**
 - Stripe: PaymentIntent + webhooks para confirmar pagos.
@@ -867,10 +937,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Las API routes idempotentes (GET de catálogo) responden con `Cache-Control` (stale-while-revalidate); nunca cachear datos personales.
 
 ### Flujo de usuario a validar de extremo a extremo
-- 1. Usuario autenticado entra al panel y ve su rol y permisos.
-- 2. Realiza operaciones CRUD sobre los módulos correspondientes.
-- 3. Cada acción crítica queda registrada en auditoría.
-- 4. Los reportes se generan y pueden exportarse a PDF/CSV.
+- 1. El alumno ve el catálogo, elige un curso y se inscribe.
+- 2. Avanza por las lecciones en video; su progreso se guarda por lección.
+- 3. Al completar el curso, genera su certificado.
+- 4. El admin ve el avance de los alumnos y modera la comunidad (si aplica).
 
 ### Estados de UI
 Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 5/6 y el microcopy del CHAT 7 define los textos).

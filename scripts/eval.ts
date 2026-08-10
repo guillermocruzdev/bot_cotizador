@@ -43,10 +43,11 @@ import {
   type ChatContext,
   type ChatMessage,
 } from "../lib/types";
-import { DONE_NODE_ID, START_NODE_ID, getNode } from "../lib/conversation-flow";
+import { DONE_NODE_ID, START_NODE_ID, getNode, buildRecap } from "../lib/conversation-flow";
 import { detectTrato, toUsted } from "../lib/personality";
 import { generateNextMessage, resolveGoal } from "../lib/chat-llm";
 import { chatCompletion, getLlmProvider } from "../lib/llm-client";
+import { detectarBotsRecomendados } from "../lib/bots-catalog";
 
 // ─── Env ────────────────────────────────────────────────────────────
 // Carga .env.local para que el modo --llm use la DEEPSEEK_API_KEY local
@@ -95,6 +96,10 @@ interface Persona {
   expectsVertical?: "inmobiliaria" | "membresias" | "cursos" | "telemedicina" | "directorio";
   /** Nivel 5: si espera que la señal de ecosistema (marketplace/saas/erp) se active */
   expectsEcosystem?: "marketplace" | "saas" | "erp";
+  /** Cotizador: si espera que los documentos (PDFs de cotización) entren en el alcance (parte del producto) */
+  expectsDocumentos?: boolean;
+  /** FASE 2: si espera que detectarBotsRecomendados recomiende estos bots (id) al final del flujo */
+  expectsBotIds?: string[];
   answers: string[];
 }
 
@@ -817,6 +822,243 @@ const PERSONAS: Persona[] = [
       "no, eso es todo",
     ],
   },
+  {
+    name: "24 · Valeria (creadora de contenido, link-in-bio para Instagram)",
+    expectedCategory: "link_in_bio",
+    maxAsked: 13,
+    answers: [
+      // discovery_business → link_in_bio ("link en mi bio" + "mis enlaces" + bonus)
+      "Soy creadora de contenido y quiero un link en mi bio de Instagram con todos mis enlaces: mi WhatsApp, mi TikTok y mis redes en una sola página",
+      // discovery_confirm
+      "sí, eso mismo, una página con mis enlaces",
+      // pages (categoría simple: NO pregunta auth/db/pagos/pwa ni referencia)
+      "una sola página, cortita: mi foto, mis enlaces y el botón de WhatsApp",
+      // technical_bundle (solo funciones relevantes: chat+seo; el resto fuera)
+      "Solo el botón de WhatsApp y que me encuentren en Google, nada más",
+      // design
+      "moderno, que se vea bonito y con mi marca",
+      // technical_bots
+      "no, por ahora sin asistentes",
+      // scope_content
+      "sí, tengo fotos de mi contenido y de mis productos",
+      // scope_services
+      "asesorías en línea, contenido exclusivo y marcas que recomiendo",
+      // budget (scope_reference se salta: categoría simple)
+      "para el próximo mes, y tengo unos 5 mil",
+      // contact_name
+      "Me llamo Valeria Soto, valeria.creadora@gmail.com y mi WhatsApp 81 2233 7788",
+      // extra_comments
+      "no, eso es todo",
+    ],
+  },
+  {
+    name: "25 · Gerardo (imprenta, cotizador en línea con PDF y WhatsApp)",
+    expectedCategory: "cotizador",
+    maxAsked: 15,
+    expectsDocumentos: true,
+    answers: [
+      // discovery_business → cotizador ("cotizador" + "presupuesto en línea" + bonus)
+      "Tengo una imprenta y quiero un cotizador para que mis clientes me pidan presupuesto en línea y les llegue por WhatsApp",
+      // discovery_confirm
+      "sí, así es, un cotizador en línea",
+      // pages
+      "una sola página: el formulario para pedir su cotización y el botón de WhatsApp",
+      // technical_bundle → "las que me convengan" → recomendaciones cotizador:
+      // chat+seo+documentos (PDFs de cotización son parte del producto) true,
+      // el resto false (cotizador ES simple desde FASE 4/QA11: auth/db/pagos/PWA
+      // no entran al bundle y scope_reference se salta).
+      "Las que me convengan, lo que recomiendes",
+      // design
+      "moderno y profesional, que se vea serio",
+      // technical_bots (NO recomienda bot_cotizacion: es el producto)
+      "no, sin asistentes por ahora",
+      // scope_content
+      "sí, tengo el logotipo y fotos de mis trabajos",
+      // scope_services
+      "impresión digital, tarjetas de presentación, lonas y volantes",
+      // (scope_reference se salta: cotizador es categoría simple desde FASE 4)
+      // budget
+      "para el próximo mes, y tengo unos 20 mil",
+      // contact_name
+      "Me llamo Gerardo Luna, gerardo.imprenta@gmail.com y mi WhatsApp 81 3344 9988",
+      // extra_comments
+      "no, eso es todo",
+    ],
+  },
+  {
+    name: "26 · Marco (academia, plataforma de cursos en línea, vertical N4)",
+    expectedCategory: "webapp",
+    maxAsked: 16,
+    expectsBots: true,
+    expectsVertical: "cursos",
+    expectsBotIds: ["bot_membresias", "bot_ventas"],
+    answers: [
+      // discovery_business → webapp (plataforma de cursos) + ctx.cursos + giro consultor.
+      // OJO: NO empieza con "soy coach" (captureEarlyData guardaría "coach" como
+      // nombre y saltaría contact_name → pediría correo/teléfono por separado).
+      "Tengo una academia y quiero una plataforma de cursos en línea con lecciones en video, progreso del alumno y certificados para vender mis cursos",
+      // discovery_confirm
+      "Sí, una plataforma para vender mis cursos en línea",
+      // pages
+      "Varias secciones: Inicio, Catálogo de cursos, Mis cursos y Contacto",
+      // technical_bundle → panel + SEO · sin cuentas/citas/pagos por adelantado
+      "Quiero un panel para gestionar los cursos y que me encuentren en Google. No necesito citas ni pagos por adelantado",
+      // design
+      "moderno, que se vea profesional y con energía",
+      // technical_bots (cursos recomienda bot_membresias + bot_ventas)
+      "sí, el de membresías y el de ventas",
+      // scope_content
+      "sí, tengo los videos de las lecciones y el logo",
+      // scope_services
+      "cursos de marketing digital, coaching y talleres en línea",
+      // scope_reference (webapp NO es simple → se pregunta)
+      "no tengo ninguna referencia",
+      // budget
+      "para el próximo mes, y tengo unos 45 mil",
+      // contact_name
+      "Me llamo Marco Ibarra, marco.cursos@gmail.com y mi WhatsApp 81 2233 4455",
+      // extra_comments
+      "no, eso es todo",
+    ],
+  },
+  {
+    name: "27 · Dra. Elena (clínica, portal de telemedicina, vertical N4)",
+    expectedCategory: "webapp",
+    maxAsked: 16,
+    expectsBots: true,
+    expectsVertical: "telemedicina",
+    expectsBotIds: ["bot_citas", "bot_faq"],
+    answers: [
+      // discovery_business → webapp (portal de telemedicina) + ctx.telemedicina + giro medico
+      "Tengo una clínica y quiero un portal de telemedicina con expediente del paciente y videollamadas para las consultas en línea",
+      // discovery_confirm
+      "Sí, un portal para las consultas en línea",
+      // pages
+      "Varias secciones: Inicio, Especialidades, Consultas y Contacto",
+      // technical_bundle → panel + SEO · sin pagos en línea
+      "Quiero un panel para gestionar las citas y los expedientes, y que me encuentren en Google. No necesito pagos en línea",
+      // design
+      "sobrio y profesional, que transmita confianza",
+      // technical_bots (telemedicina recomienda bot_citas + bot_faq)
+      "sí, el de citas y el de preguntas frecuentes",
+      // scope_content
+      "sí, tengo el logo y fotos de la clínica",
+      // scope_services
+      "consultas médicas generales, pediatría y teleconsultas",
+      // scope_reference (webapp NO es simple → se pregunta)
+      "no tengo ninguna referencia",
+      // budget
+      "para el próximo mes, y tenemos unos 60 mil",
+      // contact_name
+      "Me llamo Elena Vázquez, elena.clinica@gmail.com y mi WhatsApp 81 5566 7788",
+      // extra_comments
+      "no, eso es todo",
+    ],
+  },
+  {
+    name: "28 · Rosa (asociación, directorio de negocios, vertical N4)",
+    expectedCategory: "webapp",
+    maxAsked: 16,
+    expectsBots: true,
+    expectsVertical: "directorio",
+    expectsBotIds: ["bot_faq", "bot_leads"],
+    answers: [
+      // discovery_business → webapp (directorio) + ctx.directorio + giro tienda (comercio)
+      "Tengo una asociación de comerciantes de mi zona y quiero un directorio de negocios con fichas autogestionables y búsqueda por mapa para que encuentren a los comercios asociados",
+      // discovery_confirm
+      "Sí, un directorio de los negocios de la asociación",
+      // pages
+      "Varias secciones: Inicio, Directorio, Fichas y Contacto",
+      // technical_bundle → panel + SEO · sin pagos ni citas
+      "Quiero un panel para que cada negocio publique su ficha y que me encuentren en Google. No necesito pagos ni citas",
+      // design
+      "moderno y limpio, que se vea confiable",
+      // technical_bots (directorio recomienda bot_faq + bot_leads)
+      "sí, el de preguntas frecuentes y el capturador de clientes",
+      // scope_content
+      "sí, tengo el logo de la asociación y los datos de los negocios",
+      // scope_services
+      "directorio de los comercios afiliados, con sus fichas y su contacto",
+      // scope_reference (webapp NO es simple → se pregunta)
+      "no tengo ninguna referencia",
+      // budget
+      "para el próximo mes, y tengo unos 35 mil",
+      // contact_name
+      "Me llamo Rosa Aguilar, rosa.asociacion@gmail.com y mi WhatsApp 81 9988 7766",
+      // extra_comments
+      "no, eso es todo",
+    ],
+  },
+  {
+    name: "29 · David (emprendedor, SaaS con suscripción mensual, ecosistema N5)",
+    expectedCategory: "webapp",
+    maxAsked: 16,
+    expectsEcosystem: "saas",
+    answers: [
+      // discovery_business → webapp (NIVEL5_ECOSYSTEM_RE: software como
+      // servicio/SaaS) + ctx.saas. OJO: NO debe confundirse con marketplace
+      // ni con ERP (solo "software como servicio" + "saas" activan la señal).
+      "Quiero montar un software como servicio (SaaS) para que mis clientes se registren y paguen una suscripción mensual, con los datos de cada cliente aislados entre sí",
+      // discovery_confirm
+      "Sí, un SaaS con suscripción mensual para mis clientes",
+      // pages
+      "Varias secciones: Inicio, Planes, Registro y Contacto",
+      // technical_bundle → panel + SEO · sin citas ni mapa
+      "Quiero un panel para gestionar los clientes y sus suscripciones, y que me encuentren en Google. No necesito citas ni mapa",
+      // design
+      "moderno y profesional, que se vea como una plataforma seria",
+      // technical_bots
+      "no, por ahora sin asistentes",
+      // scope_content
+      "sí, tengo el diseño de la marca y las capturas del sistema",
+      // scope_services
+      "un servicio de suscripción con varios planes para mis clientes",
+      // scope_reference (webapp NO es simple → se pregunta)
+      "me gusta cómo funciona un SaaS conocido, con sus planes y su área de clientes",
+      // budget
+      "para el próximo mes, y tengo unos 90 mil",
+      // contact_name
+      "Me llamo David Salinas, david.saas@gmail.com y mi WhatsApp 81 2233 4455",
+      // extra_comments
+      "no, eso es todo",
+    ],
+  },
+  {
+    name: "30 · Héctor (empresa, sistema ERP de operación, ecosistema N5)",
+    expectedCategory: "webapp",
+    maxAsked: 16,
+    expectsEcosystem: "erp",
+    answers: [
+      // discovery_business → webapp (NIVEL5_ECOSYSTEM_RE: \berp\b) + ctx.erp.
+      // OJO: "facturación"/"inventario" sueltos NO caen a ecommerce ni a
+      // ecommerce-pro: el ERP exige contexto de operación (compras/ventas/
+      // almacén/nómina) y el texto incluye "control de almacén" → además el
+      // giro empresa_operacion protege el ticket del clamp.
+      "Tengo una empresa y necesito un sistema ERP con control de almacén, compras, ventas y nómina, con reportes ejecutivos e integración contable",
+      // discovery_confirm
+      "Sí, un sistema ERP para toda la operación de mi empresa",
+      // pages
+      "Varias secciones: Inicio, Compras, Almacén, Nómina y Reportes",
+      // technical_bundle → panel + SEO · sin citas ni mapa
+      "Quiero un panel para administrar los módulos y que me encuentren en Google. No necesito citas ni mapa",
+      // design
+      "sobrio y profesional, que transmita confianza",
+      // technical_bots
+      "no, por ahora sin asistentes",
+      // scope_content
+      "sí, tengo el logo y los datos de la operación",
+      // scope_services
+      "control de compras, ventas, almacén y nómina para mi empresa",
+      // scope_reference (webapp NO es simple → se pregunta)
+      "me gusta cómo se ve el sistema que usa un distribuidor grande de la ciudad",
+      // budget
+      "para el próximo mes, y tengo unos 120 mil",
+      // contact_name
+      "Me llamo Héctor Lara, hector.erp@gmail.com y mi WhatsApp 81 6677 8899",
+      // extra_comments
+      "no, eso es todo",
+    ],
+  },
 ];
 
 // ════════════════════════════════════════════════════════════════════
@@ -1169,6 +1411,38 @@ function checkPersonaFlow(persona: Persona, result: WalkResult): void {
       ctx[persona.expectsEcosystem] === true,
       `[${persona.name}] señal nivel 5 ${persona.expectsEcosystem} activada (obtuve: ${String(ctx[persona.expectsEcosystem])})`
     );
+    // FASE 3: las plataformas N5 (marketplace/saas/erp) se cotizan con
+    // "propuesta formal" (nunca precio cerrado en el chat): el recap del
+    // cierre debe comunicarlo para que el cliente lo confirme antes de cerrar.
+    const recap = buildRecap(ctx);
+    assert(
+      /propuesta formal/.test(recap),
+      `[${persona.name}] recap N5 comunica "propuesta formal" (obtuve: ${recap || "(vacío)"})`
+    );
+    // FASE 3: la señal N5 no debe confundirse con las otras dos del ecosistema
+    // (saas ≠ marketplace/erp, erp ≠ marketplace/saas, etc.).
+    const otras = (["marketplace", "saas", "erp"] as const).filter(
+      (e) => e !== persona.expectsEcosystem
+    );
+    for (const otra of otras) {
+      assert(
+        ctx[otra] !== true,
+        `[${persona.name}] señal ${persona.expectsEcosystem} sin contaminar ${otra} (obtuve: ${String(ctx[otra])})`
+      );
+    }
+  }
+  if (persona.expectsDocumentos) {
+    assert(
+      ctx.documentos === true,
+      `[${persona.name}] documentos (PDFs de cotización) recomendados como parte del producto (obtuve: ${String(ctx.documentos)})`
+    );
+  }
+  if (persona.expectsBotIds) {
+    const rec = detectarBotsRecomendados(ctx).map((b) => b.id);
+    assert(
+      persona.expectsBotIds.every((id) => rec.includes(id)),
+      `[${persona.name}] bots recomendados incluyen ${persona.expectsBotIds.join(", ")} (obtuve: ${rec.join(", ")})`
+    );
   }
   if (persona.expectsUsted) {
     assert(
@@ -1309,6 +1583,29 @@ async function run(): Promise<number> {
   console.log(
     `  Cobertura de categorías (${categoriasCubiertas.size}/${TODAS.length}): ${Array.from(categoriasCubiertas).sort().join(", ")}` +
       (faltantes.length ? ` · FALTAN: ${faltantes.join(", ")}` : "")
+  );
+  // Cobertura de verticales N4 y ecosistemas N5 (FASE 2/3 del plan de QA).
+  const TODAS_V = ["inmobiliaria", "membresias", "cursos", "telemedicina", "directorio"] as const;
+  const verticalesCubiertas = new Set(
+    personas
+      .map((p) => p.expectsVertical)
+      .filter((v): v is NonNullable<Persona["expectsVertical"]> => v !== undefined)
+  );
+  const faltantesV = TODAS_V.filter((v) => !verticalesCubiertas.has(v));
+  console.log(
+    `  Cobertura de verticales N4 (${verticalesCubiertas.size}/${TODAS_V.length}): ${Array.from(verticalesCubiertas).sort().join(", ")}` +
+      (faltantesV.length ? ` · FALTAN: ${faltantesV.join(", ")}` : "")
+  );
+  const TODAS_E = ["marketplace", "saas", "erp"] as const;
+  const ecosCubiertos = new Set(
+    personas
+      .map((p) => p.expectsEcosystem)
+      .filter((e): e is NonNullable<Persona["expectsEcosystem"]> => e !== undefined)
+  );
+  const faltantesE = TODAS_E.filter((e) => !ecosCubiertos.has(e));
+  console.log(
+    `  Cobertura de ecosistemas N5 (${ecosCubiertos.size}/${TODAS_E.length}): ${Array.from(ecosCubiertos).sort().join(", ")}` +
+      (faltantesE.length ? ` · FALTAN: ${faltantesE.join(", ")}` : "")
   );
   console.log(`  asserts: ${passed} ✓ · fallos: ${failures} ✗ · warnings: ${warnings} ⚠`);
   if (LLM_MODE && provider) {

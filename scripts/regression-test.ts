@@ -23,6 +23,7 @@ import {
   toUsted,
 } from "../lib/personality";
 import {
+  buildRecap,
   DONE_NODE_ID,
   FLOW,
   START_NODE_ID,
@@ -44,7 +45,7 @@ import {
   inferNivel,
   resolverCategoria,
 } from "../lib/pricing-catalog";
-import { filtrarPorDeclinados, adaptarCopyGiro, detectarGiro } from "../lib/industry-pricing";
+import { adaptarCopyGiro, ajustarPrecio, detectarGiro, filtrarPorDeclinados } from "../lib/industry-pricing";
 
 let failures = 0;
 let passed = 0;
@@ -1902,6 +1903,289 @@ section("QA10 · Nivel 4 · verticales → webapp, sin robar landings ni inflar"
     ctx.baseDeDatos = false;
     ctx.autenticacion = false;
     assert(resolverCategoria(ctx) === "landing", "[QA10] webapp vertical sin panel/db/login → landing (resolverCategoria intacto)");
+  }
+}
+
+// ─── FASE QA11 · Robustez del nuevo flujo de la cartera ────────────
+// Blindaje de los casos límite REALES del flujo con 11 categorías + N4 + N5
+// (docs/IMPLEMENTACION_QA_CARTERA_ROO.md · FASE 4):
+//  1) Negación de verticales/N5 → landing (guarda SIMPLE_PAGE_RE + negación).
+//  2) Degradación por rechazo: webapp vertical sin panel/BD/login → landing.
+//  3) Categorías de entrada (menu_digital/tarjeta_digital/link_in_bio/cotizador)
+//     NO preguntan auth/db/pagos/PWA ni scope_reference (CATEGORIAS_SIMPLES).
+//  4) N5 (marketplace/saas/erp) sin precio cerrado: recap con "propuesta formal"
+//     y pack que cita el total del motor (regla #7), sin rango que contradiga.
+//  5) Bots de los productos de entrada (cotizador nunca recomienda bot_cotizacion).
+//  6) Escalera de cross-sell (restaurante con menú digital → apartar mesa).
+//  7) Precio único (regla #7): motor = fallback para link_in_bio ($5,800) y
+//     cotizador ($20,300).
+//  8) Presupuesto ajustado: mensaje_alcance honesto cuando el giro no alcanza.
+
+section("QA11 · Robustez del flujo de la cartera (N4/N5 + categorías de entrada)");
+{
+  // ── 1) Negación de verticales/N5 → landing (no se roba con "no quiero...") ──
+  assert(
+    inferCategory("No quiero un portal de propiedades, solo una página sencilla para mi negocio") === "landing",
+    "[QA11] 'no portal de propiedades + página sencilla' → landing (no inmobiliaria)"
+  );
+  assert(
+    inferCategory("No, no quiero montar un marketplace, solo una página sencilla para mostrar mi trabajo") === "landing",
+    "[QA11] 'no marketplace + página sencilla' → landing (no webapp N5)"
+  );
+  {
+    const ctx = createEmptyContext();
+    fireOnReceive("discovery_business", "No, no quiero un portal de propiedades, solo una página sencilla", ctx);
+    assert(ctx.inmobiliaria !== true, "[QA11] negación de inmobiliaria en discovery → señal NO activada");
+  }
+
+  // ── 2) Degradación por rechazo: webapp vertical sin panel/BD/login → landing ──
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.membresias = true;
+    ctx.dashboard = false;
+    ctx.baseDeDatos = false;
+    ctx.autenticacion = false;
+    assert(resolverCategoria(ctx) === "landing", "[QA11] webapp membresías sin panel/db/login → landing");
+  }
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "webapp";
+    ctx.cursos = true;
+    ctx.dashboard = false;
+    ctx.baseDeDatos = false;
+    ctx.autenticacion = false;
+    assert(resolverCategoria(ctx) === "landing", "[QA11] webapp cursos sin panel/db/login → landing");
+  }
+
+  // ── 3) Categorías de entrada: NO preguntan auth/db/pagos/PWA ni referencia ──
+  // Una persona realista por cada categoría nueva; los nodos pesados NO aparecen
+  // en asked[] y la conversación cierra en su categoría.
+  const PESADOS_ENTRADA = [
+    "technical_auth",
+    "technical_db",
+    "technical_payments",
+    "technical_pwa",
+    "scope_reference",
+  ];
+  const ENTRADA_PERSONAS: Array<[string, string, string[]]> = [
+    [
+      "menu_digital",
+      "Tengo un restaurante y quiero un menú digital con código QR: que la gente escanee el QR de la mesa y vea mi carta en el celular, sin apps ni descargas",
+      [
+        "Sí, así es, un menú digital",
+        "Una sola página: mi menú con fotos y el teléfono",
+        "Solo el botón de WhatsApp y que me encuentren en Google, nada más",
+        "moderno y apetitoso",
+        "ninguno",
+        "sí, tengo fotos de mis platillos",
+        "tacos, quesadillas y mariscos, con sus precios",
+        "para el próximo mes, y tengo unos 5 mil",
+        "Me llamo Javier Ramos, javier.menu@gmail.com y mi WhatsApp 81 5566 7788",
+        "no, eso es todo",
+      ],
+    ],
+    [
+      "tarjeta_digital",
+      "Soy plomero y quiero una tarjeta digital para compartir mi información por WhatsApp: mis servicios, mi teléfono y mis zonas de cobertura",
+      [
+        "Sí, una tarjeta digital para compartirla por WhatsApp",
+        "Una sola página, corta: mis servicios, mi teléfono y el botón de WhatsApp",
+        "Solo el botón de WhatsApp y que me encuentren en Google",
+        "sencillo y limpio",
+        "no, gracias, sin asistentes por ahora",
+        "tengo fotos de mis trabajos",
+        "instalaciones, reparaciones y desagües",
+        "para el próximo mes, y tengo unos 4 mil",
+        "Me llamo Pedro Flores, pedro.plomeria@gmail.com y mi WhatsApp 81 2233 4455",
+        "no, eso es todo",
+      ],
+    ],
+    [
+      "link_in_bio",
+      "Soy creadora de contenido y quiero un link en mi bio de Instagram con todos mis enlaces: mi WhatsApp, mi TikTok y mis redes en una sola página",
+      [
+        "sí, eso mismo, una página con mis enlaces",
+        "una sola página, cortita: mi foto, mis enlaces y el botón de WhatsApp",
+        "Solo el botón de WhatsApp y que me encuentren en Google, nada más",
+        "moderno, que se vea bonito y con mi marca",
+        "no, por ahora sin asistentes",
+        "sí, tengo fotos de mi contenido y de mis productos",
+        "asesorías en línea, contenido exclusivo y marcas que recomiendo",
+        "para el próximo mes, y tengo unos 5 mil",
+        "Me llamo Valeria Soto, valeria.creadora@gmail.com y mi WhatsApp 81 2233 7788",
+        "no, eso es todo",
+      ],
+    ],
+    [
+      "cotizador",
+      "Tengo una imprenta y quiero un cotizador para que mis clientes me pidan presupuesto en línea y les llegue por WhatsApp",
+      [
+        "sí, así es, un cotizador en línea",
+        "una sola página: el formulario para pedir su cotización y el botón de WhatsApp",
+        "Las que me convengan, lo que recomiendes",
+        "moderno y profesional, que se vea serio",
+        "no, sin asistentes por ahora",
+        "sí, tengo el logotipo y fotos de mis trabajos",
+        "impresión digital, tarjetas de presentación, lonas y volantes",
+        "para el próximo mes, y tengo unos 20 mil",
+        "Me llamo Gerardo Luna, gerardo.imprenta@gmail.com y mi WhatsApp 81 3344 9988",
+        "no, eso es todo",
+      ],
+    ],
+  ];
+  for (const [cat, intro, answers] of ENTRADA_PERSONAS) {
+    let ok = false;
+    let detalle = "";
+    try {
+      const { ctx, asked } = simulate([intro, ...answers]);
+      ok =
+        ctx.category === cat &&
+        !PESADOS_ENTRADA.some((n) => asked.includes(n));
+      detalle = `(asked=${asked.length} · ${PESADOS_ENTRADA.filter((n) => asked.includes(n)).join(",") || "sin pesados"})`;
+    } catch (err) {
+      detalle = `(cerró mal: ${err instanceof Error ? err.message : String(err)})`;
+    }
+    assert(ok, `[QA11] ${cat}: cierra en ${cat} sin preguntar auth/db/pagos/PWA/referencia ${detalle}`);
+  }
+
+  // ── 4) N5 sin precio cerrado: recap "propuesta formal" + pack con el total ──
+  {
+    // buildRecap comunica que la plataforma N5 se arma con propuesta formal.
+    const rcMarketplace = createEmptyContext();
+    rcMarketplace.category = "webapp";
+    rcMarketplace.marketplace = true;
+    const rcSaas = createEmptyContext();
+    rcSaas.category = "webapp";
+    rcSaas.saas = true;
+    const rcErp = createEmptyContext();
+    rcErp.category = "webapp";
+    rcErp.erp = true;
+    assert(
+      [rcMarketplace, rcSaas, rcErp].every(
+        (c) => buildRecap(c).includes("propuesta formal")
+      ),
+      "[QA11] N5 (marketplace/saas/erp): recap dice 'propuesta formal', no precio cerrado"
+    );
+  }
+  {
+    const ctxN5 = createEmptyContext();
+    ctxN5.category = "webapp";
+    ctxN5.marketplace = true;
+    ctxN5.dashboard = true;
+    ctxN5.baseDeDatos = true;
+    ctxN5.autenticacion = true;
+    ctxN5.clientName = "Andrés";
+    ctxN5.negocioDescripcion =
+      "Tengo un marketplace multi-vendedor donde cada vendedor publica sus productos y yo cobro comisión por venta";
+    const featuresN5 = ["split_pagos", "api_publica", "reportes_ejecutivos", "planes_billing"];
+    const propN5 = buildFallbackProposal("webapp", featuresN5, "Andrés", ctxN5);
+    const totalN5 = calcularTotalDeterminista({
+      giro: detectarGiro(ctxN5.negocioDescripcion, "webapp").nombre,
+      clientName: "Andrés",
+      clientPhone: null,
+      negocioDescripcion: ctxN5.negocioDescripcion,
+      category: "webapp",
+      paginas: null,
+    });
+    // Regla #7: el motor (webapp → corporativo, $20,300) manda sobre el clamp.
+    assert(
+      totalN5 === 20300 && propN5.precio_min === 20300,
+      `[QA11] N5: motor y fallback = $20,300 (regla #7, obtuve total=${totalN5} min=${propN5.precio_min})`
+    );
+    // El pack cita el total del motor como "desde": el rango NO contradice la UI.
+    assert(
+      propN5.prompt_tecnico.includes("$20,300 MXN"),
+      "[QA11] N5: el pack cita el total del motor (desde sin rango contradictorio)"
+    );
+  }
+
+  // ── 5) Bots de los productos de entrada ──
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "link_in_bio";
+    const rec = detectarBotsRecomendados(ctx);
+    assert(rec.some((b) => b.id === "bot_faq"), "[QA11] link_in_bio → recomienda bot_faq");
+  }
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "tarjeta_digital";
+    const rec = detectarBotsRecomendados(ctx);
+    assert(rec.some((b) => b.id === "bot_faq"), "[QA11] tarjeta_digital → recomienda bot_faq");
+  }
+  {
+    // Cotizador con dashboard (regla 1c): bot_cotizacion NUNCA es add-on.
+    const ctx = createEmptyContext();
+    ctx.category = "cotizador";
+    ctx.dashboard = true;
+    const rec = detectarBotsRecomendados(ctx);
+    assert(
+      !rec.some((b) => b.id === "bot_cotizacion") && rec.some((b) => b.id === "bot_faq"),
+      `[QA11] cotizador (con panel) → NO bot_cotizacion, sí bot_faq (obtuve ${rec.map((b) => b.id).join(",")})`
+    );
+  }
+
+  // ── 6) Escalera de cross-sell: restaurante con menú digital → apartar mesa ──
+  {
+    const ctx = createEmptyContext();
+    ctx.category = "menu_digital";
+    ctx.negocioDescripcion = "Tengo un restaurante en Puebla con comida corrida";
+    const escalera = sugerirEscaleraProducto(ctx);
+    assert(
+      escalera !== null && /aparten mesa|reservas/i.test(escalera),
+      "[QA11] restaurante + menú digital → escalera sugiere apartar mesa"
+    );
+  }
+
+  // ── 7) Precio único (regla #7): motor = fallback para categorías de entrada ──
+  {
+    const ctxLink = createEmptyContext();
+    ctxLink.category = "link_in_bio";
+    ctxLink.negocioDescripcion = "soy creadora de contenido";
+    ctxLink.clientName = "Valeria";
+    const totalLink = calcularTotalDeterminista({
+      giro: "Creador de contenido",
+      clientName: "Valeria",
+      clientPhone: null,
+      negocioDescripcion: ctxLink.negocioDescripcion,
+      category: "link_in_bio",
+      paginas: 1,
+    });
+    const propLink = buildFallbackProposal("link_in_bio", [], "Valeria", ctxLink);
+    assert(
+      totalLink === 5800 && propLink.precio_min === 5800,
+      `[QA11] link_in_bio: motor=fallback=$5,800 (regla #7, obtuve ${totalLink}/${propLink.precio_min})`
+    );
+
+    const ctxCot = createEmptyContext();
+    ctxCot.category = "cotizador";
+    ctxCot.negocioDescripcion = "tengo una imprenta";
+    ctxCot.clientName = "Gerardo";
+    const totalCot = calcularTotalDeterminista({
+      giro: "Negocio de servicios que cotiza",
+      clientName: "Gerardo",
+      clientPhone: null,
+      negocioDescripcion: ctxCot.negocioDescripcion,
+      category: "cotizador",
+      paginas: 1,
+    });
+    const propCot = buildFallbackProposal("cotizador", [], "Gerardo", ctxCot);
+    assert(
+      totalCot === 20300 && propCot.precio_min === 20300,
+      `[QA11] cotizador: motor=fallback=$20,300 (regla #7, obtuve ${totalCot}/${propCot.precio_min})`
+    );
+  }
+
+  // ── 8) Presupuesto ajustado: mensaje_alcance honesto cuando el giro no alcanza ──
+  {
+    // link_in_bio: el giro "Creador de contenido" presupuesta [2500, 8000]; un
+    // estimado alto recorta alcance y lo comunica de forma honesta.
+    const giroLink = detectarGiro("soy creadora de contenido", "link_in_bio");
+    const ajustado = ajustarPrecio(9000, 11000, giroLink);
+    assert(
+      ajustado.mensaje_alcance !== null && ajustado.alcance_ajustado === true,
+      "[QA11] link_in_bio con estimado > presupuesto del giro → mensaje_alcance honesto"
+    );
   }
 }
 

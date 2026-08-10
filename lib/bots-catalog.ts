@@ -474,6 +474,16 @@ export function detectarBotsRecomendados(ctx: ChatContext): BotSpec[] {
   }
   if (cat === "cotizador") orden = orden.filter((id) => id !== "bot_cotizacion");
 
+  // Nivel 4 · La vertical manda sobre la matriz del giro cuando el giro no
+  // coincide con su bot de valor (caso real: un directorio cae en el giro
+  // "tienda", cuya matriz es de comercio → bot_dudas/bot_ventas, pero la
+  // vertical directorio quiere bot_faq + bot_leads). Anteponemos los bots
+  // clave de la vertical activa para que el tope de 3 los conserve.
+  if (ctx.directorio === true) {
+    const lead = ["bot_faq", "bot_leads"];
+    orden = [...lead, ...orden.filter((id) => !lead.includes(id))];
+  }
+
   const finalIds = orden.slice(0, 3);
   const recomendados = finalIds
     .map((id) => getBotById(id))

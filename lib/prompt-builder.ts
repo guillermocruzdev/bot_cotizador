@@ -238,6 +238,293 @@ const CATEGORY_SPECS: Record<string, CategorySpec> = {
   },
 };
 
+// ─── Specs de webapp por vertical / ecosistema (niveles 4 y 5) ─────
+// La entrada webapp de CATEGORY_SPECS es el caso GENÉRICO. Cuando una
+// vertical (N4) o un ecosistema (N5) está activo, se usa el spec específico:
+// páginas, tablas, flujos e integraciones del negocio real del cliente.
+// Los sketches de dataModel alimentan dataModelSql() (CHAT de modelo de datos).
+const WEBAPP_SPECS: Record<string, CategorySpec> = {
+  inmobiliaria: {
+    pages: [
+      "/ — Home con buscador de propiedades (zona/precio/tipo) y propiedades destacadas.",
+      "/propiedades — Listado con filtros por zona, precio, tipo y habitaciones.",
+      "/propiedades/[slug] — Detalle de propiedad: fotos, características, mapa y formulario de interés (leads).",
+      "/agentes — Equipo de asesores y sus propiedades.",
+      "/panel — (admin) publicar/editar propiedades, ver leads de cada propiedad y estadísticas.",
+      "/login y /registro — Autenticación del asesor (si aplica).",
+      "/aviso-de-privacidad — página legal.",
+    ],
+    dataModel: [
+      "profiles(id, nombre, email, rol, telefono, created_at) — roles admin/asesor.",
+      "propiedades(id, slug unique, titulo, descripcion, tipo, precio, zona, habitaciones, banos, m2, imagen_portada, galeria jsonb, lat, lng, destacada boolean, activa boolean, agente_id fk, created_at)",
+      "leads_propiedad(id, propiedad_id fk, nombre, email, telefono, mensaje, leido boolean, created_at)",
+      "agentes(id, nombre, email, telefono, whatsapp, foto_url, bio, created_at)",
+      "audit_log(id, usuario_id, accion, detalle jsonb, created_at) — trazabilidad.",
+    ],
+    userFlow: [
+      "El visitante llega y busca propiedades por zona/precio/tipo.",
+      "Abre el detalle de una propiedad con fotos, mapa y características.",
+      "Deja su dato en el formulario de interés (lead de comprador).",
+      "El asesor recibe el lead y lo contacta; la propiedad queda en su panel.",
+    ],
+    integrations: [
+      "GET /api/propiedades — listado público con filtros por zona/precio (paginado).",
+      "POST /api/propiedades/lead — formulario de interés por propiedad (validación Zod + notificación).",
+      "Panel protegido para publicar propiedades y consultar leads.",
+      "Mapa embebido (Leaflet/Google Maps) en listado y detalle.",
+    ],
+  },
+  membresias: {
+    pages: [
+      "/ — Home con planes, beneficios y prueba social.",
+      "/planes — Planes de membresía con precios y comparativa.",
+      "/registro y /login — Alta de miembro (correo y/o OAuth).",
+      "/mi-cuenta — Área privada: plan, pagos, datos y beneficios.",
+      "/panel — (admin) gestión de planes, miembros, cobros y reportes de retención.",
+      "/aviso-de-privacidad — página legal.",
+    ],
+    dataModel: [
+      "profiles(id, nombre, email, rol, created_at) — roles admin/miembro.",
+      "planes(id, nombre, slug unique, precio, periodo, beneficios jsonb, activo boolean, created_at)",
+      "suscripciones(id, miembro_id fk, plan_id fk, estado, stripe_subscription_id, renovacion date, created_at)",
+      "pagos_membresia(id, suscripcion_id fk, proveedor, referencia, monto, estatus, created_at)",
+      "retencion_report(id, mes, suscriptores_iniciales, altas, bajas, churn numeric, created_at) — reportes de retención.",
+      "audit_log(id, usuario_id, accion, detalle jsonb, created_at) — trazabilidad.",
+    ],
+    userFlow: [
+      "El visitante ve los planes y elige uno.",
+      "Se registra y paga la primera cuota (Stripe, cobro recurrente).",
+      "Entra al área privada y ve su plan, pagos y beneficios.",
+      "El admin ve la retención (quiénes se quedan, quiénes se van) y actúa.",
+    ],
+    integrations: [
+      "POST /api/registro — alta de miembro con suscripción Stripe.",
+      "Webhook POST /api/webhooks/stripe — confirma cobros recurrentes y actualiza estado.",
+      "GET /api/mi-cuenta — datos del miembro y su plan (protegido).",
+      "Panel protegido para gestión de planes, miembros y retención.",
+    ],
+  },
+  cursos: {
+    pages: [
+      "/ — Home con catálogo de cursos destacados.",
+      "/cursos — Catálogo con categorías, niveles y búsqueda.",
+      "/cursos/[slug] — Detalle del curso: plan de estudios, duración, precio.",
+      "/aprendizaje — Mi espacio: cursos inscritos, lecciones y progreso.",
+      "/aprendizaje/[curso]/[leccion] — Reproductor de lección en video con progreso.",
+      "/certificado/[inscripcion_id] — Certificado de finalización (generado).",
+      "/panel — (admin) crear cursos/lecciones, ver alumnos y progreso.",
+      "/aviso-de-privacidad — página legal.",
+    ],
+    dataModel: [
+      "profiles(id, nombre, email, rol, created_at) — roles admin/alumno.",
+      "cursos(id, slug unique, titulo, descripcion, nivel, precio, portada_url, instructor_id fk, activo boolean, created_at)",
+      "lecciones(id, curso_id fk, titulo, video_url, duracion_min, orden, contenido text, created_at)",
+      "inscripciones(id, alumno_id fk, curso_id fk, estado, monto, created_at)",
+      "progreso_alumno(id, inscripcion_id fk, leccion_id fk, completada boolean, progreso numeric, updated_at)",
+      "certificados(id, inscripcion_id fk, codigo unique, url_pdf, emitido_en, created_at)",
+      "comunidad_foros(id, curso_id fk, autor_id fk, titulo, mensaje, created_at) — si aplica.",
+      "audit_log(id, usuario_id, accion, detalle jsonb, created_at) — trazabilidad.",
+    ],
+    userFlow: [
+      "El alumno ve el catálogo, elige un curso y se inscribe.",
+      "Avanza por las lecciones en video; su progreso se guarda por lección.",
+      "Al completar el curso, genera su certificado.",
+      "El admin ve el avance de los alumnos y modera la comunidad (si aplica).",
+    ],
+    integrations: [
+      "GET /api/cursos — catálogo público con detalle de lecciones.",
+      "POST /api/inscripciones — alta de inscripción (pago Stripe si aplica).",
+      "GET /api/progreso — progreso del alumno por curso (protegido).",
+      "Generación de certificado PDF al completar (jsPDF/react-pdf).",
+      "Reproductor de video (Vimeo/YouTube/self-hosted HLS) con guardado de progreso.",
+    ],
+  },
+  telemedicina: {
+    pages: [
+      "/ — Home con servicios médicos, especialistas y CTA de agendar.",
+      "/agendar — Selección de especialista, día y hora de la consulta.",
+      "/mi-expediente — Expediente digital del paciente (acceso protegido).",
+      "/consulta/[id] — Sala de videollamada con el médico.",
+      "/mis-recetas — Recetas electrónicas generadas y descargables.",
+      "/panel — (admin/médico) agenda, pacientes, expedientes y recetas.",
+      "/aviso-de-privacidad — página legal (datos de salud: énfasis).",
+    ],
+    dataModel: [
+      "profiles(id, nombre, email, rol, created_at) — roles admin/médico/paciente.",
+      "pacientes(id, usuario_id fk, nombre, fecha_nacimiento, sexo, telefono, alergias text, created_at)",
+      "citas(id, paciente_id fk, medico_id fk, especialidad, fecha, hora_inicio, hora_fin, estado, videollamada_url, created_at)",
+      "expedientes(id, paciente_id fk, diagnostico, notas, sintomas jsonb, created_at)",
+      "recetas(id, paciente_id fk, medico_id fk, medicamento, dosis, indicaciones, url_pdf, created_at)",
+      "audit_log(id, usuario_id, accion, detalle jsonb, created_at) — trazabilidad (dato sensible).",
+    ],
+    userFlow: [
+      "El paciente agenda una consulta (especialista, día y hora).",
+      "Llena/actualiza su expediente digital antes de la cita.",
+      "Entra a la videollamada con el médico.",
+      "El médico genera la receta electrónica, que el paciente descarga.",
+    ],
+    integrations: [
+      "POST /api/citas — agenda y bloquea horarios (validación atómica).",
+      "GET /api/expediente — expediente del paciente (protegido, RLS estricta).",
+      "Videollamada (WebRTC/Twilio) con sala segura por cita.",
+      "Generación de recetas PDF firmadas.",
+      "Privacidad reforzada: datos de salud cifrados, RLS cerrada, sin PII en logs.",
+    ],
+  },
+  directorio: {
+    pages: [
+      "/ — Home con buscador por categoría/ubicación y fichas destacadas.",
+      "/directorio — Listado de negocios con filtros y mapa.",
+      "/negocios/[slug] — Ficha del negocio: datos, fotos, ubicación, contacto.",
+      "/registrarse — Alta del negocio (ficha autogestionable).",
+      "/panel — (admin) aprobar fichas, gestionar categorías y pagos premium.",
+      "/aviso-de-privacidad — página legal.",
+    ],
+    dataModel: [
+      "profiles(id, nombre, email, rol, created_at) — roles admin/negocio.",
+      "negocios(id, slug unique, nombre, categoria_id fk, descripcion, direccion, telefono, whatsapp, sitio_web, lat, lng, logo_url, galeria jsonb, activo boolean, premium boolean, created_at)",
+      "categorias(id, nombre, slug unique, posicion)",
+      "fichas(id, negocio_id fk, destacado boolean, visitas integer, updated_at) — ficha autogestionable.",
+      "pagos_ficha(id, negocio_id fk, plan, monto, periodo, estatus, created_at) — ficha premium.",
+      "audit_log(id, usuario_id, accion, detalle jsonb, created_at) — trazabilidad.",
+    ],
+    userFlow: [
+      "El negocio se registra y crea su ficha autogestionable.",
+      "El visitante busca por categoría/ubicación (con mapa) y encuentra negocios.",
+      "El visitante contacta por WhatsApp/teléfono desde la ficha.",
+      "El negocio paga su ficha premium y el admin la aprueba/renueva.",
+    ],
+    integrations: [
+      "GET /api/directorio — listado con filtros por categoría/ubicación (paginado).",
+      "POST /api/fichas — alta/edición de la ficha (autogestionable).",
+      "Búsqueda con mapa (Leaflet/Google Maps) y geolocalización.",
+      "Panel protegido para aprobar fichas y gestionar pagos premium.",
+    ],
+  },
+  marketplace: {
+    pages: [
+      "/ — Home con categorías, productos destacados y CTA de vender.",
+      "/productos — Catálogo de todos los vendedores con filtros y búsqueda.",
+      "/productos/[slug] — Detalle de producto (vendedor, fotos, precio, agregar al carrito).",
+      "/carrito y /checkout — Compra con split de pagos entre vendedores.",
+      "/vendedor — Panel del vendedor: publicar productos, pedidos y comisiones.",
+      "/panel — (admin) administración de vendedores, comisiones y reportes.",
+      "/login y /registro — Autenticación de comprador y vendedor.",
+      "/aviso-de-privacidad — página legal.",
+    ],
+    dataModel: [
+      "tenants(id, nombre, slug unique, comision numeric, activo boolean, created_at) — vendedores del marketplace.",
+      "profiles(id, tenant_id fk, nombre, email, rol, created_at) — roles comprador/vendedor/admin.",
+      "productos(id, tenant_id fk, slug unique, nombre, descripcion, precio, stock, imagen_url, categoria_id fk, activo boolean, created_at)",
+      "pedidos(id, comprador_id fk, tenant_id fk, subtotal, envio, total, estado, stripe_payment_id, created_at)",
+      "pedido_items(id, pedido_id fk, producto_id fk, tenant_id fk, cantidad, precio_unitario)",
+      "splits_pago(id, pedido_id fk, tenant_id fk, monto, proveedor, referencia, estatus, created_at) — cada vendedor recibe su parte.",
+      "comisiones(id, tenant_id fk, mes, ventas, comision numeric, pagado boolean, created_at)",
+      "audit_log(id, usuario_id, accion, detalle jsonb, created_at) — trazabilidad.",
+    ],
+    userFlow: [
+      "El vendedor se registra, publica sus productos y administra su catálogo.",
+      "El comprador navega, agrega al carrito y paga en el checkout.",
+      "El sistema hace el split de pagos: cada vendedor recibe su parte.",
+      "El admin ve comisiones, ventas por vendedor y reportes ejecutivos.",
+    ],
+    integrations: [
+      "POST /api/checkout — crea el pedido y el split de pagos (Stripe Connect).",
+      "Webhook POST /api/webhooks/stripe — confirma pagos y reparte a los vendedores.",
+      "CRUD /api/vendedor/productos — catálogo del vendedor (protegido).",
+      "Panel de administración de comisiones y reportes.",
+      "Aislamiento por tenant (RLS): cada vendedor solo ve sus datos.",
+    ],
+  },
+  saas: {
+    pages: [
+      "/ — Landing del SaaS: propuesta de valor, planes y CTA.",
+      "/registro y /login — Alta de cliente y acceso a su espacio.",
+      "/app — Dashboard de la aplicación para el cliente (sus datos).",
+      "/app/[modulo] — Módulos del SaaS según el producto.",
+      "/configuracion — Ajustes del tenant: plan, usuarios, facturación.",
+      "/panel — (admin de la plataforma) gestión de tenants, planes y facturación.",
+      "/aviso-de-privacidad — página legal.",
+    ],
+    dataModel: [
+      "tenants(id, nombre, slug unique, plan_id fk, estado, datos_aislados boolean, created_at) — cada cliente del SaaS.",
+      "profiles(id, tenant_id fk, nombre, email, rol, created_at) — usuarios del tenant.",
+      "planes(id, nombre, slug unique, precio, periodo, limites jsonb, activo boolean, created_at)",
+      "suscripciones(id, tenant_id fk, plan_id fk, estado, stripe_subscription_id, renovacion date, created_at)",
+      "facturas(id, tenant_id fk, monto, periodo, estatus, url_pdf, created_at)",
+      "api_keys(id, tenant_id fk, clave, scope, creada_en, revocada boolean) — API pública (si aplica).",
+      "audit_log(id, tenant_id fk, usuario_id, accion, detalle jsonb, created_at) — trazabilidad.",
+    ],
+    userFlow: [
+      "El cliente se registra, elige plan y paga la suscripción.",
+      "Usa su espacio con sus datos aislados (RLS por tenant).",
+      "Gestiona plan, usuarios y facturación desde configuración.",
+      "El admin de la plataforma ve todos los tenants y su facturación.",
+    ],
+    integrations: [
+      "POST /api/registro — alta del tenant con suscripción Stripe.",
+      "Webhook POST /api/webhooks/stripe — cobros recurrentes y cambios de plan.",
+      "GET /api/app/... — API del SaaS (RLS por tenant: crítico).",
+      "API pública documentada con api_keys (si aplica).",
+      "Panel de administración de tenants y facturación.",
+    ],
+  },
+  erp: {
+    pages: [
+      "/login — Acceso al sistema (roles).",
+      "/ — Dashboard ejecutivo: métricas, alertas y accesos a módulos.",
+      "/compras — Órdenes de compra, proveedores y recepciones.",
+      "/ventas — Cotizaciones, pedidos de venta y facturación.",
+      "/almacen — Inventario, movimientos y transferencias.",
+      "/nomina — Empleados, nóminas y timbrado.",
+      "/contabilidad — Asientos, integración contable y reportes.",
+      "/reportes — Reportes ejecutivos de rentabilidad, costos y ventas.",
+      "/configuracion — Catálogos, usuarios y roles.",
+      "/aviso-de-privacidad — página legal.",
+    ],
+    dataModel: [
+      "profiles(id, nombre, email, rol, created_at) — roles admin/compra/venta/almacen/nomina.",
+      "proveedores(id, rfc, nombre, contacto, telefono, email, created_at)",
+      "ordenes_compra(id, proveedor_id fk, folio unique, fecha, subtotal, impuestos, total, estado, created_at)",
+      "productos(id, sku unique, nombre, descripcion, precio_compra, precio_venta, stock, stock_minimo, ubicacion, created_at)",
+      "movimientos_almacen(id, producto_id fk, tipo, cantidad, referencia, fecha, created_at)",
+      "pedidos_venta(id, cliente, folio unique, fecha, subtotal, impuestos, total, estado, created_at)",
+      "empleados(id, nombre, rfc, puesto, salario numeric, fecha_ingreso, created_at)",
+      "nominas(id, empleado_id fk, periodo, salario_bruto, deducciones, salario_neto, estatus, created_at)",
+      "asientos_contables(id, fecha, cuenta, tipo, monto, referencia, integrado boolean, created_at)",
+      "audit_log(id, usuario_id, accion, detalle jsonb, created_at) — trazabilidad.",
+    ],
+    userFlow: [
+      "El usuario entra con su rol y opera su módulo (compras/ventas/almacén/nómina).",
+      "Cada operación descuenta/actualiza el inventario y genera su movimiento.",
+      "Las operaciones se integran a la contabilidad (asientos automáticos).",
+      "Los reportes ejecutivos se generan y exportan a PDF/CSV.",
+    ],
+    integrations: [
+      "API routes por módulo con validación Zod y autorización por rol (middleware).",
+      "Supabase RLS + audit_log para trazabilidad de cada operación.",
+      "Integración contable (asientos automáticos desde compras/ventas/nómina).",
+      "Exportación de reportes ejecutivos a PDF/CSV.",
+      "Timbrado de nómina/facturas (proveedor CFDI si aplica).",
+    ],
+  },
+};
+
+/** Spec de webapp con el matiz de vertical (N4) o ecosistema (N5) detectado. */
+function resolveWebappSpec(ctx: ChatContext): CategorySpec {
+  const vertical =
+    (si(ctx.marketplace) ? "marketplace"
+      : si(ctx.saas) ? "saas"
+        : si(ctx.erp) ? "erp"
+          : si(ctx.inmobiliaria) ? "inmobiliaria"
+            : si(ctx.membresias) ? "membresias"
+              : si(ctx.cursos) ? "cursos"
+                : si(ctx.telemedicina) ? "telemedicina"
+                  : si(ctx.directorio) ? "directorio"
+                    : null);
+  return vertical ? (WEBAPP_SPECS[vertical] ?? CATEGORY_SPECS.webapp) : CATEGORY_SPECS.webapp;
+}
+
 // ─── Perfil por tipo de servicio ──────────────────────────────────
 // Hace que el pack hable distinto según el giro: quién CONDUCE el proyecto
 // (rol), qué conversión es la #1, qué define el éxito y qué suele fallar.
@@ -531,7 +818,7 @@ const VERTICAL_BRIEFS: Record<string, CategoryBrief> = {
   marketplace: {
     leadRole: "Arquitecto de marketplace + product manager de plataformas multi-vendedor",
     primaryGoal:
-      "Convertir visitas en VENTAS de muchos vendedores: cada vendedor publica y vende, el comprador compra y el marketplace cobra comisión por venta — split de pagos incluido.",
+      "Convertir visitas en VENTAS de muchos vendedores: cada vendedor publica y vende, el comprador compra y el marketplace cobra comisión por venta — split de pagos incluido. Se cotiza con propuesta formal detallada, no a ciegas.",
     successCriteria: [
       "Multi-vendedor: cada uno publica y administra sus productos con sus datos aislados.",
       "Split de pagos: cada vendedor recibe su parte automáticamente al vender.",
@@ -546,7 +833,7 @@ const VERTICAL_BRIEFS: Record<string, CategoryBrief> = {
   saas: {
     leadRole: "Arquitecto de software como servicio + product manager multi-tenant",
     primaryGoal:
-      "Convertir visitas en SUSCRIPTORES de tu software: tus clientes se registran, usan la plataforma y pagan plan — multi-tenant con datos aislados y billing automático.",
+      "Convertir visitas en SUSCRIPTORES de tu software: tus clientes se registran, usan la plataforma y pagan plan — multi-tenant con datos aislados y billing automático. Se cotiza con propuesta formal detallada, no a ciegas.",
     successCriteria: [
       "Multi-tenant: cada cliente con sus datos aislados (RLS por tenant: crítico).",
       "Planes y billing automático (altas, cambios, cancelaciones).",
@@ -695,6 +982,51 @@ function buildFunctionalRequirements(ctx: ChatContext, spec: CategorySpec, categ
     reqs.push(
       `- **RF-17** · [Alta] Integrar los asistentes IA (${bots}) con LangChain + DeepSeek: widget de chat flotante, memoria por sesión, validación con Zod y las API routes correspondientes.`
     );
+  }
+
+  // ── Cartera extendida (niveles 3/4/5 + multilingüe) ──────────────
+  // Solo se emiten si la señal está activa y la categoría corresponde: no
+  // inflan otras categorías ni el webapp genérico.
+  let rf = 18;
+  const addRf = (label: string, priority = "Alta") => add(`RF-${String(rf++).padStart(2, "0")}`, label, priority);
+
+  if (si(ctx.multilingue))
+    addRf("Versión en inglés y español (u otros idiomas): selector de idioma, textos traducidos y SEO hreflang.", "Media");
+
+  // Nivel 3 · Ecommerce pro (solo si category === "ecommerce" y la señal está activa)
+  if (category.id === "ecommerce") {
+    if (si(ctx.inventario)) addRf("Inventario avanzado: existencias, tallas/colores, alertas de stock bajo y ajustes desde el panel.");
+    if (si(ctx.reportesVentas)) addRf("Reportes de ventas: ingresos por día/mes, productos más vendidos y comparativas desde el panel.");
+    if (si(ctx.facturacionCfdi)) addRf("Facturación CFDI: facturas fiscales con RFC, validación de datos fiscales y timbrado.");
+    if (si(ctx.multiVendedor)) addRf("Multi-vendedor interno: cuentas por vendedor, comisiones y pedidos asociados.");
+  }
+
+  // Nivel 4 · Verticales de webapp (solo si category === "webapp" y la señal está activa)
+  if (category.id === "webapp") {
+    if (si(ctx.inmobiliaria)) addRf("Portal inmobiliario: filtros por zona/precio, formulario de interés por propiedad (leads) y panel para publicar propiedades.");
+    if (si(ctx.membresias)) addRf("Membresías: cobro recurrente (Stripe), área privada de miembro, gestión de planes y reportes de retención.");
+    if (si(ctx.cursos)) addRf("Cursos en línea: lecciones en video, progreso del alumno, certificados y comunidad/foros.");
+    if (si(ctx.telemedicina)) addRf("Telemedicina: expediente digital del paciente, videollamada y recetas electrónicas (privacidad estricta).");
+    if (si(ctx.directorio)) addRf("Directorio: fichas autogestionables, búsqueda por categoría/mapa y fichas premium de pago.");
+
+    // Nivel 5 · Ecosistema (marketplace / SaaS / ERP)
+    if (si(ctx.marketplace)) {
+      addRf("Split de pagos / escrow: cada vendedor recibe su parte automáticamente al vender.");
+      addRf("Aislamiento por tenant: cada vendedor con sus productos, pedidos y ventas aislados (RLS).");
+      addRf("Panel de administración de comisiones, ventas por vendedor, API pública (si aplica) y reportes ejecutivos.");
+    }
+    if (si(ctx.saas)) {
+      addRf("Multi-tenant: cada cliente de tu software con sus datos aislados (RLS por tenant: crítico).");
+      addRf("Planes y billing automático: altas, cambios de plan y cancelaciones de suscripción.");
+      addRf("API pública documentada (si aplica) y reportes de uso/facturación del SaaS.");
+    }
+    if (si(ctx.erp)) {
+      addRf("Módulos de operación conectados: compras, ventas, almacén y nómina en un solo sistema.");
+      addRf("Integración contable: asientos automáticos desde las operaciones (compras/ventas/nómina).");
+      addRf("Reportes ejecutivos: rentabilidad, costos, ventas y estados por módulo.");
+    }
+    if (si(ctx.marketplace) || si(ctx.saas) || si(ctx.erp))
+      addRf("El proyecto se cotiza con propuesta formal detallada (alcance por módulos): el pack NO debe fijar un precio cerrado — solo un estimado \"desde\".", "Alta");
   }
 
   return reqs;
@@ -926,7 +1258,7 @@ ${rows(opcionales)}
 
 export function buildTechnicalPrompt(opts: PromptBuildOptions): string {
   const { clientName, businessDescription, category, nivel, context, analysis } = opts;
-  const spec = CATEGORY_SPECS[category.id] ?? CATEGORY_SPECS.landing;
+  const spec = category.id === "webapp" ? resolveWebappSpec(context) : (CATEGORY_SPECS[category.id] ?? CATEGORY_SPECS.landing);
   const today = new Date().toLocaleDateString("es-MX", { day: "2-digit", month: "long", year: "numeric" });
 
   const features = analysis.funcionalidades.length
@@ -1063,6 +1395,9 @@ function buildCompactContext(base: PackBase, phases: PackPhases): string {
     `TIPO DE PÁGINA: ${buildTipoPagina(base)}.`,
     `GIRO: ${analysis.giro ?? "negocio local"}${analysis.presupuesto_giro ? ` · Presupuesto del giro: ${analysis.presupuesto_giro}` : ""}.`,
     `STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui${si(context.animaciones) ? " · Framer Motion" : ""}${si(context.baseDeDatos) || si(context.autenticacion) || base.category.id !== "landing" ? " · Supabase" : ""} · Vercel.`,
+    base.category.id === "webapp" && (si(context.marketplace) || si(context.saas) || si(context.erp))
+      ? `NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".`
+      : null,
     `ESTILO: ${estilo}.`,
     `UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT ${phases.uxResearch}), la arquitectura de información + wireframes y flujos mobile-first (CHAT ${phases.iaWireframes}) y la voz, el microcopy y el diseño conversacional (CHAT ${phases.microcopy}); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.`,
     context.servicios ? `SERVICIOS/OFERTA A MOSTRAR: ${context.servicios}.` : null,

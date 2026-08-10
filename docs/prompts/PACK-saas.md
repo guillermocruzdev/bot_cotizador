@@ -98,7 +98,7 @@
 
 **🎭 Rol que conduce el proyecto:** Arquitecto de software como servicio + product manager multi-tenant
 
-**🥇 Conversión #1 (el objetivo comercial):** Convertir visitas en SUSCRIPTORES de tu software: tus clientes se registran, usan la plataforma y pagan plan — multi-tenant con datos aislados y billing automático.
+**🥇 Conversión #1 (el objetivo comercial):** Convertir visitas en SUSCRIPTORES de tu software: tus clientes se registran, usan la plataforma y pagan plan — multi-tenant con datos aislados y billing automático. Se cotiza con propuesta formal detallada, no a ciegas.
 
 **✅ Qué define que el sitio "funciona" para este giro:**
 - Multi-tenant: cada cliente con sus datos aislados (RLS por tenant: crítico).
@@ -116,6 +116,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -143,6 +144,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -228,6 +230,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -248,11 +251,12 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 
 ### 1. Arquitectura de la información (sitemap)
 Con base en las páginas del proyecto y lo acordado con el cliente, documenta el **sitemap** en `docs/ux/sitemap.md`:
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+- / — Landing del SaaS: propuesta de valor, planes y CTA.
+- /registro y /login — Alta de cliente y acceso a su espacio.
+- /app — Dashboard de la aplicación para el cliente (sus datos).
+- /app/[modulo] — Módulos del SaaS según el producto.
+- /configuracion — Ajustes del tenant: plan, usuarios, facturación.
+- /panel — (admin de la plataforma) gestión de tenants, planes y facturación.
 - /aviso-de-privacidad — página legal.
 Incorpora la estructura acordada con el cliente: "Landing del SaaS, Panel, Configuración".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
@@ -260,10 +264,10 @@ Incorpora la estructura acordada con el cliente: "Landing del SaaS, Panel, Confi
 
 ### 2. Flujos de tareas (task flows)
 Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Plataforma o sistema web a medida**:
-- **Tarea 1**: Usuario autenticado entra al panel y ve su rol y permisos.
-- **Tarea 2**: Realiza operaciones CRUD sobre los módulos correspondientes.
-- **Tarea 3**: Cada acción crítica queda registrada en auditoría.
-- **Tarea 4**: Los reportes se generan y pueden exportarse a PDF/CSV.
+- **Tarea 1**: El cliente se registra, elige plan y paga la suscripción.
+- **Tarea 2**: Usa su espacio con sus datos aislados (RLS por tenant).
+- **Tarea 3**: Gestiona plan, usuarios y facturación desde configuración.
+- **Tarea 4**: El admin de la plataforma ve todos los tenants y su facturación.
 Para cada flujo, verifica que: hay 1 CTA claro por pantalla, el usuario sabe dónde está (breadcrumb/estado), puede volver atrás sin perder lo escrito y el éxito se confirma (mensaje de éxito visible).
 
 ### 3. Wireframes mobile-first (360px)
@@ -310,6 +314,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -396,6 +401,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -483,6 +489,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -534,6 +541,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -585,12 +593,13 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (Software como servicio (SaaS) multi-tenant — 6 bloques)
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+### Secciones a construir (Software como servicio (SaaS) multi-tenant — 7 bloques)
+- / — Landing del SaaS: propuesta de valor, planes y CTA.
+- /registro y /login — Alta de cliente y acceso a su espacio.
+- /app — Dashboard de la aplicación para el cliente (sus datos).
+- /app/[modulo] — Módulos del SaaS según el producto.
+- /configuracion — Ajustes del tenant: plan, usuarios, facturación.
+- /panel — (admin de la plataforma) gestión de tenants, planes y facturación.
 - /aviso-de-privacidad — página legal.
 
 ### Servicios / oferta a mostrar
@@ -641,6 +650,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -710,6 +720,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -735,20 +746,75 @@ Crear/verificar el proyecto de Supabase, aplicar el esquema en una migración SQ
 ```sql
 -- WEBAPP — esquema base (convención de tipos; ajustar en kickoff)
 
--- roles admin/empleado/cliente.
+-- cada cliente del SaaS.
+create table if not exists public.tenants (
+  id uuid primary key default gen_random_uuid(),
+  nombre text,
+  slug text unique,
+  plan_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  estado text,
+  datos_aislados boolean,
+  created_at timestamptz not null default now()
+);
+
+-- usuarios del tenant.
 create table if not exists public.profiles (
-  id uuid primary key default gen_random_uuid()  -- FK a la tabla correspondiente (ajustar en kickoff),
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
   nombre text,
   email text,
   rol text,
   created_at timestamptz not null default now()
 );
 
--- modules según el proceso: customers, inventory, orders, reports, etc. (definir con el cliente en el kickoff).
+
+create table if not exists public.planes (
+  id uuid primary key default gen_random_uuid(),
+  nombre text,
+  slug text unique,
+  precio numeric(10,2),
+  periodo text,
+  limites jsonb,
+  activo boolean,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.suscripciones (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  plan_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  estado text,
+  stripe_subscription_id uuid,
+  renovacion date,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.facturas (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  monto numeric(10,2),
+  periodo text,
+  estatus text,
+  url_pdf text,
+  created_at timestamptz not null default now()
+);
+
+-- API pública (si aplica).
+create table if not exists public.api_keys (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  clave text,
+  scope text,
+  creada_en text,
+  revocada boolean
+);
 
 -- trazabilidad.
 create table if not exists public.audit_log (
   id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
   usuario_id uuid,
   accion text,
   detalle jsonb,
@@ -811,6 +877,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -833,14 +900,19 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-13** · [Alta] Optimización SEO: metadata dinámica, Open Graph, sitemap, robots.txt y datos estructurados JSON-LD.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
+- **RF-18** · [Alta] Multi-tenant: cada cliente de tu software con sus datos aislados (RLS por tenant: crítico).
+- **RF-19** · [Alta] Planes y billing automático: altas, cambios de plan y cancelaciones de suscripción.
+- **RF-20** · [Alta] API pública documentada (si aplica) y reportes de uso/facturación del SaaS.
+- **RF-21** · [Alta] El proyecto se cotiza con propuesta formal detallada (alcance por módulos): el pack NO debe fijar un precio cerrado — solo un estimado "desde".
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
 ### API routes e integraciones
-- API routes por módulo con validación Zod y autorización por rol (middleware).
-- Autenticación con Supabase Auth (email + OAuth).
-- Generación de PDFs (react-pdf/jsPDF) si aplica.
-- Supabase RLS para seguridad a nivel de fila.
+- POST /api/registro — alta del tenant con suscripción Stripe.
+- Webhook POST /api/webhooks/stripe — cobros recurrentes y cambios de plan.
+- GET /api/app/... — API del SaaS (RLS por tenant: crítico).
+- API pública documentada con api_keys (si aplica).
+- Panel de administración de tenants y facturación.
 
 **Integraciones externas según lo capturado:**
 - Stripe: PaymentIntent + webhooks para confirmar pagos.
@@ -866,10 +938,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Las API routes idempotentes (GET de catálogo) responden con `Cache-Control` (stale-while-revalidate); nunca cachear datos personales.
 
 ### Flujo de usuario a validar de extremo a extremo
-- 1. Usuario autenticado entra al panel y ve su rol y permisos.
-- 2. Realiza operaciones CRUD sobre los módulos correspondientes.
-- 3. Cada acción crítica queda registrada en auditoría.
-- 4. Los reportes se generan y pueden exportarse a PDF/CSV.
+- 1. El cliente se registra, elige plan y paga la suscripción.
+- 2. Usa su espacio con sus datos aislados (RLS por tenant).
+- 3. Gestiona plan, usuarios y facturación desde configuración.
+- 4. El admin de la plataforma ve todos los tenants y su facturación.
 
 ### Estados de UI
 Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 5/6 y el microcopy del CHAT 7 define los textos).
@@ -904,6 +976,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -988,6 +1061,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1045,6 +1119,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1117,6 +1192,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1194,6 +1270,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1289,6 +1366,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1375,6 +1453,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1465,6 +1544,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1517,6 +1597,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1617,6 +1698,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.
@@ -1683,6 +1765,7 @@ PROYECTO: Software como servicio (SaaS) multi-tenant para NubeContable · Nivel 
 TIPO DE PÁGINA: software como servicio (SaaS) multi-tenant con planes y billing para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: contabilidad en línea para pymes.

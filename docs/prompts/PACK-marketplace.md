@@ -98,7 +98,7 @@
 
 **🎭 Rol que conduce el proyecto:** Arquitecto de marketplace + product manager de plataformas multi-vendedor
 
-**🥇 Conversión #1 (el objetivo comercial):** Convertir visitas en VENTAS de muchos vendedores: cada vendedor publica y vende, el comprador compra y el marketplace cobra comisión por venta — split de pagos incluido.
+**🥇 Conversión #1 (el objetivo comercial):** Convertir visitas en VENTAS de muchos vendedores: cada vendedor publica y vende, el comprador compra y el marketplace cobra comisión por venta — split de pagos incluido. Se cotiza con propuesta formal detallada, no a ciegas.
 
 **✅ Qué define que el sitio "funciona" para este giro:**
 - Multi-vendedor: cada uno publica y administra sus productos con sus datos aislados.
@@ -116,6 +116,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -143,6 +144,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -228,6 +230,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -248,11 +251,13 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 
 ### 1. Arquitectura de la información (sitemap)
 Con base en las páginas del proyecto y lo acordado con el cliente, documenta el **sitemap** en `docs/ux/sitemap.md`:
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+- / — Home con categorías, productos destacados y CTA de vender.
+- /productos — Catálogo de todos los vendedores con filtros y búsqueda.
+- /productos/[slug] — Detalle de producto (vendedor, fotos, precio, agregar al carrito).
+- /carrito y /checkout — Compra con split de pagos entre vendedores.
+- /vendedor — Panel del vendedor: publicar productos, pedidos y comisiones.
+- /panel — (admin) administración de vendedores, comisiones y reportes.
+- /login y /registro — Autenticación de comprador y vendedor.
 - /aviso-de-privacidad — página legal.
 Incorpora la estructura acordada con el cliente: "Inicio, Tiendas, Producto, Panel del vendedor".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
@@ -260,10 +265,10 @@ Incorpora la estructura acordada con el cliente: "Inicio, Tiendas, Producto, Pan
 
 ### 2. Flujos de tareas (task flows)
 Dibuja (en Markdown con flechas) el flujo de cada tarea crítica del giro **Plataforma o sistema web a medida**:
-- **Tarea 1**: Usuario autenticado entra al panel y ve su rol y permisos.
-- **Tarea 2**: Realiza operaciones CRUD sobre los módulos correspondientes.
-- **Tarea 3**: Cada acción crítica queda registrada en auditoría.
-- **Tarea 4**: Los reportes se generan y pueden exportarse a PDF/CSV.
+- **Tarea 1**: El vendedor se registra, publica sus productos y administra su catálogo.
+- **Tarea 2**: El comprador navega, agrega al carrito y paga en el checkout.
+- **Tarea 3**: El sistema hace el split de pagos: cada vendedor recibe su parte.
+- **Tarea 4**: El admin ve comisiones, ventas por vendedor y reportes ejecutivos.
 Para cada flujo, verifica que: hay 1 CTA claro por pantalla, el usuario sabe dónde está (breadcrumb/estado), puede volver atrás sin perder lo escrito y el éxito se confirma (mensaje de éxito visible).
 
 ### 3. Wireframes mobile-first (360px)
@@ -310,6 +315,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -396,6 +402,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -483,6 +490,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -534,6 +542,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -585,12 +594,14 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (Marketplace multi-vendedor (comisión por venta) — 6 bloques)
-- /login y /registro — Autenticación (si aplica).
-- / — Dashboard principal con métricas.
-- /[recurso] — Módulos del sistema (según el proceso del cliente): clientes, pedidos, inventario, reportes, etc.
-- /[recurso]/[id] — Detalle/edición de registros.
-- /configuracion — Ajustes y usuarios (roles).
+### Secciones a construir (Marketplace multi-vendedor (comisión por venta) — 8 bloques)
+- / — Home con categorías, productos destacados y CTA de vender.
+- /productos — Catálogo de todos los vendedores con filtros y búsqueda.
+- /productos/[slug] — Detalle de producto (vendedor, fotos, precio, agregar al carrito).
+- /carrito y /checkout — Compra con split de pagos entre vendedores.
+- /vendedor — Panel del vendedor: publicar productos, pedidos y comisiones.
+- /panel — (admin) administración de vendedores, comisiones y reportes.
+- /login y /registro — Autenticación de comprador y vendedor.
 - /aviso-de-privacidad — página legal.
 
 ### Servicios / oferta a mostrar
@@ -641,6 +652,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -710,6 +722,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -735,16 +748,86 @@ Crear/verificar el proyecto de Supabase, aplicar el esquema en una migración SQ
 ```sql
 -- WEBAPP — esquema base (convención de tipos; ajustar en kickoff)
 
--- roles admin/empleado/cliente.
+-- vendedores del marketplace.
+create table if not exists public.tenants (
+  id uuid primary key default gen_random_uuid(),
+  nombre text,
+  slug text unique,
+  comision numeric,
+  activo boolean,
+  created_at timestamptz not null default now()
+);
+
+-- roles comprador/vendedor/admin.
 create table if not exists public.profiles (
-  id uuid primary key default gen_random_uuid()  -- FK a la tabla correspondiente (ajustar en kickoff),
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
   nombre text,
   email text,
   rol text,
   created_at timestamptz not null default now()
 );
 
--- modules según el proceso: customers, inventory, orders, reports, etc. (definir con el cliente en el kickoff).
+
+create table if not exists public.productos (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  slug text unique,
+  nombre text,
+  descripcion text,
+  precio numeric(10,2),
+  stock integer,
+  imagen_url text,
+  categoria_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  activo boolean,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.pedidos (
+  id uuid primary key default gen_random_uuid(),
+  comprador_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  subtotal numeric(10,2),
+  envio numeric(10,2),
+  total numeric(10,2),
+  estado text,
+  stripe_payment_id uuid,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.pedido_items (
+  id uuid primary key default gen_random_uuid(),
+  pedido_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  producto_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  cantidad integer,
+  precio_unitario numeric(10,2)
+);
+
+-- cada vendedor recibe su parte.
+create table if not exists public.splits_pago (
+  id uuid primary key default gen_random_uuid(),
+  pedido_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  monto numeric(10,2),
+  proveedor text,
+  referencia text,
+  estatus text,
+  created_at timestamptz not null default now()
+);
+
+
+create table if not exists public.comisiones (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid  -- FK a la tabla correspondiente (ajustar en kickoff),
+  mes text,
+  ventas text,
+  comision numeric,
+  pagado boolean,
+  created_at timestamptz not null default now()
+);
 
 -- trazabilidad.
 create table if not exists public.audit_log (
@@ -811,6 +894,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -834,14 +918,19 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-14** · [Media] PWA instalable: manifest, service worker, íconos y carga offline básica.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
+- **RF-18** · [Alta] Split de pagos / escrow: cada vendedor recibe su parte automáticamente al vender.
+- **RF-19** · [Alta] Aislamiento por tenant: cada vendedor con sus productos, pedidos y ventas aislados (RLS).
+- **RF-20** · [Alta] Panel de administración de comisiones, ventas por vendedor, API pública (si aplica) y reportes ejecutivos.
+- **RF-21** · [Alta] El proyecto se cotiza con propuesta formal detallada (alcance por módulos): el pack NO debe fijar un precio cerrado — solo un estimado "desde".
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
 ### API routes e integraciones
-- API routes por módulo con validación Zod y autorización por rol (middleware).
-- Autenticación con Supabase Auth (email + OAuth).
-- Generación de PDFs (react-pdf/jsPDF) si aplica.
-- Supabase RLS para seguridad a nivel de fila.
+- POST /api/checkout — crea el pedido y el split de pagos (Stripe Connect).
+- Webhook POST /api/webhooks/stripe — confirma pagos y reparte a los vendedores.
+- CRUD /api/vendedor/productos — catálogo del vendedor (protegido).
+- Panel de administración de comisiones y reportes.
+- Aislamiento por tenant (RLS): cada vendedor solo ve sus datos.
 
 **Integraciones externas según lo capturado:**
 - Stripe: PaymentIntent + webhooks para confirmar pagos.
@@ -867,10 +956,10 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Las API routes idempotentes (GET de catálogo) responden con `Cache-Control` (stale-while-revalidate); nunca cachear datos personales.
 
 ### Flujo de usuario a validar de extremo a extremo
-- 1. Usuario autenticado entra al panel y ve su rol y permisos.
-- 2. Realiza operaciones CRUD sobre los módulos correspondientes.
-- 3. Cada acción crítica queda registrada en auditoría.
-- 4. Los reportes se generan y pueden exportarse a PDF/CSV.
+- 1. El vendedor se registra, publica sus productos y administra su catálogo.
+- 2. El comprador navega, agrega al carrito y paga en el checkout.
+- 3. El sistema hace el split de pagos: cada vendedor recibe su parte.
+- 4. El admin ve comisiones, ventas por vendedor y reportes ejecutivos.
 
 ### Estados de UI
 Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** con mensajes claros en español (el diseño base ya existe del CHAT 5/6 y el microcopy del CHAT 7 define los textos).
@@ -905,6 +994,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -989,6 +1079,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1046,6 +1137,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1118,6 +1210,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1195,6 +1288,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1291,6 +1385,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1377,6 +1472,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1467,6 +1563,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1519,6 +1616,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1619,6 +1717,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
@@ -1685,6 +1784,7 @@ PROYECTO: Marketplace multi-vendedor (comisión por venta) para Mercado Local ·
 TIPO DE PÁGINA: marketplace multi-vendedor (split de pagos y comisión por venta) para empresa / operación (plataforma a medida).
 GIRO: Empresa / operación (plataforma a medida).
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
+NIVEL 5: el proyecto se cotiza con propuesta formal detallada (alcance por módulos) — el pack NO fija un precio cerrado, solo un estimado "desde".
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
 SERVICIOS/OFERTA A MOSTRAR: productos de artesanos y pymes.
