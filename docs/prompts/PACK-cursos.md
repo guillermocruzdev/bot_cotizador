@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-024** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-024` |
+> | Producto | Plataforma de cursos online |
+> | Nivel | N4 · Plataforma |
+> | Archivo | `PACK-cursos.md` |
+> | URL Vercel | https://vibercoder-cursos.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-cursos |
+> | Precio desde | $30,000 MXN |
+
 # 📦 PACK DE PROMPTS · Plataforma de cursos en línea — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Academia CursosPro |
 | Tipo de proyecto | Plataforma de cursos en línea |
+| Código de registro | `PK-024` |
+| URL Vercel | https://vibercoder-cursos.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-cursos |
 | 🎭 Rol que conduce el proyecto | Consultor educativo digital + arquitecto de plataforma de cursos |
 | Nivel | Avanzado |
 | Presupuesto estimado | $30,000 MXN – $55,000 MXN |

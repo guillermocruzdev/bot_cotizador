@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-023** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-023` |
+> | Producto | Portal de membresías |
+> | Nivel | N4 · Plataforma |
+> | Archivo | `PACK-membresias.md` |
+> | URL Vercel | https://vibercoder-membresias.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-membresias |
+> | Precio desde | $28,000 MXN |
+
 # 📦 PACK DE PROMPTS · Portal de membresías (cobro recurrente y área privada) — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Gimnasio FitZone |
 | Tipo de proyecto | Portal de membresías (cobro recurrente y área privada) |
+| Código de registro | `PK-023` |
+| URL Vercel | https://vibercoder-membresias.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-membresias |
 | 🎭 Rol que conduce el proyecto | Consultor de negocios de membresía + arquitecto de cobro recurrente |
 | Nivel | Avanzado |
 | Presupuesto estimado | $28,000 MXN – $50,000 MXN |

@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-003** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-003` |
+> | Producto | Tarjeta digital / minisitio |
+> | Nivel | N0 · Entrada |
+> | Archivo | `PACK-tarjeta-digital.md` |
+> | URL Vercel | https://vibercoder-tarjeta-digital.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-tarjeta-digital |
+> | Precio desde | $4,500 MXN |
+
 # 📦 PACK DE PROMPTS · Tarjeta digital / minisitio — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Pedro Ramírez |
 | Tipo de proyecto | Tarjeta digital / minisitio |
+| Código de registro | `PK-003` |
+| URL Vercel | https://vibercoder-tarjeta-digital.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-tarjeta-digital |
 | 🎭 Rol que conduce el proyecto | Diseñador de marca personal / minisitio de presentación |
 | Nivel | Básico |
 | Presupuesto estimado | $6,960 MXN – $9,960 MXN |

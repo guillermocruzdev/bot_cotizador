@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-002** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-002` |
+> | Producto | Menú digital con QR |
+> | Nivel | N0 · Entrada |
+> | Archivo | `PACK-menu-digital.md` |
+> | URL Vercel | https://vibercoder-menu-digital.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-menu-digital |
+> | Precio desde | $3,500 MXN |
+
 # 📦 PACK DE PROMPTS · Menú digital con código QR — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Taquería El Pastor |
 | Tipo de proyecto | Menú digital con código QR |
+| Código de registro | `PK-002` |
+| URL Vercel | https://vibercoder-menu-digital.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-menu-digital |
 | 🎭 Rol que conduce el proyecto | Consultor gastronómico + diseñador de menú digital |
 | Nivel | Básico |
 | Presupuesto estimado | $6,960 MXN – $9,960 MXN |

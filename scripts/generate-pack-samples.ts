@@ -21,6 +21,72 @@ interface Scenario {
   analysis: Partial<PromptAnalysis> & Pick<PromptAnalysis, "categoria">;
 }
 
+/**
+ * Registro de despliegue de cada PACK: el código único que identifica el
+ * proyecto en Vercel/GitHub. Es la fuente de verdad de "qué página es cuál".
+ * - `slugVercel`: nombre del proyecto en Vercel → URL = https://{slug}.vercel.app
+ * - `repoGitHub`: ruta del repo → URL = https://github.com/{repoGitHub}
+ */
+interface PackRegistro {
+  codigo: string; // ej. "PK-008"
+  nombre: string; // nombre del producto en la agencia
+  nivel: string; // ej. "N1 · Presencia"
+  desde: number; // precio "desde" MXN (IVA incl.) para la vitrina
+  slugVercel: string;
+  repoGitHub: string;
+  nota?: string; // aclaración opcional (ej. "servicio, sin PACK de web")
+}
+
+/** Códigos asignados por orden del catálogo maestro (docs/MERCADO_PAGINAS_VIBECODER.md). */
+const REGISTRO_PACKS: Record<string, PackRegistro> = {
+  // Nivel 0 · Entrada
+  "PACK-link-in-bio.md": { codigo: "PK-001", nombre: "Link-in-bio premium", nivel: "N0 · Entrada", desde: 2500, slugVercel: "vibercoder-link-in-bio", repoGitHub: "VibeCoder/pack-link-in-bio" },
+  "PACK-menu-digital.md": { codigo: "PK-002", nombre: "Menú digital con QR", nivel: "N0 · Entrada", desde: 3500, slugVercel: "vibercoder-menu-digital", repoGitHub: "VibeCoder/pack-menu-digital" },
+  "PACK-tarjeta-digital.md": { codigo: "PK-003", nombre: "Tarjeta digital / minisitio", nivel: "N0 · Entrada", desde: 4500, slugVercel: "vibercoder-tarjeta-digital", repoGitHub: "VibeCoder/pack-tarjeta-digital" },
+  "PACK-micro-landing.md": { codigo: "PK-004", nombre: "Micro-landing promocional", nivel: "N0 · Entrada", desde: 4500, slugVercel: "vibercoder-micro-landing", repoGitHub: "VibeCoder/pack-micro-landing" },
+  // Nivel 1 · Presencia
+  "PACK-landing-evento.md": { codigo: "PK-006", nombre: "Landing de evento", nivel: "N1 · Presencia", desde: 6500, slugVercel: "vibercoder-landing-evento", repoGitHub: "VibeCoder/pack-landing-evento" },
+  "PACK-portafolio.md": { codigo: "PK-007", nombre: "Portafolio profesional", nivel: "N1 · Presencia", desde: 7000, slugVercel: "vibercoder-portafolio", repoGitHub: "VibeCoder/pack-portafolio" },
+  "PACK-landing.md": { codigo: "PK-008", nombre: "Landing page", nivel: "N1 · Presencia", desde: 8500, slugVercel: "vibercoder-landing", repoGitHub: "VibeCoder/pack-landing" },
+  "PACK-blog.md": { codigo: "PK-009", nombre: "Blog / contenido con SEO", nivel: "N1 · Presencia", desde: 9000, slugVercel: "vibercoder-blog", repoGitHub: "VibeCoder/pack-blog" },
+  // Nivel 2 · Negocio
+  "PACK-multilingue.md": { codigo: "PK-010", nombre: "Sitio multilingüe", nivel: "N2 · Negocio", desde: 11000, slugVercel: "vibercoder-multilingue", repoGitHub: "VibeCoder/pack-multilingue" },
+  "PACK-pwa.md": { codigo: "PK-011", nombre: "PWA instalable (app sin tienda)", nivel: "N2 · Negocio", desde: 12000, slugVercel: "vibercoder-pwa", repoGitHub: "VibeCoder/pack-pwa" },
+  "PACK-reservas-restaurante.md": { codigo: "PK-012", nombre: "Reservas de restaurante", nivel: "N2 · Negocio", desde: 12000, slugVercel: "vibercoder-reservas-restaurante", repoGitHub: "VibeCoder/pack-reservas-restaurante" },
+  "PACK-cotizador.md": { codigo: "PK-013", nombre: "Cotizador / presupuesto en línea", nivel: "N2 · Negocio", desde: 15000, slugVercel: "vibercoder-cotizador", repoGitHub: "VibeCoder/pack-cotizador" },
+  "PACK-citas.md": { codigo: "PK-014", nombre: "Sistema de citas", nivel: "N2 · Negocio", desde: 15000, slugVercel: "vibercoder-citas", repoGitHub: "VibeCoder/pack-citas" },
+  "PACK-corporativo.md": { codigo: "PK-015", nombre: "Sitio corporativo (multi-página)", nivel: "N2 · Negocio", desde: 15000, slugVercel: "vibercoder-corporativo", repoGitHub: "VibeCoder/pack-corporativo" },
+  // Nivel 3 · Venta
+  "PACK-reservas-pago.md": { codigo: "PK-016", nombre: "Reservas con pago por adelantado", nivel: "N3 · Venta", desde: 18000, slugVercel: "vibercoder-reservas-pago", repoGitHub: "VibeCoder/pack-reservas-pago" },
+  "PACK-ecommerce.md": { codigo: "PK-017", nombre: "E-commerce (tienda online)", nivel: "N3 · Venta", desde: 20000, slugVercel: "vibercoder-ecommerce", repoGitHub: "VibeCoder/pack-ecommerce" },
+  "PACK-ecommerce-pro.md": { codigo: "PK-018", nombre: "E-commerce pro (inventario + CFDI)", nivel: "N3 · Venta", desde: 28000, slugVercel: "vibercoder-ecommerce-pro", repoGitHub: "VibeCoder/pack-ecommerce-pro" },
+  // Nivel 4 · Plataforma
+  "PACK-directorio.md": { codigo: "PK-019", nombre: "Directorio / listado de negocios", nivel: "N4 · Plataforma", desde: 22000, slugVercel: "vibercoder-directorio", repoGitHub: "VibeCoder/pack-directorio" },
+  "PACK-webapp.md": { codigo: "PK-020", nombre: "Plataforma / webapp a medida", nivel: "N4 · Plataforma", desde: 25000, slugVercel: "vibercoder-webapp", repoGitHub: "VibeCoder/pack-webapp" },
+  "PACK-inmobiliaria.md": { codigo: "PK-021", nombre: "Portal inmobiliario", nivel: "N4 · Plataforma", desde: 25000, slugVercel: "vibercoder-inmobiliaria", repoGitHub: "VibeCoder/pack-inmobiliaria" },
+  "PACK-telemedicina.md": { codigo: "PK-022", nombre: "Portal de salud (telemedicina)", nivel: "N4 · Plataforma", desde: 26000, slugVercel: "vibercoder-telemedicina", repoGitHub: "VibeCoder/pack-telemedicina" },
+  "PACK-membresias.md": { codigo: "PK-023", nombre: "Portal de membresías", nivel: "N4 · Plataforma", desde: 28000, slugVercel: "vibercoder-membresias", repoGitHub: "VibeCoder/pack-membresias" },
+  "PACK-cursos.md": { codigo: "PK-024", nombre: "Plataforma de cursos online", nivel: "N4 · Plataforma", desde: 30000, slugVercel: "vibercoder-cursos", repoGitHub: "VibeCoder/pack-cursos" },
+  // Nivel 5 · Ecosistema
+  "PACK-marketplace.md": { codigo: "PK-025", nombre: "Marketplace multi-vendedor", nivel: "N5 · Ecosistema", desde: 40000, slugVercel: "vibercoder-marketplace", repoGitHub: "VibeCoder/pack-marketplace" },
+  "PACK-marketplace-split.md": { codigo: "PK-026", nombre: "Marketplace con split de pagos", nivel: "N5 · Ecosistema", desde: 70000, slugVercel: "vibercoder-marketplace-split", repoGitHub: "VibeCoder/pack-marketplace-split" },
+  "PACK-saas.md": { codigo: "PK-027", nombre: "SaaS multi-tenant B2B", nivel: "N5 · Ecosistema", desde: 60000, slugVercel: "vibercoder-saas", repoGitHub: "VibeCoder/pack-saas" },
+  "PACK-erp.md": { codigo: "PK-028", nombre: "ERP / CRM a medida", nivel: "N5 · Ecosistema", desde: 90000, slugVercel: "vibercoder-erp", repoGitHub: "VibeCoder/pack-erp" },
+  // Extra · demo
+  "PACK-psicologo.md": { codigo: "PK-029", nombre: "Landing de psicólogo con asistente IA", nivel: "N1 · Presencia (extra)", desde: 12000, slugVercel: "vibercoder-psicologo", repoGitHub: "VibeCoder/pack-psicologo" },
+};
+
+/** Servicios de la agencia que NO generan un PACK de web (se listan igual en el índice). */
+const SERVICIOS_SIN_PACK: { codigo: string; nombre: string; nivel: string; desde: number; nota: string }[] = [
+  {
+    codigo: "PK-005",
+    nombre: "Perfil Google Business (setup)",
+    nivel: "N0 · Entrada",
+    desde: 3000,
+    nota: "Servicio de setup/optimización (no es una web): se ofrece junto a cualquier landing. Sin PACK de prompts.",
+  },
+];
+
 const SCENARIOS: Scenario[] = [
   {
     file: "PACK-landing.md",
@@ -582,9 +648,311 @@ const SCENARIOS: Scenario[] = [
       punto_venta: "Controla toda tu operación en un solo sistema con reportes ejecutivos.",
     },
   },
+  // ── Nivel 0 · Micro-landing promocional ─────────────────────────
+  {
+    file: "PACK-micro-landing.md",
+    clientName: "PromoTech Studio",
+    businessDescription:
+      "Quiero una micro-landing para una promoción o campaña con un solo objetivo: captar contactos",
+    categoryId: "landing",
+    nivel: "basico",
+    buildCtx: (ctx) => {
+      ctx.paginas = 1;
+      ctx.estructuraWeb = "Promo, Oferta, Formulario, Contacto";
+      ctx.servicios = "promoción de lanzamiento de un curso";
+      ctx.chat = true;
+      ctx.seo = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "5000";
+      ctx.fechaEntrega = "para la próxima semana";
+    },
+    analysis: {
+      categoria: "Micro-landing promocional (una sola oferta)",
+      nivelLabel: "Básico",
+      precio_min: 5800,
+      precio_max: 8300,
+      tiempo_estimado: "2-4 días de desarrollo",
+      giro: "Negocio local / campaña promocional",
+      punto_venta: "Una sola página enfocada en UNA oferta: el visitante actúa o se va.",
+    },
+  },
+  // ── Nivel 1 · Landing de evento ─────────────────────────────────
+  {
+    file: "PACK-landing-evento.md",
+    clientName: "Congreso Innovación MX",
+    businessDescription:
+      "Quiero una landing para mi evento con registro de asistentes, agenda, ponentes y contador",
+    categoryId: "landing",
+    nivel: "basico",
+    buildCtx: (ctx) => {
+      ctx.paginas = 1;
+      ctx.estructuraWeb = "Hero del evento, Agenda, Ponentes, Registro";
+      ctx.servicios = "congreso anual de innovación y tecnología";
+      ctx.chat = true;
+      ctx.seo = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "8000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Landing de evento (registro y boletos)",
+      nivelLabel: "Básico",
+      precio_min: 7540,
+      precio_max: 10040,
+      tiempo_estimado: "3-7 días de desarrollo",
+      giro: "Organizador de eventos",
+      punto_venta: "Registro de asistentes, agenda, ponentes y venta de boletos en una sola página.",
+    },
+  },
+  // ── Nivel 1 · Portafolio profesional ────────────────────────────
+  {
+    file: "PACK-portafolio.md",
+    clientName: "Mariana Fotógrafa",
+    businessDescription:
+      "Quiero un portafolio para mostrar mi trabajo con galería y animaciones",
+    categoryId: "portafolio",
+    nivel: "profesional",
+    buildCtx: (ctx) => {
+      ctx.paginas = 1;
+      ctx.estructuraWeb = "Inicio, Portafolio, Sobre mí, Contacto";
+      ctx.servicios = "fotografía de bodas y retratos";
+      ctx.animaciones = true;
+      ctx.chat = true;
+      ctx.seo = true;
+      ctx.contenidoListo = true;
+      ctx.presupuesto = "9000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Portafolio profesional (galería con animaciones)",
+      nivelLabel: "Profesional",
+      precio_min: 10150,
+      precio_max: 12150,
+      tiempo_estimado: "4-10 días de desarrollo",
+      giro: "Fotógrafo / creativo",
+      punto_venta: "Tu trabajo en una galería con animaciones que deja huella y cierra proyectos.",
+    },
+  },
+  // ── Nivel 1 · Blog / contenido ──────────────────────────────────
+  {
+    file: "PACK-blog.md",
+    clientName: "Nutrición Clara",
+    businessDescription:
+      "Quiero un blog para publicar artículos que me posicionen en Google y atraigan clientes",
+    categoryId: "blog",
+    nivel: "profesional",
+    buildCtx: (ctx) => {
+      ctx.paginas = 3;
+      ctx.estructuraWeb = "Inicio, Blog, Artículo, Contacto";
+      ctx.servicios = "nutrición y hábitos saludables";
+      ctx.seo = true;
+      ctx.pwa = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "12000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Blog / sitio de contenido con SEO",
+      nivelLabel: "Profesional",
+      precio_min: 12180,
+      precio_max: 14680,
+      tiempo_estimado: "5-12 días de desarrollo",
+      giro: "Marca personal / contenido",
+      punto_venta: "Publica artículos que posicionan en Google y atraen clientes orgánicos.",
+    },
+  },
+  // ── Nivel 2 · Sitio multilingüe ─────────────────────────────────
+  {
+    file: "PACK-multilingue.md",
+    clientName: "Tour Riviera Maya",
+    businessDescription:
+      "Quiero mi web en español e inglés porque atiendo turistas y clientes de exportación",
+    categoryId: "landing",
+    nivel: "profesional",
+    buildCtx: (ctx) => {
+      ctx.paginas = 4;
+      ctx.estructuraWeb = "Inicio, Tours, Nosotros, Contacto";
+      ctx.servicios = "tours y experiencias en la Riviera Maya";
+      ctx.multilingue = true;
+      ctx.seo = true;
+      ctx.chat = true;
+      ctx.mapas = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "15000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Sitio multilingüe (español + inglés con SEO por idioma)",
+      nivelLabel: "Profesional",
+      precio_min: 15260,
+      precio_max: 18760,
+      tiempo_estimado: "6-12 días de desarrollo",
+      giro: "Turismo / negocio fronterizo",
+      punto_venta: "Atiende turistas y clientes internacionales con SEO por idioma (hreflang).",
+    },
+  },
+  // ── Nivel 2 · PWA instalable ────────────────────────────────────
+  {
+    file: "PACK-pwa.md",
+    clientName: "Pizzería La Flama",
+    businessDescription:
+      "Quiero que mi web se instale en el celular de mis clientes como app con notificaciones",
+    categoryId: "landing",
+    nivel: "profesional",
+    buildCtx: (ctx) => {
+      ctx.paginas = 3;
+      ctx.estructuraWeb = "Inicio, Menú, Pedido, Contacto";
+      ctx.servicios = "pizza artesanal a domicilio";
+      ctx.pwa = true;
+      ctx.chat = true;
+      ctx.seo = true;
+      ctx.mapas = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "15000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Web instalable (PWA) con notificaciones",
+      nivelLabel: "Profesional",
+      precio_min: 15260,
+      precio_max: 19260,
+      tiempo_estimado: "7-15 días de desarrollo",
+      giro: "Restaurante / negocio local",
+      punto_venta: "Tus clientes instalan tu web como app sin pasar por la tienda y reciben notificaciones.",
+    },
+  },
+  // ── Nivel 3 · Reservas con pago por adelantado ──────────────────
+  {
+    file: "PACK-reservas-pago.md",
+    clientName: "Spa Serenidad",
+    businessDescription:
+      "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar",
+    categoryId: "citas",
+    nivel: "avanzado",
+    buildCtx: (ctx) => {
+      ctx.paginas = 4;
+      ctx.estructuraWeb = "Inicio, Servicios, Reservar con pago, Panel";
+      ctx.servicios = "masajes y tratamientos de spa";
+      ctx.citas = true;
+      ctx.pagos = true;
+      ctx.autenticacion = true;
+      ctx.baseDeDatos = true;
+      ctx.dashboard = true;
+      ctx.mapas = true;
+      ctx.chat = true;
+      ctx.seo = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "25000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Sistema de reservas con pago por adelantado",
+      nivelLabel: "Avanzado",
+      precio_min: 26796,
+      precio_max: 32796,
+      tiempo_estimado: "12-18 días de desarrollo",
+      giro: "Spa / estética",
+      punto_venta: "El cliente paga al reservar: cero no-shows y tu agenda garantizada.",
+    },
+  },
+  // ── Nivel 4 · Plataforma / webapp a medida ──────────────────────
+  {
+    file: "PACK-webapp.md",
+    clientName: "Taller Mecánico Express",
+    businessDescription:
+      "Quiero un sistema a la medida de mi operación para controlar clientes, servicios y reportes",
+    categoryId: "webapp",
+    nivel: "avanzado",
+    buildCtx: (ctx) => {
+      ctx.paginas = 4;
+      ctx.estructuraWeb = "Panel, Clientes, Servicios, Reportes";
+      ctx.servicios = "servicio automotriz";
+      ctx.autenticacion = true;
+      ctx.baseDeDatos = true;
+      ctx.dashboard = true;
+      ctx.documentos = true;
+      ctx.chat = true;
+      ctx.seo = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "40000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Plataforma / sistema web a medida",
+      nivelLabel: "Avanzado",
+      precio_min: 20300,
+      precio_max: 45000,
+      tiempo_estimado: "15-30 días de desarrollo",
+      giro: "Empresa / operación (plataforma a medida)",
+      punto_venta: "Un sistema hecho a la medida de tu proceso: solo pagas los módulos que usas.",
+    },
+  },
+  // ── Nivel 5 · Marketplace con split de pagos ────────────────────
+  {
+    file: "PACK-marketplace-split.md",
+    clientName: "Plaza Digital MX",
+    businessDescription:
+      "Quiero un marketplace donde cada vendedor reciba su parte automáticamente al vender (split de pagos)",
+    categoryId: "webapp",
+    nivel: "avanzado",
+    buildCtx: (ctx) => {
+      ctx.paginas = 4;
+      ctx.estructuraWeb = "Inicio, Tiendas, Producto, Panel del vendedor";
+      ctx.servicios = "productos de múltiples vendedores";
+      ctx.marketplace = true;
+      ctx.autenticacion = true;
+      ctx.baseDeDatos = true;
+      ctx.pagos = true;
+      ctx.dashboard = true;
+      ctx.seo = true;
+      ctx.pwa = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "120000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Marketplace con split de pagos (escrow multi-vendedor)",
+      nivelLabel: "Avanzado",
+      precio_min: 70000,
+      precio_max: 150000,
+      tiempo_estimado: "45-80 días de desarrollo",
+      giro: "Empresa / operación (plataforma a medida)",
+      punto_venta: "Cada vendedor cobra su parte al instante; tú administras la plataforma y cobras comisión.",
+    },
+  },
+  // ── Extra · Landing de psicólogo con asistente IA ───────────────
+  {
+    file: "PACK-psicologo.md",
+    clientName: "Lic. Paola Rivera",
+    businessDescription:
+      "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas",
+    categoryId: "landing",
+    nivel: "profesional",
+    buildCtx: (ctx) => {
+      ctx.paginas = 4;
+      ctx.estructuraWeb = "Inicio, Servicios, Sobre mí, Contacto";
+      ctx.servicios = "terapia individual, de pareja y manejo de ansiedad";
+      ctx.bots = ["bot_atencion", "bot_faq", "bot_leads"];
+      ctx.chat = true;
+      ctx.seo = true;
+      ctx.mapas = true;
+      ctx.contenidoListo = false;
+      ctx.presupuesto = "15000";
+      ctx.fechaEntrega = "para el próximo mes";
+    },
+    analysis: {
+      categoria: "Landing para consultorio de psicología con asistente IA",
+      nivelLabel: "Profesional",
+      precio_min: 15260,
+      precio_max: 18260,
+      tiempo_estimado: "10-15 días de desarrollo",
+      giro: "Médico / clínica",
+      punto_venta: "Un asistente responde dudas y agenda citas 24/7, con calidez y privacidad.",
+    },
+  },
 ];
 
-function buildAnalysis(s: Scenario): PromptAnalysis {
+function buildAnalysis(s: Scenario, registro?: PackRegistro): PromptAnalysis {
   return {
     nivelLabel: s.analysis.nivelLabel,
     precio_min: s.analysis.precio_min ?? 1000,
@@ -595,13 +963,22 @@ function buildAnalysis(s: Scenario): PromptAnalysis {
     entregables: [],
     recomendaciones: [],
     ...s.analysis,
+    codigo: registro?.codigo,
+    slugVercel: registro?.slugVercel ? `https://${registro.slugVercel}.vercel.app` : undefined,
+    repoGitHub: registro?.repoGitHub ? `https://github.com/${registro.repoGitHub}` : undefined,
   } as PromptAnalysis;
 }
 
 const OUT_DIR = join(process.cwd(), "docs", "prompts");
 mkdirSync(OUT_DIR, { recursive: true });
 
+let generados = 0;
+
 for (const s of SCENARIOS) {
+  const registro = REGISTRO_PACKS[s.file];
+  if (!registro) {
+    console.warn(`⚠ Sin registro (código/URL) para ${s.file} — añádelo a REGISTRO_PACKS.`);
+  }
   const ctx = createEmptyContext();
   ctx.clientName = s.clientName;
   ctx.negocioDescripcion = s.businessDescription;
@@ -615,12 +992,88 @@ for (const s of SCENARIOS) {
     category,
     nivel: s.nivel,
     context: ctx,
-    analysis: buildAnalysis(s),
+    analysis: buildAnalysis(s, registro),
   });
 
   const path = join(OUT_DIR, s.file);
-  writeFileSync(path, prompt, "utf8");
-  console.log(`✓ ${s.file} (${(prompt.length / 1024).toFixed(1)} KB, ${prompt.length} chars)`);
+  writeFileSync(path, buildRegistroHeader(registro, s.file) + prompt, "utf8");
+  generados++;
+  console.log(`✓ ${s.file}${registro ? ` [${registro.codigo}]` : ""} (${(prompt.length / 1024).toFixed(1)} KB)`);
 }
 
-console.log(`\nPacks generados en ${OUT_DIR}`);
+const indice = buildIndicePacks();
+writeFileSync(join(OUT_DIR, "INDICE-PACKS.md"), indice, "utf8");
+console.log(`\n${generados} packs generados en ${OUT_DIR} + INDICE-PACKS.md`);
+
+/** Cabecera de registro que identifica el PACK en Vercel/GitHub (va antes del prompt). */
+function buildRegistroHeader(registro: PackRegistro | undefined, file: string): string {
+  if (!registro) return "";
+  const desde = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(registro.desde);
+  return [
+    `> #️⃣ **REGISTRO · ${registro.codigo}** — identifica este PACK en Vercel / GitHub`,
+    `>`,
+    `> | Campo | Valor |`,
+    `> |---|---|`,
+    `> | Código | \`${registro.codigo}\` |`,
+    `> | Producto | ${registro.nombre} |`,
+    `> | Nivel | ${registro.nivel} |`,
+    `> | Archivo | \`${file}\` |`,
+    `> | URL Vercel | https://${registro.slugVercel}.vercel.app |`,
+    `> | Repo GitHub | https://github.com/${registro.repoGitHub} |`,
+    `> | Precio desde | ${desde} MXN |`,
+    ``,
+    ``,
+  ].join("\n");
+}
+
+/** Índice maestro: "qué PACK es cuál" en Vercel/GitHub. Se regenera en cada corrida. */
+function buildIndicePacks(): string {
+  const desde = (n: number) => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
+  const filas: string[] = [];
+  for (const s of SCENARIOS) {
+    const r = REGISTRO_PACKS[s.file];
+    if (!r) continue;
+    filas.push(`| ${r.codigo} | ${r.nombre} | \`${s.file}\` | ${r.nivel} | ${desde(r.desde)} | https://${r.slugVercel}.vercel.app | https://github.com/${r.repoGitHub} | ✅ Listo para deploy |`);
+  }
+  const servicios = SERVICIOS_SIN_PACK.map(
+    (sv) => `| ${sv.codigo} | ${sv.nombre} | — | ${sv.nivel} | ${desde(sv.desde)} | — | — | 🛠 Servicio (sin PACK) |`
+  );
+  const todas = [...filas, ...servicios].sort((a, b) => {
+    const aN = a.match(/^\| (PK-\d+)/)?.[1] ?? "";
+    const bN = b.match(/^\| (PK-\d+)/)?.[1] ?? "";
+    return aN.localeCompare(bN, undefined, { numeric: true });
+  });
+  const hoy = new Date().toLocaleDateString("es-MX", { day: "2-digit", month: "long", year: "numeric" });
+  return `# 📇 ÍNDICE DE PACKS · Vitrina VibeCoder (qué página es cuál en Vercel / GitHub)
+
+> Generado automáticamente por \`npx tsx scripts/generate-pack-samples.ts\` (${hoy}). No lo edites a mano:
+> se regenera en cada corrida. Para registrar la URL REAL una vez desplegada, usa \`docs/prompts/REGISTRO-DEPLOY.md\`.
+
+## 🔑 Cómo funciona el código
+
+- Cada PACK tiene un **código único** \`PK-XXX\` que lo identifica en Vercel y GitHub.
+- El código está **dentro del propio PACK** (bloque \`#️⃣ REGISTRO\` al inicio + fila "Código de registro" en la Ficha del proyecto).
+- La **URL de Vercel propuesta** es \`https://{slug}.vercel.app\` (crea el proyecto en Vercel con ese slug exacto).
+- El **repo de GitHub propuesto** es \`https://github.com/{repo}\` (crea el repo con ese nombre).
+- Sigue la convención de nombres y el registro se mantiene exacto sin tocar nada más.
+
+## 🚀 Qué hacer para desplegar (flujo rápido)
+
+1. Crea el repo en GitHub con el nombre de la columna **Repo GitHub** y sube ahí el proyecto construido con su PACK.
+2. Importa ese repo en Vercel → el proyecto se llama igual que el **slug** → la URL queda \`https://{slug}.vercel.app\`.
+3. Marca el PACK como "desplegado" en \`docs/prompts/REGISTRO-DEPLOY.md\` (URL real + fecha) para llevar el control.
+4. Opcional: cada PACK ya trae un **CHAT de despliegue** que construye, prueba y publica en Vercel automáticamente.
+
+## 📋 Registro completo (${SCENARIOS.length} PACKs + ${SERVICIOS_SIN_PACK.length} servicio)
+
+| Código | Producto | Archivo | Nivel | Desde | URL Vercel | Repo GitHub | Estado |
+|---|---|---|---|---|---|---|---|
+${todas.join("\n")}
+
+## 📌 Notas
+
+- **PK-005 Perfil Google Business** es un **servicio de setup** (no una web): se vende junto a cualquier landing, por eso no tiene PACK de prompts.
+- **PK-029 Psicólogo** es una **demo extra** (landing con asistente IA) fuera del catálogo maestro de 28 tipos.
+- Todos los PACKs regenerados pasan por \`npm run lint\` y \`npx tsc --noEmit\`; el contenido lo valida \`npm run test:regression\` (regla #7: motor = pack = PDF).
+`;
+}

@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-017** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-017` |
+> | Producto | E-commerce (tienda online) |
+> | Nivel | N3 · Venta |
+> | Archivo | `PACK-ecommerce.md` |
+> | URL Vercel | https://vibercoder-ecommerce.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-ecommerce |
+> | Precio desde | $20,000 MXN |
+
 # 📦 PACK DE PROMPTS · Tienda online con carrito y pagos — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Moda GDL |
 | Tipo de proyecto | Tienda online con carrito y pagos |
+| Código de registro | `PK-017` |
+| URL Vercel | https://vibercoder-ecommerce.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-ecommerce |
 | 🎭 Rol que conduce el proyecto | Product Manager de ecommerce + optimizador de conversión |
 | Nivel | Avanzado |
 | Presupuesto estimado | $32,640 MXN – $36,640 MXN |

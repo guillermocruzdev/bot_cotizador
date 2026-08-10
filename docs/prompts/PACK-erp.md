@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-028** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-028` |
+> | Producto | ERP / CRM a medida |
+> | Nivel | N5 · Ecosistema |
+> | Archivo | `PACK-erp.md` |
+> | URL Vercel | https://vibercoder-erp.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-erp |
+> | Precio desde | $90,000 MXN |
+
 # 📦 PACK DE PROMPTS · ERP a medida (compras, ventas, almacén, nómina) — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Logística del Norte |
 | Tipo de proyecto | ERP a medida (compras, ventas, almacén, nómina) |
+| Código de registro | `PK-028` |
+| URL Vercel | https://vibercoder-erp.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-erp |
 | 🎭 Rol que conduce el proyecto | Consultor de procesos + arquitecto de sistemas de operación |
 | Nivel | Avanzado |
 | Presupuesto estimado | $90,000 MXN – $200,000 MXN |

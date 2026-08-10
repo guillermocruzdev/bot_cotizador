@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-022** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-022` |
+> | Producto | Portal de salud (telemedicina) |
+> | Nivel | N4 · Plataforma |
+> | Archivo | `PACK-telemedicina.md` |
+> | URL Vercel | https://vibercoder-telemedicina.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-telemedicina |
+> | Precio desde | $26,000 MXN |
+
 # 📦 PACK DE PROMPTS · Portal de salud / telemedicina — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Clínica VidaSana |
 | Tipo de proyecto | Portal de salud / telemedicina |
+| Código de registro | `PK-022` |
+| URL Vercel | https://vibercoder-telemedicina.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-telemedicina |
 | 🎭 Rol que conduce el proyecto | Consultor de salud digital + arquitecto de portal clínico |
 | Nivel | Avanzado |
 | Presupuesto estimado | $26,000 MXN – $55,000 MXN |

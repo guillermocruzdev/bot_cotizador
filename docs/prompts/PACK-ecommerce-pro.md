@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-018** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-018` |
+> | Producto | E-commerce pro (inventario + CFDI) |
+> | Nivel | N3 · Venta |
+> | Archivo | `PACK-ecommerce-pro.md` |
+> | URL Vercel | https://vibercoder-ecommerce-pro.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-ecommerce-pro |
+> | Precio desde | $28,000 MXN |
+
 # 📦 PACK DE PROMPTS · Tienda online pro (inventario, facturación CFDI y multi-vendedor) — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Distribuidora GDL |
 | Tipo de proyecto | Tienda online pro (inventario, facturación CFDI y multi-vendedor) |
+| Código de registro | `PK-018` |
+| URL Vercel | https://vibercoder-ecommerce-pro.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-ecommerce-pro |
 | 🎭 Rol que conduce el proyecto | Product manager de ecommerce + optimizador de operación de tienda |
 | Nivel | Avanzado |
 | Presupuesto estimado | $32,640 MXN – $46,640 MXN |

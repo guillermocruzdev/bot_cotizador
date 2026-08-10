@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-015** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-015` |
+> | Producto | Sitio corporativo (multi-página) |
+> | Nivel | N2 · Negocio |
+> | Archivo | `PACK-corporativo.md` |
+> | URL Vercel | https://vibercoder-corporativo.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-corporativo |
+> | Precio desde | $15,000 MXN |
+
 # 📦 PACK DE PROMPTS · Sitio corporativo (varias páginas) — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Grupo Constructor MX |
 | Tipo de proyecto | Sitio corporativo (varias páginas) |
+| Código de registro | `PK-015` |
+| URL Vercel | https://vibercoder-corporativo.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-corporativo |
 | 🎭 Rol que conduce el proyecto | Consultor de presencia digital + arquitecto de contenido multi-página |
 | Nivel | Profesional |
 | Presupuesto estimado | $20,300 MXN – $25,800 MXN |

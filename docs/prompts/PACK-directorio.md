@@ -1,3 +1,15 @@
+> #️⃣ **REGISTRO · PK-019** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-019` |
+> | Producto | Directorio / listado de negocios |
+> | Nivel | N4 · Plataforma |
+> | Archivo | `PACK-directorio.md` |
+> | URL Vercel | https://vibercoder-directorio.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-directorio |
+> | Precio desde | $22,000 MXN |
+
 # 📦 PACK DE PROMPTS · Directorio de negocios (fichas y mapa) — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
@@ -83,6 +95,9 @@
 |---|---|
 | Cliente | Cámara de Comercio Local |
 | Tipo de proyecto | Directorio de negocios (fichas y mapa) |
+| Código de registro | `PK-019` |
+| URL Vercel | https://vibercoder-directorio.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-directorio |
 | 🎭 Rol que conduce el proyecto | Consultor de asociaciones/cámaras + arquitecto de directorio |
 | Nivel | Avanzado |
 | Presupuesto estimado | $22,000 MXN – $45,000 MXN |

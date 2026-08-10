@@ -1,16 +1,16 @@
-> #️⃣ **REGISTRO · PK-012** — identifica este PACK en Vercel / GitHub
+> #️⃣ **REGISTRO · PK-016** — identifica este PACK en Vercel / GitHub
 >
 > | Campo | Valor |
 > |---|---|
-> | Código | `PK-012` |
-> | Producto | Reservas de restaurante |
-> | Nivel | N2 · Negocio |
-> | Archivo | `PACK-reservas-restaurante.md` |
-> | URL Vercel | https://vibercoder-reservas-restaurante.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-reservas-restaurante |
-> | Precio desde | $12,000 MXN |
+> | Código | `PK-016` |
+> | Producto | Reservas con pago por adelantado |
+> | Nivel | N3 · Venta |
+> | Archivo | `PACK-reservas-pago.md` |
+> | URL Vercel | https://vibercoder-reservas-pago.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-reservas-pago |
+> | Precio desde | $18,000 MXN |
 
-# 📦 PACK DE PROMPTS · Sistema de reservas de mesa para restaurante — para Roo Code + DeepSeek (mobile-first, por fases)
+# 📦 PACK DE PROMPTS · Sistema de reservas con pago por adelantado — para Roo Code + DeepSeek (mobile-first, por fases)
 
 > Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
 > Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
@@ -93,13 +93,13 @@
 
 | Campo | Valor |
 |---|---|
-| Cliente | La Esquina Bistro |
-| Tipo de proyecto | Sistema de reservas de mesa para restaurante |
-| Código de registro | `PK-012` |
-| URL Vercel | https://vibercoder-reservas-restaurante.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-reservas-restaurante |
-| 🎭 Rol que conduce el proyecto | Consultor de operación restaurantera + diseñador de flujo de reservas |
-| Nivel | Profesional |
+| Cliente | Spa Serenidad |
+| Tipo de proyecto | Sistema de reservas con pago por adelantado |
+| Código de registro | `PK-016` |
+| URL Vercel | https://vibercoder-reservas-pago.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-reservas-pago |
+| 🎭 Rol que conduce el proyecto | Product Manager de servicios + diseñador de flujo de agenda |
+| Nivel | Avanzado |
 | Presupuesto estimado | $26,796 MXN – $32,796 MXN |
 | Tiempo estimado | 12-18 días de desarrollo |
 | Despliegue | Vercel (producción) |
@@ -109,33 +109,33 @@
 
 ### 🎯 Punto de partida según el tipo de servicio
 
-> Este pack no es genérico: está afinado para un proyecto de **Sistema de reservas de mesa para restaurante**. Toda decisión de UX, contenido, datos y QA debe alinearse con esto.
+> Este pack no es genérico: está afinado para un proyecto de **Sistema de reservas con pago por adelantado**. Toda decisión de UX, contenido, datos y QA debe alinearse con esto.
 
-**🎭 Rol que conduce el proyecto:** Consultor de operación restaurantera + diseñador de flujo de reservas
+**🎭 Rol que conduce el proyecto:** Product Manager de servicios + diseñador de flujo de agenda
 
-**🥇 Conversión #1 (el objetivo comercial):** Convertir interés en MESA RESERVADA sin llamadas: el comensal elige fecha, hora y personas, confirma y el restaurante bloquea la mesa — con pago por adelantado para grupos, evita no-shows.
+**🥇 Conversión #1 (el objetivo comercial):** Convertir interés en CITA AGENDADA sin llamadas: elegir servicio → día → hora → confirmación. Bloquear horarios para evitar dobles reservas.
 
 **✅ Qué define que el sitio "funciona" para este giro:**
-- Reservar de punta a punta sin dobles reservas (bloqueo atómico de mesas).
-- Confirmación automática al cliente y notificación al restaurante.
-- Pago por adelantado (si aplica) y recordatorio antes de la visita.
+- Agendar de punta a punta sin dobles reservas (validación de disponibilidad atómica).
+- Confirmación automática al paciente y notificación al negocio.
+- El panel muestra la agenda del día y permite bloquear horarios.
 
 **⚠️ Riesgos típicos de este tipo de servicio (vigilar en QA):**
-- Dobles reservas por carrera de disponibilidad.
-- Horarios mal configurados (mesas reservadas en horario cerrado).
-- Pago por adelantado mal integrado (pagan y no se confirma la mesa).
+- Dobles reservas por carrera de disponibilidad (falta transacción atómica).
+- Cambios de zona horaria o horarios mal configurados.
+- Recordatorios/confirmaciones que no llegan (SPF/DKIM en el correo).
 
 ### Contexto global del proyecto
 
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -154,15 +154,15 @@ Copia cada bloque `CHAT N` por separado y pégalo en su propio chat. Empieza por
 Actúa como **UX Researcher + estratega de producto senior**. Tu trabajo: convertir lo que el cliente contó en la entrevista en un plan de producto centrado en el usuario — research brief, proto-personas, customer journey, métricas de éxito y jerarquía de mensajes — para que todas las fases siguientes diseñen y construyan con intención y no "a ojo".
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -180,16 +180,16 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 ### 1. Research brief (qué sabemos)
 Resume en `docs/ux/research-brief.md` los datos reales de la entrevista y del análisis:
 - Objetivo comercial #1 (la pregunta del CEO): qué conversión es la MÁS importante para este negocio — contactar, agendar, comprar o pedir por WhatsApp — y a qué segmento de cliente ataca primero; se mide en el CHAT 10/11 y se revisa en el CHAT 20.
-- Negocio: Sistema de reservas de mesa para restaurante · Giro: Restaurante / negocio de comida.
-- Servicios/oferta: cocina de autor y maridajes.
-- Descripción del cliente: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+- Negocio: Sistema de reservas con pago por adelantado · Giro: Spa / estética.
+- Servicios/oferta: masajes y tratamientos de spa.
+- Descripción del cliente: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 - Sin referencia de estilo definida.
 - Presupuesto: 25000 · Entrega: para el próximo mes.
-- Contexto técnico: sin cuentas, pagos en línea, panel interno, sin asistentes IA.
+- Contexto técnico: usuarios con cuenta, pagos en línea, panel interno, sin asistentes IA.
 Marca explícitamente qué es un **hecho** (lo que dijo el cliente) vs un **supuesto** (lo que inferimos) — eso evita inventar para el cliente.
 
 ### 2. Proto-personas (2-3, basadas en evidencia, no inventadas)
-Crea proto-personas realistas para el giro **Restaurante / negocio de comida** (mobile-first: la mayoría entrará por celular). Para cada una: nombre, contexto, objetivos, dolores, cómo llega a la web (fuente: Google, WhatsApp, redes, QR) y qué necesita encontrar en < 30s. Al menos una persona debe ser el **dueño del negocio** (el que decide y el que lee el panel) y otra el **cliente final** (el que compra/agenda/contacta). No inventes estadísticas reales; si citas cifras, márcalas `[EJEMPLO — validar]`.
+Crea proto-personas realistas para el giro **Spa / estética** (mobile-first: la mayoría entrará por celular). Para cada una: nombre, contexto, objetivos, dolores, cómo llega a la web (fuente: Google, WhatsApp, redes, QR) y qué necesita encontrar en < 30s. Al menos una persona debe ser el **dueño del negocio** (el que decide y el que lee el panel) y otra el **cliente final** (el que compra/agenda/contacta). No inventes estadísticas reales; si citas cifras, márcalas `[EJEMPLO — validar]`.
 
 ### 3. Customer journey (de la necesidad a la conversión)
 Documenta el journey del giro en `docs/ux/journey.md` con las etapas reales y, en cada una, qué ve el usuario, qué siente y qué puede fallar (fricción):
@@ -239,15 +239,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_1` + resumen 
 Actúa como **UX/UI Designer senior**. Tu trabajo: producir el "plano" de la web — qué páginas existen, cómo se navegan, qué hay en cada pantalla y en qué orden — en wireframes de baja fidelidad a 360px, validando que cada tarea del cliente se complete sin fricción.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -269,7 +269,7 @@ Con base en las páginas del proyecto y lo acordado con el cliente, documenta el
 - /confirmacion — Confirmación de cita con resumen.
 - /panel — (si dashboard) agenda del día, próximas citas, gestión de horarios y servicios.
 - /aviso-de-privacidad — página legal.
-Incorpora la estructura acordada con el cliente: "Inicio, Menú, Reservar mesa, Contacto".
+Incorpora la estructura acordada con el cliente: "Inicio, Servicios, Reservar con pago, Panel".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
 - Evita páginas huérfanas: cada página aparece en la navegación o tiene una ruta de entrada clara (CTA, footer, enlaces internos).
 
@@ -323,15 +323,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_2` + resumen 
 Actúa como **Brand Manager + Project Manager / Content Strategist senior**. Tu trabajo: convertir la conversación con el cliente en un "kit de marca y contenido" concreto — qué entrega el cliente, en qué formato y para cuándo — y dejar un **contrato de contenido** que evite bloqueos a mitad del proyecto. Si algo no existe (logo, fotos), NO lo inventes: defínelo como placeholder provisional y márcalo.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -348,7 +348,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 ### 1. Kit de marca (entregable del cliente)
 Crea `docs/ux/brand-content.md` y la carpeta `docs/content/marca/` y pide al cliente (o extrae de la conversación) lo siguiente:
 - **Logo**: archivo vectorial (SVG/PDF) o PNG con fondo transparente; si NO hay logo, crea un wordmark provisional con el nombre del negocio (tipografía de marca + color) y márcalo como provisional en el README.
-- **Colores de marca**: 2-4 colores (hex) que usa el negocio (logo, redes, local); si no los hay, propón una paleta coherente con el giro **Restaurante / negocio de comida** y márcala como propuesta a validar.
+- **Colores de marca**: 2-4 colores (hex) que usa el negocio (logo, redes, local); si no los hay, propón una paleta coherente con el giro **Spa / estética** y márcala como propuesta a validar.
 - **Tipografías**: las del logo/carteles (si existen); si no, elige 1 display + 1 de texto legible (regla del CHAT 4).
 - **Favicon e íconos**: derívalos del logo (si no hay, usa la inicial del negocio).
 - **Redes sociales y perfiles**: URLs de Facebook/Instagram/TikTok/Google para enlazarlas y extraer tono.
@@ -409,15 +409,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_3` + resumen 
 Actúa como **desarrollador senior de Next.js**. Estás INICIANDO un proyecto desde cero y vas a dejarlo listo para recibir las siguientes fases (interfaz, contenido, datos, lógica, asistentes IA y despliegue). Tu criterio es el de alguien que ya entregó decenas de webs en producción.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -496,15 +496,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_4` seguido de
 Actúa como **desarrollador senior de UI**. Tu trabajo: construir el esqueleto visual (header, footer, contenedores) y la librería de componentes, todo **mobile-first**.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -547,15 +547,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_5` + resumen 
 Actúa como **desarrollador senior de UI/UX y copywriter técnico**. Tu trabajo: construir TODAS las secciones visibles de la página con copy que vende y con imágenes, **mobile-first**. Al terminar, la página debe verse **COMPLETA y profesional en el celular**.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -563,7 +563,7 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### Estrategia comercial que la página DEBE comunicar
-- **Mensaje de venta:** Tus clientes apartan mesa en línea y tú bloqueas el horario sin llamadas.
+- **Mensaje de venta:** El cliente paga al reservar: cero no-shows y tu agenda garantizada.
 - **El problema que resuelve:** El cliente pierde oportunidades por no tener presencia digital clara.
 - **Beneficios de negocio:** - Presencia profesional
 - Captación de clientes
@@ -602,7 +602,7 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (Sistema de reservas de mesa para restaurante — 6 bloques)
+### Secciones a construir (Sistema de reservas con pago por adelantado — 6 bloques)
 - / — Home: presentación del consultorio/negocio, servicios y CTA de agendar.
 - /servicios — Lista de servicios con precios y duración.
 - /agendar — Calendario + selección de día y hora para el servicio elegido.
@@ -612,10 +612,10 @@ Si no hay contenido real del cliente, escribe copy placeholder **profesional y r
 
 ### Servicios / oferta a mostrar
 El cliente quiere destacar los siguientes servicios u oferta. Crea una sección de servicios (o catálogo) bien armada, con cada ítem:
-- cocina de autor y maridajes — con descripción breve, beneficios y CTA de contacto.
+- masajes y tratamientos de spa — con descripción breve, beneficios y CTA de contacto.
 
 ### Sitemap / estructura acordada con el cliente
-El cliente describió la estructura así: "Inicio, Menú, Reservar mesa, Contacto". Asegúrate de que la navegación y las secciones reflejen esta estructura de forma completa y coherente.
+El cliente describió la estructura así: "Inicio, Servicios, Reservar con pago, Panel". Asegúrate de que la navegación y las secciones reflejen esta estructura de forma completa y coherente.
 
 ### Imágenes (OBLIGATORIO: nunca cajas vacías)
 La página DEBE verse completa desde el primer deploy. Cuando el cliente no tenga fotos reales, usa imágenes placeholder de alta calidad; **nunca dejes cajas grises, espacios vacíos ni imágenes rotas**.
@@ -654,15 +654,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_6` + resumen 
 Actúa como **Conversation Designer (CxD) + UX Writer + Interaction Designer senior**. Tu trabajo: que cada palabra de la web suene a una sola marca, ayude a completar la tarea y reduzca fricción; y que cada conversación (formulario o asistente IA) tenga estructura: apertura, turnos, recuperación de errores y cierre claro.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -670,7 +670,7 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### 1. Voz y tono (guía, no reglas rígidas)
-Crea `docs/ux/voice-tone.md`: cómo suena la marca según el giro **Restaurante / negocio de comida** y el análisis (Tus clientes apartan mesa en línea y tú bloqueas el horario sin llamadas.):
+Crea `docs/ux/voice-tone.md`: cómo suena la marca según el giro **Spa / estética** y el análisis (El cliente paga al reservar: cero no-shows y tu agenda garantizada.):
 - **Personalidad**: consultor cercano y directo (p. ej. "te ayudo a...", no "nuestros servicios incluyen...").
 - **Tratamiento consistente**: usa **tú** en toda la web y en los asistentes (según lo que el cliente pidió en la entrevista).
 - **Lenguaje claro**: español sin jerga técnica; frases cortas; sin anglicismos salvo los del giro (checkout, FAQ, etc.).
@@ -723,15 +723,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_7` + resumen 
 Actúa como **desarrollador senior backend / base de datos**. Tu trabajo: dejar la base de datos de producción lista (esquema versionado, RLS y datos de demostración) para que las fases de lógica y asistentes IA trabajen sobre una base real.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -873,15 +873,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_8` + resumen 
 Actúa como **desarrollador senior full-stack**. Tu trabajo: dar vida a los formularios, crear las API routes y las integraciones externas, todo con TypeScript estricto y validación Zod, usando el esquema que dejó listo el CHAT 8.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -892,6 +892,8 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-01** · [Alta] Página de inicio profesional con propuesta de valor clara y CTAs visibles.
 - **RF-02** · [Alta] Diseño 100% responsive (móvil, tablet, escritorio) con enfoque mobile-first.
 - **RF-03** · [Alta] Formulario de contacto funcional con validación, protección contra spam y confirmación visual.
+- **RF-04** · [Alta] Sistema de cuentas de usuario: registro, login (correo y/o OAuth), recuperación de contraseña y sesión segura.
+- **RF-05** · [Alta] Base de datos PostgreSQL (Supabase) con persistencia segura de la información del negocio.
 - **RF-06** · [Alta] Pasarela de pagos integrada (Stripe recomendado) con manejo de webhooks, confirmación y reembolsos.
 - **RF-07** · [Alta] Panel de administración protegido para gestionar la información y ver estadísticas.
 - **RF-08** · [Media] Mapa interactivo con la ubicación o sucursales del negocio.
@@ -969,15 +971,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_9` + resumen 
 Actúa como **Data Engineer senior** con criterio de **privacidad por diseño**. Tu trabajo: montar el pipeline de datos del sitio (eventos → API → tabla) como si fuera un data pipeline de producción: esquema versionado, validación, batching, idempotencia y sin datos personales. Nada de recopilar "por si acaso": cada evento responde una pregunta de negocio.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1053,15 +1055,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_10` + resumen
 Actúa como **Data Analyst / Data Scientist senior**. Tu trabajo: definir las métricas que importan para el giro, medir el funnel y la atribución con los datos ya capturados, y dejar un reporte que responda "¿qué mejoro y dónde?" — no un montón de gráficas bonitas sin uso.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1110,15 +1112,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_11` + resumen
 Actúa como **Software Engineer en pruebas (SDET) senior** con visión de **backend y frontend**. Tu trabajo: dejar una suite de pruebas que corra sola, rápida y sin depender de servicios externos (DeepSeek, Supabase, Stripe, Resend mockeados), con umbrales de cobertura y que atrape regresiones antes de producción.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1182,15 +1184,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_12` + resumen
 Actúa como **DevOps / Platform Engineer senior**. Tu trabajo: que "prueba y despliega" sea un botón y no una rutina manual — integración continua con gates de calidad, previews por rama, despliegue continuo a Vercel, migraciones aplicadas en orden y rollback inmediato. Si un cambio no pasa las gates, NO llega a producción.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1259,15 +1261,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_13` + resumen
 Actúa como **QA Engineer (Web) senior** + **desarrollador senior de calidad**. Tu trabajo: auditar, pulir, automatizar y probar en TODOS los tamaños (celular primero) y en los navegadores principales hasta que la web se vea y comporte como un producto de producción, y dejar una suite de pruebas que corra en CI para que ningún cambio futuro la rompa.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1332,13 +1334,14 @@ Revisa la página como si la viera un cliente exigente y corrige cualquier "huec
 - El sitio abre rápido y se ve impecable en celular, tablet y computadora.
 - "Página principal con la información del negocio" funciona de punta a punta.
 - "Diseño responsive profesional" funciona de punta a punta.
+- "Cuentas de usuario (registro/login)" funciona de punta a punta.
+- "Base de datos segura" funciona de punta a punta.
 - "Pagos en línea" funciona de punta a punta.
 - "Panel de administración" funciona de punta a punta.
 - "Mapa con ubicación" funciona de punta a punta.
 - "Contacto por WhatsApp/chat" funciona de punta a punta.
 - "Agendamiento de citas en línea" funciona de punta a punta.
 - "SEO optimizado" funciona de punta a punta.
-- "Formulario de contacto" funciona de punta a punta.
 - Los formularios y confirmaciones llegan correctamente (correo/WhatsApp).
 - El panel permite gestionar la información principal sin fricción.
 - Se puede completar un pago de prueba de extremo a extremo.
@@ -1355,15 +1358,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_14` + resumen
 Actúa como **Security Engineer senior (ofensivo + defensivo)**. No confías en que "las librerías ya protegen": pruebas manualmente los vectores de ataque, verificas que el código no expone secretos ni datos ajenos y dejas controles que bloquean el abuso. Cada hallazgo se corrige antes de pasar a la siguiente fase.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1441,15 +1444,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_15` + resumen
 Actúa como **Performance Engineer senior**. Tu trabajo: medir y optimizar hasta que la web cargue y responda rápido de verdad — no "se ve rápido en mi laptop", sino medido en un celular real con throttling. Nada de optimizar "a ojo": cada cambio se valida con medición.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1531,15 +1534,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_16` + resumen
 Actúa como **auditor senior de IA responsable, privacidad y accesibilidad**. Tu trabajo: revisar la web como lo haría un oficial de cumplimiento y corregir todo lo que falle en accesibilidad, protección de datos y honestidad del producto. NO despliegues todavía: eso es el CHAT 19 (tras la fase SRE del CHAT 18).
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1583,15 +1586,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_17` + resumen
 Actúa como **SRE (Site Reliability Engineer) senior**. Tu trabajo: preparar la aplicación para vivir en producción de forma confiable — observabilidad, alertas, respaldos, endurecimiento de seguridad, límites de uso y documentación de operaciones. Nada de "deploy y a rezar".
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1683,15 +1686,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_18` + resumen
 Actúa como **desarrollador senior DevOps / entrega**. Tu trabajo: desplegar a producción, configurar el dominio, indexar en Google y dejar la entrega documentada para el cliente.
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.
@@ -1749,15 +1752,15 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_19` + un resu
 Actúa como **Product Manager / Growth + Account Manager senior**. Tu trabajo: cerrar la entrega con un cliente satisfecho y, después, hacer que la web trabaje (medir, mejorar, captar) — y dejar el terreno listo para la siguiente venta (asistentes IA, mantenimiento, panel).
 
 ### Contexto del proyecto
-PROYECTO: Sistema de reservas de mesa para restaurante para La Esquina Bistro · Nivel Profesional.
-TIPO DE PÁGINA: sistema de reservas de mesa para restaurante (fecha, hora y personas; pago por adelantado opcional).
-GIRO: Restaurante / negocio de comida.
+PROYECTO: Sistema de reservas con pago por adelantado para Spa Serenidad · Nivel Avanzado.
+TIPO DE PÁGINA: sistema de citas y reservaciones para spa / estética.
+GIRO: Spa / estética.
 STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Supabase · Vercel.
 ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: cocina de autor y maridajes.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Menú, Reservar mesa, Contacto.
-NEGOCIO: "Quiero que mis clientes aparten mesa en línea con hora y número de personas".
+SERVICIOS/OFERTA A MOSTRAR: masajes y tratamientos de spa.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Reservar con pago, Panel.
+NEGOCIO: "Quiero que mis clientes reserven su cita y paguen por adelantado al reservar".
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 16) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 15) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 12 y se automatizan en el pipeline CI/CD del CHAT 13 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 14) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada.

@@ -1,6 +1,18 @@
-# 📦 PACK DE PROMPTS · Landing para consultorio de psicología con chatbot de acompañamiento — para Roo Code + DeepSeek (mobile-first, por fases)
+> #️⃣ **REGISTRO · PK-029** — identifica este PACK en Vercel / GitHub
+>
+> | Campo | Valor |
+> |---|---|
+> | Código | `PK-029` |
+> | Producto | Landing de psicólogo con asistente IA |
+> | Nivel | N1 · Presencia (extra) |
+> | Archivo | `PACK-psicologo.md` |
+> | URL Vercel | https://vibercoder-psicologo.vercel.app |
+> | Repo GitHub | https://github.com/VibeCoder/pack-psicologo |
+> | Precio desde | $12,000 MXN |
 
-> Generado por tu consultor senior (08 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
+# 📦 PACK DE PROMPTS · Landing para consultorio de psicología con asistente IA — para Roo Code + DeepSeek (mobile-first, por fases)
+
+> Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
 > Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
 > 🎭 **Cada chat asume un ROL** (UX Researcher, Dev, QA, SRE, etc.): pega el bloque tal cual y el agente actúa como ese rol durante toda la fase.
 
@@ -10,58 +22,107 @@
 2. Ejecuta el CHAT 1 y espera el marcador `FIN_DE_FASE_1`. Luego abre un **chat nuevo** y pega el CHAT 2; espera `FIN_DE_FASE_2`; y así hasta el CHAT 25.
 3. Cada chat es **autosuficiente**: trae su propio contexto compacto + las instrucciones de su fase. El agente no necesita "recordar" el chat anterior.
 4. Al terminar el CHAT 25 tendrás la página construida, probada, asegurada y desplegada en Vercel.
+5. **Prioridad por fase**: cada chat está marcado **⭐ OBLIGATORIA** (imprescindible para entregar) o **✨ OPCIONAL** (eleva el resultado, no bloquea). Ver la sección siguiente.
 
 > 💡 Este pack incluye todo el ciclo LLM: infraestructura LLM (CHAT 12), asistentes IA (CHAT 13), prompt engineering + evaluación (CHAT 14), knowledge base (CHAT 15), RAG (CHAT 16) y QA de IA (CHAT 17). Si el cliente NO contrató asistentes IA, el pack trae 20 chats (sin esos seis bloques de IA).
 
+### 🧭 Prioridad de fases: ⭐ OBLIGATORIAS vs ✨ OPCIONALES (decisión del CEO)
+
+> Como **CEO / Director General**, esta es la regla para saber qué se entrega y qué se negocia:
+
+- **⭐ OBLIGATORIA** — No se negocia. Sin esta fase la web NO se considera **profesional ni lista para entregar al cliente**. Ejecútalas SIEMPRE y en orden.
+- **✨ OPCIONAL** — Eleva el resultado (medir, automatizar, operar, crecer) o es un **add-on contratado** (asistentes IA). No bloquean la entrega: se ejecutan si hay presupuesto/tiempo o si el cliente las contrató.
+
+#### ⭐ OBLIGATORIAS (14 · imprescindibles para entregar)
+
+| CHAT | Fase | Por qué es obligatoria |
+|---|---|---|
+| 1 | Estrategia UX e investigación | Sin plan no hay web profesional: define qué construir y para quién. |
+| 2 | Arquitectura de información + wireframes | El plano de la web: evita rehacer, páginas huérfanas y flujos rotos. |
+| 3 | Brand y contenido real (kickoff) | Lo que separa una web genérica de una profesional: marca y contenido reales. |
+| 4 | Fundación + design tokens | Los cimientos técnicos y de diseño sobre los que se construye todo. |
+| 5 | Shell + componentes UI | El esqueleto visual y la librería de componentes de toda la web. |
+| 6 | Secciones de contenido | La página visible: sin estas secciones no hay web que entregar. |
+| 7 | Conversation design y microcopy | El acabado premium: toda palabra de la interfaz escrita con intención. |
+| 8 | Modelo de datos + Supabase | Formularios y leads necesitan una base de datos segura (RLS). |
+| 9 | Lógica + API routes | Los formularios y flujos deben funcionar de extremo a extremo. |
+| 20 | QA web (gate de calidad) | El gate final: la web se ve y funciona en todos los dispositivos. |
+| 21 | Seguridad (OWASP) | Entregar con secretos expuestos o datos ajenos accesibles no es profesional. |
+| 22 | Rendimiento | Una web lenta en celular no es profesional ni convierte. |
+| 23 | Accesibilidad, privacidad e IA responsable | Cumplimiento legal (privacidad) y calidad ética/accesible: no negociable. |
+| 25 | Despliegue y entrega | La entrega física al cliente: sin esto no hay nada que mostrar. |
+
+#### ✨ OPCIONALES (12 · elevan el resultado, no bloquean)
+
+| CHAT | Fase | Por qué es opcional |
+|---|---|---|
+| 10 | Analítica · instrumentación | Mide el uso y alimenta decisiones; no bloquea la entrega. |
+| 11 | Analítica · reporting | Convierte datos en decisiones de negocio; valor de crecimiento. |
+| 12 | Infraestructura LLM (MLOps) | Add-on IA contratado: solo si el cliente pagó asistentes IA. |
+| 13 | Asistentes IA (LangChain + DeepSeek) | Add-on IA contratado: solo si el cliente pagó asistentes IA. |
+| 14 | Prompt engineering & evaluación | Add-on IA contratado: solo si el cliente pagó asistentes IA. |
+| 15 | Knowledge base · curación | Add-on IA contratado: solo si el cliente pagó asistentes IA. |
+| 16 | Knowledge base · RAG | Add-on IA contratado: solo si el cliente pagó asistentes IA. |
+| 17 | QA de asistentes IA | Add-on IA contratado: solo si el cliente pagó asistentes IA. |
+| 18 | Calidad de código · pruebas | Rigor de ingeniería: muy recomendada, pero no bloquea la entrega. |
+| 19 | CI/CD | Automatiza calidad y despliegue: ideal para equipos, no bloquea. |
+| 24 | Confiabilidad y operaciones (SRE) | Operación de nivel producción: avanzado, no bloquea la entrega. |
+| 26 | Presentación, aprobación y crecimiento | Ocurre después de la entrega: retención, resultados y upsell. |
+
+> **Regla de entrega:** completa las **14 ⭐ OBLIGATORIAS** y la web queda profesional y lista para entregar al cliente. Las **✨ OPCIONALES** la elevan (analítica, pruebas, CI/CD, SRE, crecimiento) o amplían el alcance contratado (asistentes IA): si el cliente pagó asistentes IA, sus 6 fases pasan a ser obligatorias dentro del alcance contratado.
+
 ### Mapa de fases (roadmap del proyecto)
 
-| CHAT | Fase | Entrega clave |
-|---|---|---|
-| 1 | Estrategia UX e investigación | research brief, personas, journey, KPIs |
-| 2 | Arquitectura de información + wireframes | sitemap, flujos, wireframes 360px |
-| 3 | Brand y contenido real (kickoff) | logo, fotos, textos y testimonios reales |
-| 4 | Fundación + design tokens | base técnica, paleta real, mobile-first |
-| 5 | Shell + componentes UI | header/footer, primitivas, interacción |
-| 6 | Secciones de contenido | la página visible completa |
-| 7 | Conversation design y microcopy | voz, botones, errores, diseño conversacional |
-| 8 | Modelo de datos + Supabase | esquema, RLS, seed |
-| 9 | Lógica + API routes | formularios, integraciones, /api/health |
-| 10 | Analítica · instrumentación | pipeline de eventos sin PII |
-| 11 | Analítica · reporting | funnel, atribución, "so what" |
-| 12 | Infraestructura LLM (MLOps) | gateway, presupuesto, caché, registry |
-| 13 | Asistentes IA (LangChain + DeepSeek) | bots de punta a punta |
-| 14 | Prompt engineering & evaluación | golden tests, LLM-as-judge |
-| 15 | Knowledge base · curación | fuentes curadas, chunking |
-| 16 | Knowledge base · RAG | pgvector, retrieval híbrido |
-| 17 | QA de asistentes IA | matriz, red team, aislamiento |
-| 18 | Calidad de código · pruebas | unitarias + integración + componentes |
-| 19 | CI/CD | pipeline, previews, deploy automático |
-| 20 | QA web (gate de calidad) | E2E, cross-browser, pulido |
-| 21 | Seguridad (OWASP) | auditoría y endurecimiento |
-| 22 | Rendimiento | CWV en verde, presupuesto |
-| 23 | Accesibilidad, privacidad e IA responsable | WCAG, LFPDPPP, ética |
-| 24 | Confiabilidad y operaciones (SRE) | health, alertas, backups, runbooks |
-| 25 | Despliegue y entrega | Vercel, dominio, indexación |
-| 26 | Presentación, aprobación y crecimiento | UAT, lanzamiento, SEO local, 30-60 días |
+| CHAT | Fase | Entrega clave | Prioridad |
+|---|---|---|---|
+| 1 | Estrategia UX e investigación | research brief, personas, journey, KPIs | ⭐ OBLIGATORIA |
+| 2 | Arquitectura de información + wireframes | sitemap, flujos, wireframes 360px | ⭐ OBLIGATORIA |
+| 3 | Brand y contenido real (kickoff) | logo, fotos, textos y testimonios reales | ⭐ OBLIGATORIA |
+| 4 | Fundación + design tokens | base técnica, paleta real, mobile-first | ⭐ OBLIGATORIA |
+| 5 | Shell + componentes UI | header/footer, primitivas, interacción | ⭐ OBLIGATORIA |
+| 6 | Secciones de contenido | la página visible completa | ⭐ OBLIGATORIA |
+| 7 | Conversation design y microcopy | voz, botones, errores, diseño conversacional | ⭐ OBLIGATORIA |
+| 8 | Modelo de datos + Supabase | esquema, RLS, seed | ⭐ OBLIGATORIA |
+| 9 | Lógica + API routes | formularios, integraciones, /api/health | ⭐ OBLIGATORIA |
+| 10 | Analítica · instrumentación | pipeline de eventos sin PII | ✨ OPCIONAL |
+| 11 | Analítica · reporting | funnel, atribución, "so what" | ✨ OPCIONAL |
+| 12 | Infraestructura LLM (MLOps) | gateway, presupuesto, caché, registry | ✨ OPCIONAL |
+| 13 | Asistentes IA (LangChain + DeepSeek) | bots de punta a punta | ✨ OPCIONAL |
+| 14 | Prompt engineering & evaluación | golden tests, LLM-as-judge | ✨ OPCIONAL |
+| 15 | Knowledge base · curación | fuentes curadas, chunking | ✨ OPCIONAL |
+| 16 | Knowledge base · RAG | pgvector, retrieval híbrido | ✨ OPCIONAL |
+| 17 | QA de asistentes IA | matriz, red team, aislamiento | ✨ OPCIONAL |
+| 18 | Calidad de código · pruebas | unitarias + integración + componentes | ✨ OPCIONAL |
+| 19 | CI/CD | pipeline, previews, deploy automático | ✨ OPCIONAL |
+| 20 | QA web (gate de calidad) | E2E, cross-browser, pulido | ⭐ OBLIGATORIA |
+| 21 | Seguridad (OWASP) | auditoría y endurecimiento | ⭐ OBLIGATORIA |
+| 22 | Rendimiento | CWV en verde, presupuesto | ⭐ OBLIGATORIA |
+| 23 | Accesibilidad, privacidad e IA responsable | WCAG, LFPDPPP, ética | ⭐ OBLIGATORIA |
+| 24 | Confiabilidad y operaciones (SRE) | health, alertas, backups, runbooks | ✨ OPCIONAL |
+| 25 | Despliegue y entrega | Vercel, dominio, indexación | ⭐ OBLIGATORIA |
+| 26 | Presentación, aprobación y crecimiento | UAT, lanzamiento, SEO local, 30-60 días | ✨ OPCIONAL |
 
 ### Ficha del proyecto
 
 | Campo | Valor |
 |---|---|
-| Cliente | Lic. Mariana Ortega |
-| Tipo de proyecto | Landing para consultorio de psicología con chatbot de acompañamiento |
+| Cliente | Lic. Paola Rivera |
+| Tipo de proyecto | Landing para consultorio de psicología con asistente IA |
+| Código de registro | `PK-029` |
+| URL Vercel | https://vibercoder-psicologo.vercel.app |
+| Repo GitHub | https://github.com/VibeCoder/pack-psicologo |
 | 🎭 Rol que conduce el proyecto | UX Researcher + estratega de conversión |
-| Nivel | Avanzado |
-| Presupuesto estimado | $25,000 MXN – $29,000 MXN |
-| Tiempo estimado | 10-14 días de desarrollo |
+| Nivel | Profesional |
+| Presupuesto estimado | $15,260 MXN – $18,260 MXN |
+| Tiempo estimado | 10-15 días de desarrollo |
 | Despliegue | Vercel (producción) |
-| Fecha de entrega acordada | para finales de mes |
-| Mantenimiento | Sí, plan mensual |
-| Asistentes IA (bots) | Asistente de acompañamiento emocional |
+| Fecha de entrega acordada | para el próximo mes |
+| Mantenimiento | No incluido (opcional) |
+| Asistentes IA (bots) | Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) |
 
 ### 🎯 Punto de partida según el tipo de servicio
 
-> Este pack no es genérico: está afinado para un proyecto de **Landing para consultorio de psicología con chatbot de acompañamiento**. Toda decisión de UX, contenido, datos y QA debe alinearse con esto.
+> Este pack no es genérico: está afinado para un proyecto de **Landing para consultorio de psicología con asistente IA**. Toda decisión de UX, contenido, datos y QA debe alinearse con esto.
 
 **🎭 Rol que conduce el proyecto:** UX Researcher + estratega de conversión
 
@@ -79,15 +140,16 @@
 
 ### Contexto global del proyecto
 
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -98,7 +160,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Copia cada bloque `CHAT N` por separado y pégalo en su propio chat. Empieza por el CHAT 1 👇
 
 
-## 🧩 CHAT 1 · ESTRATEGIA UX E INVESTIGACIÓN (UX RESEARCHER)
+## 🧩 CHAT 1 · ESTRATEGIA UX E INVESTIGACIÓN (UX RESEARCHER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Es la PRIMERA fase del pack: aquí se decide QUÉ construir y PARA QUIÉN, antes de tocar código. El sistema de diseño (CHAT 4), las secciones (CHAT 6), el microcopy (CHAT 7) y la analítica (CHAT 10) respetan lo que se decide aquí. No escribas código de la web todavía.
 
@@ -106,15 +168,16 @@ Copia cada bloque `CHAT N` por separado y pégalo en su propio chat. Empieza por
 Actúa como **UX Researcher + estratega de producto senior**. Tu trabajo: convertir lo que el cliente contó en la entrevista en un plan de producto centrado en el usuario — research brief, proto-personas, customer journey, métricas de éxito y jerarquía de mensajes — para que todas las fases siguientes diseñen y construyan con intención y no "a ojo".
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -132,16 +195,16 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 ### 1. Research brief (qué sabemos)
 Resume en `docs/ux/research-brief.md` los datos reales de la entrevista y del análisis:
 - Objetivo comercial #1 (la pregunta del CEO): qué conversión es la MÁS importante para este negocio — contactar, agendar, comprar o pedir por WhatsApp — y a qué segmento de cliente ataca primero; se mide en el CHAT 10/11 y se revisa en el CHAT 26.
-- Negocio: Landing para consultorio de psicología con chatbot de acompañamiento · Giro: Psicólogo / salud mental.
-- Servicios/oferta: Consultas de psicología en línea y presencial; acompañamiento emocional.
-- Descripción del cliente: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-- Referencia de estilo: una web de terapeutas moderna y sobria.
-- Presupuesto: unos 25 mil pesos · Entrega: para finales de mes.
+- Negocio: Landing para consultorio de psicología con asistente IA · Giro: Médico / clínica.
+- Servicios/oferta: terapia individual, de pareja y manejo de ansiedad.
+- Descripción del cliente: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+- Sin referencia de estilo definida.
+- Presupuesto: 15000 · Entrega: para el próximo mes.
 - Contexto técnico: sin cuentas, sin pagos en línea, sin panel, asistentes IA incluidos.
 Marca explícitamente qué es un **hecho** (lo que dijo el cliente) vs un **supuesto** (lo que inferimos) — eso evita inventar para el cliente.
 
 ### 2. Proto-personas (2-3, basadas en evidencia, no inventadas)
-Crea proto-personas realistas para el giro **Psicólogo / salud mental** (mobile-first: la mayoría entrará por celular). Para cada una: nombre, contexto, objetivos, dolores, cómo llega a la web (fuente: Google, WhatsApp, redes, QR) y qué necesita encontrar en < 30s. Al menos una persona debe ser el **dueño del negocio** (el que decide y el que lee el panel) y otra el **cliente final** (el que compra/agenda/contacta). No inventes estadísticas reales; si citas cifras, márcalas `[EJEMPLO — validar]`.
+Crea proto-personas realistas para el giro **Médico / clínica** (mobile-first: la mayoría entrará por celular). Para cada una: nombre, contexto, objetivos, dolores, cómo llega a la web (fuente: Google, WhatsApp, redes, QR) y qué necesita encontrar en < 30s. Al menos una persona debe ser el **dueño del negocio** (el que decide y el que lee el panel) y otra el **cliente final** (el que compra/agenda/contacta). No inventes estadísticas reales; si citas cifras, márcalas `[EJEMPLO — validar]`.
 
 ### 3. Customer journey (de la necesidad a la conversión)
 Documenta el journey del giro en `docs/ux/journey.md` con las etapas reales y, en cada una, qué ve el usuario, qué siente y qué puede fallar (fricción):
@@ -160,11 +223,11 @@ Estas métricas se instrumentan en el CHAT 10 y se reportan en el CHAT 11; aquí
 
 ### 5. Estrategia de mensajes (qué comunicar y en qué orden)
 Define la **jerarquía de mensajes** de la portada y de cada sección (la implementa el CHAT 6 y la afina el microcopy del CHAT 7):
-1. **Propuesta de valor** (primer mensaje, < 5s): Para tu consultorio, esta página no es un gasto: es un puente de confianza que trabaja 24/7. Con una inversión de $25,000–$29,000 MXN (más el chatbot) acompañas a quien lo necesita y conviertes ese primer contacto en consultas reales.
-2. **Dolor que resuelve**: Quien busca apoyo emocional lo hace a cualquier hora; si tu web solo tiene un formulario, esa persona busca ayuda en otro lado.
-3. **Beneficios diferenciadores**: - Un chatbot que contiene y orienta 24/7, con ética y límites claros
-- Detección de crisis con línea de emergencia y aviso inmediato
-- Captar consultas reales desde el primer contacto
+1. **Propuesta de valor** (primer mensaje, < 5s): Comunicar el beneficio principal del negocio en una frase clara.
+2. **Dolor que resuelve**: El cliente pierde oportunidades sin presencia digital clara.
+3. **Beneficios diferenciadores**: - Presencia profesional
+- Facilidad de contacto
+- Confianza
 4. **Prueba de confianza**: testimonio o dato verificable marcado `[EJEMPLO]` si no es real (regla de copy ético del CHAT 6).
 5. **CTA claro en cada etapa**: qué debe hacer el usuario y con qué palabras (lo define el CHAT 7).
 
@@ -183,7 +246,7 @@ Como no hay usuarios reales aún, documenta los **supuestos** de las proto-perso
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_1` + resumen breve (documentos y decisiones clave). No sigas con la siguiente fase (los wireframes son el CHAT 2).
 
 
-## 🧩 CHAT 2 · ARQUITECTURA DE INFORMACIÓN + WIREFRAMES + FLUJOS (UX/UI DESIGNER)
+## 🧩 CHAT 2 · ARQUITECTURA DE INFORMACIÓN + WIREFRAMES + FLUJOS (UX/UI DESIGNER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación está lista (CHAT 1). Aquí decides la estructura y el flujo ANTES de construir: sitemap, tareas clave y wireframes mobile-first de cada plantilla (baja fidelidad). El CHAT 4 (tokens/estilo), el CHAT 5 (componentes) y el CHAT 6 (secciones) implementan estos planos. No escribas la web todavía.
 
@@ -191,15 +254,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_1` + resumen 
 Actúa como **UX/UI Designer senior**. Tu trabajo: producir el "plano" de la web — qué páginas existen, cómo se navegan, qué hay en cada pantalla y en qué orden — en wireframes de baja fidelidad a 360px, validando que cada tarea del cliente se complete sin fricción.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -219,7 +283,7 @@ Con base en las páginas del proyecto y lo acordado con el cliente, documenta el
 - /#servicios — Sección de servicios anclada.
 - /#contacto — Formulario de contacto + datos de la empresa + mapa (si aplica).
 - /aviso-de-privacidad — Página legal obligatoria en México (LFPDPPP).
-Incorpora la estructura acordada con el cliente: "Inicio, sobre mí, servicios, contacto".
+Incorpora la estructura acordada con el cliente: "Inicio, Servicios, Sobre mí, Contacto".
 - Define el **orden de navegación** (qué va en el header móvil/desktop) y qué páginas son de conversión (con CTA) vs de información vs de confianza (legal).
 - Evita páginas huérfanas: cada página aparece en la navegación o tiene una ruta de entrada clara (CTA, footer, enlaces internos).
 
@@ -263,7 +327,7 @@ Para cada formulario del proyecto (contacto, cita, checkout, registro):
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_2` + resumen breve (sitemap, flujos y wireframes creados). No sigas con la siguiente fase (la fundación es el CHAT 4).
 
 
-## 🧩 CHAT 3 · BRAND Y CONTENIDO REAL (KICKOFF CON EL CLIENTE)
+## 🧩 CHAT 3 · BRAND Y CONTENIDO REAL (KICKOFF CON EL CLIENTE) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación (CHAT 1) y los wireframes (CHAT 2) ya definieron QUÉ construir y PARA QUIÉN. Antes de abrir el editor, esta fase consigue del cliente lo que hace que la web no se vea "genérica": su marca (logo, colores, tipografías) y su contenido real (fotos, textos, precios, testimonios). Con esto, el CHAT 4 deriva los design tokens de la marca real y el CHAT 6 escribe con datos ciertos — ese es el "acabado premium" de verdad.
 
@@ -271,15 +335,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_2` + resumen 
 Actúa como **Brand Manager + Project Manager / Content Strategist senior**. Tu trabajo: convertir la conversación con el cliente en un "kit de marca y contenido" concreto — qué entrega el cliente, en qué formato y para cuándo — y dejar un **contrato de contenido** que evite bloqueos a mitad del proyecto. Si algo no existe (logo, fotos), NO lo inventes: defínelo como placeholder provisional y márcalo.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -296,7 +361,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 ### 1. Kit de marca (entregable del cliente)
 Crea `docs/ux/brand-content.md` y la carpeta `docs/content/marca/` y pide al cliente (o extrae de la conversación) lo siguiente:
 - **Logo**: archivo vectorial (SVG/PDF) o PNG con fondo transparente; si NO hay logo, crea un wordmark provisional con el nombre del negocio (tipografía de marca + color) y márcalo como provisional en el README.
-- **Colores de marca**: 2-4 colores (hex) que usa el negocio (logo, redes, local); si no los hay, propón una paleta coherente con el giro **Psicólogo / salud mental** y márcala como propuesta a validar.
+- **Colores de marca**: 2-4 colores (hex) que usa el negocio (logo, redes, local); si no los hay, propón una paleta coherente con el giro **Médico / clínica** y márcala como propuesta a validar.
 - **Tipografías**: las del logo/carteles (si existen); si no, elige 1 display + 1 de texto legible (regla del CHAT 4).
 - **Favicon e íconos**: derívalos del logo (si no hay, usa la inicial del negocio).
 - **Redes sociales y perfiles**: URLs de Facebook/Instagram/TikTok/Google para enlazarlas y extraer tono.
@@ -349,7 +414,7 @@ Deja en `docs/content/checklist.md` un checklist accionable:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_3` + resumen breve (qué entregó el cliente y qué quedó como placeholder). No sigas con la siguiente fase (la fundación es el CHAT 4).
 
 
-## 🧩 CHAT 4 · FUNDACIÓN DEL PROYECTO + DESIGN TOKENS + BASE MOBILE-FIRST (UX/UI FOUNDATION)
+## 🧩 CHAT 4 · FUNDACIÓN DEL PROYECTO + DESIGN TOKENS + BASE MOBILE-FIRST (UX/UI FOUNDATION) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La investigación (CHAT 1) y los wireframes (CHAT 2) ya definieron qué construir y cómo; aquí dejas la base técnica y el sistema de diseño con el estilo del cliente. No pegues el CHAT 5 aquí.
 
@@ -357,15 +422,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_3` + resumen 
 Actúa como **desarrollador senior de Next.js**. Estás INICIANDO un proyecto desde cero y vas a dejarlo listo para recibir las siguientes fases (interfaz, contenido, datos, lógica, asistentes IA y despliegue). Tu criterio es el de alguien que ya entregó decenas de webs en producción.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -377,7 +443,7 @@ Dejar la base funcionando con `npm run dev`: sistema de diseño definido (tokens
 
 ### Pasos
 1. **Scaffold**: crea el proyecto Next.js 14+ (App Router) con TypeScript estricto, Tailwind CSS y shadcn/ui configurado. Si el proyecto ya existe, verifica que compile y que ESLint + Prettier estén listos.
-2. **Design tokens** (sistema de diseño con PRESENCIA): define en `globals.css` (CSS variables) y conecta a `tailwind.config` (colores, fuentes, breakpoints y `container`) según el estilo del cliente (**moderno, con micro-interacciones y animaciones sutiles (Framer Motion), respetando la referencia del cliente (una web de terapeutas moderna y sobria)**):
+2. **Design tokens** (sistema de diseño con PRESENCIA): define en `globals.css` (CSS variables) y conecta a `tailwind.config` (colores, fuentes, breakpoints y `container`) según el estilo del cliente (**sobrio, limpio y directo, con foco en la claridad**):
    - **Paleta**: color de marca + escala completa (50→950), color de acento y de superficie; soporte de **modo oscuro** (variante `dark` de Tailwind) aunque se use claro por defecto.
    - **Tipografía**: jerarquía clara (display / h1-h4 / body / caption) con escalas `clamp()`; fuente display para titulares (si el giro lo amerita) + Inter (o similar) para texto.
    - **Espaciado y ritmo de sección**: escala de espaciado, contenedor con `max-w` y padding correcto en móvil; ritmo vertical consistente entre secciones (`py-16/24` en desktop, `py-12/16` en móvil).
@@ -409,7 +475,7 @@ supabase/
 7. **README**: documenta arranque (instalación, comandos, variables de entorno) y pega la metodología mobile-first de abajo para que quede como referencia del proyecto.
 
 ### Reglas de diseño
-- Estilo: moderno, con micro-interacciones y animaciones sutiles (Framer Motion), respetando la referencia del cliente (una web de terapeutas moderna y sobria).
+- Estilo: sobrio, limpio y directo, con foco en la claridad.
 - Sistema de diseño: paleta en CSS variables, tipografía legible, componentes shadcn/ui consistentes.
 - Favicon, íconos PWA y Open Graph image para compartir en redes.
 
@@ -436,7 +502,7 @@ Esta web se diseña y construye PRIMERO para celular (360px) y DESPUÉS se escal
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_4` seguido de un resumen de 3-5 líneas (archivos creados y comandos). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 5 · SHELL (HEADER/FOOTER) + COMPONENTES UI + PATRONES DE INTERACCIÓN — MOBILE-FIRST
+## 🧩 CHAT 5 · SHELL (HEADER/FOOTER) + COMPONENTES UI + PATRONES DE INTERACCIÓN — MOBILE-FIRST · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto YA existe (lo dejó listo el CHAT 4) y los wireframes del CHAT 2 definen qué pantallas construir. Aquí construyes el esqueleto visual (header/footer), la librería de componentes y sus patrones de interacción, todo **mobile-first**.
 
@@ -444,15 +510,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_4` seguido de
 Actúa como **desarrollador senior de UI**. Tu trabajo: construir el esqueleto visual (header, footer, contenedores) y la librería de componentes, todo **mobile-first**.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -487,7 +554,7 @@ Cada componente nace con sus **estados y su respuesta al usuario** definidos (no
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_5` + resumen breve (componentes creados y patrones de interacción). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 6 · SECCIONES DE CONTENIDO (LA PÁGINA VISIBLE) — MOBILE-FIRST
+## 🧩 CHAT 6 · SECCIONES DE CONTENIDO (LA PÁGINA VISIBLE) — MOBILE-FIRST · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El shell y los componentes ya existen (CHAT 5) y los wireframes del CHAT 2 definen cada pantalla. Aquí construyes TODAS las secciones visibles siguiendo la estrategia de mensajes del CHAT 1; el microcopy (CHAT 7) afinará las palabras.
 
@@ -495,15 +562,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_5` + resumen 
 Actúa como **desarrollador senior de UI/UX y copywriter técnico**. Tu trabajo: construir TODAS las secciones visibles de la página con copy que vende y con imágenes, **mobile-first**. Al terminar, la página debe verse **COMPLETA y profesional en el celular**.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -511,13 +579,13 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### Estrategia comercial que la página DEBE comunicar
-- **Mensaje de venta:** Para un consultorio de psicología, tu web es tu primer acompañamiento: recibe a quien busca ayuda a cualquier hora y lo convierte en una consulta real.
-- **El problema que resuelve:** Quien busca apoyo emocional lo hace a cualquier hora; si tu web solo tiene un formulario, esa persona busca ayuda en otro lado.
-- **Beneficios de negocio:** - Un chatbot que contiene y orienta 24/7, con ética y límites claros
-- Detección de crisis con línea de emergencia y aviso inmediato
-- Captar consultas reales desde el primer contacto
-- **Propuesta de valor (copy de portada y secciones):** Para tu consultorio, esta página no es un gasto: es un puente de confianza que trabaja 24/7. Con una inversión de $25,000–$29,000 MXN (más el chatbot) acompañas a quien lo necesita y conviertes ese primer contacto en consultas reales.
-- **Costo de omisión (por qué actuar ahora):** Cada persona que llega a tu web en un momento difícil y no encuentra apoyo, busca ayuda en otro consultorio.
+- **Mensaje de venta:** Un asistente responde dudas y agenda citas 24/7, con calidez y privacidad.
+- **El problema que resuelve:** El cliente pierde oportunidades por no tener presencia digital clara.
+- **Beneficios de negocio:** - Presencia profesional
+- Captación de clientes
+- Ahorro de tiempo
+- **Propuesta de valor (copy de portada y secciones):** 
+- **Costo de omisión (por qué actuar ahora):** 
 
 > **Regla de oro:** el copy de la portada y de cada sección responde "¿qué gano yo como dueño del negocio?". La página VENDE, no solo describe servicios.
 
@@ -550,7 +618,7 @@ Cada bloque visible debe transmitir **vida y presencia**, no rellenar espacio:
 ### Cero "lorem ipsum", cero cajas vacías
 Si no hay contenido real del cliente, escribe copy placeholder **profesional y realista del giro** (no lorem ipsum): titulares, subtítulos y descripciones que un dueño podría usar tal cual; y marca en el README qué texto/foto real debe reemplazar el cliente.
 
-### Secciones a construir (Landing para consultorio de psicología con chatbot de acompañamiento — 4 bloques)
+### Secciones a construir (Landing para consultorio de psicología con asistente IA — 4 bloques)
 - / — Página de inicio: hero con propuesta de valor, servicios, beneficios, testimonios (opcional), CTA de contacto.
 - /#servicios — Sección de servicios anclada.
 - /#contacto — Formulario de contacto + datos de la empresa + mapa (si aplica).
@@ -558,11 +626,11 @@ Si no hay contenido real del cliente, escribe copy placeholder **profesional y r
 
 ### Servicios / oferta a mostrar
 El cliente quiere destacar los siguientes servicios u oferta. Crea una sección de servicios (o catálogo) bien armada, con cada ítem:
-- Consultas de psicología en línea y presencial — con descripción breve, beneficios y CTA de contacto.
-- acompañamiento emocional — con descripción breve, beneficios y CTA de contacto.
+- terapia individual — con descripción breve, beneficios y CTA de contacto.
+- de pareja y manejo de ansiedad — con descripción breve, beneficios y CTA de contacto.
 
 ### Sitemap / estructura acordada con el cliente
-El cliente describió la estructura así: "Inicio, sobre mí, servicios, contacto". Asegúrate de que la navegación y las secciones reflejen esta estructura de forma completa y coherente.
+El cliente describió la estructura así: "Inicio, Servicios, Sobre mí, Contacto". Asegúrate de que la navegación y las secciones reflejen esta estructura de forma completa y coherente.
 
 ### Imágenes (OBLIGATORIO: nunca cajas vacías)
 La página DEBE verse completa desde el primer deploy. Cuando el cliente no tenga fotos reales, usa imágenes placeholder de alta calidad; **nunca dejes cajas grises, espacios vacíos ni imágenes rotas**.
@@ -593,7 +661,7 @@ La página DEBE verse completa desde el primer deploy. Cuando el cliente no teng
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_6` + resumen breve. No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 7 · CONVERSATION DESIGN Y MICROCOPY (CONVERSATION DESIGNER + UX WRITER)
+## 🧩 CHAT 7 · CONVERSATION DESIGN Y MICROCOPY (CONVERSATION DESIGNER + UX WRITER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT 6). Aquí afinas TODAS las palabras de la interfaz — botones, formularios, errores, estados vacíos, confirmaciones — y, si hay asistentes IA, dejas su diseño conversacional especificado. El diseño conversacional de los asistentes IA (CHAT 13) se especifica aquí; la infraestructura LLM (CHAT 12) y la evaluación de prompts (CHAT 14) lo implementan técnicamente. El CHAT 5 implementó los componentes; aquí les das voz.
 
@@ -601,15 +669,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_6` + resumen 
 Actúa como **Conversation Designer (CxD) + UX Writer + Interaction Designer senior**. Tu trabajo: que cada palabra de la web suene a una sola marca, ayude a completar la tarea y reduzca fricción; y que cada conversación (formulario o asistente IA) tenga estructura: apertura, turnos, recuperación de errores y cierre claro.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -617,7 +686,7 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### 1. Voz y tono (guía, no reglas rígidas)
-Crea `docs/ux/voice-tone.md`: cómo suena la marca según el giro **Psicólogo / salud mental** y el análisis (Para un consultorio de psicología, tu web es tu primer acompañamiento: recibe a quien busca ayuda a cualquier hora y lo convierte en una consulta real.):
+Crea `docs/ux/voice-tone.md`: cómo suena la marca según el giro **Médico / clínica** y el análisis (Un asistente responde dudas y agenda citas 24/7, con calidez y privacidad.):
 - **Personalidad**: consultor cercano y directo (p. ej. "te ayudo a...", no "nuestros servicios incluyen...").
 - **Tratamiento consistente**: usa **tú** en toda la web y en los asistentes (según lo que el cliente pidió en la entrevista).
 - **Lenguaje claro**: español sin jerga técnica; frases cortas; sin anglicismos salvo los del giro (checkout, FAQ, etc.).
@@ -662,7 +731,7 @@ Deja en `docs/ux/conversation-design.md` la especificación conversacional que s
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_7` + resumen breve (guías creadas y textos ajustados). No sigas con la siguiente fase (el modelo de datos es el CHAT 8).
 
 
-## 🧩 CHAT 8 · MODELO DE DATOS + SETUP DE SUPABASE
+## 🧩 CHAT 8 · MODELO DE DATOS + SETUP DE SUPABASE · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT 6).
 
@@ -670,15 +739,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_7` + resumen 
 Actúa como **desarrollador senior backend / base de datos**. Tu trabajo: dejar la base de datos de producción lista (esquema versionado, RLS y datos de demostración) para que las fases de lógica y asistentes IA trabajen sobre una base real.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -768,7 +838,7 @@ create table if not exists public.contact_messages (
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_8` + resumen breve (tablas creadas y seed). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 9 · LÓGICA, API ROUTES E INTEGRACIONES
+## 🧩 CHAT 9 · LÓGICA, API ROUTES E INTEGRACIONES · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Las secciones visibles ya existen (CHAT 6) y el modelo de datos está aplicado (CHAT 8).
 
@@ -776,15 +846,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_8` + resumen 
 Actúa como **desarrollador senior full-stack**. Tu trabajo: dar vida a los formularios, crear las API routes y las integraciones externas, todo con TypeScript estricto y validación Zod, usando el esquema que dejó listo el CHAT 8.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -795,13 +866,12 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - **RF-01** · [Alta] Página de inicio profesional con propuesta de valor clara y CTAs visibles.
 - **RF-02** · [Alta] Diseño 100% responsive (móvil, tablet, escritorio) con enfoque mobile-first.
 - **RF-03** · [Alta] Formulario de contacto funcional con validación, protección contra spam y confirmación visual.
-- **RF-05** · [Alta] Base de datos PostgreSQL (Supabase) con persistencia segura de la información del negocio.
+- **RF-08** · [Media] Mapa interactivo con la ubicación o sucursales del negocio.
 - **RF-10** · [Media] Canal de contacto directo: botón flotante de WhatsApp y/o chat.
-- **RF-12** · [Media] Micro-interacciones y animaciones (Framer Motion) para una experiencia moderna.
 - **RF-13** · [Alta] Optimización SEO: metadata dinámica, Open Graph, sitemap, robots.txt y datos estructurados JSON-LD.
 - **RF-15** · [Media] Estructurar el contenido: textos placeholder profesionales y guía de reemplazo para el cliente.
 - **RF-16** · [Alta] Cumplir el flujo de usuario de la categoría: 4 pasos documentados en la sección 9.
-- **RF-17** · [Alta] Integrar los asistentes IA (Asistente de acompañamiento emocional) con LangChain + DeepSeek: widget de chat flotante, memoria por sesión, validación con Zod y las API routes correspondientes.
+- **RF-17** · [Alta] Integrar los asistentes IA (Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads)) con LangChain + DeepSeek: widget de chat flotante, memoria por sesión, validación con Zod y las API routes correspondientes.
 
 > Prioridades: **Alta** (bloquea la entrega), **Media** (esperada), **Baja** (nice-to-have).
 
@@ -814,7 +884,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 - Sin pasarela de pagos (contacto directo).
 - WhatsApp: deep links (wa.me) para contacto directo.
 - Correos transaccionales: Resend (confirmaciones de cita, pedido o contacto).
-- Sin mapa.
+- Mapas: Leaflet (ligero, open-source) o Google Maps.
 
 > Si una credencial real no está disponible, implementa con modo sandbox/datos de prueba y documenta en el README cómo activarla.
 
@@ -860,7 +930,7 @@ Cada formulario/flujo debe tener estados de **carga, error, vacío y éxito** co
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_9` + resumen breve (rutas API). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 10 · DATOS Y ANALÍTICA · INSTRUMENTACIÓN (DATA ENGINEER)
+## 🧩 CHAT 10 · DATOS Y ANALÍTICA · INSTRUMENTACIÓN (DATA ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El modelo de datos ya está aplicado (CHAT 8) y la lógica/API existe (CHAT 9). Aquí instrumentas el producto para EMITIR datos limpios: esquema de eventos, pipeline de captura y calidad de datos, sin PII y con privacidad por diseño. Leer esos datos (funnel, atribución y reporte) es el CHAT 11.
 
@@ -868,15 +938,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_9` + resumen 
 Actúa como **Data Engineer senior** con criterio de **privacidad por diseño**. Tu trabajo: montar el pipeline de datos del sitio (eventos → API → tabla) como si fuera un data pipeline de producción: esquema versionado, validación, batching, idempotencia y sin datos personales. Nada de recopilar "por si acaso": cada evento responde una pregunta de negocio.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -944,7 +1015,7 @@ alter table public.analytics_events enable row level security;
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_10` + resumen breve (eventos instrumentados y pipeline). No sigas con la siguiente fase (el reporting es el CHAT 11).
 
 
-## 🧩 CHAT 11 · DATOS Y ANALÍTICA · REPORTING, FUNNEL Y ATRIBUCIÓN (DATA ANALYST)
+## 🧩 CHAT 11 · DATOS Y ANALÍTICA · REPORTING, FUNNEL Y ATRIBUCIÓN (DATA ANALYST) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los eventos ya se capturan con calidad (CHAT 10); aquí los CONVIERTES en decisiones: funnel de conversión, atribución de fuentes y un tablero/reporte con su "so what". Después siguen los asistentes IA (CHAT 13).
 
@@ -952,15 +1023,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_10` + resumen
 Actúa como **Data Analyst / Data Scientist senior**. Tu trabajo: definir las métricas que importan para el giro, medir el funnel y la atribución con los datos ya capturados, y dejar un reporte que responda "¿qué mejoro y dónde?" — no un montón de gráficas bonitas sin uso.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1001,7 +1073,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_11` + resumen breve (funnel, atribución y reporte). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 12 · INFRAESTRUCTURA LLM (MLOPS / AI INFRASTRUCTURE)
+## 🧩 CHAT 12 · INFRAESTRUCTURA LLM (MLOPS / AI INFRASTRUCTURE) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya tiene su lógica (CHAT 9) y su analítica (CHAT 10/11). Aquí montas la **capa compartida de LLM** que usarán TODOS los asistentes IA (CHAT 13) y su evaluación de prompts (CHAT 14): un gateway único, configuración centralizada, presupuesto de tokens/costo, tracing, caché de respuestas y registry de prompts versionados. Nada de configurar DeepSeek "a mano" en cada bot.
 
@@ -1009,15 +1081,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_11` + resumen
 Actúa como **MLOps / AI Infrastructure Engineer senior**. Tu trabajo: construir la infraestructura de LLM del proyecto — un solo lugar para configurar, medir, proteger y cachear las llamadas a DeepSeek — para que los bots que vienen después sean baratos, observables y no rompan producción.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1075,7 +1148,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_12` + resumen breve (módulos creados y cómo se prueba el fallback). No sigas con la siguiente fase (los asistentes IA son el CHAT 13).
 
 
-## 🧩 CHAT 13 · ASISTENTES IA CON LANGCHAIN + DEEPSEEK (1 bot)
+## 🧩 CHAT 13 · ASISTENTES IA CON LANGCHAIN + DEEPSEEK (3 bots) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La infraestructura LLM ya está lista (CHAT 12: gateway, presupuesto, tracing y registry de prompts), el esquema está aplicado (CHAT 8) y la lógica/API base existe (CHAT 9). Aquí implementas los asistentes IA de punta a punta; la evaluación de sus prompts es el CHAT 14 y su base de conocimiento/RAG los CHAT 15/16.
 
@@ -1083,15 +1156,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_12` + resumen
 Actúa como **desarrollador senior full-stack especializado en LLMs** (LangChain/LangGraph + DeepSeek). Tu trabajo: implementar de punta a punta los asistentes IA que el cliente contrató (widget → API route → DeepSeek → persistencia), con robustez ante fallos, usando SIEMPRE la infraestructura LLM del CHAT 12 (nunca configures el modelo a mano en la ruta).
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1099,32 +1173,44 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### Objetivo
-- Implementar 1 asistente IA listo para producción.
+- Implementar 3 asistentes IA listos para producción.
 - Respuesta de extremo a extremo desde el widget, sin cuelgues ni errores visibles.
 - Persistencia con validación Zod + Supabase (service-role SOLO server) usando las tablas del CHAT 8.
 - Transparencia: el widget se identifica como IA, ofrece pasar a una persona y aplica guardrails de contenido.
 
 ### 🤖 Bots de LangChain (asistentes inteligentes del negocio)
 
-El cliente eligió **1 asistente(s) IA**. Implementa cada uno con **LangChain + DeepSeek** (`ChatOpenAI` con `baseURL` `https://api.deepseek.com`, modelo `deepseek-chat`). Son parte de la propuesta y deben quedar funcionando de punta a punta.
+El cliente eligió **3 asistente(s) IA**. Implementa cada uno con **LangChain + DeepSeek** (`ChatOpenAI` con `baseURL` `https://api.deepseek.com`, modelo `deepseek-chat`). Son parte de la propuesta y deben quedar funcionando de punta a punta.
 
-**Bot 1 · Asistente de acompañamiento emocional**
-- **Qué hace:** Un espacio seguro en tu web donde los visitantes hablan de lo que sienten, reciben contención y orientación para buscar ayuda profesional — disponible 24/7.
-- **Resultado de negocio:** Un primer contacto humano con tus visitantes 24/7: contiene, orienta y convierte a quien necesita ayuda en una consulta real, sin que nadie se quede sin respuesta.
-- **Arquitectura LangChain:** Agente LangGraph con memoria por sesión (MemorySaver + thread_id) y detector de crisis por keywords: RAG sobre una KB curada de temas de bienestar (CHAT kb/rag) + herramienta 'escalar_humano' (deep link a WhatsApp/agenda) + herramienta 'recurso' (devuelve ejercicios/recursos de la KB). Regla de oro: si detecta riesgo (autolesión/suicidio/crisis), responde con empatía, da la línea de emergencia (Línea de la Vida 800 911 2000 o 911) y NO continúa como consulta clínica. Nunca diagnostica ni sustituye a un profesional.
+**Bot 1 · Bot de atención al cliente**
+- **Qué hace:** Atiende a tus clientes como un equipo de soporte: resuelve dudas, registra quejas y peticiones, y escala a un humano cuando hace falta.
+- **Resultado de negocio:** Un equipo de soporte que nunca duerme: resuelve dudas comunes y solo escala contigo lo importante.
+- **Arquitectura LangChain:** Agente con herramientas (createToolCallingAgent): tool 'responder_desde_kb' (RAG), tool 'crear_ticket', tool 'escalar_humano' (deep link WhatsApp) + memoria conversacional por sesión. Decisiones de escalamiento con reglas (keywords de urgencia).
 - **System prompt:**
 ```
-Eres el asistente de acompañamiento emocional del consultorio de psicología. NO eres un psicólogo ni sustituyes una terapia: tu papel es escuchar con empatía, contener y orientar hacia una consulta real.
-
-Reglas:
-1. Habla en español, cálido, pausado y sin juzgar. Usa "tú" y un tono cercano pero respetuoso.
-2. NUNCA diagnostiques, etiquetes ni ofrezcas tratamiento clínico. No minimices lo que la persona siente.
-3. Si la persona expresa riesgo de hacerse daño o ideas de suicidio, prioriza su seguridad: responde con empatía inmediata, dale la Línea de la Vida (800 911 2000) o 911 según la urgencia, e invítala a contactar a una persona de confianza o al consultorio. NO sigas la conversación como si fuera una consulta.
-4. Puedes compartir recursos de bienestar (respiración, técnicas de relajación) SOLO si vienen de la base de conocimiento curada; si no sabes, no inventes y ofrece pasar el chat a una persona.
-5. Sé honesto sobre tus límites: eres una IA de apoyo inicial, no un terapeuta. Ofrece agendar una sesión de exploración con la psicóloga.
-6. Protege la privacidad: no pidas ni guardes datos sensibles de salud más allá de lo indispensable, y recuerda que el chat es confidencial pero no es una vía de emergencia.
+Eres el agente de atención al cliente. Resuelves dudas y problemas comunes con amabilidad. Si el cliente está molesto, menciona urgencia o pide algo que no puedes, escálalo a un humano y dile que alguien le escribirá pronto.
 ```
-- **API routes a crear:** `POST /api/bots/psicologo — responde con contención + recurso o escalamiento`, `POST /api/bots/psicologo/crisis — registra alerta y notifica a la psicóloga por WhatsApp`, `POST /api/bots/psicologo/feedback`
+- **API routes a crear:** `POST /api/bots/ticket — guarda el caso`, `Webhook a WhatsApp del dueño en escalamientos`
+
+**Bot 2 · Bot de preguntas frecuentes**
+- **Qué hace:** Responde al instante las dudas más comunes de tus clientes: horarios, precios, ubicación, cómo contratar. Entrenado con la información de tu negocio.
+- **Resultado de negocio:** Responder dudas 24/7 sin que tú pierdas tiempo, y no dejar a ningún cliente esperando una respuesta.
+- **Arquitectura LangChain:** RAG ligero: embeddings + vectorstore (o índice en memoria) con la info del negocio + ChatPromptTemplate + memoria de conversación corta (ConversationBufferWindowMemory). Fallback a mensaje 'no sé, te conecto con alguien'.
+- **System prompt:**
+```
+Eres un asistente amable y directo del negocio. Respondes SOLO con la información que tienes en la base de conocimiento (horarios, precios, ubicación, servicios). Si no sabes algo, lo dices claro y ofreces pasar el chat a WhatsApp.
+```
+- **API routes a crear:** `POST /api/bots/faq — responde desde la KB`, `POST /api/bots/faq/feedback`
+
+**Bot 3 · Bot capturador de clientes (leads)**
+- **Qué hace:** Chatea con cada visitante, captura su nombre, contacto y lo que busca, y lo guarda para que tú lo contactes.
+- **Resultado de negocio:** Nunca más perder un visitante: cada conversación valiosa queda capturada con datos y lista para tu seguimiento.
+- **Arquitectura LangChain:** Cadena conversacional con StructuredOutputParser (name, phone, email, interest, score) que guarda el lead en Supabase (prospect_leads) y agenda una tarea. Escala a WhatsApp si el interés es alto.
+- **System prompt:**
+```
+Eres el recepcionista digital. Saludas, haces 2-3 preguntas amables (qué busca, cómo se llama, cómo contactarlo) y capturas los datos. Si el visitante muestra interés, ofreces que un asesor le escriba.
+```
+- **API routes a crear:** `POST /api/bots/leads — guarda lead en Supabase`, `POST /api/bots/leads/whatsapp`
 
 **Requisitos transversales (LangChain + full-stack):**
 
@@ -1191,7 +1277,7 @@ export async function POST(req: Request) {
 
 7. **Vercel serverless:** en las rutas de los bots declara `export const runtime = "nodejs"` y `export const maxDuration = 60` — las llamadas a DeepSeek exceden el timeout por defecto de 10s de las serverless functions.
 
-8. **Suscripción/mantenimiento:** la mensualidad del cliente ($349 MXN/mes) cubre el hosting del LLM (DeepSeek) y el mantenimiento. Documenta en el README las env vars (DEEPSEEK_API_KEY), cómo desplegar/monitorear y el costo estimado por mensaje.
+8. **Suscripción/mantenimiento:** la mensualidad del cliente ($697 MXN/mes) cubre el hosting del LLM (DeepSeek) y el mantenimiento. Documenta en el README las env vars (DEEPSEEK_API_KEY), cómo desplegar/monitorear y el costo estimado por mensaje.
 
 9. **Transparencia (IA visible):** el widget se presenta como **asistente IA del negocio** ("Soy el asistente virtual de <negocio>"), NUNCA se hace pasar por humano, y ofrece pasar a WhatsApp/atención humana ("¿Prefieres hablar con una persona?"). Incluye un enlace al aviso de privacidad dentro del widget.
 
@@ -1214,7 +1300,7 @@ export async function POST(req: Request) {
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_13` + resumen breve (bots creados y endpoint de prueba). No sigas con la siguiente fase (la evaluación de prompts es el CHAT 14).
 
 
-## 🧩 CHAT 14 · PROMPT ENGINEERING & EVALUACIÓN (PROMPT ENGINEER + LLM EVAL)
+## 🧩 CHAT 14 · PROMPT ENGINEERING & EVALUACIÓN (PROMPT ENGINEER + LLM EVAL) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los asistentes IA ya responden (CHAT 13) sobre la infraestructura LLM (CHAT 12). Aquí los conviertes en producto de calidad: diseñas y versionas los system prompts con metodología, pruebas cada prompt con un set áureo (golden tests) y mides la calidad con un juez automático (LLM-as-judge). Después llegan la knowledge base (CHAT 15) y el RAG (CHAT 16); la verificación de seguridad/red team es el CHAT 17.
 
@@ -1222,15 +1308,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_13` + resumen
 Actúa como **Prompt Engineer + LLM Evaluator + NLP/Computational Linguist senior**. Tu trabajo: transformar los system prompts iniciales de los bots en prompts versionados, evaluables y consistentes — con golden tests que corren en CI y un juez automático que puntúa calidad — para que ningún cambio futuro degrade el tono, las reglas ni el español.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1283,7 +1370,7 @@ Reescribe cada system prompt del CHAT 13 siguiendo esta anatomía:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_14` + resumen breve (puntaje del eval y versiones de prompts). No sigas con la siguiente fase (la knowledge base es el CHAT 15).
 
 
-## 🧩 CHAT 15 · KNOWLEDGE BASE · CURACIÓN Y CHUNKING (NLP / DATA ENGINEER)
+## 🧩 CHAT 15 · KNOWLEDGE BASE · CURACIÓN Y CHUNKING (NLP / DATA ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los asistentes IA ya responden (CHAT 13) con prompts evaluados (CHAT 14). Aquí construyes la PRIMERA mitad de la base de conocimiento: curaduría del contenido real del negocio, normalización del español y chunking de calidad (sin partir datos). El vector store, el retrieval y la evaluación RAG se hacen en el CHAT 16; el QA de IA (CHAT 17) verifica el aterrizaje.
 
@@ -1291,15 +1378,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_14` + resumen
 Actúa como **NLP / Computational Linguist + Data Engineer senior**. Tu trabajo: convertir el conocimiento del negocio (menú, precios, horarios, políticas, FAQ, proceso) en una knowledge base curada, limpia y bien troceada — lista para que el RAG (CHAT 16) recupere respuestas exactas y el bot NO invente.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1357,7 +1445,7 @@ Para que el retrieval encuentre "café" cuando el cliente escribe "cafe", "Café
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_15` + resumen breve (docs curados, chunks y normalización). No sigas con la siguiente fase (el RAG es el CHAT 16).
 
 
-## 🧩 CHAT 16 · KNOWLEDGE BASE · RAG (VECTOR DB / RAG SPECIALIST)
+## 🧩 CHAT 16 · KNOWLEDGE BASE · RAG (VECTOR DB / RAG SPECIALIST) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La knowledge base ya está curada, normalizada y chunkeada (CHAT 15). Aquí la conviertes en un sistema RAG de producción: embeddings, vector store (pgvector), **retrieval híbrido** (vector + texto completo con RRF), re-ranking, integración con los bots (CHAT 13) y **evaluación RAG** (hit@k + groundedness con LLM-as-judge). Después, el QA de IA (CHAT 17) verifica seguridad y robustez.
 
@@ -1365,15 +1453,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_15` + resumen
 Actúa como **RAG Specialist / Vector DB Specialist senior**. Tu trabajo: montar la capa de retrieval que "aterriza" a los asistentes IA en datos verificados — con búsqueda híbrida (no solo vectores), re-ranking, filtros por metadata y una evaluación que demuestre que el bot no alucina.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1470,7 +1559,7 @@ alter table public.kb_chunks enable row level security;
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_16` + resumen breve (retriever híbrido, hit@5 y alucinaciones). No sigas con la siguiente fase (el QA de IA es el CHAT 17).
 
 
-## 🧩 CHAT 17 · QA DE ASISTENTES IA (AI QA / BOT TESTER) — 1 bot
+## 🧩 CHAT 17 · QA DE ASISTENTES IA (AI QA / BOT TESTER) — 3 bots · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. Los asistentes IA ya están implementados (CHAT 13) con prompts evaluados (CHAT 14) y knowledge base + RAG (CHAT 15 / CHAT 16). Aquí los pruebas como lo haría un **QA de IA / Bot Tester** (incluido un mini red team de LLMs) hasta dejarlos seguros, útiles, rápidos y sin fugas. Después sigue el QA web (CHAT 20) y la auditoría de seguridad (CHAT 21).
 
@@ -1478,15 +1567,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_16` + resumen
 Actúa como **QA Engineer especializado en IA / Bot Tester / red team de LLMs**. No confías en que "funciona": lo pruebas con una matriz de casos reales, intentas romperlo (injection, jailbreak, fuga de datos entre sesiones) y dejas una suite de regresión automatizada para que ningún cambio futuro lo rompa.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1568,7 +1658,7 @@ Prueba y documenta la resistencia a:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_17` + resumen breve (casos probados, vulnerabilidades encontradas y corregidas, latencia/costo). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 18 · CALIDAD DE CÓDIGO · PRUEBAS UNITARIAS E INTEGRACIÓN (BACKEND + FRONTEND)
+## 🧩 CHAT 18 · CALIDAD DE CÓDIGO · PRUEBAS UNITARIAS E INTEGRACIÓN (BACKEND + FRONTEND) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya tiene su lógica (CHAT 9) y su analítica (CHAT 10/11). Aquí construyes la **pirámide de pruebas** del proyecto (unitarias + integración + componentes) con mocks consistentes, para que el pipeline CI/CD (CHAT 19) y el gate de QA web (CHAT 20) corran sobre una suite real y no sobre humo. Los asistentes IA tienen su propio QA de IA (CHAT 17); aquí pruebas el código general (frontend + backend), no el comportamiento del LLM.
 
@@ -1576,15 +1666,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_17` + resumen
 Actúa como **Software Engineer en pruebas (SDET) senior** con visión de **backend y frontend**. Tu trabajo: dejar una suite de pruebas que corra sola, rápida y sin depender de servicios externos (DeepSeek, Supabase, Stripe, Resend mockeados), con umbrales de cobertura y que atrape regresiones antes de producción.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1640,7 +1731,7 @@ Cubre la lógica que NO debe fallar nunca:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_18` + resumen breve (número de tests y cobertura). No sigas con la siguiente fase (el pipeline CI/CD es el CHAT 19).
 
 
-## 🧩 CHAT 19 · CI/CD · PIPELINE DE INTEGRACIÓN Y DESPLIEGUE CONTINUO (DEVOPS / PLATFORM ENGINEER)
+## 🧩 CHAT 19 · CI/CD · PIPELINE DE INTEGRACIÓN Y DESPLIEGUE CONTINUO (DEVOPS / PLATFORM ENGINEER) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La suite de pruebas ya existe (CHAT 18). Aquí construyes el **pipeline que automatiza la calidad y el despliegue**: cada cambio pasa por lint, typecheck, tests, E2E y auditorías antes de llegar a producción, con previews por rama y releases con rollback. Así el QA web (CHAT 20), la seguridad (CHAT 21) y el despliegue final (CHAT 25) corren sobre un proceso repetible, no manual.
 
@@ -1648,15 +1739,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_18` + resumen
 Actúa como **DevOps / Platform Engineer senior**. Tu trabajo: que "prueba y despliega" sea un botón y no una rutina manual — integración continua con gates de calidad, previews por rama, despliegue continuo a Vercel, migraciones aplicadas en orden y rollback inmediato. Si un cambio no pasa las gates, NO llega a producción.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1718,7 +1810,7 @@ Crea `.github/workflows/ci.yml` que corra en cada PR y push (y documenta que el 
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_19` + resumen breve (jobs del pipeline y cómo se prueba un PR). No sigas con la siguiente fase (el QA web es el CHAT 20).
 
 
-## 🧩 CHAT 20 · QA WEB Y PULIDO (GATE DE CALIDAD · QA ENGINEER)
+## 🧩 CHAT 20 · QA WEB Y PULIDO (GATE DE CALIDAD · QA ENGINEER) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo (CHAT 8-17 (datos, lógica, analítica, infraestructura LLM, asistentes IA, prompt engineering, knowledge base/RAG y su QA), las pruebas automatizadas (CHAT 18) y el pipeline CI/CD (CHAT 19)). Los asistentes IA ya pasaron su QA de IA (CHAT 17: matriz, prompt injection, aislamiento de sesiones). NO despliegues todavía: antes vienen la auditoría de seguridad (CHAT 21), la optimización de rendimiento (CHAT 22), el cumplimiento (CHAT 23), la fase SRE (CHAT 24) y el despliegue (CHAT 25).
 
@@ -1726,15 +1818,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_19` + resumen
 Actúa como **QA Engineer (Web) senior** + **desarrollador senior de calidad**. Tu trabajo: auditar, pulir, automatizar y probar en TODOS los tamaños (celular primero) y en los navegadores principales hasta que la web se vea y comporte como un producto de producción, y dejar una suite de pruebas que corra en CI para que ningún cambio futuro la rompa.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1797,18 +1890,19 @@ Revisa la página como si la viera un cliente exigente y corrige cualquier "huec
 
 ### Criterios de aceptación (para validar con el cliente)
 - El sitio abre rápido y se ve impecable en celular, tablet y computadora.
-- "Página de presentación de tu consultorio (inicio, sobre mí, servicios, contacto)" funciona de punta a punta.
-- "Chatbot psicólogo de acompañamiento emocional (widget en la página)" funciona de punta a punta.
-- "Detección de crisis con línea de emergencia y aviso a la psicóloga" funciona de punta a punta.
-- "Recursos de bienestar curados (ejercicios, técnicas de relajación)" funciona de punta a punta.
-- "Diseño que se ve bien en celular y SEO en Google" funciona de punta a punta.
+- "Página principal con la información del negocio" funciona de punta a punta.
+- "Diseño responsive profesional" funciona de punta a punta.
+- "Mapa con ubicación" funciona de punta a punta.
+- "Contacto por WhatsApp/chat" funciona de punta a punta.
+- "SEO optimizado" funciona de punta a punta.
+- "Formulario de contacto" funciona de punta a punta.
 - Los formularios y confirmaciones llegan correctamente (correo/WhatsApp).
 - La web está lista para desplegarse (solo faltan las fases de confiabilidad y despliegue).
 
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_20` + resumen breve (métricas y correcciones). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 21 · SEGURIDAD (SECURITY ENGINEERING / OWASP)
+## 🧩 CHAT 21 · SEGURIDAD (SECURITY ENGINEERING / OWASP) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo y probado funcionalmente (CHAT 20). Aquí actúas como **Security Engineer**: auditas la app como un pentester, endureces los puntos débiles y dejas un checklist de seguridad documentado ANTES de optimizar rendimiento (CHAT 22), cumplir (CHAT 23) y desplegar (CHAT 25). Los asistentes IA ya pasaron su QA de red team (CHAT 17); aquí auditas la web y sus endpoints (incluido el de los bots).
 
@@ -1816,15 +1910,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_20` + resumen
 Actúa como **Security Engineer senior (ofensivo + defensivo)**. No confías en que "las librerías ya protegen": pruebas manualmente los vectores de ataque, verificas que el código no expone secretos ni datos ajenos y dejas controles que bloquean el abuso. Cada hallazgo se corrige antes de pasar a la siguiente fase.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1894,7 +1989,7 @@ Ajusta la CSP a las necesidades reales (analytics, mapas, imágenes remotas) y v
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_21` + resumen breve (hallazgos corregidos y controles activos). No sigas con la siguiente fase (el rendimiento es el CHAT 22).
 
 
-## 🧩 CHAT 22 · RENDIMIENTO (PERFORMANCE ENGINEERING)
+## 🧩 CHAT 22 · RENDIMIENTO (PERFORMANCE ENGINEERING) · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya pasó QA (CHAT 20): está completo, pulido y cumple los umbrales básicos. Aquí actúas como **ingeniero de performance** y llevas los Core Web Vitals y el peso de la página a nivel de producción en celulares de gama media con red 4G. Después vienen el cumplimiento (CHAT 23), la fase SRE (CHAT 24) y el despliegue (CHAT 25).
 
@@ -1902,15 +1997,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_21` + resumen
 Actúa como **Performance Engineer senior**. Tu trabajo: medir y optimizar hasta que la web cargue y responda rápido de verdad — no "se ve rápido en mi laptop", sino medido en un celular real con throttling. Nada de optimizar "a ojo": cada cambio se valida con medición.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -1984,7 +2080,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_22` + resumen breve (métricas antes/después y qué optimizaste). No sigas con la siguiente fase (el cumplimiento es el CHAT 23).
 
 
-## 🧩 CHAT 23 · ACCESIBILIDAD, PRIVACIDAD E IA RESPONSABLE
+## 🧩 CHAT 23 · ACCESIBILIDAD, PRIVACIDAD E IA RESPONSABLE · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto ya pasó QA técnico (CHAT 20), la auditoría de seguridad (CHAT 21) y la optimización de rendimiento (CHAT 22). Aquí lo dejas en cumplimiento (accesibilidad profunda, privacidad y ética de IA) ANTES de la fase SRE (CHAT 24) y el despliegue (CHAT 25).
 
@@ -1992,15 +2088,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_22` + resumen
 Actúa como **auditor senior de IA responsable, privacidad y accesibilidad**. Tu trabajo: revisar la web como lo haría un oficial de cumplimiento y corregir todo lo que falle en accesibilidad, protección de datos y honestidad del producto. NO despliegues todavía: eso es el CHAT 25 (tras la fase SRE del CHAT 24).
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -2036,7 +2133,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_23` + resumen breve (correcciones de accesibilidad/privacidad/ética). No sigas con la siguiente fase.
 
 
-## 🧩 CHAT 24 · CONFIABILIDAD, OBSERVABILIDAD Y OPERACIONES (SRE)
+## 🧩 CHAT 24 · CONFIABILIDAD, OBSERVABILIDAD Y OPERACIONES (SRE) · ✨ OPCIONAL
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está completo, pulido, probado (CHAT 20), auditado en seguridad (CHAT 21), optimizado en rendimiento (CHAT 22) y en cumplimiento (CHAT 23). Aquí lo dejas operado como un producto de producción: monitoreado, con alertas, respaldos y runbooks. El despliegue final es el CHAT 25.
 
@@ -2044,15 +2141,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_23` + resumen
 Actúa como **SRE (Site Reliability Engineer) senior**. Tu trabajo: preparar la aplicación para vivir en producción de forma confiable — observabilidad, alertas, respaldos, endurecimiento de seguridad, límites de uso y documentación de operaciones. Nada de "deploy y a rezar".
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -2136,7 +2234,7 @@ Crea en el README una sección **"Operaciones (SRE)"**:
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_24` + resumen breve (endpoints de salud, alertas activas y runbooks creados). No sigas con la siguiente fase (la entrega es el CHAT 25).
 
 
-## 🧩 CHAT 25 · DESPLIEGUE EN VERCEL Y ENTREGA
+## 🧩 CHAT 25 · DESPLIEGUE EN VERCEL Y ENTREGA · ⭐ OBLIGATORIA
 
 > Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. El proyecto está probado, pulido, auditado en seguridad (CHAT 21), optimizado en rendimiento (CHAT 22), en cumplimiento (CHAT 23) y operado (CHAT 24).
 
@@ -2144,15 +2242,16 @@ Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_24` + resumen
 Actúa como **desarrollador senior DevOps / entrega**. Tu trabajo: desplegar a producción, configurar el dominio, indexar en Google y dejar la entrega documentada para el cliente.
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).
@@ -2188,40 +2287,38 @@ DEEPSEEK_API_KEY=          # si hay asistentes IA
 - Explica el plan de mantenimiento: respaldos, updates, monitoreo y soporte (opcional).
 
 ### Entregables finales
-- Landing mobile-first
-- Chatbot de acompañamiento emocional
-- Knowledge base de recursos de bienestar
-- Aviso de crisis por WhatsApp
+- Diseño responsive (celular, tablet, escritorio)
+- Formulario de contacto con envío a tu correo
+- SEO básico en Google
+- Guía para actualizar el contenido
 
 ### Notas finales
 - Trabaja con **criterio senior**: si algo es ambiguo, toma una decisión razonable y documéntala en el README (no dejes la tarea bloqueada).
 - Usa datos de demostración realistas para que el deploy se vea vivo desde el primer momento.
 - El resultado final DEBE poder abrirse en producción y entregarse al cliente sin que el cliente tenga que "arreglar" nada técnico.
 
-**Recomendaciones detectadas:**
-- Mantenimiento mensual
-- Base de conocimiento de recursos de bienestar
 
 Cuando termines, responde ÚNICAMENTE con el marcador `FIN_DE_FASE_25` + un resumen final del proyecto (URL de producción, cómo se probó en cada tamaño y pendientes opcionales).
 
 
-## 🧩 CHAT 26 · PRESENTACIÓN, APROBACIÓN Y CRECIMIENTO (POST-LANZAMIENTO)
+## 🧩 CHAT 26 · PRESENTACIÓN, APROBACIÓN Y CRECIMIENTO (POST-LANZAMIENTO) · ✨ OPCIONAL
 
-> Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La web ya está desplegada (CHAT 25). Esta última fase convierte el lanzamiento en resultados: presenta la web al cliente y obtén su aprobación (UAT), lanzas formalmente y arrancas el bucle de crecimiento de 30-60 días — analítica, SEO local, reseñas y WhatsApp — para que la inversión del cliente produzca clientes, no solo "una página bonita". El objetivo comercial #1 que se definió en el CHAT 1 se revisa aquí contra datos reales.
+> Pega este bloque en un **chat NUEVO** de Roo Code + DeepSeek y ejecútalo. La web ya está desplegada (CHAT 25). Esta última fase convierte el lanzamiento en resultados: presenta la web al cliente y obtén su aprobación (UAT), lanzas formalmente y arrancas el bucle de crecimiento de 30-60 días — analítica, SEO local, reseñas y WhatsApp — para que la inversión del cliente produzca clientes, no solo "una página bonita".
 
 ### Rol
 Actúa como **Product Manager / Growth + Account Manager senior**. Tu trabajo: cerrar la entrega con un cliente satisfecho y, después, hacer que la web trabaje (medir, mejorar, captar) — y dejar el terreno listo para la siguiente venta (asistentes IA, mantenimiento, panel).
 
 ### Contexto del proyecto
-PROYECTO: Landing para consultorio de psicología con chatbot de acompañamiento para Lic. Mariana Ortega · Nivel Avanzado.
-GIRO: Psicólogo / salud mental · Presupuesto del giro: $15,000–$45,000 MXN.
-STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Framer Motion · Supabase · Vercel.
-ESTILO: moderno, con micro-interacciones y animaciones sutiles (referencia del cliente: una web de terapeutas moderna y sobria).
+PROYECTO: Landing para consultorio de psicología con asistente IA para Lic. Paola Rivera · Nivel Profesional.
+TIPO DE PÁGINA: landing / página de presentación para médico / clínica.
+GIRO: Médico / clínica.
+STACK: Next.js 14+ (App Router) · TypeScript estricto · Tailwind CSS · shadcn/ui · Vercel.
+ESTILO: sobrio, limpio y directo.
 UX (criterio de UX Researcher + Conversation Designer desde la fase 1): antes de escribir código se documentan el research brief, proto-personas y journey (CHAT 1), la arquitectura de información + wireframes y flujos mobile-first (CHAT 2) y la voz, el microcopy y el diseño conversacional (CHAT 7); toda fase posterior respeta esos planos de UX y la web habla con UNA sola voz, clara y sin jerga.
-SERVICIOS/OFERTA A MOSTRAR: Consultas de psicología en línea y presencial; acompañamiento emocional.
-ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, sobre mí, servicios, contacto.
-NEGOCIO: "Soy psicóloga y quiero una página sencilla donde la gente pueda hablar con un chatbot que sirva como acompañamiento emocional".
-BOTS IA SELECCIONADOS: Asistente de acompañamiento emocional — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
+SERVICIOS/OFERTA A MOSTRAR: terapia individual, de pareja y manejo de ansiedad.
+ESTRUCTURA ACORDADA CON EL CLIENTE: Inicio, Servicios, Sobre mí, Contacto.
+NEGOCIO: "Quiero una página para mi consultorio de psicología con un asistente que responda dudas y agende citas".
+BOTS IA SELECCIONADOS: Bot de atención al cliente, Bot de preguntas frecuentes, Bot capturador de clientes (leads) — se implementan sobre la infraestructura LLM (CHAT 12) con LangChain + DeepSeek (CHAT 13), prompts evaluados con golden tests y LLM-as-judge (CHAT 14) y una BASE DE CONOCIMIENTO curada (CHAT 15) con RAG (CHAT 16); su QA de IA es el CHAT 17.
 REGLAS GLOBALES: mobile-first (360px → 1440px), Lighthouse ≥ 90, TS estricto, componentes tipados, UI y código en español. ACABADO PREMIUM: la web debe verse VIVA y profesional desde el primer deploy — micro-interacciones y hover states en todo lo interactivo, animaciones de entrada sutiles (scroll reveal), secciones completas (hero con prueba social, servicios, sobre nosotros, testimonios, FAQ, CTA final, contacto), cero lorem ipsum, cero cajas grises/vacías, imágenes placeholder de alta calidad y lista para que el cliente solo aporte detalles menores (fotos/textos reales). RENDIMIENTO (criterio de ingeniero de performance desde la fase 1): Core Web Vitals en verde desde el primer deploy (LCP < 2.5s, INP < 200ms, CLS < 0.1), Server Components por defecto, next/image + next/font en toda la web, bundle inicial ligero y cero trabajo pesado en el hilo principal; el CHAT de Rendimiento (CHAT 22) audita y afina todo esto.
 SEGURIDAD (criterio de ingeniero de seguridad desde la fase 1): secretos solo en variables de entorno del servidor (el cliente usa solo keys públicas con RLS), validación Zod en TODA entrada de usuario/API, sin SQL interpolado, HTML escapado (sin dangerouslySetInnerHTML), sin PII en logs, rate limiting en rutas sensibles y cabeceras de seguridad; el CHAT de Seguridad (CHAT 21) audita con OWASP Top 10 y endurece.
 CALIDAD (criterio de QA desde la fase 1): todo componente con estados de carga/error/vacío/éxito; las pruebas unitarias e integración se escriben en el CHAT 18 y se automatizan en el pipeline CI/CD del CHAT 19 (lint, typecheck, tests, E2E y auditorías en cada PR y antes de cada deploy); el CHAT de QA web (CHAT 20) es el gate final con matriz cross-browser (Chrome/Edge/Firefox/Safari+iOS/Android) y regresión para que un cambio futuro no rompa nada. Y los asistentes IA pasan su propio QA de IA (CHAT 17: prompt injection, aislamiento de sesiones, fallback y aterrizaje RAG).

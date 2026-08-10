@@ -36,6 +36,13 @@ export interface PromptAnalysis {
   presupuesto_giro?: string;
   cuota_mensual?: number;
   alcance_ajustado?: boolean;
+  // ── Registro de despliegue (solo packs de muestra de la agencia) ──
+  /** Código único del PACK (ej. "PK-008") para identificarlo en Vercel/GitHub. */
+  codigo?: string;
+  /** URL de Vercel propuesta (ej. "https://vibercoder-landing.vercel.app"). */
+  slugVercel?: string;
+  /** Repo de GitHub propuesto (ej. "https://github.com/VibeCoder/pack-landing"). */
+  repoGitHub?: string;
 }
 
 export interface PromptBuildOptions {
@@ -1466,6 +1473,7 @@ ${buildMapaFases(phases)}
 |---|---|
 | Cliente | ${clientName || "Por confirmar"} |
 | Tipo de proyecto | ${analysis.categoria} |
+${analysis.codigo ? `| Código de registro | \`${analysis.codigo}\` |\n| URL Vercel | ${analysis.slugVercel ?? "—"} |\n| Repo GitHub | ${analysis.repoGitHub ?? "—"} |` : ""}
 | 🎭 Rol que conduce el proyecto | ${resolveBrief(base).leadRole} |
 | Nivel | ${analysis.nivelLabel} |
 | Presupuesto estimado | ${precioMXN(analysis.precio_min)}${analysis.precio_max > analysis.precio_min ? ` – ${precioMXN(analysis.precio_max)}` : ""} |
