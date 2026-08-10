@@ -11,11 +11,11 @@
 
 ## 🖥 Vitrina (la app principal: sitios + cotizador Alex)
 
-| App            | URL real (Vercel Hobby, gratis) | Repo (GitHub)          | Fecha | Estado                                                                            |
-| -------------- | ------------------------------- | ---------------------- | ----- | --------------------------------------------------------------------------------- |
-| Vitrina Nexora | `https://nexora.vercel.app`     | `Nexora/bot-cotizador` | —     | 🟡 FASE 8 QA local ✅ (SEO/sitemap/robots/manifest/JSON-LD ok) — deploy en FASE 9 |
+| App            | URL real (Vercel Hobby, gratis)       | Repo (GitHub)                    | Fecha      | Estado                                                                                                                          |
+| -------------- | ------------------------------------- | -------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Vitrina Nexora | `https://botcotizador.vercel.app`     | `guillermocruzdev/bot_cotizador` | 2026-08-10 | ✅ **FASE 9 deploy #1 (Vercel Hobby)**: / /chat /results /servicios /portafolio /precios /contacto → 200; E2E cotización completa OK. `nexora.vercel.app` está ocupada por otra empresa → se usa `botcotizador.vercel.app` (URL gratis del proyecto). Envs de contacto reales en Vercel Production. |
 
-> **Antes de FASE 9 (deploy):** poner los datos reales en las envs `NEXT_PUBLIC_WHATSAPP` (número wa.me sin `+`) y `NEXT_PUBLIC_EMAIL` (hoy en `.env.local` con placeholder).
+> **✅ FASE 9 hecha (2026-08-10):** envs `NEXT_PUBLIC_WHATSAPP=528145575257` y `NEXT_PUBLIC_EMAIL=hola@nexora.mx` configuradas en Vercel Production (ya no hay placeholders). El canonical/metadataBase/sitemap del código apuntan a `https://botcotizador.vercel.app` (la URL real del plan Hobby).
 
 | Código | Producto                              | URL real (Vercel) | Repo real (GitHub) | Fecha de deploy | Estado       |
 | ------ | ------------------------------------- | ----------------- | ------------------ | --------------- | ------------ |

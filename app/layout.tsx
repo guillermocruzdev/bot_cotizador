@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nexora.vercel.app"),
+  metadataBase: new URL("https://botcotizador.vercel.app"),
   title: {
     default: "Nexora · Webs que venden. Hechas con IA.",
     template: "%s · Nexora",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description:
       "El nexo entre tu negocio y tus clientes. Webs profesionales hechas con IA, en días y a precio desde honesto.",
     type: "website",
-    url: "https://nexora.vercel.app",
+    url: "https://botcotizador.vercel.app",
     siteName: "Nexora",
     locale: "es_MX",
     images: [
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://nexora.vercel.app",
+    canonical: "https://botcotizador.vercel.app",
   },
 };
 

@@ -10,8 +10,8 @@ export const siteConfig = {
   name: "Nexora",
   tagline: "El nexo entre tu negocio y tus clientes.",
   valueLine: "Webs que venden. Hechas con IA.",
-  url: "https://nexora.vercel.app",
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP || "52XXXXXXXXXX",
+  url: "https://botcotizador.vercel.app",
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP || "528145575257",
   email: process.env.NEXT_PUBLIC_EMAIL || "hola@nexora.mx",
 } as const;
 
