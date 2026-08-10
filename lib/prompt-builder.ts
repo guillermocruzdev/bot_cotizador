@@ -39,9 +39,9 @@ export interface PromptAnalysis {
   // ── Registro de despliegue (solo packs de muestra de la agencia) ──
   /** Código único del PACK (ej. "PK-008") para identificarlo en Vercel/GitHub. */
   codigo?: string;
-  /** URL de Vercel propuesta (ej. "https://vibercoder-landing.vercel.app"). */
+  /** URL de Vercel propuesta (ej. "https://nexora-landing.vercel.app"). */
   slugVercel?: string;
-  /** Repo de GitHub propuesto (ej. "https://github.com/VibeCoder/pack-landing"). */
+  /** Repo de GitHub propuesto (ej. "https://github.com/Nexora/pack-landing"). */
   repoGitHub?: string;
 }
 

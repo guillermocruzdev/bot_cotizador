@@ -6,8 +6,8 @@
 > | Producto | SaaS multi-tenant B2B |
 > | Nivel | N5 · Ecosistema |
 > | Archivo | `PACK-saas.md` |
-> | URL Vercel | https://vibercoder-saas.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-saas |
+> | URL Vercel | https://nexora-saas.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-saas |
 > | Precio desde | $60,000 MXN |
 
 # 📦 PACK DE PROMPTS · Software como servicio (SaaS) multi-tenant — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | NubeContable |
 | Tipo de proyecto | Software como servicio (SaaS) multi-tenant |
 | Código de registro | `PK-027` |
-| URL Vercel | https://vibercoder-saas.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-saas |
+| URL Vercel | https://nexora-saas.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-saas |
 | 🎭 Rol que conduce el proyecto | Arquitecto de software como servicio + product manager multi-tenant |
 | Nivel | Avanzado |
 | Presupuesto estimado | $60,000 MXN – $120,000 MXN |

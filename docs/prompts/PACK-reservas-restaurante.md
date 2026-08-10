@@ -6,8 +6,8 @@
 > | Producto | Reservas de restaurante |
 > | Nivel | N2 · Negocio |
 > | Archivo | `PACK-reservas-restaurante.md` |
-> | URL Vercel | https://vibercoder-reservas-restaurante.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-reservas-restaurante |
+> | URL Vercel | https://nexora-reservas-restaurante.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-reservas-restaurante |
 > | Precio desde | $12,000 MXN |
 
 # 📦 PACK DE PROMPTS · Sistema de reservas de mesa para restaurante — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | La Esquina Bistro |
 | Tipo de proyecto | Sistema de reservas de mesa para restaurante |
 | Código de registro | `PK-012` |
-| URL Vercel | https://vibercoder-reservas-restaurante.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-reservas-restaurante |
+| URL Vercel | https://nexora-reservas-restaurante.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-reservas-restaurante |
 | 🎭 Rol que conduce el proyecto | Consultor de operación restaurantera + diseñador de flujo de reservas |
 | Nivel | Profesional |
 | Presupuesto estimado | $26,796 MXN – $32,796 MXN |

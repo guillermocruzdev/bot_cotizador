@@ -95,7 +95,7 @@ scripts/                        → Tests y previews (tsx, deben ser type-safe):
 supabase/
   schema.sql                    → Esquema del cotizador (tabla leads)
   migrations/0001..0003*.sql    → Migraciones del sistema de prospección
-docs/                           → Documentación (MERCADO_VIBECODER.md, MERCADO_PAGINAS_VIBECODER.md, IMPLEMENTACION_CARTERA_ROO.md, prompts/PACK-*.md)
+docs/                           → Documentación (MERCADO_VIBECODER.md, MERCADO_PAGINAS_VIBECODER.md, IMPLEMENTACION_CARTERA_ROO.md, prompts/PACK-*.md). **CRECIMIENTO DE LA AGENCIA:** `docs/prompts/AGENCIA-CRECIMIENTO-ROO.md` = plan maestro por fases (FASE 0-15, ⭐/✨) para construir la vitrina DENTRO de la app del cotizador Alex (route group `app/(marketing)/`; una sola app, un solo deploy/dominio nexora.mx; marca Nexora, logo, paleta, portafolio data-driven, SEO y pipeline de ventas). NO tocar el motor del cotizador.
 types/index.ts                  → Tipos compartidos
 ```
 

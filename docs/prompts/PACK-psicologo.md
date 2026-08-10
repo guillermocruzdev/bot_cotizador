@@ -6,8 +6,8 @@
 > | Producto | Landing de psicólogo con asistente IA |
 > | Nivel | N1 · Presencia (extra) |
 > | Archivo | `PACK-psicologo.md` |
-> | URL Vercel | https://vibercoder-psicologo.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-psicologo |
+> | URL Vercel | https://nexora-psicologo.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-psicologo |
 > | Precio desde | $12,000 MXN |
 
 # 📦 PACK DE PROMPTS · Landing para consultorio de psicología con asistente IA — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -109,8 +109,8 @@
 | Cliente | Lic. Paola Rivera |
 | Tipo de proyecto | Landing para consultorio de psicología con asistente IA |
 | Código de registro | `PK-029` |
-| URL Vercel | https://vibercoder-psicologo.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-psicologo |
+| URL Vercel | https://nexora-psicologo.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-psicologo |
 | 🎭 Rol que conduce el proyecto | UX Researcher + estratega de conversión |
 | Nivel | Profesional |
 | Presupuesto estimado | $15,260 MXN – $18,260 MXN |

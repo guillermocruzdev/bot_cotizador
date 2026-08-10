@@ -6,8 +6,8 @@
 > | Producto | E-commerce (tienda online) |
 > | Nivel | N3 · Venta |
 > | Archivo | `PACK-ecommerce.md` |
-> | URL Vercel | https://vibercoder-ecommerce.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-ecommerce |
+> | URL Vercel | https://nexora-ecommerce.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-ecommerce |
 > | Precio desde | $20,000 MXN |
 
 # 📦 PACK DE PROMPTS · Tienda online con carrito y pagos — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Moda GDL |
 | Tipo de proyecto | Tienda online con carrito y pagos |
 | Código de registro | `PK-017` |
-| URL Vercel | https://vibercoder-ecommerce.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-ecommerce |
+| URL Vercel | https://nexora-ecommerce.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-ecommerce |
 | 🎭 Rol que conduce el proyecto | Product Manager de ecommerce + optimizador de conversión |
 | Nivel | Avanzado |
 | Presupuesto estimado | $32,640 MXN – $36,640 MXN |

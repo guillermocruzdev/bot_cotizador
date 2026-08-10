@@ -6,8 +6,8 @@
 > | Producto | Reservas con pago por adelantado |
 > | Nivel | N3 · Venta |
 > | Archivo | `PACK-reservas-pago.md` |
-> | URL Vercel | https://vibercoder-reservas-pago.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-reservas-pago |
+> | URL Vercel | https://nexora-reservas-pago.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-reservas-pago |
 > | Precio desde | $18,000 MXN |
 
 # 📦 PACK DE PROMPTS · Sistema de reservas con pago por adelantado — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Spa Serenidad |
 | Tipo de proyecto | Sistema de reservas con pago por adelantado |
 | Código de registro | `PK-016` |
-| URL Vercel | https://vibercoder-reservas-pago.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-reservas-pago |
+| URL Vercel | https://nexora-reservas-pago.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-reservas-pago |
 | 🎭 Rol que conduce el proyecto | Product Manager de servicios + diseñador de flujo de agenda |
 | Nivel | Avanzado |
 | Presupuesto estimado | $26,796 MXN – $32,796 MXN |

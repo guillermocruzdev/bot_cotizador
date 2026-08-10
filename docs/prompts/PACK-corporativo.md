@@ -6,8 +6,8 @@
 > | Producto | Sitio corporativo (multi-página) |
 > | Nivel | N2 · Negocio |
 > | Archivo | `PACK-corporativo.md` |
-> | URL Vercel | https://vibercoder-corporativo.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-corporativo |
+> | URL Vercel | https://nexora-corporativo.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-corporativo |
 > | Precio desde | $15,000 MXN |
 
 # 📦 PACK DE PROMPTS · Sitio corporativo (varias páginas) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Grupo Constructor MX |
 | Tipo de proyecto | Sitio corporativo (varias páginas) |
 | Código de registro | `PK-015` |
-| URL Vercel | https://vibercoder-corporativo.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-corporativo |
+| URL Vercel | https://nexora-corporativo.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-corporativo |
 | 🎭 Rol que conduce el proyecto | Consultor de presencia digital + arquitecto de contenido multi-página |
 | Nivel | Profesional |
 | Presupuesto estimado | $20,300 MXN – $25,800 MXN |

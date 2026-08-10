@@ -6,8 +6,8 @@
 > | Producto | Sitio multilingüe |
 > | Nivel | N2 · Negocio |
 > | Archivo | `PACK-multilingue.md` |
-> | URL Vercel | https://vibercoder-multilingue.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-multilingue |
+> | URL Vercel | https://nexora-multilingue.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-multilingue |
 > | Precio desde | $11,000 MXN |
 
 # 📦 PACK DE PROMPTS · Sitio multilingüe (español + inglés con SEO por idioma) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Tour Riviera Maya |
 | Tipo de proyecto | Sitio multilingüe (español + inglés con SEO por idioma) |
 | Código de registro | `PK-010` |
-| URL Vercel | https://vibercoder-multilingue.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-multilingue |
+| URL Vercel | https://nexora-multilingue.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-multilingue |
 | 🎭 Rol que conduce el proyecto | UX Researcher + estratega de conversión |
 | Nivel | Profesional |
 | Presupuesto estimado | $15,260 MXN – $18,760 MXN |

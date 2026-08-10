@@ -6,8 +6,8 @@
 > | Producto | Link-in-bio premium |
 > | Nivel | N0 · Entrada |
 > | Archivo | `PACK-link-in-bio.md` |
-> | URL Vercel | https://vibercoder-link-in-bio.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-link-in-bio |
+> | URL Vercel | https://nexora-link-in-bio.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-link-in-bio |
 > | Precio desde | $2,500 MXN |
 
 # 📦 PACK DE PROMPTS · Página de enlaces (link-in-bio) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Sofía Creativa |
 | Tipo de proyecto | Página de enlaces (link-in-bio) |
 | Código de registro | `PK-001` |
-| URL Vercel | https://vibercoder-link-in-bio.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-link-in-bio |
+| URL Vercel | https://nexora-link-in-bio.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-link-in-bio |
 | 🎭 Rol que conduce el proyecto | Estratega de marca personal / creador de contenido |
 | Nivel | Básico |
 | Presupuesto estimado | $5,800 MXN – $7,800 MXN |

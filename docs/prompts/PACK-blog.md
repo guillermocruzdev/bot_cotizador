@@ -6,8 +6,8 @@
 > | Producto | Blog / contenido con SEO |
 > | Nivel | N1 · Presencia |
 > | Archivo | `PACK-blog.md` |
-> | URL Vercel | https://vibercoder-blog.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-blog |
+> | URL Vercel | https://nexora-blog.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-blog |
 > | Precio desde | $9,000 MXN |
 
 # 📦 PACK DE PROMPTS · Blog / sitio de contenido con SEO — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Nutrición Clara |
 | Tipo de proyecto | Blog / sitio de contenido con SEO |
 | Código de registro | `PK-009` |
-| URL Vercel | https://vibercoder-blog.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-blog |
+| URL Vercel | https://nexora-blog.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-blog |
 | 🎭 Rol que conduce el proyecto | Editor de contenido + especialista SEO |
 | Nivel | Profesional |
 | Presupuesto estimado | $12,180 MXN – $14,680 MXN |

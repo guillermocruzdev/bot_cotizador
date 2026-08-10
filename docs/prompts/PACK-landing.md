@@ -6,8 +6,8 @@
 > | Producto | Landing page |
 > | Nivel | N1 · Presencia |
 > | Archivo | `PACK-landing.md` |
-> | URL Vercel | https://vibercoder-landing.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-landing |
+> | URL Vercel | https://nexora-landing.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-landing |
 > | Precio desde | $8,500 MXN |
 
 # 📦 PACK DE PROMPTS · Página de presentación para barbería (landing) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Barbería El Corte |
 | Tipo de proyecto | Página de presentación para barbería (landing) |
 | Código de registro | `PK-008` |
-| URL Vercel | https://vibercoder-landing.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-landing |
+| URL Vercel | https://nexora-landing.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-landing |
 | 🎭 Rol que conduce el proyecto | UX Researcher + estratega de conversión |
 | Nivel | Profesional |
 | Presupuesto estimado | $12,760 MXN – $15,260 MXN |

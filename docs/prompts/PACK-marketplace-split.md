@@ -6,8 +6,8 @@
 > | Producto | Marketplace con split de pagos |
 > | Nivel | N5 · Ecosistema |
 > | Archivo | `PACK-marketplace-split.md` |
-> | URL Vercel | https://vibercoder-marketplace-split.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-marketplace-split |
+> | URL Vercel | https://nexora-marketplace-split.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-marketplace-split |
 > | Precio desde | $70,000 MXN |
 
 # 📦 PACK DE PROMPTS · Marketplace con split de pagos (escrow multi-vendedor) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Plaza Digital MX |
 | Tipo de proyecto | Marketplace con split de pagos (escrow multi-vendedor) |
 | Código de registro | `PK-026` |
-| URL Vercel | https://vibercoder-marketplace-split.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-marketplace-split |
+| URL Vercel | https://nexora-marketplace-split.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-marketplace-split |
 | 🎭 Rol que conduce el proyecto | Arquitecto de marketplace + product manager de plataformas multi-vendedor |
 | Nivel | Avanzado |
 | Presupuesto estimado | $70,000 MXN – $150,000 MXN |

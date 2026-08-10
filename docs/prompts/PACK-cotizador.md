@@ -6,8 +6,8 @@
 > | Producto | Cotizador / presupuesto en línea |
 > | Nivel | N2 · Negocio |
 > | Archivo | `PACK-cotizador.md` |
-> | URL Vercel | https://vibercoder-cotizador.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-cotizador |
+> | URL Vercel | https://nexora-cotizador.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-cotizador |
 > | Precio desde | $15,000 MXN |
 
 # 📦 PACK DE PROMPTS · Cotizador / presupuesto en línea — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Iván Contreras |
 | Tipo de proyecto | Cotizador / presupuesto en línea |
 | Código de registro | `PK-013` |
-| URL Vercel | https://vibercoder-cotizador.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-cotizador |
+| URL Vercel | https://nexora-cotizador.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-cotizador |
 | 🎭 Rol que conduce el proyecto | Director de producto del cotizador + optimizador de conversión de servicios |
 | Nivel | Profesional |
 | Presupuesto estimado | $20,300 MXN – $28,800 MXN |

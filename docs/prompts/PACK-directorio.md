@@ -6,8 +6,8 @@
 > | Producto | Directorio / listado de negocios |
 > | Nivel | N4 · Plataforma |
 > | Archivo | `PACK-directorio.md` |
-> | URL Vercel | https://vibercoder-directorio.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-directorio |
+> | URL Vercel | https://nexora-directorio.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-directorio |
 > | Precio desde | $22,000 MXN |
 
 # 📦 PACK DE PROMPTS · Directorio de negocios (fichas y mapa) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Cámara de Comercio Local |
 | Tipo de proyecto | Directorio de negocios (fichas y mapa) |
 | Código de registro | `PK-019` |
-| URL Vercel | https://vibercoder-directorio.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-directorio |
+| URL Vercel | https://nexora-directorio.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-directorio |
 | 🎭 Rol que conduce el proyecto | Consultor de asociaciones/cámaras + arquitecto de directorio |
 | Nivel | Avanzado |
 | Presupuesto estimado | $22,000 MXN – $45,000 MXN |

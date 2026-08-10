@@ -6,8 +6,8 @@
 > | Producto | Portal inmobiliario |
 > | Nivel | N4 · Plataforma |
 > | Archivo | `PACK-inmobiliaria.md` |
-> | URL Vercel | https://vibercoder-inmobiliaria.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-inmobiliaria |
+> | URL Vercel | https://nexora-inmobiliaria.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-inmobiliaria |
 > | Precio desde | $25,000 MXN |
 
 # 📦 PACK DE PROMPTS · Portal inmobiliario (propiedades, filtros y leads) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Inmobiliaria Horizonte |
 | Tipo de proyecto | Portal inmobiliario (propiedades, filtros y leads) |
 | Código de registro | `PK-021` |
-| URL Vercel | https://vibercoder-inmobiliaria.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-inmobiliaria |
+| URL Vercel | https://nexora-inmobiliaria.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-inmobiliaria |
 | 🎭 Rol que conduce el proyecto | Consultor inmobiliario digital + arquitecto de portal de propiedades |
 | Nivel | Avanzado |
 | Presupuesto estimado | $25,000 MXN – $50,000 MXN |

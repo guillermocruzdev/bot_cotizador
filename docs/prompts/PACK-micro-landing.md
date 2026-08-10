@@ -6,8 +6,8 @@
 > | Producto | Micro-landing promocional |
 > | Nivel | N0 · Entrada |
 > | Archivo | `PACK-micro-landing.md` |
-> | URL Vercel | https://vibercoder-micro-landing.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-micro-landing |
+> | URL Vercel | https://nexora-micro-landing.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-micro-landing |
 > | Precio desde | $4,500 MXN |
 
 # 📦 PACK DE PROMPTS · Micro-landing promocional (una sola oferta) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | PromoTech Studio |
 | Tipo de proyecto | Micro-landing promocional (una sola oferta) |
 | Código de registro | `PK-004` |
-| URL Vercel | https://vibercoder-micro-landing.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-micro-landing |
+| URL Vercel | https://nexora-micro-landing.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-micro-landing |
 | 🎭 Rol que conduce el proyecto | UX Researcher + estratega de conversión |
 | Nivel | Básico |
 | Presupuesto estimado | $5,800 MXN – $8,300 MXN |

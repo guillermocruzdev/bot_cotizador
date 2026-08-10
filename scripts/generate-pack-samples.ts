@@ -40,40 +40,40 @@ interface PackRegistro {
 /** Códigos asignados por orden del catálogo maestro (docs/MERCADO_PAGINAS_VIBECODER.md). */
 const REGISTRO_PACKS: Record<string, PackRegistro> = {
   // Nivel 0 · Entrada
-  "PACK-link-in-bio.md": { codigo: "PK-001", nombre: "Link-in-bio premium", nivel: "N0 · Entrada", desde: 2500, slugVercel: "vibercoder-link-in-bio", repoGitHub: "VibeCoder/pack-link-in-bio" },
-  "PACK-menu-digital.md": { codigo: "PK-002", nombre: "Menú digital con QR", nivel: "N0 · Entrada", desde: 3500, slugVercel: "vibercoder-menu-digital", repoGitHub: "VibeCoder/pack-menu-digital" },
-  "PACK-tarjeta-digital.md": { codigo: "PK-003", nombre: "Tarjeta digital / minisitio", nivel: "N0 · Entrada", desde: 4500, slugVercel: "vibercoder-tarjeta-digital", repoGitHub: "VibeCoder/pack-tarjeta-digital" },
-  "PACK-micro-landing.md": { codigo: "PK-004", nombre: "Micro-landing promocional", nivel: "N0 · Entrada", desde: 4500, slugVercel: "vibercoder-micro-landing", repoGitHub: "VibeCoder/pack-micro-landing" },
+  "PACK-link-in-bio.md": { codigo: "PK-001", nombre: "Link-in-bio premium", nivel: "N0 · Entrada", desde: 2500, slugVercel: "nexora-link-in-bio", repoGitHub: "Nexora/pack-link-in-bio" },
+  "PACK-menu-digital.md": { codigo: "PK-002", nombre: "Menú digital con QR", nivel: "N0 · Entrada", desde: 3500, slugVercel: "nexora-menu-digital", repoGitHub: "Nexora/pack-menu-digital" },
+  "PACK-tarjeta-digital.md": { codigo: "PK-003", nombre: "Tarjeta digital / minisitio", nivel: "N0 · Entrada", desde: 4500, slugVercel: "nexora-tarjeta-digital", repoGitHub: "Nexora/pack-tarjeta-digital" },
+  "PACK-micro-landing.md": { codigo: "PK-004", nombre: "Micro-landing promocional", nivel: "N0 · Entrada", desde: 4500, slugVercel: "nexora-micro-landing", repoGitHub: "Nexora/pack-micro-landing" },
   // Nivel 1 · Presencia
-  "PACK-landing-evento.md": { codigo: "PK-006", nombre: "Landing de evento", nivel: "N1 · Presencia", desde: 6500, slugVercel: "vibercoder-landing-evento", repoGitHub: "VibeCoder/pack-landing-evento" },
-  "PACK-portafolio.md": { codigo: "PK-007", nombre: "Portafolio profesional", nivel: "N1 · Presencia", desde: 7000, slugVercel: "vibercoder-portafolio", repoGitHub: "VibeCoder/pack-portafolio" },
-  "PACK-landing.md": { codigo: "PK-008", nombre: "Landing page", nivel: "N1 · Presencia", desde: 8500, slugVercel: "vibercoder-landing", repoGitHub: "VibeCoder/pack-landing" },
-  "PACK-blog.md": { codigo: "PK-009", nombre: "Blog / contenido con SEO", nivel: "N1 · Presencia", desde: 9000, slugVercel: "vibercoder-blog", repoGitHub: "VibeCoder/pack-blog" },
+  "PACK-landing-evento.md": { codigo: "PK-006", nombre: "Landing de evento", nivel: "N1 · Presencia", desde: 6500, slugVercel: "nexora-landing-evento", repoGitHub: "Nexora/pack-landing-evento" },
+  "PACK-portafolio.md": { codigo: "PK-007", nombre: "Portafolio profesional", nivel: "N1 · Presencia", desde: 7000, slugVercel: "nexora-portafolio", repoGitHub: "Nexora/pack-portafolio" },
+  "PACK-landing.md": { codigo: "PK-008", nombre: "Landing page", nivel: "N1 · Presencia", desde: 8500, slugVercel: "nexora-landing", repoGitHub: "Nexora/pack-landing" },
+  "PACK-blog.md": { codigo: "PK-009", nombre: "Blog / contenido con SEO", nivel: "N1 · Presencia", desde: 9000, slugVercel: "nexora-blog", repoGitHub: "Nexora/pack-blog" },
   // Nivel 2 · Negocio
-  "PACK-multilingue.md": { codigo: "PK-010", nombre: "Sitio multilingüe", nivel: "N2 · Negocio", desde: 11000, slugVercel: "vibercoder-multilingue", repoGitHub: "VibeCoder/pack-multilingue" },
-  "PACK-pwa.md": { codigo: "PK-011", nombre: "PWA instalable (app sin tienda)", nivel: "N2 · Negocio", desde: 12000, slugVercel: "vibercoder-pwa", repoGitHub: "VibeCoder/pack-pwa" },
-  "PACK-reservas-restaurante.md": { codigo: "PK-012", nombre: "Reservas de restaurante", nivel: "N2 · Negocio", desde: 12000, slugVercel: "vibercoder-reservas-restaurante", repoGitHub: "VibeCoder/pack-reservas-restaurante" },
-  "PACK-cotizador.md": { codigo: "PK-013", nombre: "Cotizador / presupuesto en línea", nivel: "N2 · Negocio", desde: 15000, slugVercel: "vibercoder-cotizador", repoGitHub: "VibeCoder/pack-cotizador" },
-  "PACK-citas.md": { codigo: "PK-014", nombre: "Sistema de citas", nivel: "N2 · Negocio", desde: 15000, slugVercel: "vibercoder-citas", repoGitHub: "VibeCoder/pack-citas" },
-  "PACK-corporativo.md": { codigo: "PK-015", nombre: "Sitio corporativo (multi-página)", nivel: "N2 · Negocio", desde: 15000, slugVercel: "vibercoder-corporativo", repoGitHub: "VibeCoder/pack-corporativo" },
+  "PACK-multilingue.md": { codigo: "PK-010", nombre: "Sitio multilingüe", nivel: "N2 · Negocio", desde: 11000, slugVercel: "nexora-multilingue", repoGitHub: "Nexora/pack-multilingue" },
+  "PACK-pwa.md": { codigo: "PK-011", nombre: "PWA instalable (app sin tienda)", nivel: "N2 · Negocio", desde: 12000, slugVercel: "nexora-pwa", repoGitHub: "Nexora/pack-pwa" },
+  "PACK-reservas-restaurante.md": { codigo: "PK-012", nombre: "Reservas de restaurante", nivel: "N2 · Negocio", desde: 12000, slugVercel: "nexora-reservas-restaurante", repoGitHub: "Nexora/pack-reservas-restaurante" },
+  "PACK-cotizador.md": { codigo: "PK-013", nombre: "Cotizador / presupuesto en línea", nivel: "N2 · Negocio", desde: 15000, slugVercel: "nexora-cotizador", repoGitHub: "Nexora/pack-cotizador" },
+  "PACK-citas.md": { codigo: "PK-014", nombre: "Sistema de citas", nivel: "N2 · Negocio", desde: 15000, slugVercel: "nexora-citas", repoGitHub: "Nexora/pack-citas" },
+  "PACK-corporativo.md": { codigo: "PK-015", nombre: "Sitio corporativo (multi-página)", nivel: "N2 · Negocio", desde: 15000, slugVercel: "nexora-corporativo", repoGitHub: "Nexora/pack-corporativo" },
   // Nivel 3 · Venta
-  "PACK-reservas-pago.md": { codigo: "PK-016", nombre: "Reservas con pago por adelantado", nivel: "N3 · Venta", desde: 18000, slugVercel: "vibercoder-reservas-pago", repoGitHub: "VibeCoder/pack-reservas-pago" },
-  "PACK-ecommerce.md": { codigo: "PK-017", nombre: "E-commerce (tienda online)", nivel: "N3 · Venta", desde: 20000, slugVercel: "vibercoder-ecommerce", repoGitHub: "VibeCoder/pack-ecommerce" },
-  "PACK-ecommerce-pro.md": { codigo: "PK-018", nombre: "E-commerce pro (inventario + CFDI)", nivel: "N3 · Venta", desde: 28000, slugVercel: "vibercoder-ecommerce-pro", repoGitHub: "VibeCoder/pack-ecommerce-pro" },
+  "PACK-reservas-pago.md": { codigo: "PK-016", nombre: "Reservas con pago por adelantado", nivel: "N3 · Venta", desde: 18000, slugVercel: "nexora-reservas-pago", repoGitHub: "Nexora/pack-reservas-pago" },
+  "PACK-ecommerce.md": { codigo: "PK-017", nombre: "E-commerce (tienda online)", nivel: "N3 · Venta", desde: 20000, slugVercel: "nexora-ecommerce", repoGitHub: "Nexora/pack-ecommerce" },
+  "PACK-ecommerce-pro.md": { codigo: "PK-018", nombre: "E-commerce pro (inventario + CFDI)", nivel: "N3 · Venta", desde: 28000, slugVercel: "nexora-ecommerce-pro", repoGitHub: "Nexora/pack-ecommerce-pro" },
   // Nivel 4 · Plataforma
-  "PACK-directorio.md": { codigo: "PK-019", nombre: "Directorio / listado de negocios", nivel: "N4 · Plataforma", desde: 22000, slugVercel: "vibercoder-directorio", repoGitHub: "VibeCoder/pack-directorio" },
-  "PACK-webapp.md": { codigo: "PK-020", nombre: "Plataforma / webapp a medida", nivel: "N4 · Plataforma", desde: 25000, slugVercel: "vibercoder-webapp", repoGitHub: "VibeCoder/pack-webapp" },
-  "PACK-inmobiliaria.md": { codigo: "PK-021", nombre: "Portal inmobiliario", nivel: "N4 · Plataforma", desde: 25000, slugVercel: "vibercoder-inmobiliaria", repoGitHub: "VibeCoder/pack-inmobiliaria" },
-  "PACK-telemedicina.md": { codigo: "PK-022", nombre: "Portal de salud (telemedicina)", nivel: "N4 · Plataforma", desde: 26000, slugVercel: "vibercoder-telemedicina", repoGitHub: "VibeCoder/pack-telemedicina" },
-  "PACK-membresias.md": { codigo: "PK-023", nombre: "Portal de membresías", nivel: "N4 · Plataforma", desde: 28000, slugVercel: "vibercoder-membresias", repoGitHub: "VibeCoder/pack-membresias" },
-  "PACK-cursos.md": { codigo: "PK-024", nombre: "Plataforma de cursos online", nivel: "N4 · Plataforma", desde: 30000, slugVercel: "vibercoder-cursos", repoGitHub: "VibeCoder/pack-cursos" },
+  "PACK-directorio.md": { codigo: "PK-019", nombre: "Directorio / listado de negocios", nivel: "N4 · Plataforma", desde: 22000, slugVercel: "nexora-directorio", repoGitHub: "Nexora/pack-directorio" },
+  "PACK-webapp.md": { codigo: "PK-020", nombre: "Plataforma / webapp a medida", nivel: "N4 · Plataforma", desde: 25000, slugVercel: "nexora-webapp", repoGitHub: "Nexora/pack-webapp" },
+  "PACK-inmobiliaria.md": { codigo: "PK-021", nombre: "Portal inmobiliario", nivel: "N4 · Plataforma", desde: 25000, slugVercel: "nexora-inmobiliaria", repoGitHub: "Nexora/pack-inmobiliaria" },
+  "PACK-telemedicina.md": { codigo: "PK-022", nombre: "Portal de salud (telemedicina)", nivel: "N4 · Plataforma", desde: 26000, slugVercel: "nexora-telemedicina", repoGitHub: "Nexora/pack-telemedicina" },
+  "PACK-membresias.md": { codigo: "PK-023", nombre: "Portal de membresías", nivel: "N4 · Plataforma", desde: 28000, slugVercel: "nexora-membresias", repoGitHub: "Nexora/pack-membresias" },
+  "PACK-cursos.md": { codigo: "PK-024", nombre: "Plataforma de cursos online", nivel: "N4 · Plataforma", desde: 30000, slugVercel: "nexora-cursos", repoGitHub: "Nexora/pack-cursos" },
   // Nivel 5 · Ecosistema
-  "PACK-marketplace.md": { codigo: "PK-025", nombre: "Marketplace multi-vendedor", nivel: "N5 · Ecosistema", desde: 40000, slugVercel: "vibercoder-marketplace", repoGitHub: "VibeCoder/pack-marketplace" },
-  "PACK-marketplace-split.md": { codigo: "PK-026", nombre: "Marketplace con split de pagos", nivel: "N5 · Ecosistema", desde: 70000, slugVercel: "vibercoder-marketplace-split", repoGitHub: "VibeCoder/pack-marketplace-split" },
-  "PACK-saas.md": { codigo: "PK-027", nombre: "SaaS multi-tenant B2B", nivel: "N5 · Ecosistema", desde: 60000, slugVercel: "vibercoder-saas", repoGitHub: "VibeCoder/pack-saas" },
-  "PACK-erp.md": { codigo: "PK-028", nombre: "ERP / CRM a medida", nivel: "N5 · Ecosistema", desde: 90000, slugVercel: "vibercoder-erp", repoGitHub: "VibeCoder/pack-erp" },
+  "PACK-marketplace.md": { codigo: "PK-025", nombre: "Marketplace multi-vendedor", nivel: "N5 · Ecosistema", desde: 40000, slugVercel: "nexora-marketplace", repoGitHub: "Nexora/pack-marketplace" },
+  "PACK-marketplace-split.md": { codigo: "PK-026", nombre: "Marketplace con split de pagos", nivel: "N5 · Ecosistema", desde: 70000, slugVercel: "nexora-marketplace-split", repoGitHub: "Nexora/pack-marketplace-split" },
+  "PACK-saas.md": { codigo: "PK-027", nombre: "SaaS multi-tenant B2B", nivel: "N5 · Ecosistema", desde: 60000, slugVercel: "nexora-saas", repoGitHub: "Nexora/pack-saas" },
+  "PACK-erp.md": { codigo: "PK-028", nombre: "ERP / CRM a medida", nivel: "N5 · Ecosistema", desde: 90000, slugVercel: "nexora-erp", repoGitHub: "Nexora/pack-erp" },
   // Extra · demo
-  "PACK-psicologo.md": { codigo: "PK-029", nombre: "Landing de psicólogo con asistente IA", nivel: "N1 · Presencia (extra)", desde: 12000, slugVercel: "vibercoder-psicologo", repoGitHub: "VibeCoder/pack-psicologo" },
+  "PACK-psicologo.md": { codigo: "PK-029", nombre: "Landing de psicólogo con asistente IA", nivel: "N1 · Presencia (extra)", desde: 12000, slugVercel: "nexora-psicologo", repoGitHub: "Nexora/pack-psicologo" },
 };
 
 /** Servicios de la agencia que NO generan un PACK de web (se listan igual en el índice). */
@@ -1044,7 +1044,7 @@ function buildIndicePacks(): string {
     return aN.localeCompare(bN, undefined, { numeric: true });
   });
   const hoy = new Date().toLocaleDateString("es-MX", { day: "2-digit", month: "long", year: "numeric" });
-  return `# 📇 ÍNDICE DE PACKS · Vitrina VibeCoder (qué página es cuál en Vercel / GitHub)
+  return `# 📇 ÍNDICE DE PACKS · Vitrina Nexora (qué página es cuál en Vercel / GitHub)
 
 > Generado automáticamente por \`npx tsx scripts/generate-pack-samples.ts\` (${hoy}). No lo edites a mano:
 > se regenera en cada corrida. Para registrar la URL REAL una vez desplegada, usa \`docs/prompts/REGISTRO-DEPLOY.md\`.

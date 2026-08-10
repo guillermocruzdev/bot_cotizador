@@ -6,8 +6,8 @@
 > | Producto | Menú digital con QR |
 > | Nivel | N0 · Entrada |
 > | Archivo | `PACK-menu-digital.md` |
-> | URL Vercel | https://vibercoder-menu-digital.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-menu-digital |
+> | URL Vercel | https://nexora-menu-digital.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-menu-digital |
 > | Precio desde | $3,500 MXN |
 
 # 📦 PACK DE PROMPTS · Menú digital con código QR — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Taquería El Pastor |
 | Tipo de proyecto | Menú digital con código QR |
 | Código de registro | `PK-002` |
-| URL Vercel | https://vibercoder-menu-digital.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-menu-digital |
+| URL Vercel | https://nexora-menu-digital.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-menu-digital |
 | 🎭 Rol que conduce el proyecto | Consultor gastronómico + diseñador de menú digital |
 | Nivel | Básico |
 | Presupuesto estimado | $6,960 MXN – $9,960 MXN |

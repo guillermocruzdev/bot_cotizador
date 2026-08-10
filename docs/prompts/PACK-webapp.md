@@ -6,8 +6,8 @@
 > | Producto | Plataforma / webapp a medida |
 > | Nivel | N4 · Plataforma |
 > | Archivo | `PACK-webapp.md` |
-> | URL Vercel | https://vibercoder-webapp.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-webapp |
+> | URL Vercel | https://nexora-webapp.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-webapp |
 > | Precio desde | $25,000 MXN |
 
 # 📦 PACK DE PROMPTS · Plataforma / sistema web a medida — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Taller Mecánico Express |
 | Tipo de proyecto | Plataforma / sistema web a medida |
 | Código de registro | `PK-020` |
-| URL Vercel | https://vibercoder-webapp.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-webapp |
+| URL Vercel | https://nexora-webapp.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-webapp |
 | 🎭 Rol que conduce el proyecto | Arquitecto de software + product manager de sistemas |
 | Nivel | Avanzado |
 | Presupuesto estimado | $20,300 MXN – $45,000 MXN |

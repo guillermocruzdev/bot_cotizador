@@ -6,8 +6,8 @@
 > | Producto | Portafolio profesional |
 > | Nivel | N1 · Presencia |
 > | Archivo | `PACK-portafolio.md` |
-> | URL Vercel | https://vibercoder-portafolio.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-portafolio |
+> | URL Vercel | https://nexora-portafolio.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-portafolio |
 > | Precio desde | $7,000 MXN |
 
 # 📦 PACK DE PROMPTS · Portafolio profesional (galería con animaciones) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Mariana Fotógrafa |
 | Tipo de proyecto | Portafolio profesional (galería con animaciones) |
 | Código de registro | `PK-007` |
-| URL Vercel | https://vibercoder-portafolio.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-portafolio |
+| URL Vercel | https://nexora-portafolio.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-portafolio |
 | 🎭 Rol que conduce el proyecto | Diseñador de portafolio + narrador visual |
 | Nivel | Profesional |
 | Presupuesto estimado | $10,150 MXN – $12,150 MXN |

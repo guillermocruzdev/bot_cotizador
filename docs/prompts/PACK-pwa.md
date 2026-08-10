@@ -6,8 +6,8 @@
 > | Producto | PWA instalable (app sin tienda) |
 > | Nivel | N2 · Negocio |
 > | Archivo | `PACK-pwa.md` |
-> | URL Vercel | https://vibercoder-pwa.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-pwa |
+> | URL Vercel | https://nexora-pwa.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-pwa |
 > | Precio desde | $12,000 MXN |
 
 # 📦 PACK DE PROMPTS · Web instalable (PWA) con notificaciones — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Pizzería La Flama |
 | Tipo de proyecto | Web instalable (PWA) con notificaciones |
 | Código de registro | `PK-011` |
-| URL Vercel | https://vibercoder-pwa.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-pwa |
+| URL Vercel | https://nexora-pwa.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-pwa |
 | 🎭 Rol que conduce el proyecto | UX Researcher + estratega de conversión |
 | Nivel | Profesional |
 | Presupuesto estimado | $15,260 MXN – $19,260 MXN |

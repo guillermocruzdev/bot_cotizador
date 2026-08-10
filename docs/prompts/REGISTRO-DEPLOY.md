@@ -1,4 +1,4 @@
-# 🚀 REGISTRO DE DESPLIEGUE · VibeCoder (editar a mano)
+# 🚀 REGISTRO DE DESPLIEGUE · Nexora (editar a mano)
 
 > **Este archivo SÍ se edita a mano** (a diferencia de `INDICE-PACKS.md`, que se regenera solo).
 > A medida que despliegues cada PACK en Vercel / lo subas a GitHub, marca aquí la **URL real**,

@@ -6,8 +6,8 @@
 > | Producto | Marketplace multi-vendedor |
 > | Nivel | N5 · Ecosistema |
 > | Archivo | `PACK-marketplace.md` |
-> | URL Vercel | https://vibercoder-marketplace.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-marketplace |
+> | URL Vercel | https://nexora-marketplace.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-marketplace |
 > | Precio desde | $40,000 MXN |
 
 # 📦 PACK DE PROMPTS · Marketplace multi-vendedor (comisión por venta) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Mercado Local |
 | Tipo de proyecto | Marketplace multi-vendedor (comisión por venta) |
 | Código de registro | `PK-025` |
-| URL Vercel | https://vibercoder-marketplace.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-marketplace |
+| URL Vercel | https://nexora-marketplace.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-marketplace |
 | 🎭 Rol que conduce el proyecto | Arquitecto de marketplace + product manager de plataformas multi-vendedor |
 | Nivel | Avanzado |
 | Presupuesto estimado | $40,000 MXN – $90,000 MXN |

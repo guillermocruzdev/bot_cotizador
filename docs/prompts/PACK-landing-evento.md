@@ -6,8 +6,8 @@
 > | Producto | Landing de evento |
 > | Nivel | N1 · Presencia |
 > | Archivo | `PACK-landing-evento.md` |
-> | URL Vercel | https://vibercoder-landing-evento.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-landing-evento |
+> | URL Vercel | https://nexora-landing-evento.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-landing-evento |
 > | Precio desde | $6,500 MXN |
 
 # 📦 PACK DE PROMPTS · Landing de evento (registro y boletos) — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Congreso Innovación MX |
 | Tipo de proyecto | Landing de evento (registro y boletos) |
 | Código de registro | `PK-006` |
-| URL Vercel | https://vibercoder-landing-evento.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-landing-evento |
+| URL Vercel | https://nexora-landing-evento.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-landing-evento |
 | 🎭 Rol que conduce el proyecto | UX Researcher + estratega de conversión |
 | Nivel | Básico |
 | Presupuesto estimado | $7,540 MXN – $10,040 MXN |

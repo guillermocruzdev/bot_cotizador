@@ -6,8 +6,8 @@
 > | Producto | Sistema de citas |
 > | Nivel | N2 · Negocio |
 > | Archivo | `PACK-citas.md` |
-> | URL Vercel | https://vibercoder-citas.vercel.app |
-> | Repo GitHub | https://github.com/VibeCoder/pack-citas |
+> | URL Vercel | https://nexora-citas.vercel.app |
+> | Repo GitHub | https://github.com/Nexora/pack-citas |
 > | Precio desde | $15,000 MXN |
 
 # 📦 PACK DE PROMPTS · Sistema de Citas para Consultorio Dental — para Roo Code + DeepSeek (mobile-first, por fases)
@@ -96,8 +96,8 @@
 | Cliente | Dra. Laura Gómez |
 | Tipo de proyecto | Sistema de Citas para Consultorio Dental |
 | Código de registro | `PK-014` |
-| URL Vercel | https://vibercoder-citas.vercel.app |
-| Repo GitHub | https://github.com/VibeCoder/pack-citas |
+| URL Vercel | https://nexora-citas.vercel.app |
+| Repo GitHub | https://github.com/Nexora/pack-citas |
 | 🎭 Rol que conduce el proyecto | Product Manager de servicios + diseñador de flujo de agenda |
 | Nivel | Avanzado |
 | Presupuesto estimado | $54,630 MXN – $57,305 MXN |
