@@ -10,6 +10,7 @@
     "prompt:preview": "tsx scripts/sample-prompt.ts",
     "proposal:preview": "tsx scripts/sample-commercial.ts",
     "quote:preview": "tsx scripts/sample-quote.ts",
+    "sync:agencia": "tsx scripts/sync-agency-data.ts",
     "test:regression": "tsx scripts/regression-test.ts",
     "test:prospecting": "tsx scripts/prospecting-test.ts",
     "test:message": "tsx scripts/message-test.ts",

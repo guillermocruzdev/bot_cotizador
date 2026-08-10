@@ -91,7 +91,9 @@ components/
   ui/                           → primitivas shadcn/ui
 lib/                            → LÓGICA NUCLEO (ver §5) — el 90% de la lógica vive aquí
 prospecting/                    → Sistema de prospección WhatsApp (ver §7)
-scripts/                        → Tests y previews (tsx, deben ser type-safe): regression-test.ts, generate-pack-samples.ts (regenera los packs en docs/prompts/)
+data/
+  portfolio.json                → Fuente de verdad de la vitrina /portafolio (28 PACKs, zod). Lo genera `scripts/sync-agency-data.ts` (`npm run sync:agencia`). Precios = `precioDesde` (regla #7).
+scripts/                        → Tests y previews (tsx, deben ser type-safe): regression-test.ts, generate-pack-samples.ts (regenera los packs en docs/prompts/), pack-registry.ts (REGISTRO_PACKS/SERVICIOS_SIN_PACK/PackRegistro — módulo SIN efectos, compartido por generate-pack-samples y sync-agency-data), sync-agency-data.ts (genera data/portfolio.json)
 supabase/
   schema.sql                    → Esquema del cotizador (tabla leads)
   migrations/0001..0003*.sql    → Migraciones del sistema de prospección

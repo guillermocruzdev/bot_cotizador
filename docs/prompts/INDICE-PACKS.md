@@ -1,6 +1,6 @@
 # 📇 ÍNDICE DE PACKS · Vitrina Nexora (qué página es cuál en Vercel / GitHub)
 
-> Generado automáticamente por `npx tsx scripts/generate-pack-samples.ts` (09 de agosto de 2026). No lo edites a mano:
+> Generado automáticamente por `npx tsx scripts/generate-pack-samples.ts` (10 de agosto de 2026). No lo edites a mano:
 > se regenera en cada corrida. Para registrar la URL REAL una vez desplegada, usa `docs/prompts/REGISTRO-DEPLOY.md`.
 
 ## 🔑 Cómo funciona el código

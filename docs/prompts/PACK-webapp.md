@@ -12,7 +12,7 @@
 
 # 📦 PACK DE PROMPTS · Plataforma / sistema web a medida — para Roo Code + DeepSeek (mobile-first, por fases)
 
-> Generado por tu consultor senior (09 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
+> Generado por tu consultor senior (10 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
 > Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
 > 🎭 **Cada chat asume un ROL** (UX Researcher, Dev, QA, SRE, etc.): pega el bloque tal cual y el agente actúa como ese rol durante toda la fase.
 

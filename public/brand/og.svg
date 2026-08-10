@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="gx" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0" r="0.85">
+      <stop offset="0" stop-color="#2563EB" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#0F172A" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0 L0 0 0 72" fill="none" stroke="#1E293B" stroke-width="1" opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- Fondo night + brillo + rejilla técnica -->
+  <rect x="0" y="0" width="1200" height="630" fill="#0F172A"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#glow)"/>
+  <rect x="0" y="0" width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Mark centrado (120px) -->
+  <g transform="translate(540 92) scale(1.875)">
+    <path d="M32 5 L55.4 18.5 L55.4 45.5 L32 59 L8.6 45.5 L8.6 18.5 Z"
+          fill="none" stroke="#3B82F6" stroke-width="2.4" stroke-linejoin="round"/>
+    <rect x="38" y="16" width="9.5" height="32" rx="4.75" fill="none" stroke="#3B82F6" stroke-width="2.4"/>
+    <path d="M21.25 19 L42.75 45" stroke="url(#gx)" stroke-width="7.5" stroke-linecap="round"/>
+    <rect x="16.5" y="16" width="9.5" height="32" rx="4.75" fill="url(#gx)"/>
+    <circle cx="32" cy="32" r="5.5" fill="#ffffff" stroke="#1D4ED8" stroke-width="1.6"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="600" y="332" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="84" font-weight="700" fill="#F8FAFC">Nexora</text>
+
+  <!-- Tagline -->
+  <text x="600" y="398" text-anchor="middle" font-family="Inter, sans-serif" font-size="38" font-weight="500" fill="#94A3B8">El nexo entre tu negocio y tus clientes.</text>
+
+  <!-- Barra de acento -->
+  <rect x="552" y="470" width="96" height="6" rx="3" fill="url(#gx)"/>
+
+  <!-- URL en mono -->
+  <text x="600" y="520" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="28" font-weight="400" fill="#64748B">nexora.vercel.app</text>
+</svg>

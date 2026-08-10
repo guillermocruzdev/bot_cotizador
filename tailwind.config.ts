@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config: Config = {
   darkMode: ["class"],
@@ -18,6 +19,11 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
+        heading: ["var(--font-heading)", ...defaultTheme.fontFamily.sans],
+        mono: ["var(--font-mono)", ...defaultTheme.fontFamily.mono],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -52,6 +58,22 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        /* ── Marca Nexora (FASE 1 de AGENCIA-CRECIMIENTO) ── */
+        brand: {
+          600: "#2563EB",
+          700: "#1D4ED8",
+        },
+        night: {
+          700: "#1E293B",
+          900: "#0F172A",
+        },
+        emerald: {
+          500: "#10B981",
+        },
+        surface: {
+          50: "#FAFAFA",
+        },
+        whatsapp: "#25D366",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -3,7 +3,9 @@ description: >-
   Prompt maestro de crecimiento de la agencia Nexora (roles CEO / CTO / CPO / AI Strategist).
   Plan por FASES para Roo Code + DeepSeek: construye la vitrina de la agencia (sitio de venta),
   la identidad de marca completa y el motor de prospectos, gastando el mínimo de tokens.
-version: 1.0.0
+  TODO se desarrolla en entorno LOCAL y se despliega en Vercel GRATIS (plan Hobby, sin dominio pago):
+  costo cero para funcionar.
+version: 2.0.0
 alwaysApply: true
 ---
 
@@ -13,6 +15,11 @@ alwaysApply: true
 > de la agencia. Las decisiones de marca y arquitectura YA están tomadas aquí: **no las re-discutas ni
 > las vuelvas a preguntar** (ahorra tokens). Cada fase es un prompt listo para pegar en un **chat NUEVO**
 > de Roo Code + DeepSeek, en orden, esperando `FIN_DE_FASE_N` antes de abrir el siguiente chat.
+>
+> **ENTORNO OBJETIVO (CERO COSTO):** las FASES 0–8 se construyen y verifican en **desarrollo local**
+> (`npm run dev`). Las **FASES 9–10 despliegan a Vercel en el plan GRATUITO (Hobby)** con URL
+> `nexora.vercel.app` (sin dominio de pago). Las FASES 11–17 son opcionales. Todo lo que se usa
+> (hosting, bot, analítica, DB, colas, búsqueda) tiene alternativa **gratis** — ver §1.4.
 
 ---
 
@@ -26,6 +33,10 @@ alwaysApply: true
    repo padre están en este checkout (rama `prospecting-wip`).
 6. **Fuente de verdad de precios:** SIEMPRE `lib/agency-catalog.ts` (`precioDesde`) y
    `scripts/generate-pack-samples.ts` (`REGISTRO_PACKS`). Nunca hardcodear precios en la UI.
+7. **Cero costo obligatorio:** nada de este plan puede depender de un servicio de pago. Todo lo
+   construido debe funcionar en **local** y en **Vercel gratis (Hobby)**. Si una fase propone algo que
+   cuesta dinero (dominio propio, analítica de pago, Redis de pago, LLM sin fallback), se reemplaza
+   por la alternativa gratuita de §1.4 o se marca OPCIONAL.
 
 ---
 
@@ -57,8 +68,9 @@ de asistentes IA recurrentes (moat DeepSeek: ~90% de margen en la mensualidad).
 
 - Rama actual: `prospecting-wip` (limpia). Último commit: `c00a00a` (registro de despliegue Nexora).
 - **La vitrina se construye DENTRO de la app del cotizador Alex** (una sola app, un solo deploy,
-  un solo dominio). NO hay app separada `nexora/` ni "API de Alex": el bot ya vive aquí (`/chat`,
-  `/results`, `/api/*`) y se reutiliza tal cual.
+  una sola URL gratis en Vercel Hobby: `nexora.vercel.app`, sin dominio de pago). NO hay app separada
+  `nexora/` ni "API de Alex": el bot ya vive aquí (`/chat`, `/results`, `/api/*`) y se reutiliza tal
+  cual.
 - **SÍ existe** `docs/prompts/INDICE-PACKS.md` (regenerado con `generate-pack-samples.ts`; FASE 5 lo verifica).
 - **NO existe** `docs/prompts/AGENCIA-VITRINA-ROO.md` (este documento lo sustituye).
 - `prospecting/closing/negotiation-agent.ts` está **roto** (no compila) — NO tocarlo.
@@ -67,9 +79,32 @@ de asistentes IA recurrentes (moat DeepSeek: ~90% de margen en la mensualidad).
 ### 1.3 Objetivo de este plan (CEO)
 
 Construir el **sitio vitrina de la agencia** (la "cara" que atrae por Google y genera confianza),
-desplegarlo en Vercel con dominio propio, y conectarlo al **motor de prospección**, mientras seguimos
-haciendo páginas de muestreo. El sitio debe: **atraer → mostrar lo que hacemos con precios honestos →
-convertir a WhatsApp/cotización → alimentar el pipeline de ventas**.
+desarrollarlo y validarlo en **entorno local**, desplegarlo en **Vercel gratis (plan Hobby)** y
+conectarlo al **motor de prospección**, mientras seguimos haciendo páginas de muestreo. El sitio debe:
+**atraer → mostrar lo que hacemos con precios honestos → convertir a WhatsApp/cotización → alimentar el
+pipeline de ventas**. Todo debe funcionar **sin costos** (ver §1.4).
+
+### 1.4 Entorno objetivo: desarrollo local + Vercel GRATIS (costo cero)
+
+**Regla: nada de este plan puede requerir pagar para funcionar.** Mapa de servicios gratis que usamos
+(y su contraparte de pago, NO requerida):
+
+| Recurso                | Gratis (lo que usamos)                                                                                      | Costo si se paga (NO requerido)     |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Hosting vitrina + bot  | **Vercel plan Hobby** — estático + serverless. URL `nexora.vercel.app`                                      | Dominio `nexora.mx` (~$250 MXN/año) |
+| LLM (DeepSeek)         | **Fallback determinista** (el bot funciona sin keys; `NEXT_PUBLIC_LLM_CHAT=0`)                              | `DEEPSEEK_API_KEY` (por uso)        |
+| Base de datos          | **Supabase plan free** (500 MB) o **fallback en memoria** si no hay config                                  | Supabase Pro                        |
+| Colas / Redis          | **Fallback en memoria** (sin `REDIS_URL`); el scheduler y los workers corren en LOCAL (Hobby no tiene cron) | Upstash / cron de pago              |
+| WhatsApp (prospección) | **Baileys** con tu propio número (gratis); corre en LOCAL, no en serverless                                 | Twilio/WACloud (no usamos)          |
+| Búsqueda de leads      | `search-local` determinista (0 tokens) o **SerpAPI plan free** (100 búsquedas/mes)                          | SerpAPI de pago                     |
+| Analítica              | **Vercel Web Analytics** (gratis, ~2,500 eventos/mes) + buffer en memoria/JSON                              | Plausible / Vercel Pro              |
+| SEO / verificación     | **Google Search Console + Business Profile** (gratis)                                                       | —                                   |
+| Assets / fuentes       | `next/font` (Google Fonts self-hosted, gratis)                                                              | —                                   |
+
+**Qué NO corre en Vercel Hobby** (para no intentarlo): cron programado (el scheduler `node-cron` corre
+en local), procesos de larga duración (bot WhatsApp y workers de BullMQ corren en local; Hobby no tiene
+instancia permanente), y funciones de ejecución muy larga (el bot ya usa `runtime = "nodejs"` +
+`maxDuration = 60` + fallback determinista para no fallar).
 
 ---
 
@@ -159,15 +194,15 @@ sin sombras ni degradados que "mueran" al reducir.
 ### 2.7 Checklist "lo que una empresa seria debe tener" (objetivo transversal)
 
 - [ ] Nombre + tagline + logo + favicon + paleta + tipografía (FASE 0)
-- [ ] Dominio propio `nexora.mx` + email `hola@nexora.mx` (FASE 8)
+- [ ] URL gratis `nexora.vercel.app` desplegada (FASE 9) — dominio `nexora.mx` = OPCIONAL y de pago
 - [ ] Home / Servicios / Portafolio / Proceso / Precios / Preguntas / Contacto / Aviso de privacidad (FASES 3–7)
-- [ ] SEO (meta por ruta, sitemap, robots, OG, LocalBusiness, Search Console) (FASE 8)
+- [ ] SEO (meta por ruta, sitemap, robots, OG, LocalBusiness, Search Console) (FASE 8 y 10)
 - [ ] Garantías y proceso de compra claros (FASE 6)
 - [ ] Aviso de privacidad LFPDPPP (FASE 7)
-- [ ] Formas de contacto: WhatsApp + email + cotizador Alex (FASES 7 y 11)
-- [ ] Google Business Profile + NAP consistente (FASE 8)
-- [ ] Analítica de conversión (FASE 10)
-- [ ] Pipeline de leads → WhatsApp (FASE 12)
+- [ ] Formas de contacto: WhatsApp + email + cotizador Alex (FASES 7 y 13)
+- [ ] Google Business Profile + NAP consistente (FASE 10)
+- [ ] Analítica de conversión (FASE 12)
+- [ ] Pipeline de leads → WhatsApp (FASE 14)
 
 ---
 
@@ -175,8 +210,9 @@ sin sombras ni degradados que "mueran" al reducir.
 
 **Decisión: UNA sola app (vitrina + cotizador bajo el mismo techo).** La vitrina se construye
 DENTRO de la app existente del cotizador Alex (este repo): el bot ya es una ruta de la misma app
-(`/chat`, `/results`, `/api/*`) y se reutiliza tal cual. Un solo proyecto Vercel, un solo dominio
-(`nexora.mx`), unas mismas llaves (DeepSeek/Supabase), cero CORS y cero piezas extra que operar.
+(`/chat`, `/results`, `/api/*`) y se reutiliza tal cual. Un solo proyecto Vercel (plan Hobby gratis),
+una sola URL (`nexora.vercel.app`), unas mismas llaves (DeepSeek/Supabase, ambas opcionales con
+fallback), cero CORS y cero piezas extra que operar.
 
 - **¿Y la "API de Alex" + página aparte?** No por ahora. Separar exige auth, rate-limiting, CORS,
   dos deploys y más operación — coste que una agencia en arranque no necesita. El efecto buscado
@@ -185,9 +221,10 @@ DENTRO de la app existente del cotizador Alex (este repo): el bot ya es una ruta
 - **Rutas:** la vitrina vive en el route group `app/(marketing)/` (home, servicios, portafolio,
   proceso, precios, preguntas, contacto, aviso-privacidad, blog, admin). El bot conserva `/chat` y
   `/results`; la landing actual de `/` se reemplaza por la vitrina (FASE 1/3). CTA "Cotiza con Alex" → `/chat`.
-- **Dominio:** se conecta `nexora.mx` como dominio principal del MISMO proyecto Vercel
-  (botcotizador.vercel.app queda como alias). La marca en las envs del bot:
-  `NEXT_PUBLIC_AGENCY_NAME=Nexora`.
+- **Dominio (GRATIS):** la vitrina vive en la URL que Vercel da gratis en el plan Hobby:
+  `nexora.vercel.app` (el proyecto actual `botcotizador.vercel.app` ya corre gratis). **No se compra
+  dominio.** Un `nexora.mx` propio es OPCIONAL y de pago (~$250–400 MXN/año) — se decide después de
+  FASE 10, no bloquea nada. La marca en las envs del bot: `NEXT_PUBLIC_AGENCY_NAME=Nexora`.
 - **Vitrina data-driven:** un solo `data/portfolio.json` (validado con zod) alimenta Portafolio +
   Servicios. Lo genera el script `scripts/sync-agency-data.ts` (raíz del repo) leyendo
   `lib/agency-catalog.ts` (`AGENCY_WEB_TYPES`: id/nombre/descripcion/precioDesde/categoriaBase) +
@@ -202,7 +239,7 @@ DENTRO de la app existente del cotizador Alex (este repo): el bot ya es una ruta
 ## 4. Sitemap del sitio vitrina (CPO)
 
 ```
-nexora.mx
+nexora.vercel.app
 ├── /                    Home de la vitrina (hero + prueba social + servicios + vitrina teaser + proceso + CTA)
 ├── /servicios           11 categorías + bots IA, con "Desde $X" (data-driven)
 ├── /portafolio          Vitrina de los 28 PACKs (códigos PK-001..029): tarjeta + "Desde $X" + link demo + link repo
@@ -213,8 +250,8 @@ nexora.mx
 ├── /aviso-privacidad    LFPDPPP
 ├── /chat                El cotizador Alex (bot) — se reutiliza tal cual; CTA "Cotiza con Alex"
 ├── /results             Resultado del cotizador (existente)
-├── /blog/*              (FASE 9 opcional) artículos SEO "cuánto cuesta una web de X"
-├── /demo                (FASE 11 opcional) demo de prospección / feed en vivo (existente)
+├── /blog/*              (FASE 11 opcional) artículos SEO "cuánto cuesta una web de X"
+├── /demo                (FASE 13 opcional) demo de prospección / feed en vivo (existente)
 └── 404                  con CTA a WhatsApp (vitrina en app/(marketing)/not-found)
 ```
 
@@ -301,7 +338,8 @@ lib/ del bot):
 4. layout.tsx: next/font/google con Space_Grotesk (500-700), Inter (400-600), JetBrains_Mono
    (400-700) y variables --font-heading/--font-sans/--font-mono si no están; metadata base de la
    vitrina: title "Nexora · Webs que venden. Hechas con IA.", description, canonical
-   https://nexora.mx, openGraph 1200x630, twitter, icons desde /brand/, robots index,follow.
+   https://nexora.vercel.app (URL gratis de Vercel; NO uses nexora.mx), openGraph 1200x630, twitter,
+   icons desde /brand/, robots index,follow.
 5. public/brand/ — copia/reutiliza los assets de FASE 0 (logo/favicon/og) en public/.
 6. components/BrandLogo.tsx (next/image, variantes full/mono/mark) y lib/utils.ts (cn) para la vitrina.
 7. lib/portfolio.ts (tipos zod: PortfolioItem { codigo, nombre, nivel, descripcion, precioDesde,
@@ -310,9 +348,9 @@ lib/ del bot):
 
 NO escribas las secciones de contenido (solo la base). RENDIMIENTO: next/font display swap.
 
-Verifica y reporta: npm run lint = 0, npx tsc --noEmit = 0 (solo los 28 errores preexistentes de
-prospecting/closing/negotiation-agent.ts), npm run build OK, y que / (vitrina placeholder), /chat y
-/results renderizan. Cierra con FIN_DE_FASE_1.
+Verifica y reporta (en desarrollo LOCAL): npm run lint = 0, npx tsc --noEmit = 0 (solo los 28 errores
+preexistentes de prospecting/closing/negotiation-agent.ts), npm run build OK, y que / (vitrina
+placeholder), /chat y /results renderizan con npm run dev. Cierra con FIN_DE_FASE_1.
 ```
 
 ---
@@ -445,7 +483,9 @@ tarjetas: todo sale de data/portfolio.json.
 3. Crea app/(marketing)/portafolio/page.tsx: SectionHeader + filtros por nivel (N0–N5) +
    grid de PortfolioCard leyendo data/portfolio.json. Cada tarjeta: badge nivel, código PK, nombre,
    descripción, "Desde $X MXN", botón "Ver demo" (urlDemo) y "Código" (repo) — si la demo aún no está
-   desplegada, el botón queda con estado "Próximamente" (no rompas el diseño).
+   desplegada, el botón queda con estado "Próximamente" (no rompas el diseño). Nota: cada demo
+   `nexora-<tipo>.vercel.app` se despliega en su propio proyecto Vercel plan Hobby (gratis); es un paso
+   opcional que NO bloquea la vitrina.
 4. Crea app/(marketing)/portafolio/[codigo]/page.tsx (generación estática desde portfolio.json):
    detalle del PACK con su descripción, nivel, desde, enlaces y CTA "Cotizar algo así" → bot Alex.
 5. Regenera el índice maestro docs/prompts/INDICE-PACKS.md (corre npx tsx scripts/generate-pack-samples.ts
@@ -516,15 +556,16 @@ funcionando).
 
 ---
 
-### FASE 8 · SEO + QA + Deploy a Vercel — ⭐ OBLIGATORIA
+### FASE 8 · SEO + QA (entorno desarrollo) — ⭐ OBLIGATORIA
 
-**Rol para Roo:** SEO Engineer + QA + DevOps.
+**Rol para Roo:** SEO Engineer + QA Lead.
 
 👉 **PROMPT FASE 8**
 
 ```markdown
-Actúa como SEO Engineer + QA Lead + DevOps para la vitrina Nexora. Objetivo: que nos encuentren en
-Google y que el sitio quede en producción con dominio propio.
+Actúa como SEO Engineer + QA Lead para la vitrina Nexora. Objetivo (en desarrollo LOCAL): dejar las
+páginas listas para Google y pasar el QA ANTES de desplegar. El deploy NO se hace aquí: es la FASE 9
+(Vercel gratis) y la FASE 10 (verificación en producción).
 
 SEO:
 
@@ -536,37 +577,115 @@ SEO:
    con NAP consistente.
 5. app/manifest.ts (PWA básica, theme color brand) y favicon/apletouch ya en public/brand.
 6. Añade las envs NEXT_PUBLIC_WHATSAPP (tu número wa.me) y NEXT_PUBLIC_EMAIL; reemplaza los
-   placeholders de contacto en Nav/Footer/Contacto/404.
+   placeholders de contacto en Nav/Footer/Contacto/404. (En local usa un .env.local con tus datos
+   reales; en producción los pones en Vercel en la FASE 9.)
 
-QA (gate final):
+QA (gate final — en local, con npm run dev):
 
 - Lighthouse ≥ 90 en móvil y desktop (performance, accesibilidad, SEO, best practices) en /, /servicios,
   /portafolio, /proceso, /precios, /contacto. Corrige lo que baje de 90 (imágenes, CLS, contraste).
 - Matriz responsive: 360/375/768/1024/1440. Sin scroll horizontal, sin cajas vacías, sin lorem ipsum.
-- npm run lint = 0, npx tsc --noEmit = 0, npm run build OK.
+- npm run lint = 0, npx tsc --noEmit = 0 (solo los 28 errores preexistentes de
+  prospecting/closing/negotiation-agent.ts), npm run build OK.
+- Comprueba que /chat y /results siguen funcionando con la vitrina en "/" (el bot no se rompe).
 
-Deploy (el MISMO proyecto Vercel del cotizador — no es un proyecto nuevo):
+El despliegue NO es parte de esta fase: primero QA en local, después FASE 9 (deploy en Vercel Hobby)
+y FASE 10 (Search Console + verificación en producción). Este QA es la puerta de entrada a la FASE 9.
 
-- Conecta nexora.mx como dominio principal del proyecto; botcotizador.vercel.app queda como alias.
-- Verifica que / (vitrina), /chat y /results funcionan bajo nexora.mx.
-- Marca en las envs existentes: NEXT_PUBLIC_AGENCY_NAME=Nexora y tus datos reales en
-  NEXT_PUBLIC_DEVELOPER_NAME/WHATSAPP/EMAIL (reemplazan los placeholders "Tu Agencia Web"/wa.me de
-  los PDFs y CTAs del bot). La vitrina usa NEXT_PUBLIC_WHATSAPP/NEXT_PUBLIC_EMAIL.
-- Incluye /chat y las rutas de la vitrina en sitemap y robots.
-- Lista de verificación final: dominio activo, https, sitemap accesible, OG renderiza, WhatsApp
-  apunta a tu número real, Search Console añadido (manual, no requiere código).
-
-Cierra con FIN_DE_FASE_8 cuando: build OK, Lighthouse ≥ 90 en las 6 páginas clave, dominio desplegado
-(o instrucciones exactas para hacerlo), sitemap y robots activos.
+Cierra con FIN_DE_FASE_8 cuando: build OK, Lighthouse ≥ 90 en las 6 páginas clave en local, sitemap y
+robots generados y funcionando en local, y sin errores de lint/tsc nuevos.
 ```
 
 ---
 
-### FASE 9 · Blog / contenido SEO — ✨ OPCIONAL
+### FASE 9 · DEPLOY #1 — Vercel GRATIS (plan Hobby) — ⭐ OBLIGATORIA
+
+**Rol para Roo:** DevOps (Vercel).
+
+👉 **PROMPT FASE 9**
+
+```markdown
+Actúa como DevOps enfocado en Vercel. Objetivo: desplegar la vitrina Nexora + el cotizador Alex en el
+plan GRATUITO de Vercel (Hobby), SIN comprar dominio ni contratar nada. Cero costos.
+
+Contexto: una sola app Next.js (este repo) con la vitrina en app/(marketing)/ y el bot en /chat,
+/results y /api/\*. Ya pasó QA en local (FASE 8). El proyecto Vercel del cotizador ya existe
+(botcotizador.vercel.app, gratis) — usamos el MISMO proyecto (no crear uno de pago).
+
+Pasos (SIN pagar nada):
+
+1. Asegura que el repo esté en GitHub (Nexora/bot-cotizador o el que ya uses). En Vercel: Import
+   Project → el repo → framework Next.js (detectado) → plan Hobby (gratis).
+2. Configura en el proyecto las envs necesarias (todas OPCIONALES para funcionar; la app cae a
+   fallback determinista sin ellas):
+   - NEXT_PUBLIC_AGENCY_NAME=Nexora
+   - NEXT_PUBLIC_WHATSAPP=52XXXXXXXXXX (tu número wa.me, sin "+")
+   - NEXT_PUBLIC_EMAIL=hola@nexora.mx (o el correo que uses; es solo texto de contacto)
+   - NEXT_PUBLIC_LLM_CHAT=0 (bot 100% determinista = 0 costo; ponlo en 1 solo si añades DEEPSEEK_API_KEY)
+   - DEEPSEEK_API_KEY (OPCIONAL, de pago por uso — el fallback sigue funcionando)
+   - NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY (OPCIONAL, plan free; sin ellas hay
+     fallback en memoria)
+3. URL del deploy: usa la que Vercel asigna gratis (`nexora.vercel.app` si está libre, o
+   `botcotizador.vercel.app`). NO conectes dominio propio (es de pago y no se necesita).
+4. Crea rama/alias de producción y haz el primer deploy (build). Verifica:
+   - / (vitrina), /chat, /results, /servicios, /portafolio, /precios, /contacto responden 200.
+   - El bot cotiza SIN keys (fallback determinista, NEXT_PUBLIC_LLM_CHAT=0): haz una cotización de
+     prueba de punta a punta hasta /results.
+5. Documenta la URL real en docs/prompts/REGISTRO-DEPLOY.md (fila de la vitrina) y actualiza el
+   sitemap/canonical si hace falta con la URL final.
+
+Límites del plan Hobby (NO pelear contra ellos): sin cron programado, funciones serverless con
+duración limitada, sin proceso de larga duración. Por eso el scheduler de prospección, el worker de
+BullMQ y el bot WhatsApp corren en LOCAL (ver FASE 10) — no se despliegan aquí. La vitrina y el bot
+de chat funcionan perfecto en Hobby.
+
+Cierra con FIN_DE_FASE_9 cuando: la app está desplegada en la URL gratis de Vercel, / /chat /results
+responden, una cotización de prueba funciona (con fallback sin keys), y la URL quedó en
+REGISTRO-DEPLOY.md.
+```
+
+---
+
+### FASE 10 · DEPLOY #2 — Verificación post-deploy + Search Console (gratis) — ⭐ OBLIGATORIA
+
+**Rol para Roo:** QA + SEO en producción.
+
+👉 **PROMPT FASE 10**
+
+```markdown
+Actúa como QA/DevOps. La app ya está en Vercel gratis (FASE 9). Ahora verifica que todo funciona en
+producción y déjala lista para que Google la encuentre, SIN pagar nada.
+
+1. Verificación en producción (URL vercel.app):
+   - Repite Lighthouse ≥ 90 en /, /servicios, /portafolio, /proceso, /precios, /contacto.
+   - Revisa sitemap.xml y robots.txt accesibles y con las rutas correctas (incluye /chat y /results).
+   - Comprueba que og.png se renderiza (herramienta de depuración de OG — gratis) y que el JSON-LD
+     (Organization/LocalBusiness) se ve bien.
+   - Prueba de punta a punta: cotiza una web real con el bot hasta /results y descarga el PDF y el
+     pack. Verifica que los PDFs citan la marca Nexora (NEXT_PUBLIC_AGENCY_NAME) y que el botón de
+     WhatsApp apunta a tu número real.
+2. Google Search Console (gratis): añade la propiedad de la URL vercel.app, envía el sitemap y
+   solicita la indexación de /, /servicios y /portafolio. (El dominio nexora.mx NO se compra por ahora.)
+3. Operación en GRATIS — documenta lo que corre en local (no en Vercel Hobby):
+   - `npm run dev` local para el scheduler de prospección (node-cron) y el worker de BullMQ (colas
+     en memoria sin REDIS_URL).
+   - El bot WhatsApp (Baileys) corre en local con tu número; no se despliega.
+   - Anota en README o docs/prompts/REGISTRO-DEPLOY.md qué se corre localmente y qué está en Vercel.
+4. Opcional (también gratis): crea el Google Business Profile de Nexora con el NAP consistente y la
+   URL vercel.app (o el dominio propio cuando lo tengas).
+
+Cierra con FIN_DE_FASE_10 cuando: Lighthouse ≥ 90 en producción, sitemap/robots/OG verificados,
+Search Console con la propiedad añadida y sitemap enviado, una cotización E2E funciona en la URL
+desplegada, y está documentado qué corre en local vs Vercel.
+```
+
+---
+
+### FASE 11 · Blog / contenido SEO — ✨ OPCIONAL
 
 **Rol para Roo:** Content Strategist + SEO.
 
-👉 **PROMPT FASE 9**
+👉 **PROMPT FASE 11**
 
 ```markdown
 Actúa como Content Strategist SEO para Nexora. Crea app/(marketing)/blog con:
@@ -579,21 +698,23 @@ Actúa como Content Strategist SEO para Nexora. Crea app/(marketing)/blog con:
 3. Estructura: app/(marketing)/blog/page.tsx + app/(marketing)/blog/[slug]/page.tsx (generación estática desde una lista
    data/blog.ts). Cada artículo en Markdown o MDX.
 4. Añade los artículos al sitemap.ts.
-   Cierra con FIN_DE_FASE_9 cuando haya ≥3 artículos publicados y enlazados desde home/blog.
+   Cierra con FIN_DE_FASE_11 cuando haya ≥3 artículos publicados y enlazados desde home/blog.
 ```
 
 ---
 
-### FASE 10 · Analítica y conversión — ✨ OPCIONAL
+### FASE 12 · Analítica y conversión (GRATIS) — ✨ OPCIONAL
 
 **Rol para Roo:** Data Engineer + Growth.
 
-👉 **PROMPT FASE 10**
+👉 **PROMPT FASE 12**
 
 ```markdown
 Actúa como Data Engineer + Growth para Nexora. Instrumenta la vitrina SIN PII:
 
-1. Añade Vercel Analytics (o Plausible) para métricas de audiencia (script web/analytics en layout).
+1. Añade **Vercel Web Analytics** (gratis en el plan Hobby, ~2,500 eventos/mes; suficiente para tráfico
+   ligero) para métricas de audiencia. Alternativa 100% gratis sin depender de terceros: el propio
+   endpoint /api/events con buffer en memoria/JSON (punto 2). NO uses Plausible de pago.
 2. Crea lib/analytics.ts + un endpoint serverless POST /api/events (Zod whitelist, rate limit) que
    registre eventos de conversión: cta_whatsapp_click, cta_cotizar_click, form_submit,
    portfolio_demo_click, portfolio_contact_click, con atribución por referrer/UTM.
@@ -602,16 +723,17 @@ Actúa como Data Engineer + Growth para Nexora. Instrumenta la vitrina SIN PII:
    vistos, tasa de conversión. Tabla simple (no necesitas Supabase; usa un buffer en memoria o un
    JSON, pero deja la interfaz lista para Supabase).
 4. Documenta los KPIs que importan (ver §7 del plan maestro) y cómo leerlos.
-   Cierra con FIN_DE_FASE_10 cuando puedas ver eventos de los CTAs clave en una pantalla.
+   Cierra con FIN_DE_FASE_12 cuando puedas ver eventos de los CTAs clave en una pantalla (sin pagar
+   nada: Web Analytics gratis o buffer en memoria).
 ```
 
 ---
 
-### FASE 11 · Demo del cotizador en vivo — ✨ OPCIONAL
+### FASE 13 · Demo del cotizador en vivo — ✨ OPCIONAL
 
 **Rol para Roo:** Integration Engineer.
 
-👉 **PROMPT FASE 11**
+👉 **PROMPT FASE 13**
 
 ```markdown
 Actúa como Integration Engineer. Conecta el cotizador Alex (producto estrella) a la vitrina Nexora:
@@ -621,17 +743,17 @@ Actúa como Integration Engineer. Conecta el cotizador Alex (producto estrella) 
 2. Crea app/(marketing)/demo/prospeccion/page.tsx (opcional): reutiliza la demo de prospección /demo
    existente del bot (feed en vivo de búsqueda de leads) para mostrar nuestra capacidad.
 3. Añade CTAs "Cotizar con Alex" (→ /chat) en Nav, hero, servicios, portafolio y precios.
-4. Verifica que /chat y /results siguen funcionando dentro de nexora.mx.
-   Cierra con FIN_DE_FASE_11 cuando /demo funcione y el CTA esté en todo el sitio.
+4. Verifica que /chat y /results siguen funcionando dentro de nexora.vercel.app.
+   Cierra con FIN_DE_FASE_13 cuando /demo funcione y el CTA esté en todo el sitio.
 ```
 
 ---
 
-### FASE 12 · Prospección integrada (leads → WhatsApp) — ✨ OPCIONAL
+### FASE 14 · Prospección integrada (leads → WhatsApp, GRATIS) — ✨ OPCIONAL
 
 **Rol para Roo:** Sales Pipeline Engineer.
 
-👉 **PROMPT FASE 12**
+👉 **PROMPT FASE 14**
 
 ```markdown
 Actúa como Sales Pipeline Engineer. Conecta la vitrina al pipeline de prospección del repo padre
@@ -648,17 +770,22 @@ En la misma app (este repo):
 3. Documenta el flujo: vitrina → API → leads-repo → cola whatsapp-outbound (cuando haya Redis/worker).
 4. Envía el formulario de /contacto al nuevo endpoint (fetch POST con la key compartida en env).
 
-Cierra con FIN_DE_FASE_12 cuando un lead de prueba del formulario aparezca en la tabla prospect_leads
+Notas gratis: la persistencia usa Supabase plan free o el fallback en memoria (leads-repo ya lo
+contiene). El bot de WhatsApp (Baileys) es gratis (tu propio número) pero corre en LOCAL — en Vercel
+Hobby no hay proceso permanente, así que el envío outbound se ejecuta desde el worker local cuando
+haya cola Redis o en el fallback de memoria.
+
+Cierra con FIN_DE_FASE_14 cuando un lead de prueba del formulario aparezca en la tabla prospect_leads
 (o en el fallback de memoria) con estado pending y un log de mensaje generado.
 ```
 
 ---
 
-### FASE 13 · Reseñas, casos reales y roadmap de crecimiento — ✨ OPCIONAL
+### FASE 15 · Reseñas, casos reales y roadmap de crecimiento — ✨ OPCIONAL
 
 **Rol para Roo:** CRO + CEO advisor.
 
-👉 **PROMPT FASE 13**
+👉 **PROMPT FASE 15**
 
 ```markdown
 Actúa como CRO + consejero de CEO. Eleva la confianza y define el crecimiento:
@@ -673,17 +800,17 @@ Actúa como CRO + consejero de CEO. Eleva la confianza y define el crecimiento:
    — genera confianza y abre conversaciones de upsell.
 4. Revisión CRO del home y /precios: detecta y corrige fricciones (CTAs poco visibles, falta de
    urgencia legítima, precios confusos, navegación). Reporta cambios.
-   Cierra con FIN_DE_FASE_13 cuando los componentes de prueba social existan (ocultos si vacíos) y
+   Cierra con FIN_DE_FASE_15 cuando los componentes de prueba social existan (ocultos si vacíos) y
    publiques un reporte de 5 mejoras de conversión aplicadas.
 ```
 
 ---
 
-### FASE 14 · Multi-idioma (inglés) — ✨ OPCIONAL
+### FASE 16 · Multi-idioma (inglés) — ✨ OPCIONAL
 
 **Rol para Roo:** i18n Engineer.
 
-👉 **PROMPT FASE 14**
+👉 **PROMPT FASE 16**
 
 ```markdown
 Actúa como i18n Engineer. Añade inglés a la vitrina Nexora (atrae clientes bilingües y
@@ -694,26 +821,26 @@ nearshoring):
 2. Traduce home, servicios, portafolio, proceso, precios, preguntas, contacto, footer, 404 y metadata
    (title/description por idioma + hreflang alternates en cada página).
 3. Mantén los precios y datos (portfolio.json) en un solo lugar (no se traducen).
-   Cierra con FIN_DE_FASE_14 cuando el selector funcione en todas las rutas con hreflang correcto.
+   Cierra con FIN_DE_FASE_16 cuando el selector funcione en todas las rutas con hreflang correcto.
 ```
 
 ---
 
-### FASE 15 · Backoffice simple para editar la vitrina — ✨ OPCIONAL
+### FASE 17 · Backoffice simple para editar la vitrina — ✨ OPCIONAL
 
 **Rol para Roo:** Full-stack + Admin UX.
 
-👉 **PROMPT FASE 15**
+👉 **PROMPT FASE 17**
 
 ```markdown
 Actúa como Full-stack dev. Crea un backoffice mínimo para que editar la vitrina NO requiera código:
 
 1. app/(marketing)/admin (protegido con contraseña de env): formularios para editar
    portafolio.json (añadir/quitar PACK, cambiar estado demo), testimonios y casos (misma estructura de
-   data/\*.json), y ver la analítica de FASE 10.
+   data/\*.json), y ver la analítica de FASE 12.
 2. Guarda escribiendo en data/\*.json (server-side, revalidación on-demand) o en una tabla Supabase
    simple si existe; documenta cuál.
-3. Cierra con FIN_DE_FASE_15 cuando puedas cambiar un precio/testimonio desde /admin y verlo en el
+3. Cierra con FIN_DE_FASE_17 cuando puedas cambiar un precio/testimonio desde /admin y verlo en el
    sitio público.
 ```
 
@@ -721,24 +848,28 @@ Actúa como Full-stack dev. Crea un backoffice mínimo para que editar la vitrin
 
 ## 6. Estrategia de crecimiento (AI Strategist) — ideas embebidas y futuras
 
-- **Motor de captura:** cada PACK desplegado en Vercel (`nexora-<tipo>.vercel.app`) debe tener un
-  footer "Hecho por Nexora" + CTA de cotización → todo el muestreo alimenta la vitrina.
-- **Contenido SEO que vende:** artículos "cuánto cuesta" (FASE 9) son imanes de búsqueda local; cada
+- **Motor de captura:** cada PACK desplegado en Vercel (`nexora-<tipo>.vercel.app`, también plan
+  Hobby gratis) debe tener un footer "Hecho por Nexora" + CTA de cotización → todo el muestreo
+  alimenta la vitrina.
+- **Costo cero por diseño:** la vitrina y el bot corren gratis en Vercel Hobby; sin keys el bot usa
+  el fallback determinista; la DB, las colas y la analítica caen a fallbacks en memoria/gratis.
+  Nada de este plan requiere pagar para funcionar (ver §1.4).
+- **Contenido SEO que vende:** artículos "cuánto cuesta" (FASE 11) son imanes de búsqueda local; cada
   uno termina en el cotizador Alex.
 - **Recurrencia:** los asistentes IA (margen ~90%) son el motor de LTV. Vender la web "desde" barato y
   el bot como suscripción es el modelo (tesis de docs/MERCADO_VIBECODER.md).
 - **Escalera de producto:** N0→N5 con el mismo cliente (cross-sell): el que compró un menú digital es
   candidato a reservas → ecommerce → webapp. Comunicarlo en precios.
 - **Prueba social real:** los primeros 5 proyectos entregados se convierten en casos de estudio
-  (FASE 13). Pedir permiso y una reseña en Google Business al entregar.
-- **Automatización:** FASE 12 (leads → WhatsApp) cierra el círculo: vitrina + bot + prospección =
+  (FASE 15). Pedir permiso y una reseña en Google Business al entregar.
+- **Automatización:** FASE 14 (leads → WhatsApp) cierra el círculo: vitrina + bot + prospección =
   pipeline completo.
 - **Futuro (fuera de este plan, anotar como backlog):** pagos en línea (Stripe MX), facturación
   automatizada CFDI, plantillas de contrato digital, onboarding de más desarrolladores con IA
   (subcontratación),
   landing multi-idioma completo, y panel de clientes con estado de su proyecto.
 
-## 7. KPIs que importan (medir tras FASE 10)
+## 7. KPIs que importan (medir tras FASE 12)
 
 | Métrica                                    | Meta (primer trimestre) |
 | ------------------------------------------ | ----------------------- |
@@ -752,8 +883,9 @@ Actúa como Full-stack dev. Crea un backoffice mínimo para que editar la vitrin
 
 ## 8. Presupuesto de tokens estimado
 
-- **FASES 0–8 (obligatorias):** ~9 chats de Roo con contexto compacto. Cada fase define EXACTAMENTE
-  los archivos → sin escaneo de repo. Estimado: **menos de 1/4 del costo de explorar a ciegas.**
-- **FASES 9–15 (opcionales):** ~7 chats más, cada uno opcional e independiente (se pueden saltar).
+- **FASES 0–10 (obligatorias: construir en local + desplegar en Vercel gratis):** ~11 chats de Roo con
+  contexto compacto. Cada fase define EXACTAMENTE los archivos → sin escaneo de repo. Estimado:
+  **menos de 1/4 del costo de explorar a ciegas.**
+- **FASES 11–17 (opcionales):** ~7 chats más, cada uno opcional e independiente (se pueden saltar).
 - **Regla de oro:** no pegar dos fases en el mismo chat; no re-preguntar lo decidido en §2/§3; la
   vitrina es data-driven (un JSON, no 28 tarjetas a mano).

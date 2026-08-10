@@ -9,6 +9,14 @@
 1. Cuando un PACK esté en producción, edita su fila: pon la URL real (si difiere de la propuesta) y cambia el estado a `✅ En producción`.
 2. La URL propuesta vive en `INDICE-PACKS.md`; aquí solo anotas lo que ya está desplegado.
 
+## 🖥 Vitrina (la app principal: sitios + cotizador Alex)
+
+| App            | URL real (Vercel Hobby, gratis) | Repo (GitHub)          | Fecha | Estado                                                                            |
+| -------------- | ------------------------------- | ---------------------- | ----- | --------------------------------------------------------------------------------- |
+| Vitrina Nexora | `https://nexora.vercel.app`     | `Nexora/bot-cotizador` | —     | 🟡 FASE 8 QA local ✅ (SEO/sitemap/robots/manifest/JSON-LD ok) — deploy en FASE 9 |
+
+> **Antes de FASE 9 (deploy):** poner los datos reales en las envs `NEXT_PUBLIC_WHATSAPP` (número wa.me sin `+`) y `NEXT_PUBLIC_EMAIL` (hoy en `.env.local` con placeholder).
+
 | Código | Producto                              | URL real (Vercel) | Repo real (GitHub) | Fecha de deploy | Estado       |
 | ------ | ------------------------------------- | ----------------- | ------------------ | --------------- | ------------ |
 | PK-001 | Link-in-bio premium                   |                   |                    |                 | ⏳ Pendiente |
