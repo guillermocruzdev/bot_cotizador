@@ -53,32 +53,43 @@ export function Hero() {
 
   return (
     <section className="relative isolate overflow-hidden bg-night-900 text-white">
-      {/* ── Fondo: glows de marca + partículas ── */}
+      {/* ── Fondo: glows de marca (gradientes radiales, sin filter blur) + partículas CSS ── */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
-        <div className="absolute -left-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-brand-600/25 blur-3xl" />
-        <div className="absolute -right-32 top-1/3 h-[30rem] w-[30rem] rounded-full bg-brand-700/25 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl" />
-        {reduce
-          ? null
-          : PARTICLES.map((p, i) => (
-              <motion.span
-                key={i}
-                className="absolute rounded-full bg-brand-400/60"
-                style={{
-                  left: p.left,
-                  top: p.top,
-                  width: p.size,
-                  height: p.size,
-                }}
-                animate={{ y: [0, -18, 0], opacity: [0.2, 0.7, 0.2] }}
-                transition={{
-                  duration: p.duration,
-                  delay: p.delay,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
+        <div
+          className="absolute -left-40 -top-40 h-[34rem] w-[34rem]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(37,99,235,0.28), transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute -right-32 top-1/3 h-[30rem] w-[30rem]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(29,78,216,0.28), transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute bottom-0 left-1/3 h-80 w-80"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(16,185,129,0.12), transparent 70%)",
+          }}
+        />
+        {PARTICLES.map((p, i) => (
+          <span
+            key={i}
+            className="nexora-particle"
+            style={{
+              left: p.left,
+              top: p.top,
+              width: p.size,
+              height: p.size,
+              animationDuration: `${p.duration}s`,
+              animationDelay: `${p.delay}s`,
+            }}
+          />
+        ))}
       </div>
 
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:gap-10 lg:px-8 lg:pb-28 lg:pt-24">
@@ -140,7 +151,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
           className="relative mx-auto w-full max-w-md lg:max-w-none"
         >
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-night-900/80 shadow-2xl shadow-brand-600/20 backdrop-blur">
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-night-900 shadow-2xl shadow-brand-600/20">
             <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
               <span className="h-3 w-3 rounded-full bg-red-500/80" />
               <span className="h-3 w-3 rounded-full bg-amber-400/80" />

@@ -60,6 +60,7 @@ const config: Config = {
         },
         /* ── Marca Nexora (FASE 1 de AGENCIA-CRECIMIENTO) ── */
         brand: {
+          400: "#60A5FA",
           600: "#2563EB",
           700: "#1D4ED8",
         },

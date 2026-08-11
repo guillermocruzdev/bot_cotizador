@@ -76,3 +76,29 @@
 .chat-scroll::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
 }
+
+/* ── Partículas del hero (animación CSS en compositor: no bloquea el main thread) ── */
+@keyframes nexora-float {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-18px);
+    opacity: 0.7;
+  }
+}
+.nexora-particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgba(96, 165, 250, 0.6); /* brand-400 */
+  animation: nexora-float 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nexora-particle {
+    animation: none;
+    opacity: 0.7;
+  }
+}
