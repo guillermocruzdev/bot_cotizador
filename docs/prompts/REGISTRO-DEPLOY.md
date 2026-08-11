@@ -17,6 +17,37 @@
 
 > **✅ FASE 9 hecha (2026-08-10):** envs `NEXT_PUBLIC_WHATSAPP=528145575257` y `NEXT_PUBLIC_EMAIL=hola@nexora.mx` configuradas en Vercel Production (ya no hay placeholders). El canonical/metadataBase/sitemap del código apuntan a `https://botcotizador.vercel.app` (la URL real del plan Hobby).
 
+> **✅ FASE 10 hecha (2026-08-10) — verificación post-deploy:**
+>
+> - **Lighthouse:** bp 100 · seo 100 · a11y 96–100 en las 6 páginas (`/`, `/servicios`, `/portafolio`, `/proceso`, `/precios`, `/contacto`). **Perf real (sin throttling simulado) = 98 (TBT 20 ms)**; con el throttling simulado de Lighthouse en esta laptop vieja da 53–69 por el multiplicador 4× de CPU (artefacto de hardware, no de código). Corregido en QA: partículas del hero a CSS de compositor (sin framer-motion), glows con gradientes radiales (sin `filter: blur`), sin `backdrop-blur`, **framer-motion eliminado de la vitrina** (FadeIn y Hero a CSS puro → el chunk de framer ya no se carga en las páginas de marketing), H1 del hero sin animación de entrada (LCP inmediato), y contraste AA global (`--muted-foreground` oscurecido).
+> - **SEO en producción:** sitemap.xml (39 URLs = 11 estáticas + 28 PACKs) y robots.txt OK; og.png (1200×630) sirve 200 image/png; JSON-LD `Organization` + `ProfessionalService` con NAP real (tel +528145575257, MX) en el home.
+> - **Fix de marca en PDFs:** `NEXT_PUBLIC_AGENCY_NAME` seguía con el placeholder **"Tu Agencia Web"** (los PDFs de propuesta citaban la marca equivocada) → corregido en Vercel Production con `vercel env add --force`: `NEXT_PUBLIC_AGENCY_NAME=Nexora`, `NEXT_PUBLIC_DEVELOPER_NAME=Nexora`, `NEXT_PUBLIC_DEVELOPER_EMAIL=hola@nexora.mx`, `NEXT_PUBLIC_DEVELOPER_WHATSAPP=528145575257`. Verificado en el bundle desplegado de `/results` (ya no hay "Tu Agencia Web").
+> - **E2E en producción:** cotización completa (taquería → landing) hasta `/results` → $16,260 MXN "Desde $678/mes", giro Restaurante, mensaje honesto por presupuesto; CTA WhatsApp → `wa.me/528145575257` ("¡Hola Nexora!"); botón "Descargar propuesta en PDF" funciona sin errores.
+> - **Pendiente (requiere cuenta de Google del dueño, no automatizable):** Google Search Console (añadir propiedad `https://botcotizador.vercel.app`, enviar sitemap, solicitar indexación de `/`, `/servicios`, `/portafolio`) y opcional Google Business Profile. Pasos abajo.
+
+---
+
+## ⚙️ Operación GRATIS: qué corre en LOCAL vs qué está en Vercel (FASE 10)
+
+> Regla del plan §1.4: en **Vercel Hobby no hay proceso permanente ni cron** → lo que es de larga duración corre en local (`npm run dev`). La vitrina y el bot de chat corren perfecto en Vercel.
+
+| Pieza                                                                                             | Dónde corre                                                             | Cómo                                                                                                                 |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Vitrina + cotizador Alex** (`/`, `/chat`, `/results`, `/api/*`, `/servicios`, `/portafolio`, …) | **Vercel Hobby** (producción)                                           | `vercel --prod` (ya desplegado en `botcotizador.vercel.app`)                                                         |
+| **Scheduler de prospección** (`node-cron`: drenar pending, marcar no_response)                    | **LOCAL** (`npm run dev`)                                               | `prospecting/scheduler/scheduler.ts`                                                                                 |
+| **Worker de BullMQ** (colas whatsapp-outbound / discovery / closing)                              | **LOCAL**                                                               | `npm run tsx prospecting/worker-entry.ts` (colas en memoria si no hay `REDIS_URL`; con `docker-compose.yml` + Redis) |
+| **Bot WhatsApp (Baileys)**                                                                        | **LOCAL** (nunca en serverless)                                         | `npm run tsx prospecting/worker-entry.ts` — escanea QR con tu número                                                 |
+| **DeepSeek**                                                                                      | Vercel (si `DEEPSEEK_API_KEY`) o local; sin key → fallback determinista | En producción ya hay key; `NEXT_PUBLIC_LLM_CHAT=1`                                                                   |
+| **Supabase**                                                                                      | plan free (si keys) o fallback en memoria                               | Sin keys la app funciona en memoria                                                                                  |
+
+## 🔍 Google Search Console (gratis) — pasos para el dueño
+
+1. Entrar a https://search.google.com/search-console y añadir la **propiedad** `https://botcotizador.vercel.app` (verificación por prefijo de URL; Vercel sirve el archivo/meta sin costo).
+2. En **Sitemaps** enviar `https://botcotizador.vercel.app/sitemap.xml`.
+3. En **Inspección de URLs** solicitar la indexación de `/`, `/servicios` y `/portafolio`.
+4. (Opcional, gratis) Crear el **Google Business Profile** de Nexora con el NAP consistente (tel +52 81 4557 5257, hola@nexora.mx, URL `https://botcotizador.vercel.app`).
+5. El dominio `nexora.mx` (de pago) NO se compra por ahora — se decide después de FASE 10.
+
 | Código | Producto                              | URL real (Vercel) | Repo real (GitHub) | Fecha de deploy | Estado       |
 | ------ | ------------------------------------- | ----------------- | ------------------ | --------------- | ------------ |
 | PK-001 | Link-in-bio premium                   |                   |                    |                 | ⏳ Pendiente |

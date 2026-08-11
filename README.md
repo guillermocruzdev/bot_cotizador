@@ -69,6 +69,8 @@ npm run start
 4. Añade las variables de entorno del `.env.example`.
 5. **Deploy**. ✅
 
+> **Producción real:** `https://botcotizador.vercel.app` (plan Hobby gratis). El registro de deploys, la verificación post-deploy (FASE 10) y **qué corre en LOCAL vs en Vercel** (scheduler de prospección, worker BullMQ y bot WhatsApp corren en local; la vitrina y el chat en Vercel) están en [`docs/prompts/REGISTRO-DEPLOY.md`](docs/prompts/REGISTRO-DEPLOY.md). Pasos de Google Search Console también ahí.
+
 ---
 
 ## 🧠 Cómo funciona la IA
