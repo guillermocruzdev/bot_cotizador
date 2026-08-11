@@ -88,8 +88,8 @@ export function Hero() {
       </div>
 
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:gap-10 lg:px-8 lg:pb-28 lg:pt-24">
-        {/* ── Columna de texto ── */}
-        <div className="nexora-rise">
+        {/* ── Columna de texto (sin animación de entrada: el H1 es el LCP y debe pintarse al instante) ── */}
+        <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-brand-600/40 bg-brand-600/10 px-3 py-1 font-mono text-xs font-medium tracking-widest text-brand-400">
             <Sparkles className="h-3.5 w-3.5" />
             &gt; nexora — webs hechas con IA
@@ -135,10 +135,10 @@ export function Hero() {
           </div>
         </div>
 
-        {/* ── Tarjeta terminal ── */}
+        {/* ── Tarjeta terminal (fade corto de opacidad, sin transform) ── */}
         <div
-          className="nexora-rise relative mx-auto w-full max-w-md lg:max-w-none"
-          style={{ animationDelay: "0.15s" }}
+          className="nexora-fade relative mx-auto w-full max-w-md lg:max-w-none"
+          style={{ animationDelay: "0.1s" }}
         >
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-night-900 shadow-2xl shadow-brand-600/20">
             <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
