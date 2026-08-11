@@ -108,7 +108,7 @@ export function TierCard({
             </span>
           ))}
           {ejemplos.length > 4 ? (
-            <span className="rounded-full bg-night-900/5 px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
+            <span className="rounded-full bg-night-900/5 px-2.5 py-1 font-mono text-[11px] text-night-700">
               +{ejemplos.length - 4}
             </span>
           ) : null}

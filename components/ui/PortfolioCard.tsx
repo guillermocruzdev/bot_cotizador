@@ -83,7 +83,7 @@ export function PortfolioCard({
             <ExternalLink className="h-3.5 w-3.5" /> Ver demo
           </a>
         ) : (
-          <span className="inline-flex items-center rounded-lg bg-night-900/5 px-3 py-2 text-xs font-semibold text-muted-foreground">
+          <span className="inline-flex items-center rounded-lg bg-night-900/5 px-3 py-2 text-xs font-semibold text-night-700">
             Próximamente
           </span>
         )}

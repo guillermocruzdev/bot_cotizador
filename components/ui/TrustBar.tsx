@@ -48,9 +48,9 @@ export function TrustBar({ className }: TrustBarProps) {
   return (
     <section
       className={cn("border-y border-night-900/10 bg-white", className)}
-      aria-label="Por qué confiar en Nexora"
     >
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <h2 className="sr-only">Por qué confiar en Nexora</h2>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {TRUST_ITEMS.map((item) => (
             <div

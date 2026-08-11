@@ -40,7 +40,7 @@ const TONE_CLASS: Record<TerminalLine["tone"], string> = {
   cmd: "text-slate-300",
   ok: "text-emerald-400",
   out: "text-white",
-  muted: "text-slate-500",
+  muted: "text-slate-400",
 };
 
 const HERO_TRUST = ["Desde $2,500 MXN", "Entrega en días", "Soporte real"];
@@ -158,7 +158,7 @@ export function Hero() {
               <p className="inline-block h-4 w-2 animate-pulse bg-brand-400" aria-hidden />
             </div>
           </div>
-          <p className="mt-4 text-center font-mono text-xs text-slate-500">
+          <p className="mt-4 text-center font-mono text-xs text-slate-400">
             &gt; así de fácil: prueba el cotizador Alex en /chat
           </p>
         </div>
