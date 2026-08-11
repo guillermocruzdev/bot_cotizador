@@ -1,7 +1,4 @@
-"use client";
-
-import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export type FadeInProps = {
@@ -13,23 +10,27 @@ export type FadeInProps = {
   className?: string;
 };
 
-/** Aparición suave al hacer scroll (whileInView), respeta prefers-reduced-motion. */
+/**
+ * Aparición suave al montar (animación CSS en compositor: no registra observers
+ * ni bloquea el main thread). Respeta prefers-reduced-motion vía CSS.
+ */
 export function FadeIn({
   children,
   delay = 0,
   y = 24,
   className,
 }: FadeInProps) {
-  const reduce = useReducedMotion();
   return (
-    <motion.div
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      className={cn(className)}
+    <div
+      className={cn("nexora-rise", className)}
+      style={
+        {
+          animationDelay: `${delay}s`,
+          "--nexora-rise-y": `${y}px`,
+        } as CSSProperties
+      }
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

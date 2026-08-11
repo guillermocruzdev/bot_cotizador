@@ -1,16 +1,13 @@
-"use client";
-
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 
 /**
  * Hero de la vitrina Nexora (FASE 3).
- * Fondo night con glows de marca + partículas sutiles (framer-motion) y
- * tarjeta "terminal" JetBrains Mono que muestra la cotización relámpago.
- * Respeta prefers-reduced-motion.
+ * Fondo night con glows de marca + partículas y entradas con animación CSS de
+ * compositor (sin framer-motion: no bloquea el main thread).
+ * Respeta prefers-reduced-motion vía CSS.
  */
 
 /** Puntos del "mesh" flotante (posiciones deterministas, sin aleatoriedad en render). */
@@ -49,8 +46,6 @@ const TONE_CLASS: Record<TerminalLine["tone"], string> = {
 const HERO_TRUST = ["Desde $2,500 MXN", "Entrega en días", "Soporte real"];
 
 export function Hero() {
-  const reduce = useReducedMotion();
-
   return (
     <section className="relative isolate overflow-hidden bg-night-900 text-white">
       {/* ── Fondo: glows de marca (gradientes radiales, sin filter blur) + partículas CSS ── */}
@@ -94,11 +89,7 @@ export function Hero() {
 
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:gap-10 lg:px-8 lg:pb-28 lg:pt-24">
         {/* ── Columna de texto ── */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
+        <div className="nexora-rise">
           <p className="inline-flex items-center gap-2 rounded-full border border-brand-600/40 bg-brand-600/10 px-3 py-1 font-mono text-xs font-medium tracking-widest text-brand-400">
             <Sparkles className="h-3.5 w-3.5" />
             &gt; nexora — webs hechas con IA
@@ -142,14 +133,12 @@ export function Hero() {
               </span>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* ── Tarjeta terminal ── */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-          className="relative mx-auto w-full max-w-md lg:max-w-none"
+        <div
+          className="nexora-rise relative mx-auto w-full max-w-md lg:max-w-none"
+          style={{ animationDelay: "0.15s" }}
         >
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-night-900 shadow-2xl shadow-brand-600/20">
             <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
@@ -172,7 +161,7 @@ export function Hero() {
           <p className="mt-4 text-center font-mono text-xs text-slate-500">
             &gt; así de fácil: prueba el cotizador Alex en /chat
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
