@@ -12,7 +12,7 @@
 
 # 📦 PACK DE PROMPTS · Web instalable (PWA) con notificaciones — para Roo Code + DeepSeek (mobile-first, por fases)
 
-> Generado por tu consultor senior (10 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
+> Generado por tu consultor senior (11 de agosto de 2026) para que Roo Code + DeepSeek construyan la web **al 100%**.
 > Estrategia: **celular primero** y **un chat por fase** para **ahorrar tokens** — cada chat carga solo el contexto que necesita.
 > 🎭 **Cada chat asume un ROL** (UX Researcher, Dev, QA, SRE, etc.): pega el bloque tal cual y el agente actúa como ese rol durante toda la fase.
 
@@ -23,7 +23,21 @@
 3. Cada chat es **autosuficiente**: trae su propio contexto compacto + las instrucciones de su fase. El agente no necesita "recordar" el chat anterior.
 4. Al terminar el CHAT 19 tendrás la página construida, probada, asegurada y desplegada en Vercel.
 5. **Prioridad por fase**: cada chat está marcado **⭐ OBLIGATORIA** (imprescindible para entregar) o **✨ OPCIONAL** (eleva el resultado, no bloquea). Ver la sección siguiente.
+6. **Tras cada `FIN_DE_FASE_N`**: corre `npm run lint` + `npm run build` (o `npx tsc --noEmit`) y haz un **commit** (`git add -A && git commit -m "CHAT N: <fase>"`). Nunca avances al siguiente chat con errores: el siguiente chat debe partir de un estado que compila (ver "Reglas de oro").
 
+
+## ⚙️ Reglas de oro de trabajo (Roo Code + DeepSeek) — léelas antes de empezar
+
+Estas reglas aplican a TODAS las fases: hacen que el proyecto salga bien a la primera y ahorran tokens:
+
+1. **Un commit por fase (checkpoint/rollback).** Justo tras cada `FIN_DE_FASE_N` corre `npm run lint` y `npm run build` (o `npx tsc --noEmit`) y haz `git add -A && git commit -m "CHAT N: <fase>"`. Nunca avances a la siguiente fase con errores de build. Si algo se rompe después, `git log` + `git checkout <commit>` te devuelven al último punto sano.
+2. **Memoria de proyecto (`AGENTS.md`).** El CHAT 4 crea un `AGENTS.md` en la raíz con los datos del proyecto (stack, estructura, comandos, contrato de datos, decisiones). Cada fase lo ACTUALIZA con lo que construyó. Así cada chat nuevo carga contexto en segundos y ninguna fase contradice a la anterior: si el modelo "no sabe" algo del proyecto, primero lee `AGENTS.md`.
+3. **Cambios pequeños y quirúrgicos.** No reescribas archivos completos si solo cambia una función: edita con diffs mínimos y deja el resto intacto. Menos diff = menos riesgo de romper lo que ya funciona.
+4. **Compila y prueba seguido.** Corre `npm run lint` y `npm run build` después de cada cambio significativo (no esperes al final de la fase). Un error detectado a tiempo se arregla en 1 minuto; al final de la fase puede costar 30.
+5. **Mobile-first en cada fase.** Al terminar cada fase abre el dev server y verifica en 360px que lo construido se ve bien (sin scroll horizontal, CTA táctiles ≥ 44px). No acumules errores de móvil para el QA final.
+6. **Nada de TODOs bloqueantes.** No dejes `TODO` ni placeholders que rompan el flujo. Si falta un dato del cliente, usa placeholder de calidad marcado `[EJEMPLO]` y anótalo en el README — pero el proyecto SIEMPRE debe compilar y verse completo.
+7. **Decisiones documentadas.** Cada decisión relevante (stack, esquema, precios, copy) se anota en `AGENTS.md`/README con una línea de por qué. El que reciba el proyecto después no debe adivinar.
+8. **Modo eficiente en Roo Code.** Usa **Plan mode** para cambios grandes antes de aplicarlos; activa auto-aprueba solo para operaciones seguras (lint, format, tests); pega contexto con referencias a archivos (`@ruta/archivo`) en vez de copiar contenido cuando sea posible.
 
 ### 🧭 Prioridad de fases: ⭐ OBLIGATORIAS vs ✨ OPCIONALES (decisión del CEO)
 
@@ -424,7 +438,7 @@ IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonio
 Dejar la base funcionando con `npm run dev`: sistema de diseño definido (tokens), layout raíz listo, estructura de carpetas y la metodología mobile-first documentada. Al terminar NO debe haber aún secciones visibles: solo el esqueleto estilizado.
 
 ### Pasos
-1. **Scaffold**: crea el proyecto Next.js 14+ (App Router) con TypeScript estricto, Tailwind CSS y shadcn/ui configurado. Si el proyecto ya existe, verifica que compile y que ESLint + Prettier estén listos.
+1. **Scaffold y control de versiones**: crea el proyecto Next.js 14+ (App Router) con TypeScript estricto, Tailwind CSS y shadcn/ui configurado. Si el proyecto ya existe, verifica que compile y que ESLint + Prettier estén listos. Ejecuta `git init` (si no existe), crea/verifica `.gitignore` (Next.js + `.env*` + `.next` + `node_modules`) y haz el **primer commit** ("chore: scaffold inicial") — a partir de aquí cada fase termina con su propio commit (regla de oro 1 del preámbulo).
 2. **Design tokens** (sistema de diseño con PRESENCIA): define en `globals.css` (CSS variables) y conecta a `tailwind.config` (colores, fuentes, breakpoints y `container`) según el estilo del cliente (**sobrio, limpio y directo, con foco en la claridad**):
    - **Paleta**: color de marca + escala completa (50→950), color de acento y de superficie; soporte de **modo oscuro** (variante `dark` de Tailwind) aunque se use claro por defecto.
    - **Tipografía**: jerarquía clara (display / h1-h4 / body / caption) con escalas `clamp()`; fuente display para titulares (si el giro lo amerita) + Inter (o similar) para texto.
@@ -455,6 +469,8 @@ supabase/
   migrations/      # SQL del esquema
 ```
 7. **README**: documenta arranque (instalación, comandos, variables de entorno) y pega la metodología mobile-first de abajo para que quede como referencia del proyecto.
+8. **`.env.example` y variables de entorno**: crea `.env.example` con TODAS las variables que el proyecto usa (Supabase, DeepSeek, Resend, Stripe, NextAuth... con placeholders y un comentario de qué es cada una) para que el CHAT 19 solo copie y llene. Las reales van en `.env.local` (NUNCA se sube) y en Vercel.
+9. **Memoria de proyecto (`AGENTS.md`)** — la clave para que cada chat nuevo sea eficiente: crea en la raíz un `AGENTS.md` compacto con: cliente/proyecto, stack, estructura de carpetas, comandos (`npm run dev/build/lint`), convenciones (mobile-first, TS estricto, Zod, en español), contrato de datos (tablas) y una sección "Decisiones" (1 línea por decisión). Cada fase posterior lo ACTUALIZA con lo que construyó; el siguiente chat lo lee primero (regla de oro 2 del preámbulo).
 
 ### Reglas de diseño
 - Estilo: sobrio, limpio y directo, con foco en la claridad.
@@ -1640,8 +1656,23 @@ ANALÍTICA (criterio de data engineer + data analyst desde la fase 1): el sitio 
 IA RESPONSABLE (obligatoria en TODA la web): copy honesto — nada de testimonios, estadísticas ni resultados inventados; los placeholders de ejemplo se marcan [EJEMPLO — reemplazar] —, cero dark patterns (sin falsa escasez, urgencia fabricada ni cobros ocultos), accesibilidad (WCAG 2.1 AA, teclado, contraste), privacidad por diseño (solo los datos necesarios, consentimiento, aviso de privacidad y derecho a borrar) y transparencia de la IA (los asistentes se presentan como IA y ofrecen pasar a una persona).
 
 ### Despliegue en Vercel
-1. Subir el repositorio a GitHub (rama `main`).
-2. Importar en Vercel → framework **Next.js** (detección automática).
+1. **Subir el repositorio a GitHub (rama `main`)** — paso a paso:
+```bash
+git init                                # si no existe aún
+git add -A
+git commit -m "chore: proyecto listo para deploy"
+git branch -M main
+git remote add origin https://github.com/<tu-usuario>/<nombre-repo>.git   # crea primero el repo en github.com
+git push -u origin main
+```
+2. **Importar en Vercel** → `vercel.com → Add New → Project`, conecta GitHub y selecciona el repo; el framework **Next.js** se detecta solo (build `next build`). Alternativa con **CLI** (sin conectar GitHub):
+```bash
+npm i -g vercel
+vercel login
+vercel link                            # vincula el proyecto (crea .vercel/)
+vercel env add NEXT_PUBLIC_SUPABASE_URL production   # una por variable (o vercel env pull)
+vercel --prod                          # primer deploy de producción → te da la URL
+```
 3. Variables de entorno (Production):
 ```
 NEXT_PUBLIC_SUPABASE_URL=
@@ -1661,7 +1692,13 @@ DEEPSEEK_API_KEY=          # si hay asistentes IA
 9. **Privacidad en producción**: publica el aviso de privacidad en el dominio final y verifica que el consentimiento de cookies/analytics funcione.
 10. **Confiabilidad y seguridad en producción**: verifica que `/api/health` y `/api/ready` respondan `ok` desde el dominio final; confirma que el monitoreo y las alertas del CHAT 18 están activos (Sentry, uptime, smoke test) y que no haya 5xx en los primeros minutos; revisa que las cabeceras de seguridad y el rate limiting del CHAT 15 sigan activos en el dominio final (p. ej. con securityheaders.com) y que no haya secretos expuestos; deja documentado el rollback en Vercel.
 
+### Cómo mostrarla al cliente (la URL es la entrega)
+- Tras el primer `vercel --prod` obtienes una URL tipo `https://<proyecto>.vercel.app` (y un dominio propio si se configura). **Esa URL ES la entrega**: compártela por WhatsApp/correo con el cliente para la demo del CHAT 20.
+- **Antes de compartir verifica**: la página se ve completa en el celular (360px), carga rápido, sin placeholders rotos ni errores de consola; ábrela en una ventana de **incógnito** (sin caché) para confirmar que un visitante nuevo la ve bien.
+- **Dominio personalizado** (lo más profesional para el cliente): Vercel → Project → Settings → Domains → añade `negocio.mx`; apunta el DNS (CNAME a `cname.vercel-dns.com` o cambia los NS a los de Vercel) y el SSL se emite solo en minutos. Después actualiza `NEXT_PUBLIC_APP_URL`, canonical y metadata con el dominio final.
+
 ### Entrega al cliente (handover)
+- Crea **`docs/ENTREGA-CLIENTE.md`** — el documento ÚNICO de entrega para el cliente: URL de producción, qué se construyó (secciones y funcionalidades), cómo editar textos/imágenes sin tocar código, credenciales y accesos (dominio, panel, Supabase) según lo acordado, aviso de privacidad y derecho ARCO, plan de mantenimiento y próximos pasos (roadmap). Déjalo enlazado en el README y listo para enviar al cliente.
 - Documenta en el README una sección para el cliente: cómo editar textos/imágenes sin tocar código, dónde están las credenciales del panel (si aplica) y a quién contactar.
 - Entrega las credenciales de Supabase/Vercel al dueño (correo/dominio) o retenlas bajo acuerdo de mantenimiento.
 - Explica cómo el cliente puede ejercer el derecho **ARCO** (borrar/exportar datos) y dónde está publicado su aviso de privacidad.
