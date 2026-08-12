@@ -148,13 +148,13 @@ export default function ProcesoPage() {
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-700 font-heading text-lg font-bold text-white shadow-lg shadow-brand-600/20">
                       {i + 1}
                     </span>
-                    <paso.icon className="h-6 w-6 shrink-0 text-brand-600" />
+                    <paso.icon className="h-6 w-6 shrink-0 text-brand-600 dark:text-brand-400" />
                   </div>
                   <div>
-                    <h2 className="font-heading text-xl font-bold text-night-900">
+                    <h2 className="font-heading text-xl font-bold text-night-900 dark:text-white">
                       {paso.titulo}
                     </h2>
-                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-night-700">
+                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-night-700 dark:text-slate-300">
                       {paso.descripcion}
                     </p>
                   </div>
@@ -181,7 +181,7 @@ export default function ProcesoPage() {
       </section>
 
       {/* ── Garantías ── */}
-      <section className="bg-white">
+      <section className="bg-white dark:bg-night-900">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <FadeIn>
             <SectionHeader
@@ -194,11 +194,11 @@ export default function ProcesoPage() {
             {GARANTIAS.map((g, i) => (
               <FadeIn key={g.titulo} delay={Math.min(i * 0.06, 0.2)}>
                 <LiftCard className="h-full p-6">
-                  <g.icon className="h-6 w-6 text-brand-600" />
-                  <h3 className="mt-4 font-heading text-base font-bold text-night-900">
+                  <g.icon className="h-6 w-6 text-brand-600 dark:text-brand-400" />
+                  <h3 className="mt-4 font-heading text-base font-bold text-night-900 dark:text-white">
                     {g.titulo}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-night-700">
+                  <p className="mt-2 text-sm leading-relaxed text-night-700 dark:text-slate-300">
                     {g.descripcion}
                   </p>
                 </LiftCard>

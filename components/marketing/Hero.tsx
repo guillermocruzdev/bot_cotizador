@@ -149,7 +149,7 @@ export function Hero() {
                 nexora — cotizador
               </span>
             </div>
-            <div className="space-y-2.5 p-5 font-mono text-sm sm:p-6">
+            <div className="space-y-2.5 p-5 font-mono text-xs sm:p-6 sm:text-sm">
               {TERMINAL_LINES.map((line, i) => (
                 <p key={i} className={TONE_CLASS[line.tone]}>
                   {line.text}

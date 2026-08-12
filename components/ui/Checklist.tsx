@@ -13,10 +13,10 @@ export function Checklist({ items, className, iconClassName }: ChecklistProps) {
   return (
     <ul className={cn("space-y-2.5", className)}>
       {items.map((item, i) => (
-        <li key={i} className="flex items-start gap-2.5 text-sm text-night-700">
+        <li key={i} className="flex items-start gap-2.5 text-sm text-night-700 dark:text-slate-300">
           <span
             className={cn(
-              "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600",
+              "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
               iconClassName
             )}
           >

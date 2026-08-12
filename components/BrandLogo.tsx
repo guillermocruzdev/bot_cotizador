@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
  * "mark" (solo el símbolo hexágono-nodo).
  */
 type BrandLogoProps = {
-  variant?: "full" | "mono" | "mark";
+  /** "full-dark" = wordmark claro para fondos oscuros (tema oscuro). */
+  variant?: "full" | "full-dark" | "mono" | "mark";
   className?: string;
   width?: number;
   height?: number;
@@ -17,6 +18,7 @@ type BrandLogoProps = {
 
 const SRC: Record<NonNullable<BrandLogoProps["variant"]>, string> = {
   full: "/brand/logo-full.svg",
+  "full-dark": "/brand/logo-full-dark.svg",
   mono: "/brand/logo-mono.svg",
   mark: "/brand/mark.svg",
 };

@@ -189,7 +189,7 @@ export default function MarketingHome() {
       <TrustBar />
 
       {/* ── Prueba social ── */}
-      <section className="bg-white">
+      <section className="bg-white dark:bg-night-900">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
           <FadeIn>
             <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
@@ -233,7 +233,7 @@ export default function MarketingHome() {
       </section>
 
       {/* ── Vitrina (teaser) ── */}
-      <section className="bg-white">
+      <section className="bg-white dark:bg-night-900">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <FadeIn>
             <SectionHeader
@@ -272,12 +272,12 @@ export default function MarketingHome() {
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {PASOS.map((paso, i) => (
             <FadeIn key={paso.title} delay={Math.min(i * 0.05, 0.25)}>
-              <div className="flex h-full flex-col rounded-2xl border border-night-900/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand-600/30 hover:shadow-lg hover:shadow-brand-600/5">
-                <span className="font-mono text-xs font-semibold tracking-widest text-brand-600">
+              <div className="flex h-full flex-col rounded-2xl border border-night-900/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand-600/30 hover:shadow-lg hover:shadow-brand-600/5 dark:border-white/10 dark:bg-night-900 dark:hover:border-brand-400/30 dark:hover:shadow-brand-400/5">
+                <span className="font-mono text-xs font-semibold tracking-widest text-brand-600 dark:text-brand-400">
                   PASO {i + 1}/4
                 </span>
-                <paso.icon className="mt-4 h-8 w-8 text-brand-600" />
-                <h3 className="mt-4 font-heading text-lg font-bold text-night-900">
+                <paso.icon className="mt-4 h-8 w-8 text-brand-600 dark:text-brand-400" />
+                <h3 className="mt-4 font-heading text-lg font-bold text-night-900 dark:text-white">
                   {paso.title}
                 </h3>
                 <p className="mt-2 flex-1 text-sm text-muted-foreground">
@@ -286,7 +286,7 @@ export default function MarketingHome() {
                 {paso.href ? (
                   <Link
                     href={paso.href}
-                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition hover:gap-2.5 hover:text-brand-700"
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition hover:gap-2.5 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
                   >
                     {paso.cta}
                     <ArrowRight className="h-4 w-4" />
@@ -329,10 +329,12 @@ export default function MarketingHome() {
         </FadeIn>
       </section>
 
-      {/* Botón flotante de WhatsApp (conversión persistente) */}
+      {/* Botón flotante de WhatsApp (conversión persistente; en móvil lo
+          sustituye la barra CTA fija de components/marketing/MobileCta). */}
       <WhatsAppButton
         variant="float"
         message="Hola Nexora, quiero una web para mi negocio"
+        className="hidden md:inline-flex"
       />
     </>
   );

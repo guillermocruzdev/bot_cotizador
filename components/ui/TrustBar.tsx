@@ -47,7 +47,10 @@ export type TrustBarProps = {
 export function TrustBar({ className }: TrustBarProps) {
   return (
     <section
-      className={cn("border-y border-night-900/10 bg-white", className)}
+      className={cn(
+        "border-y border-night-900/10 bg-white dark:border-white/10 dark:bg-night-900",
+        className
+      )}
     >
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <h2 className="sr-only">Por qué confiar en Nexora</h2>
@@ -57,14 +60,14 @@ export function TrustBar({ className }: TrustBarProps) {
               key={item.title}
               className="flex items-start gap-4 lg:flex-col lg:gap-3"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-600/10 text-brand-600">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-600/10 text-brand-600 dark:bg-brand-400/15 dark:text-brand-400">
                 <item.icon className="h-5 w-5" />
               </span>
               <div>
-                <h3 className="font-heading text-sm font-bold text-night-900">
+                <h3 className="font-heading text-sm font-bold text-night-900 dark:text-white">
                   {item.title}
                 </h3>
-                <p className="mt-1 text-sm leading-relaxed text-night-700">
+                <p className="mt-1 text-sm leading-relaxed text-night-700 dark:text-slate-300">
                   {item.text}
                 </p>
               </div>

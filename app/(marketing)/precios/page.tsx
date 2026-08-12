@@ -163,7 +163,7 @@ export default function PreciosPage() {
       </section>
 
       {/* ── Cómo pagas ── */}
-      <section className="bg-white">
+      <section className="bg-white dark:bg-night-900">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <FadeIn>
             <SectionHeader
@@ -176,19 +176,19 @@ export default function PreciosPage() {
             {COMO_PAGAS.map((p, i) => (
               <FadeIn key={p.titulo} delay={Math.min(i * 0.05, 0.2)}>
                 <LiftCard className="h-full p-6">
-                  <p.icon className="h-6 w-6 text-brand-600" />
-                  <h3 className="mt-4 font-heading text-base font-bold text-night-900">
+                  <p.icon className="h-6 w-6 text-brand-600 dark:text-brand-400" />
+                  <h3 className="mt-4 font-heading text-base font-bold text-night-900 dark:text-white">
                     {p.titulo}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-night-700">
+                  <p className="mt-2 text-sm leading-relaxed text-night-700 dark:text-slate-300">
                     {p.descripcion}
                   </p>
                 </LiftCard>
               </FadeIn>
             ))}
           </div>
-          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-brand-600/20 bg-brand-600/5 p-5 text-sm text-night-700">
-            <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
+          <div className="mt-8 flex items-start gap-3 rounded-2xl border border-brand-600/20 bg-brand-600/5 p-5 text-sm text-night-700 dark:border-brand-400/20 dark:bg-brand-400/10 dark:text-slate-300">
+            <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
             <p>
               ¿Prefieres otro método? Hablemos: en proyectos seleccionados
               podemos evaluar pagos con tarjeta a través de Stripe o un plan de

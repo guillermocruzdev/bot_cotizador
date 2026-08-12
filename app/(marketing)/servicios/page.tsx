@@ -219,18 +219,18 @@ function BotCard({ bot }: { bot: BotSpec }) {
   return (
     <LiftCard className="flex h-full flex-col p-6">
       <div className="flex items-center justify-between gap-2">
-        <Bot className="h-5 w-5 text-brand-600" />
-        <span className="rounded-full bg-night-900/5 px-2.5 py-0.5 font-mono text-xs text-night-700">
+        <Bot className="h-5 w-5 text-brand-600 dark:text-brand-400" />
+        <span className="rounded-full bg-night-900/5 px-2.5 py-0.5 font-mono text-xs text-night-700 dark:bg-white/10 dark:text-slate-300">
           {bot.casoUso}
         </span>
       </div>
-      <h3 className="mt-4 font-heading text-base font-bold text-night-900">
+      <h3 className="mt-4 font-heading text-base font-bold text-night-900 dark:text-white">
         {bot.nombre}
       </h3>
       <p className="mt-2 flex-1 text-sm text-muted-foreground">
         {bot.descripcion}
       </p>
-      <p className="mt-4 border-t border-night-900/10 pt-4 font-mono text-sm text-night-700">
+      <p className="mt-4 border-t border-night-900/10 pt-4 font-mono text-sm text-night-700 dark:border-white/10 dark:text-slate-300">
         desde {formatMXN(bot.precioSetup)}{" "}
         <span className="text-muted-foreground">+</span>{" "}
         {formatMXN(bot.cuotaMensual)}
@@ -306,7 +306,10 @@ export default function ServiciosPage() {
         <section
           key={s.id}
           id={s.id}
-          className={cn("scroll-mt-24", i % 2 === 1 && "bg-white")}
+          className={cn(
+            "scroll-mt-24",
+            i % 2 === 1 && "bg-white dark:bg-night-900"
+          )}
         >
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <FadeIn>
@@ -315,21 +318,21 @@ export default function ServiciosPage() {
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
                     <NivelBadge nivel={s.nivel} />
-                    <span className="inline-flex items-center gap-1.5 font-mono text-sm text-night-700">
-                      <Clock className="h-4 w-4 text-brand-600" />
+                    <span className="inline-flex items-center gap-1.5 font-mono text-sm text-night-700 dark:text-slate-300">
+                      <Clock className="h-4 w-4 text-brand-600 dark:text-brand-400" />
                       {s.spec.tiempoEntrega}
                     </span>
                   </div>
-                  <h2 className="mt-4 font-heading text-2xl font-bold text-night-900 sm:text-3xl">
+                  <h2 className="mt-4 font-heading text-2xl font-bold text-night-900 dark:text-white sm:text-3xl">
                     {s.spec.nombre}
                   </h2>
-                  <p className="mt-3 text-night-700">{s.spec.descripcion}</p>
+                  <p className="mt-3 text-night-700 dark:text-slate-300">{s.spec.descripcion}</p>
 
-                  <div className="mt-6 rounded-2xl border border-brand-600/20 bg-brand-600/5 p-5">
-                    <p className="font-mono text-xs uppercase tracking-widest text-brand-700">
+                  <div className="mt-6 rounded-2xl border border-brand-600/20 bg-brand-600/5 p-5 dark:border-brand-400/20 dark:bg-brand-400/10">
+                    <p className="font-mono text-xs uppercase tracking-widest text-brand-700 dark:text-brand-400">
                       Desde
                     </p>
-                    <p className="mt-1 font-heading text-4xl font-bold text-night-900">
+                    <p className="mt-1 font-heading text-4xl font-bold text-night-900 dark:text-white">
                       {formatMXN(s.spec.precioDesde)}{" "}
                       <span className="text-base font-medium text-muted-foreground">
                         MXN
@@ -341,10 +344,10 @@ export default function ServiciosPage() {
                   </div>
 
                   <div className="mt-6">
-                    <h3 className="font-mono text-xs uppercase tracking-widest text-brand-700">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-brand-700 dark:text-brand-400">
                       Ideal para
                     </h3>
-                    <p className="mt-2 text-sm text-night-700">
+                    <p className="mt-2 text-sm text-night-700 dark:text-slate-300">
                       {s.spec.paraQuien}
                     </p>
                   </div>
@@ -365,26 +368,26 @@ export default function ServiciosPage() {
 
                 {/* ── Columna derecha: qué incluye + extras + stack ── */}
                 <div>
-                  <h3 className="font-mono text-xs uppercase tracking-widest text-brand-700">
+                  <h3 className="font-mono text-xs uppercase tracking-widest text-brand-700 dark:text-brand-400">
                     Qué incluye
                   </h3>
-                  <div className="mt-4 rounded-2xl border border-night-900/10 bg-white p-6">
+                  <div className="mt-4 rounded-2xl border border-night-900/10 bg-white p-6 dark:border-white/10 dark:bg-night-900">
                     <Checklist items={s.pricing.entregables} />
                     {s.extras?.map((ex) => (
                       <div
                         key={ex.titulo}
-                        className="mt-6 border-t border-night-900/10 pt-5"
+                        className="mt-6 border-t border-night-900/10 pt-5 dark:border-white/10"
                       >
-                        <p className="text-sm font-semibold text-night-900">
+                        <p className="text-sm font-semibold text-night-900 dark:text-white">
                           {ex.titulo}
                         </p>
                         <ul className="mt-3 space-y-2">
                           {ex.items.map((item) => (
                             <li
                               key={item}
-                              className="flex items-start gap-2.5 text-sm text-night-700"
+                              className="flex items-start gap-2.5 text-sm text-night-700 dark:text-slate-300"
                             >
-                              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
+                              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
                                 <Check className="h-3.5 w-3.5" strokeWidth={3} />
                               </span>
                               <span>{item}</span>
@@ -398,7 +401,7 @@ export default function ServiciosPage() {
                     {s.pricing.stack.map((tech) => (
                       <span
                         key={tech}
-                        className="rounded-full bg-night-900/5 px-3 py-1 font-mono text-xs text-night-700"
+                        className="rounded-full bg-night-900/5 px-3 py-1 font-mono text-xs text-night-700 dark:bg-white/10 dark:text-slate-300"
                       >
                         {tech}
                       </span>
@@ -412,7 +415,7 @@ export default function ServiciosPage() {
       ))}
 
       {/* ── Asistentes IA ── */}
-      <section className="bg-white">
+      <section className="bg-white dark:bg-night-900">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <FadeIn>
             <SectionHeader
@@ -458,10 +461,10 @@ export default function ServiciosPage() {
                     {NIVEL_LABELS[n.nivel] ?? n.nivel}
                   </span>
                 </div>
-                <p className="mt-4 flex-1 text-sm text-night-700">
+                <p className="mt-4 flex-1 text-sm text-night-700 dark:text-slate-300">
                   {n.descripcion}
                 </p>
-                <p className="mt-4 border-t border-night-900/10 pt-4 font-mono text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-4 border-t border-night-900/10 pt-4 font-mono text-xs leading-relaxed text-muted-foreground dark:border-white/10">
                   {n.ejemplos}
                 </p>
               </LiftCard>

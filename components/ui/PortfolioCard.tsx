@@ -47,18 +47,18 @@ export function PortfolioCard({
       {detalleHref ? (
         <Link
           href={detalleHref}
-          className="mt-3 font-heading text-lg font-bold text-night-900 transition hover:text-brand-700"
+          className="mt-3 font-heading text-lg font-bold text-night-900 transition hover:text-brand-700 dark:text-white dark:hover:text-brand-400"
         >
           {nombre}
         </Link>
       ) : (
-        <h3 className="mt-3 font-heading text-lg font-bold text-night-900">
+        <h3 className="mt-3 font-heading text-lg font-bold text-night-900 dark:text-white">
           {nombre}
         </h3>
       )}
       <p className="mt-2 flex-1 text-sm text-muted-foreground">{descripcion}</p>
       {precioDesde != null ? (
-        <p className="mt-4 font-mono text-sm font-semibold text-brand-700">
+        <p className="mt-4 font-mono text-sm font-semibold text-brand-700 dark:text-brand-400">
           Desde {formatMXN(precioDesde)} MXN
         </p>
       ) : null}
@@ -68,7 +68,7 @@ export function PortfolioCard({
             href={repo}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-night-900/15 px-3 py-2 text-xs font-semibold text-night-700 transition hover:border-brand-600/40 hover:bg-surface-50"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-night-900/15 px-3 py-2 text-xs font-semibold text-night-700 transition hover:border-brand-600/40 hover:bg-surface-50 dark:border-white/15 dark:text-slate-300 dark:hover:border-brand-400/40 dark:hover:bg-night-800"
           >
             <Github className="h-3.5 w-3.5" /> Código
           </a>
@@ -83,7 +83,7 @@ export function PortfolioCard({
             <ExternalLink className="h-3.5 w-3.5" /> Ver demo
           </a>
         ) : (
-          <span className="inline-flex items-center rounded-lg bg-night-900/5 px-3 py-2 text-xs font-semibold text-night-700">
+          <span className="inline-flex items-center rounded-lg bg-night-900/5 px-3 py-2 text-xs font-semibold text-night-700 dark:bg-white/10 dark:text-slate-300">
             Próximamente
           </span>
         )}

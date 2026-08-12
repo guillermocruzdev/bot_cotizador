@@ -33,7 +33,7 @@ export function ServiceCard({
       <div className="flex items-center justify-between gap-2">
         {nivel ? <NivelBadge nivel={nivel} /> : <span />}
         {precioDesde != null ? (
-          <span className="font-mono text-sm font-semibold text-brand-700">
+          <span className="font-mono text-sm font-semibold text-brand-700 dark:text-brand-400">
             desde {formatMXN(precioDesde)}
           </span>
         ) : null}
@@ -41,19 +41,19 @@ export function ServiceCard({
       {detalleHref ? (
         <Link
           href={detalleHref}
-          className="mt-4 font-heading text-lg font-bold text-night-900 transition hover:text-brand-700"
+          className="mt-4 font-heading text-lg font-bold text-night-900 transition hover:text-brand-700 dark:text-white dark:hover:text-brand-400"
         >
           {nombre}
         </Link>
       ) : (
-        <h3 className="mt-4 font-heading text-lg font-bold text-night-900">
+        <h3 className="mt-4 font-heading text-lg font-bold text-night-900 dark:text-white">
           {nombre}
         </h3>
       )}
       <p className="mt-2 flex-1 text-sm text-muted-foreground">{descripcion}</p>
       <Link
         href={href}
-        className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition hover:gap-2.5 hover:text-brand-700"
+        className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition hover:gap-2.5 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
       >
         Cotizar esta web <ArrowRight className="h-4 w-4" />
       </Link>

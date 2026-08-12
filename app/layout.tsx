@@ -94,9 +94,23 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans`}
     >
-      <body className="min-h-dvh bg-[#fafafa]">{children}</body>
+      <body className="min-h-dvh bg-[#fafafa] dark:bg-night-950">
+        {/* Tema oscuro de la vitrina: script inline literal (corre durante el
+            parseo, ANTES del primer paint → sin flash). Solo aplica en rutas de
+            marketing; chat/results/dashboard conservan su aspecto claro.
+            DEBE ser el primer hijo de <body> (un script como hijo directo de
+            <html> rompe la hidratación de React). OJO: evitar regex con barras
+            escapadas (\/) en el inline — el build los descarta. Se usa startsWith(). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=location.pathname;var skip=['/chat','/results','/demo','/login','/dashboard','/leads','/campaigns','/conversations'];var light=false;for(var i=0;i<skip.length;i++){if(p===skip[i]||p.indexOf(skip[i]+'/')===0){light=true;break;}}if(!light){var t=localStorage.getItem('nexora-theme');var d=t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}}}catch(e){}})();`,
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

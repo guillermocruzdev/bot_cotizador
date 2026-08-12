@@ -27,11 +27,11 @@ export function SectionHeader({
       )}
     >
       {eyebrow ? (
-        <p className="font-mono text-xs font-medium uppercase tracking-widest text-brand-600">
+        <p className="font-mono text-xs font-medium uppercase tracking-widest text-brand-600 dark:text-brand-400">
           &gt; {eyebrow}
         </p>
       ) : null}
-      <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-night-900 sm:text-4xl">
+      <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-night-900 dark:text-white sm:text-4xl">
         {title}
       </h2>
       {subtitle ? (

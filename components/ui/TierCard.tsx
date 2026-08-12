@@ -62,28 +62,28 @@ export function TierCard({
         ) : null}
       </div>
 
-      <h3 className="mt-4 font-heading text-lg font-bold text-night-900">
+      <h3 className="mt-4 font-heading text-lg font-bold text-night-900 dark:text-white">
         {titulo}
       </h3>
       <p className="mt-2 text-sm text-muted-foreground">{descripcion}</p>
 
-      <div className="mt-5 rounded-xl border border-night-900/10 bg-surface-50 p-4">
-        <p className="font-mono text-xs uppercase tracking-widest text-brand-700">
+      <div className="mt-5 rounded-xl border border-night-900/10 bg-surface-50 p-4 dark:border-white/10 dark:bg-night-800">
+        <p className="font-mono text-xs uppercase tracking-widest text-brand-700 dark:text-brand-400">
           Desde
         </p>
-        <p className="mt-1 font-heading text-3xl font-bold text-night-900">
+        <p className="mt-1 font-heading text-3xl font-bold text-night-900 dark:text-white">
           {formatMXN(desde)}{" "}
           <span className="text-sm font-medium text-muted-foreground">MXN</span>
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
           {hasta > desde ? `hasta ${formatMXN(hasta)}` : formatMXN(hasta)} · o{" "}
-          <span className="font-semibold text-night-700">
+          <span className="font-semibold text-night-700 dark:text-slate-300">
             {formatMXN(cuota)}/mes
           </span>{" "}
           a 24 meses
         </p>
         {propuestaFormal ? (
-          <p className="mt-2 inline-flex items-start gap-1.5 rounded-lg bg-brand-600/10 px-2.5 py-1.5 text-xs font-medium text-brand-700">
+          <p className="mt-2 inline-flex items-start gap-1.5 rounded-lg bg-brand-600/10 px-2.5 py-1.5 text-xs font-medium text-brand-700 dark:bg-brand-400/15 dark:text-brand-300">
             <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
             Se cotiza con propuesta formal, no precio cerrado.
           </p>
@@ -94,21 +94,21 @@ export function TierCard({
         <Checklist items={includes} />
       </div>
 
-      <div className="mt-5 border-t border-night-900/10 pt-4">
-        <p className="font-mono text-xs uppercase tracking-widest text-brand-700">
+      <div className="mt-5 border-t border-night-900/10 pt-4 dark:border-white/10">
+        <p className="font-mono text-xs uppercase tracking-widest text-brand-700 dark:text-brand-400">
           Incluye
         </p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {ejemplos.slice(0, 4).map((e) => (
             <span
               key={e}
-              className="rounded-full bg-night-900/5 px-2.5 py-1 font-mono text-[11px] text-night-700"
+              className="rounded-full bg-night-900/5 px-2.5 py-1 font-mono text-[11px] text-night-700 dark:bg-white/10 dark:text-slate-300"
             >
               {e}
             </span>
           ))}
           {ejemplos.length > 4 ? (
-            <span className="rounded-full bg-night-900/5 px-2.5 py-1 font-mono text-[11px] text-night-700">
+            <span className="rounded-full bg-night-900/5 px-2.5 py-1 font-mono text-[11px] text-night-700 dark:bg-white/10 dark:text-slate-300">
               +{ejemplos.length - 4}
             </span>
           ) : null}

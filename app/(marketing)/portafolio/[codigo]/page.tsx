@@ -45,7 +45,7 @@ export default function PackDetallePage({
     <div className="mx-auto w-full max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
       <Link
         href="/portafolio"
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground transition hover:text-brand-700"
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground transition hover:text-brand-700 dark:hover:text-brand-400"
       >
         <ArrowLeft className="h-4 w-4" /> Volver al portafolio
       </Link>
@@ -58,7 +58,7 @@ export default function PackDetallePage({
               {item.codigo}
             </span>
           </div>
-          <h1 className="mt-4 font-heading text-3xl font-bold tracking-tight text-night-900 sm:text-4xl">
+          <h1 className="mt-4 font-heading text-3xl font-bold tracking-tight text-night-900 dark:text-white sm:text-4xl">
             {item.nombre}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -66,10 +66,10 @@ export default function PackDetallePage({
           </p>
 
           {cat ? (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-night-900/10 bg-white px-4 py-2 text-sm text-night-700">
-              <Layers className="h-4 w-4 text-brand-600" />
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-night-900/10 bg-white px-4 py-2 text-sm text-night-700 dark:border-white/10 dark:bg-night-900 dark:text-slate-300">
+              <Layers className="h-4 w-4 text-brand-600 dark:text-brand-400" />
               Se cotiza como:{" "}
-              <span className="font-semibold text-night-900">
+              <span className="font-semibold text-night-900 dark:text-white">
                 {cat.nombreCliente}
               </span>
             </div>
@@ -81,7 +81,7 @@ export default function PackDetallePage({
                 href={item.repo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-night-900/15 px-4 py-2 text-sm font-semibold text-night-700 transition hover:border-brand-600/40 hover:bg-surface-50"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-night-900/15 px-4 py-2 text-sm font-semibold text-night-700 transition hover:border-brand-600/40 hover:bg-surface-50 dark:border-white/15 dark:text-slate-300 dark:hover:border-brand-400/40 dark:hover:bg-night-800"
               >
                 <Github className="h-4 w-4" /> Código
               </a>
@@ -96,7 +96,7 @@ export default function PackDetallePage({
                 <ExternalLink className="h-4 w-4" /> Ver demo
               </a>
             ) : (
-              <span className="inline-flex items-center rounded-lg bg-night-900/5 px-4 py-2 text-sm font-semibold text-muted-foreground">
+              <span className="inline-flex items-center rounded-lg bg-night-900/5 px-4 py-2 text-sm font-semibold text-muted-foreground dark:bg-white/10">
                 Demo próximamente
               </span>
             )}
@@ -104,11 +104,11 @@ export default function PackDetallePage({
         </div>
 
         <aside className="h-fit lg:sticky lg:top-24">
-          <div className="rounded-2xl border border-night-900/10 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-night-900/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-night-900">
             <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
               Desde
             </p>
-            <p className="mt-1 font-mono text-4xl font-bold text-brand-700">
+            <p className="mt-1 font-mono text-4xl font-bold text-brand-700 dark:text-brand-400">
               {formatMXN(item.precioDesde)}{" "}
               <span className="text-lg text-muted-foreground">MXN</span>
             </p>

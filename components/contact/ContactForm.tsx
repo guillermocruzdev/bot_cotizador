@@ -30,9 +30,9 @@ const INITIAL: FormState = {
 };
 
 const inputClass =
-  "w-full rounded-xl border border-night-900/15 bg-white px-4 py-2.5 text-sm text-night-900 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1 disabled:opacity-50";
+  "w-full rounded-xl border border-night-900/15 bg-white px-4 py-2.5 text-sm text-night-900 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-1 disabled:opacity-50 dark:border-white/15 dark:bg-night-900 dark:text-white dark:focus-visible:ring-brand-400";
 const labelClass =
-  "mb-1.5 block text-sm font-semibold text-night-900";
+  "mb-1.5 block text-sm font-semibold text-night-900 dark:text-white";
 
 /** Formulario de contacto de la vitrina (FASE 7). Cliente: POST /api/contact. */
 export function ContactForm({ tipos }: ContactFormProps) {
@@ -76,10 +76,10 @@ export function ContactForm({ tipos }: ContactFormProps) {
     return (
       <div className="flex flex-col items-center gap-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-8 text-center">
         <CheckCircle2 className="h-10 w-10 text-emerald-500" />
-        <h3 className="font-heading text-xl font-bold text-night-900">
+        <h3 className="font-heading text-xl font-bold text-night-900 dark:text-white">
           ¡Gracias, {form.nombre || "amigo"}! Mensaje recibido
         </h3>
-        <p className="max-w-sm text-sm leading-relaxed text-night-700">
+        <p className="max-w-sm text-sm leading-relaxed text-night-700 dark:text-slate-300">
           Te respondemos en menos de 24 horas hábiles. Si es urgente,
           escríbenos por WhatsApp y te atendemos al instante.
         </p>
@@ -190,7 +190,7 @@ export function ContactForm({ tipos }: ContactFormProps) {
       {error ? (
         <p
           role="alert"
-          className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-night-900"
+          className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-night-900 dark:text-white"
         >
           {error}
         </p>

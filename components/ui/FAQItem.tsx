@@ -24,7 +24,7 @@ export function FAQItem({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-night-900/10 bg-white",
+        "rounded-2xl border border-night-900/10 bg-white dark:border-white/10 dark:bg-night-900",
         className
       )}
     >
@@ -33,12 +33,12 @@ export function FAQItem({
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={id}
-        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-heading font-semibold text-night-900 transition hover:text-brand-700"
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-heading font-semibold text-night-900 transition hover:text-brand-700 dark:text-white dark:hover:text-brand-400"
       >
         {question}
         <ChevronDown
           className={cn(
-            "h-5 w-5 shrink-0 text-brand-600 transition-transform duration-200",
+            "h-5 w-5 shrink-0 text-brand-600 transition-transform duration-200 dark:text-brand-400",
             open && "rotate-180"
           )}
         />

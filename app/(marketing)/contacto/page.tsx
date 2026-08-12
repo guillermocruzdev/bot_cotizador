@@ -97,16 +97,16 @@ export default function ContactoPage() {
 
               <a
                 href={emailLink}
-                className="flex items-center gap-4 rounded-2xl border border-night-900/10 bg-white p-5 transition hover:border-brand-600/30 hover:shadow-lg hover:shadow-brand-600/5"
+                className="flex items-center gap-4 rounded-2xl border border-night-900/10 bg-white p-5 transition hover:border-brand-600/30 hover:shadow-lg hover:shadow-brand-600/5 dark:border-white/10 dark:bg-night-900 dark:hover:border-brand-400/30"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-600/10 text-brand-600">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-600/10 text-brand-600 dark:bg-brand-400/15 dark:text-brand-400">
                   <Mail className="h-5 w-5" />
                 </span>
                 <span>
-                  <span className="block font-heading text-sm font-bold text-night-900">
+                  <span className="block font-heading text-sm font-bold text-night-900 dark:text-white">
                     Escríbenos por correo
                   </span>
-                  <span className="block text-sm text-night-700">
+                  <span className="block text-sm text-night-700 dark:text-slate-300">
                     {siteConfig.email}
                   </span>
                 </span>
@@ -114,20 +114,20 @@ export default function ContactoPage() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <LiftCard className="p-5">
-                  <Clock className="h-6 w-6 text-brand-600" />
-                  <h3 className="mt-3 font-heading text-sm font-bold text-night-900">
+                  <Clock className="h-6 w-6 text-brand-600 dark:text-brand-400" />
+                  <h3 className="mt-3 font-heading text-sm font-bold text-night-900 dark:text-white">
                     Respuesta rápida
                   </h3>
-                  <p className="mt-1.5 text-sm text-night-700">
+                  <p className="mt-1.5 text-sm text-night-700 dark:text-slate-300">
                     Menos de 24 horas hábiles en todos los canales.
                   </p>
                 </LiftCard>
                 <LiftCard className="p-5">
                   <MessageCircle className="h-6 w-6 text-whatsapp" />
-                  <h3 className="mt-3 font-heading text-sm font-bold text-night-900">
+                  <h3 className="mt-3 font-heading text-sm font-bold text-night-900 dark:text-white">
                     Sin compromiso
                   </h3>
-                  <p className="mt-1.5 text-sm text-night-700">
+                  <p className="mt-1.5 text-sm text-night-700 dark:text-slate-300">
                     Hablamos, cotizas y tú decides. Cero presión de venta.
                   </p>
                 </LiftCard>
@@ -145,11 +145,11 @@ export default function ContactoPage() {
 
           {/* Columna derecha: formulario */}
           <FadeIn delay={0.1}>
-            <div className="rounded-3xl border border-night-900/10 bg-white p-6 shadow-lg shadow-night-900/5 sm:p-8">
-              <h2 className="font-heading text-2xl font-bold text-night-900">
+            <div className="rounded-3xl border border-night-900/10 bg-white p-6 shadow-lg shadow-night-900/5 sm:p-8 dark:border-white/10 dark:bg-night-900 dark:shadow-black/20">
+              <h2 className="font-heading text-2xl font-bold text-night-900 dark:text-white">
                 Cuéntanos tu proyecto
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-night-700">
+              <p className="mt-2 text-sm leading-relaxed text-night-700 dark:text-slate-300">
                 Llena este formulario y te respondemos con propuesta y precio.
                 ¿Prefieres rapidez? Escríbenos por WhatsApp.
               </p>

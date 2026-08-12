@@ -12,8 +12,8 @@ const ctaButtonVariants = cva(
           "bg-gradient-to-r from-brand-600 to-brand-700 text-white shadow-sm hover:from-brand-700 hover:to-brand-700",
         whatsapp: "bg-whatsapp text-night-900 hover:brightness-95",
         outline:
-          "border border-night-900/15 bg-white text-night-900 hover:border-brand-600/40 hover:bg-surface-50",
-        ghost: "text-night-900 hover:bg-night-900/5",
+          "border border-night-900/15 bg-white text-night-900 hover:border-brand-600/40 hover:bg-surface-50 dark:border-white/15 dark:bg-night-900 dark:text-white dark:hover:border-brand-400/40 dark:hover:bg-night-800",
+        ghost: "text-night-900 hover:bg-night-900/5 dark:text-white dark:hover:bg-white/10",
       },
       size: {
         sm: "h-10 px-4 text-sm",
